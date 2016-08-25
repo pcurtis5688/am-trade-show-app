@@ -1,4 +1,4 @@
-package com.ashtonmansion.amtradeshowmanagement.activity;
+package com.ashtonmansion.tradeshowmanagement.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;

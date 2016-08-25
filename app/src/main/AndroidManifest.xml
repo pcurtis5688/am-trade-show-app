@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".HomeActivity"
+            android:name="com.ashtonmansion.tradeshowmanagement.HomeActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -26,24 +26,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.ConfigureReservations" />
+        <activity android:name="com.ashtonmansion.tradeshowmanagement.activity.ConfigureReservations" />
         <activity
-            android:name=".activity.MakeReservation"
+            android:name="com.ashtonmansion.tradeshowmanagement.activity.MakeReservation"
             android:label="@string/title_activity_make_reservation"
-            android:parentActivityName=".HomeActivity"
+            android:parentActivityName="com.ashtonmansion.tradeshowmanagement.HomeActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ashtonmansion.amtradeshowmanagement.HomeActivity" />
+                android:value="com.ashtonmansion.tradeshowmanagement.HomeActivity" />
         </activity>
         <activity
-            android:name=".activity.EmailResConfirmation"
+            android:name="com.ashtonmansion.tradeshowmanagement.activity.EmailResConfirmation"
             android:label="@string/title_activity_email_res_confirmation"
-            android:parentActivityName=".HomeActivity"
+            android:parentActivityName="com.ashtonmansion.tradeshowmanagement.HomeActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ashtonmansion.amtradeshowmanagement.HomeActivity" />
+                android:value="com.ashtonmansion.tradeshowmanagement.HomeActivity" />
         </activity>
     </application>
 

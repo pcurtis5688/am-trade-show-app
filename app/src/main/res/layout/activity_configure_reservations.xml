@@ -7,19 +7,16 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".activity.ConfigureReservations">
+    tools:context="com.ashtonmansion.tradeshowmanagement.activity.ConfigureReservations">
 
     <TextView
         android:id="@+id/ensuringCloverAccess"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/make_reservation_fab"
+    <TextView
+        android:id="@+id/item_stock"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:onClick="makeReservation"
-        android:src="@android:drawable/ic_menu_add" />
+        android:layout_height="wrap_content" />
+
 </RelativeLayout>
