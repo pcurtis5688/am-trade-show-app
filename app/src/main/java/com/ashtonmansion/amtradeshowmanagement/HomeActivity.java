@@ -29,7 +29,6 @@ public class HomeActivity extends AppCompatActivity
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.make_reservation_fab);
 
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -89,11 +88,6 @@ public class HomeActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    public void startReservationSystemConfiguration(View view) {
-        Intent configureResSysIntent = new Intent(this, ConfigureReservations.class);
-        startActivity(configureResSysIntent);
     }
 
     public void makeReservation(View view) {

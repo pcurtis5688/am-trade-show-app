@@ -6,7 +6,6 @@
 
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -31,6 +30,15 @@
         <activity
             android:name=".activity.MakeReservation"
             android:label="@string/title_activity_make_reservation"
+            android:parentActivityName=".HomeActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ashtonmansion.amtradeshowmanagement.HomeActivity" />
+        </activity>
+        <activity
+            android:name=".activity.EmailResConfirmation"
+            android:label="@string/title_activity_email_res_confirmation"
             android:parentActivityName=".HomeActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
