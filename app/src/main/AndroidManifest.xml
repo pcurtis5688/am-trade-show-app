@@ -37,7 +37,7 @@
         </activity>
         <activity
             android:name="com.ashtonmansion.tradeshowmanagement.activity.EmailResConfirmation"
-            android:label="@string/title_activity_email_res_confirmation"
+            android:label="@string/nav_drawer_email_confirmations_text"
             android:parentActivityName="com.ashtonmansion.tradeshowmanagement.HomeActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

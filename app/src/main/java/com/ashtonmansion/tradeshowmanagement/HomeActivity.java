@@ -1,5 +1,6 @@
 package com.ashtonmansion.tradeshowmanagement;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -19,15 +20,15 @@ import com.ashtonmansion.tradeshowmanagement.activity.ConfigureReservations;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private Context homeActivityContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        homeActivityContext = this;
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.make_reservation_fab);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -77,12 +78,29 @@ public class HomeActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_configure_reservations) {
-            // Handle the camera action
-            Intent configureResSysIntent = new Intent(this, ConfigureReservations.class);
-            startActivity(configureResSysIntent);
-        } else if (id == R.id.nav_email_reservation_confirmation) {
-            //TODO
+        if (id == R.id.nav_home_btn) {
+            //// TODO: 8/27/2016
+        } else if (id == R.id.nav_show_setup_btn) {
+            //// TODO: 8/27/2016  
+        } else if (id == R.id.nav_config_booths_btn) {
+            //// TODO: 8/27/2016  
+        } else if (id == R.id.nav_reports_queries_btn) {
+            //// TODO: 8/27/2016  
+        } else if (id == R.id.nav_make_reservation_btn) {
+            Intent makeReservationIntent = new Intent(homeActivityContext, MakeReservation.class);
+            startActivity(makeReservationIntent);
+        } else if (id == R.id.nav_email_reservation_confirmation_btn) {
+            //// TODO: 8/27/2016  
+        } else if (id == R.id.nav_advertising_sales_btn) {
+            //// TODO: 8/27/2016  
+        } else if (id == R.id.nav_general_tix_sales_btn) {
+            //// TODO: 8/27/2016  
+        } else if (id == R.id.nav_special_events_sales_btn) {
+            //// TODO: 8/27/2016  
+        } else if (id == R.id.nav_merchandise_sales_btn) {
+            //// TODO: 8/27/2016  
+        } else if (id == R.id.nav_app_settings_btn) {
+            //// TODO: 8/27/2016  
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

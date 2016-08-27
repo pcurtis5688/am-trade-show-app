@@ -21,7 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_span="3"
                 android:textAlignment="center"
-                android:textSize="@dimen/dimen_48sp"
+                android:textSize="@dimen/dimen_36sp"
                 android:textStyle="bold" />
 
         </TableRow>
@@ -45,7 +45,9 @@
             <CheckBox android:id="@+id/booth_detail_add_new_customer_chkbox" />
         </TableRow>
 
-        <TableRow>
+        <TableRow
+            android:id="@+id/invisible_row_1"
+            android:visibility="gone">
 
             <TextView
                 android:text="@string/customer_name_string"
@@ -61,7 +63,7 @@
                 android:hint="@string/customer_last_name_hint" />
         </TableRow>
 
-        <TableRow>
+        <TableRow android:visibility="gone">
 
             <TextView
                 android:text="@string/customer_address_label"
@@ -74,7 +76,7 @@
                 android:textAlignment="center" />
         </TableRow>
 
-        <TableRow>
+        <TableRow android:visibility="gone">
 
             <TextView android:text="" />
 
@@ -90,7 +92,7 @@
 
         </TableRow>
 
-        <TableRow>
+        <TableRow android:visibility="gone">
 
             <TextView
                 android:text="@string/customer_city_label"
@@ -104,7 +106,7 @@
 
         </TableRow>
 
-        <TableRow>
+        <TableRow android:visibility="gone">
 
             <TextView
                 android:text="@string/customer_state_label"
@@ -120,7 +122,7 @@
                 android:textAlignment="center" />
         </TableRow>
 
-        <TableRow>
+        <TableRow android:visibility="gone">
 
             <TextView
                 android:text="@string/customer_email_label"
@@ -134,7 +136,7 @@
                 android:textAlignment="center" />
         </TableRow>
 
-        <TableRow>
+        <TableRow android:visibility="gone">
 
             <TextView
                 android:text="@string/customer_phone_label"

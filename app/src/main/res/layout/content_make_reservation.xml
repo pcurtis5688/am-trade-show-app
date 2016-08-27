@@ -8,9 +8,34 @@
     tools:context="com.ashtonmansion.tradeshowmanagement.activity.MakeReservation"
     tools:showIn="@layout/activity_make_reservation">
 
-
-    <TableLayout
-        android:id="@+id/make_reservation_booth_table"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/available_booths_detail"
+                    android:layout_width="match_parent"
+                    android:text="@string/available_booths_header_text"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/dimen_36sp"
+                    android:textStyle="bold" />
+            </TableRow>
+
+            <TableRow>
+
+                <TableLayout
+                    android:id="@+id/make_reservation_booth_table"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_50dp" />
+            </TableRow>
+        </TableLayout>
+
+    </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

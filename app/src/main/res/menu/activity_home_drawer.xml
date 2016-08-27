@@ -2,19 +2,70 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_configure_reservations"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="@string/configure_reservations_string" />
-    </group>
 
-    <item android:title="@string/communicate_drawer_header">
+    </group>
+    <item android:title="@string/nav_drawer_home_header">
         <menu>
             <item
-                android:id="@+id/nav_email_reservation_confirmation"
+                android:id="@+id/nav_home_btn"
                 android:icon="@drawable/ic_menu_send"
-                android:title="@string/email_reservation_confirmation_string" />
+                android:title="@string/nav_home_text" />
         </menu>
     </item>
-
+    <item android:title="@string/nav_drawer_setup_header">
+        <menu>
+            <item
+                android:id="@+id/nav_show_setup_btn"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/nav_drawer_show_setup_text" />
+            <item
+                android:id="@+id/nav_config_booths_btn"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/nav_drawer_config_booths_text" />
+            <item
+                android:id="@+id/nav_reports_queries_btn"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/nav_drawer_reports_queries_text" />
+        </menu>
+    </item>
+    <item android:title="@string/nav_drawer_reservations_header">
+        <menu>
+            <item
+                android:id="@+id/nav_make_reservation_btn"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/nav_drawer_make_reservation_text" />
+            <item
+                android:id="@+id/nav_email_reservation_confirmation_btn"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/nav_drawer_email_confirmations_text" />
+        </menu>
+    </item>
+    <item android:title="@string/nav_drawer_sales_header">
+        <menu>
+            <item
+                android:id="@+id/nav_advertising_sales_btn"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/nav_drawer_advertising_sales_text" />
+            <item
+                android:id="@+id/nav_general_tix_sales_btn"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/nav_drawer_general_tix_sales_text" />
+            <item
+                android:id="@+id/nav_special_events_sales_btn"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/nav_drawer_special_events_sales_text" />
+            <item
+                android:id="@+id/nav_merchandise_sales_btn"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/nav_drawer_merchandise_sales_text" />
+        </menu>
+    </item>
+    <item android:title="@string/nav_drawer_settings_header">
+        <menu>
+            <item
+                android:id="@+id/nav_app_settings_btn"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/nav_drawer_app_settings_text" />
+        </menu>
+    </item>
 </menu>

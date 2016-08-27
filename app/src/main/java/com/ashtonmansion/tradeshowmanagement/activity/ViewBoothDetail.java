@@ -53,7 +53,7 @@ public class ViewBoothDetail extends AppCompatActivity {
 
     }
 
-    protected void finalizeReservation(View view) {
+    public void finalizeReservation(View view) {
         String reservationConfirmationToast = getResources().getString(R.string.finalized_reservation_confirmation);
         Toast.makeText(viewBoothDetailContext, reservationConfirmationToast, Toast.LENGTH_SHORT).show();
         pd = new ProgressDialog(viewBoothDetailContext);
