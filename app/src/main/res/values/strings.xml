@@ -31,6 +31,7 @@
     <string name="available_booths_header_text">Available Booths</string>
 
     <!-- MAKE RESERVATION PAGE STRINGS -->
+    <string name="customer_search_prompt">Search Existing Customers:</string>
     <string name="manual_customer_entry_prompt">-OR- Enter a customer manually below</string>
     <string name="add_new_customer_chkbox_label">Add New Customer?</string>
     <string name="customer_name_string">Customer Name</string>
@@ -108,6 +109,7 @@
     <string name="customer_phone_label">Customer Phone</string>
     <string name="customer_phone_hint">[Phone]</string>
 
+    <string name="finalize_reservation_btn_text">Finalize Reservation</string>
     <string name="finalized_reservation_confirmation">Reservation Complete</string>
     <string name="title_activity_app_settings">Application Settings</string>
 </resources>

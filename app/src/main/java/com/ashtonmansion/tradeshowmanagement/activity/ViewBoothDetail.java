@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TableRow;
@@ -49,6 +51,40 @@ public class ViewBoothDetail extends AppCompatActivity {
         setContentView(R.layout.activity_view_booth_detail);
         TextView boothDetailHeaderTV = (TextView) findViewById(R.id.booth_detail_header);
         boothDetailHeaderTV.setText(booth.getName());
+
+        ///////////////////////////NEW CUSTOMER HANDLING//////////////////////////////////////
+        final TableRow newCustomerTR1 = (TableRow) findViewById(R.id.invisible_cust_row1);
+        final TableRow newCustomerTR2 = (TableRow) findViewById(R.id.invisible_cust_row2);
+        final TableRow newCustomerTR3 = (TableRow) findViewById(R.id.invisible_cust_row3);
+        final TableRow newCustomerTR4 = (TableRow) findViewById(R.id.invisible_cust_row4);
+        final TableRow newCustomerTR5 = (TableRow) findViewById(R.id.invisible_cust_row5);
+        final TableRow newCustomerTR6 = (TableRow) findViewById(R.id.invisible_cust_row6);
+        final TableRow newCustomerTR7 = (TableRow) findViewById(R.id.invisible_cust_row7);
+        CheckBox newCustomerChkbox = (CheckBox) findViewById(R.id.booth_detail_add_new_customer_chkbox);
+        newCustomerChkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked) {
+                    newCustomerTR1.setVisibility(View.VISIBLE);
+                    newCustomerTR2.setVisibility(View.VISIBLE);
+                    newCustomerTR3.setVisibility(View.VISIBLE);
+                    newCustomerTR4.setVisibility(View.VISIBLE);
+                    newCustomerTR5.setVisibility(View.VISIBLE);
+                    newCustomerTR6.setVisibility(View.VISIBLE);
+                    newCustomerTR7.setVisibility(View.VISIBLE);
+                } else {
+                    newCustomerTR1.setVisibility(View.GONE);
+                    newCustomerTR2.setVisibility(View.GONE);
+                    newCustomerTR3.setVisibility(View.GONE);
+                    newCustomerTR4.setVisibility(View.GONE);
+                    newCustomerTR5.setVisibility(View.GONE);
+                    newCustomerTR6.setVisibility(View.GONE);
+                    newCustomerTR7.setVisibility(View.GONE);
+                }
+            }
+        });
+        ///////////////////////////
+
     }
 
     public void finalizeReservation(View view) {
@@ -96,7 +132,6 @@ public class ViewBoothDetail extends AppCompatActivity {
         reservingCustomer.setEmailAddresses(customerEmailInList);
         reservingCustomer.setPhoneNumbers(customerPhoneInList);
 
-
         ////ACCESS CLOVER
         merchantAccount = CloverAccount.getAccount(viewBoothDetailContext);
         inventoryConnector = new InventoryConnector(viewBoothDetailContext, merchantAccount, null);
@@ -137,4 +172,5 @@ public class ViewBoothDetail extends AppCompatActivity {
 
         }
     }
+
 }
