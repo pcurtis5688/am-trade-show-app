@@ -2,24 +2,23 @@
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/email_confirmation_drawerlayout"
+    android:id="@+id/show_setup_drawerlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
     <include
-        layout="@layout/app_bar_email_confirmation"
+        layout="@layout/app_bar_show_setup"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view_email_confirmations"
+        android:id="@+id/nav_view_show_setup"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/drawer_header_block"
         app:menu="@menu/nav_drawer" />
-
 </android.support.v4.widget.DrawerLayout>

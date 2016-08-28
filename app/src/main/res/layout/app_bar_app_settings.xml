@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.ashtonmansion.tradeshowmanagement.activity.MakeReservation">
+    tools:context="com.ashtonmansion.tradeshowmanagement.activity.AppSettings">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -13,14 +13,12 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/make_reservation_toolbar"
+            android:id="@+id/app_settings_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:layout_height="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
-
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_make_reservation" />
+    <include layout="@layout/content_app_settings" />
 
 </android.support.design.widget.CoordinatorLayout>

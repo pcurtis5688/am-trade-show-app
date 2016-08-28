@@ -14,8 +14,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
+import com.ashtonmansion.tradeshowmanagement.activity.AppSettings;
 import com.ashtonmansion.tradeshowmanagement.activity.EmailConfirmation;
 import com.ashtonmansion.tradeshowmanagement.activity.MakeReservation;
+import com.ashtonmansion.tradeshowmanagement.activity.ShowSetup;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -52,7 +54,7 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home, menu);
+        getMenuInflater().inflate(R.menu.menu_home, menu);
         return true;
     }
 
@@ -77,7 +79,8 @@ public class HomeActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_show_setup_btn) {
-            //// TODO: 8/27/2016  
+            Intent showSetupIntent = new Intent(homeActivityContext, ShowSetup.class);
+            startActivity(showSetupIntent);
         } else if (id == R.id.nav_config_booths_btn) {
             //// TODO: 8/27/2016
         } else if (id == R.id.nav_reports_queries_btn) {
@@ -97,7 +100,8 @@ public class HomeActivity extends AppCompatActivity
         } else if (id == R.id.nav_merchandise_sales_btn) {
             //// TODO: 8/27/2016  
         } else if (id == R.id.nav_app_settings_btn) {
-
+            Intent appSettingsIntent = new Intent(homeActivityContext, AppSettings.class);
+            startActivity(appSettingsIntent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

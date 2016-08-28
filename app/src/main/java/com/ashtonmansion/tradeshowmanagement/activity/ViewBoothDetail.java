@@ -49,8 +49,6 @@ public class ViewBoothDetail extends AppCompatActivity {
         setContentView(R.layout.activity_view_booth_detail);
         TextView boothDetailHeaderTV = (TextView) findViewById(R.id.booth_detail_header);
         boothDetailHeaderTV.setText(booth.getName());
-
-
     }
 
     public void finalizeReservation(View view) {
@@ -105,8 +103,6 @@ public class ViewBoothDetail extends AppCompatActivity {
 
         //DETERMINE IF NEED TO ADD NEW CUSTOMER, IF NOT, ASSOCIATE THE TWO
         //AND UPDATE THE INVENTORY
-
-
     }
 
     private class CreateCustomerTask extends AsyncTask<Void, Void, Void> {

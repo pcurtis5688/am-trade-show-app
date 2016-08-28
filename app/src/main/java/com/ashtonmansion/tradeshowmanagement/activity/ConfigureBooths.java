@@ -2,12 +2,12 @@ package com.ashtonmansion.tradeshowmanagement.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,35 +15,35 @@ import android.view.MenuItem;
 import com.ashtonmansion.amtradeshowmanagement.R;
 import com.ashtonmansion.tradeshowmanagement.HomeActivity;
 
-public class EmailConfirmation extends AppCompatActivity
+public class ConfigureBooths extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private Context emailConfirmationActivityContext;
+    private Context configureBoothsActivityContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ///////////UI WORK/////////////////////////////////////
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_email_confirmation);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.email_confirmation_toolbar);
+        setContentView(R.layout.activity_configure_booths);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.configure_booths_toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.email_confirmation_drawerlayout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.configure_booths_drawerlayout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_email_confirmations);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_configure_booths);
         navigationView.setNavigationItemSelectedListener(this);
 
         ///////////DATA WORK////////////////////////////////////
-        emailConfirmationActivityContext = this;
-        //// TODO: 8/28/2016 start here 
+        configureBoothsActivityContext = this;
+        //// TODO: 8/28/2016 start here
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.email_confirmation_drawerlayout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.configure_booths_drawerlayout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -80,41 +80,42 @@ public class EmailConfirmation extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home_btn) {
-            Intent homeActivityIntent = new Intent(emailConfirmationActivityContext, HomeActivity.class);
+            Intent homeActivityIntent = new Intent(configureBoothsActivityContext, HomeActivity.class);
             startActivity(homeActivityIntent);
         } else if (id == R.id.nav_show_setup_btn) {
-            Intent showSetupIntent = new Intent(emailConfirmationActivityContext, ShowSetup.class);
+            Intent showSetupIntent = new Intent(configureBoothsActivityContext, ShowSetup.class);
             startActivity(showSetupIntent);
         } else if (id == R.id.nav_config_booths_btn) {
-            Intent configureBoothsIntent = new Intent(emailConfirmationActivityContext, ConfigureBooths.class);
-            startActivity(configureBoothsIntent);
+            // nothing ; already in activity
         } else if (id == R.id.nav_reports_queries_btn) {
-            Intent reportsIntent = new Intent(emailConfirmationActivityContext, Reports.class);
+            Intent reportsIntent = new Intent(configureBoothsActivityContext, Reports.class);
             startActivity(reportsIntent);
         } else if (id == R.id.nav_make_reservation_btn) {
-            Intent makeReservationIntent = new Intent(emailConfirmationActivityContext, MakeReservation.class);
+            Intent makeReservationIntent = new Intent(configureBoothsActivityContext, MakeReservation.class);
             startActivity(makeReservationIntent);
         } else if (id == R.id.nav_email_reservation_confirmation_btn) {
-            // nothing ; already in activity
+            Intent emailConfirmationIntent = new Intent(configureBoothsActivityContext, EmailConfirmation.class);
+            startActivity(emailConfirmationIntent);
         } else if (id == R.id.nav_advertising_sales_btn) {
-            Intent advertisingSalesIntent = new Intent(emailConfirmationActivityContext, AdvertisingSales.class);
+            Intent advertisingSalesIntent = new Intent(configureBoothsActivityContext, AdvertisingSales.class);
             startActivity(advertisingSalesIntent);
         } else if (id == R.id.nav_general_tix_sales_btn) {
-            Intent generalTicketSalesIntent = new Intent(emailConfirmationActivityContext, GeneralTicketSales.class);
+            Intent generalTicketSalesIntent = new Intent(configureBoothsActivityContext, GeneralTicketSales.class);
             startActivity(generalTicketSalesIntent);
         } else if (id == R.id.nav_special_events_sales_btn) {
-            Intent specialEventSalesIntent = new Intent(emailConfirmationActivityContext, SpecialEventSales.class);
+            Intent specialEventSalesIntent = new Intent(configureBoothsActivityContext, SpecialEventSales.class);
             startActivity(specialEventSalesIntent);
         } else if (id == R.id.nav_merchandise_sales_btn) {
-            Intent merchandiseSalesIntent = new Intent(emailConfirmationActivityContext, MerchandiseSales.class);
+            Intent merchandiseSalesIntent = new Intent(configureBoothsActivityContext, MerchandiseSales.class);
             startActivity(merchandiseSalesIntent);
         } else if (id == R.id.nav_app_settings_btn) {
-            Intent appSettingsIntent = new Intent(emailConfirmationActivityContext, AppSettings.class);
+            Intent appSettingsIntent = new Intent(configureBoothsActivityContext, AppSettings.class);
             startActivity(appSettingsIntent);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.email_confirmation_drawerlayout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.configure_booths_drawerlayout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 }
+
