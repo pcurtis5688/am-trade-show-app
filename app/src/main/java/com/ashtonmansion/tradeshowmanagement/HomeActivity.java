@@ -14,10 +14,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
+import com.ashtonmansion.tradeshowmanagement.activity.AdvertisingSales;
 import com.ashtonmansion.tradeshowmanagement.activity.AppSettings;
+import com.ashtonmansion.tradeshowmanagement.activity.ConfigureBooths;
 import com.ashtonmansion.tradeshowmanagement.activity.EmailConfirmation;
+import com.ashtonmansion.tradeshowmanagement.activity.GeneralTicketSales;
 import com.ashtonmansion.tradeshowmanagement.activity.MakeReservation;
+import com.ashtonmansion.tradeshowmanagement.activity.MerchandiseSales;
+import com.ashtonmansion.tradeshowmanagement.activity.Reports;
 import com.ashtonmansion.tradeshowmanagement.activity.ShowSetup;
+import com.ashtonmansion.tradeshowmanagement.activity.SpecialEventSales;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -25,25 +31,28 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ///////////UI WORK / INSTANTIATION /////////////////////
         super.onCreate(savedInstanceState);
-        homeActivityContext = this;
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.home_drawerlayout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_home);
         navigationView.setNavigationItemSelectedListener(this);
+        //////////DATA WORK
+        homeActivityContext = this;
+        //// TODO: 8/28/2016 start here
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.home_drawerlayout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -82,9 +91,11 @@ public class HomeActivity extends AppCompatActivity
             Intent showSetupIntent = new Intent(homeActivityContext, ShowSetup.class);
             startActivity(showSetupIntent);
         } else if (id == R.id.nav_config_booths_btn) {
-            //// TODO: 8/27/2016
+            Intent configBoothsIntent = new Intent(homeActivityContext, ConfigureBooths.class);
+            startActivity(configBoothsIntent);
         } else if (id == R.id.nav_reports_queries_btn) {
-            //// TODO: 8/27/2016  
+            Intent reportsIntent = new Intent(homeActivityContext, Reports.class);
+            startActivity(reportsIntent);
         } else if (id == R.id.nav_make_reservation_btn) {
             Intent makeReservationIntent = new Intent(homeActivityContext, MakeReservation.class);
             startActivity(makeReservationIntent);
@@ -92,25 +103,24 @@ public class HomeActivity extends AppCompatActivity
             Intent emailConfirmationIntent = new Intent(homeActivityContext, EmailConfirmation.class);
             startActivity(emailConfirmationIntent);
         } else if (id == R.id.nav_advertising_sales_btn) {
-            //// TODO: 8/27/2016  
+            Intent advertisingSalesIntent = new Intent(homeActivityContext, AdvertisingSales.class);
+            startActivity(advertisingSalesIntent);
         } else if (id == R.id.nav_general_tix_sales_btn) {
-            //// TODO: 8/27/2016  
+            Intent generalTicketSalesIntent = new Intent(homeActivityContext, GeneralTicketSales.class);
+            startActivity(generalTicketSalesIntent);
         } else if (id == R.id.nav_special_events_sales_btn) {
-            //// TODO: 8/27/2016  
+            Intent specialEventSalesIntent = new Intent(homeActivityContext, SpecialEventSales.class);
+            startActivity(specialEventSalesIntent);
         } else if (id == R.id.nav_merchandise_sales_btn) {
-            //// TODO: 8/27/2016  
+            Intent merchandiseSalesIntent = new Intent(homeActivityContext, MerchandiseSales.class);
+            startActivity(merchandiseSalesIntent);
         } else if (id == R.id.nav_app_settings_btn) {
             Intent appSettingsIntent = new Intent(homeActivityContext, AppSettings.class);
             startActivity(appSettingsIntent);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.home_drawerlayout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    public void makeReservation(View view) {
-        Intent makeReservationIntent = new Intent(this, MakeReservation.class);
-        startActivity(makeReservationIntent);
     }
 }

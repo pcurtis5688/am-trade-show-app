@@ -10,7 +10,9 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_75dp"
+        android:layout_marginTop="@dimen/dimen_25dp">
 
         <TableLayout
             android:layout_width="match_parent"
@@ -18,7 +20,10 @@
 
             <TableRow>
 
-                <TextView android:text="FILLER" />
+                <TextView
+                    android:text="Application Settings"
+                    android:textSize="@dimen/dimen_24sp"
+                    android:textStyle="bold" />
             </TableRow>
         </TableLayout>
     </LinearLayout>
