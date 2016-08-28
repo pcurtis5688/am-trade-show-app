@@ -3,9 +3,7 @@ package com.ashtonmansion.tradeshowmanagement.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,9 +11,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
+import com.ashtonmansion.tradeshowmanagement.HomeActivity;
 
 public class EmailConfirmation extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -23,9 +21,9 @@ public class EmailConfirmation extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ///////////UI WORK/////////////////////////////////////
         super.onCreate(savedInstanceState);
-        emailConfirmationActivityContext = this;
-        setContentView(R.layout.activity_email_res_confirmation);
+        setContentView(R.layout.activity_email_confirmation);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -37,6 +35,9 @@ public class EmailConfirmation extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        ///////////DATA WORK////////////////////////////////////
+        emailConfirmationActivityContext = this;
     }
 
     @Override
@@ -78,7 +79,8 @@ public class EmailConfirmation extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home_btn) {
-            //// TODO: 8/27/2016
+            Intent homeActivityIntent = new Intent(emailConfirmationActivityContext, HomeActivity.class);
+            startActivity(homeActivityIntent);
         } else if (id == R.id.nav_show_setup_btn) {
             //// TODO: 8/27/2016
         } else if (id == R.id.nav_config_booths_btn) {

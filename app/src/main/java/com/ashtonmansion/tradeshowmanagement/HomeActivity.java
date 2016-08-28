@@ -74,12 +74,9 @@ public class HomeActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_home_btn) {
-            //// TODO: 8/27/2016
-        } else if (id == R.id.nav_show_setup_btn) {
+        if (id == R.id.nav_show_setup_btn) {
             //// TODO: 8/27/2016  
         } else if (id == R.id.nav_config_booths_btn) {
             //// TODO: 8/27/2016
