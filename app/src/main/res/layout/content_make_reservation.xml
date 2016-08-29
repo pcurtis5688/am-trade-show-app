@@ -11,8 +11,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/dimen_75dp"
         android:paddingStart="@dimen/dimen_75dp"
-        android:paddingTop="@dimen/dimen_50dp">
+        android:paddingTop="@dimen/dimen_25dp">
 
         <TableLayout
             android:layout_width="match_parent"
@@ -23,8 +24,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:text="@string/available_booths_header_text"
-                    android:textAlignment="center"
-                    android:textSize="@dimen/dimen_36sp"
+                    android:textSize="@dimen/dimen_24sp"
                     android:textStyle="bold" />
             </TableRow>
 
@@ -33,8 +33,7 @@
                 <TableLayout
                     android:id="@+id/make_reservation_booth_table"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dimen_50dp" />
+                    android:layout_height="wrap_content" />
             </TableRow>
         </TableLayout>
 

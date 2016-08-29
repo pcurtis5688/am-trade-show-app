@@ -25,12 +25,15 @@
     <string name="nav_drawer_special_events_sales_text">Special Event Sales</string>
     <string name="nav_drawer_merchandise_sales_text">Merchandise Sales</string>
     <string name="nav_drawer_app_settings_text">Application Settings</string>
-    <!--EMAIL RESERVATION CONFIRMATION PAGE STRINGS -->
-    <string name="search_reservations_string">Search Reservations...</string>
 
+    <!--EMAIL RESERVATION CONFIRMATION PAGE STRINGS -->
+    <string name="email_reservations_confirmations_string">Email Reservation Confirmations</string>
+    <string name="search_reservations_string">Search Reservations... </string>
+
+
+    <!-- MAKE RESERVATION PAGES STRINGS -->
     <string name="available_booths_header_text">Available Booths</string>
 
-    <!-- MAKE RESERVATION PAGE STRINGS -->
     <string name="customer_search_prompt">Search Existing Customers:</string>
     <string name="manual_customer_entry_prompt">-OR- Enter a customer manually below</string>
     <string name="add_new_customer_chkbox_label">Add New Customer?</string>

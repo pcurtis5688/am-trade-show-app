@@ -4,10 +4,8 @@ import android.accounts.Account;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -19,10 +17,6 @@ import android.widget.Toast;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
 import com.clover.sdk.util.CloverAccount;
-import com.clover.sdk.v1.BindingException;
-import com.clover.sdk.v1.ClientException;
-import com.clover.sdk.v1.ServiceException;
-import com.clover.sdk.v1.customer.CustomerConnector;
 import com.clover.sdk.v3.customers.Address;
 import com.clover.sdk.v3.customers.Customer;
 import com.clover.sdk.v3.customers.EmailAddress;
@@ -88,8 +82,6 @@ public class ViewBoothDetail extends AppCompatActivity {
     }
 
     public void finalizeReservation(View view) {
-        String reservationConfirmationToast = getResources().getString(R.string.finalized_reservation_confirmation);
-        Toast.makeText(viewBoothDetailContext, reservationConfirmationToast, Toast.LENGTH_SHORT).show();
         pd = new ProgressDialog(viewBoothDetailContext);
         pd.setMessage("Finalizing Reservation....");
         //GRAB FIELD HANDLERS
@@ -170,6 +162,8 @@ public class ViewBoothDetail extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
 
+            String reservationConfirmationToast = getResources().getString(R.string.finalized_reservation_confirmation);
+            Toast.makeText(viewBoothDetailContext, reservationConfirmationToast, Toast.LENGTH_SHORT).show();
         }
     }
 

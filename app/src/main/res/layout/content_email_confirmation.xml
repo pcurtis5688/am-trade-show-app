@@ -11,20 +11,33 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/dimen_75dp"
         android:paddingStart="@dimen/dimen_75dp"
-        android:paddingTop="@dimen/dimen_50dp">
+        android:paddingTop="@dimen/dimen_25dp">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <TableLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Email Resrevation Confirmations"
-            android:textSize="@dimen/dimen_24sp"
-            android:textStyle="bold" />
+            android:stretchColumns="*">
 
-        <EditText
-            android:id="@+id/search_reservations_field"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="@string/search_reservations_string" />
+            <TableRow>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/email_reservations_confirmations_string"
+                    android:textSize="@dimen/dimen_24sp"
+                    android:textStyle="bold" />
+            </TableRow>
+
+            <TableRow>
+
+                <EditText
+                    android:id="@+id/search_reservations_field"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/search_reservations_string" />
+            </TableRow>
+        </TableLayout>
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

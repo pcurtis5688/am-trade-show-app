@@ -11,8 +11,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/dimen_75dp"
         android:paddingStart="@dimen/dimen_75dp"
-        android:paddingTop="@dimen/dimen_50dp">
+        android:paddingTop="@dimen/dimen_25dp">
 
         <TableLayout
             android:layout_width="match_parent"
@@ -21,7 +22,7 @@
             <TableRow>
 
                 <TextView
-                    android:text="REPORTS HEADAER"
+                    android:text="@string/nav_drawer_reports_queries_text"
                     android:textSize="@dimen/dimen_24sp"
                     android:textStyle="bold" />
             </TableRow>
