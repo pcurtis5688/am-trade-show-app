@@ -37,13 +37,24 @@ public class TradeShowDB {
         return tradeShowDatabase.insert(SHOW_TABLE, null, values);
     }
 
-    public Cursor selectShowRecords() {
-        String[] cols = new String[]{SHOW_ID, SHOW_CLOVERID, SHOW_NAME, SHOW_DATE, SHOW_LOCATION, SHOW_NOTES, SHOW_LOCATION_AND_DATE_COLUMN};
-        Cursor mCursor = tradeShowDatabase.query(true, SHOW_TABLE, cols, null, null, null, null, null, null);
-        if (mCursor != null) {
-            mCursor.moveToFirst();
-        }
-        return mCursor;
+
+    public boolean updateSingleShowByCloverID(String cloverId, String showName, String showDate,
+                                              String showLocation, String showNotes,
+                                              String editShowLocationAndDateString) {
+        ContentValues values = new ContentValues();
+        values.put(SHOW_CLOVERID, cloverId);
+        values.put(SHOW_NAME, showName);
+        values.put(SHOW_DATE, showDate);
+        values.put(SHOW_LOCATION, showLocation);
+        values.put(SHOW_NOTES, showNotes);
+        values.put(SHOW_LOCATION_AND_DATE_COLUMN, editShowLocationAndDateString);
+        String cloverIdWithTicks = "'" + cloverId + "'";
+        return tradeShowDatabase.update(SHOW_TABLE, values, SHOW_CLOVERID + "=" + cloverIdWithTicks, null) > 0;
+    }
+
+    public boolean deleteSingleShowByCloverID(String showID) {
+        String showIDwithTicks = "'" + showID + "'";
+        return tradeShowDatabase.delete(SHOW_TABLE, SHOW_CLOVERID + "=" + showIDwithTicks, null) > 0;
     }
 
     public Cursor selectSingleShowByCloverID(String showID) {
@@ -54,8 +65,12 @@ public class TradeShowDB {
         return mCursor;
     }
 
-    public boolean deleteSingleShowByCloverID(String showID) {
-        String showIDwithTicks = "'" + showID + "'";
-        return tradeShowDatabase.delete(SHOW_TABLE, SHOW_CLOVERID + "=" + showIDwithTicks, null) > 0;
+    public Cursor selectShowRecords() {
+        String[] cols = new String[]{SHOW_ID, SHOW_CLOVERID, SHOW_NAME, SHOW_DATE, SHOW_LOCATION, SHOW_NOTES, SHOW_LOCATION_AND_DATE_COLUMN};
+        Cursor mCursor = tradeShowDatabase.query(true, SHOW_TABLE, cols, null, null, null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
     }
 }

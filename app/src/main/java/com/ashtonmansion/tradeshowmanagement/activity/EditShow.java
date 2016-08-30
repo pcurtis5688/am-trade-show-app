@@ -41,10 +41,12 @@ public class EditShow extends AppCompatActivity {
     //CLOVER ACCESS VARS
     private Account merchantAccount;
     private InventoryConnector inventoryConnector;
-    //LOCAL SHOW DATA VARS
-    private String showDate;
-    private String showLocation;
-    private String showNotes;
+    //UPON SAVING CHANGES VARS
+    private String editedShowName;
+    private String editedShowDate;
+    private String editedShowLocation;
+    private String editedShowNotes;
+    private String editedShowLocationAndDateString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +86,17 @@ public class EditShow extends AppCompatActivity {
         showNotesEditText.setText(dbShowCursor.getString(5));
     }
 
+    public void saveShowChangesAction(View view) {
+        editedShowName = showNameEditText.getText().toString();
+        editedShowDate = showDateEditText.getText().toString();
+        editedShowLocation = showLocationEditText.getText().toString();
+        editedShowNotes = showNotesEditText.getText().toString();
+        editedShowLocationAndDateString = editedShowLocation + " - " + editedShowDate;
+
+        UpdateShowTask updateShowTask = new UpdateShowTask();
+        updateShowTask.execute();
+    }
+
     public void deleteShowAction(View view) {
         DeleteShowTask deleteShowTask = new DeleteShowTask();
         deleteShowTask.execute();
@@ -91,6 +104,50 @@ public class EditShow extends AppCompatActivity {
 
     public void cancelEditShow(View view) {
         finish();
+    }
+
+    private class UpdateShowTask extends AsyncTask<Void, Void, Void> {
+        private ProgressDialog progressDialog;
+        private boolean recordSuccessfullyUpdated;
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog = new ProgressDialog(editShowActivityContext);
+            progressDialog.setMessage("Updating Show...");
+            progressDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                merchantAccount = CloverAccount.getAccount(editShowActivityContext);
+                inventoryConnector = new InventoryConnector(editShowActivityContext, merchantAccount, null);
+                inventoryConnector.connect();
+                Category updatedShowCategory = new Category();
+                updatedShowCategory.setId(showID);
+                updatedShowCategory.setSortOrder(1);
+                updatedShowCategory.setName(editedShowLocationAndDateString);
+
+                inventoryConnector.updateCategory(updatedShowCategory);
+
+                TradeShowDB database = new TradeShowDB(editShowActivityContext);
+                recordSuccessfullyUpdated = database.updateSingleShowByCloverID(showID, editedShowName,
+                        editedShowDate, editedShowLocation, editedShowNotes, editedShowLocationAndDateString);
+            } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
+                Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
+                e1.printStackTrace();
+            } finally {
+                inventoryConnector.disconnect();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            progressDialog.dismiss();
+            finish();
+        }
     }
 
     private class DeleteShowTask extends AsyncTask<Void, Void, Void> {

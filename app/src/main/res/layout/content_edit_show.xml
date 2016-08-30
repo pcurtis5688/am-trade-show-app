@@ -108,7 +108,7 @@
 
             <Button
                 android:id="@+id/save_show_edits_btn"
-                android:onClick="addOrSaveShow"
+                android:onClick="saveShowChangesAction"
                 android:text="@string/save_show_changes_btn_string"
                 android:textAlignment="center" />
         </TableRow>
