@@ -38,11 +38,23 @@ public class TradeShowDB {
     }
 
     public Cursor selectShowRecords() {
-        String[] cols = new String[]{SHOW_ID, SHOW_CLOVERID, SHOW_NAME, SHOW_DATE, SHOW_LOCATION, SHOW_NOTES};
+        String[] cols = new String[]{SHOW_ID, SHOW_CLOVERID, SHOW_NAME, SHOW_DATE, SHOW_LOCATION, SHOW_NOTES, SHOW_LOCATION_AND_DATE_COLUMN};
         Cursor mCursor = tradeShowDatabase.query(true, SHOW_TABLE, cols, null, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
         return mCursor;
+    }
+
+    public Cursor selectSingleShowByCloverID(String showID) {
+        Cursor mCursor = tradeShowDatabase.rawQuery("SELECT _id, cloverid, showname, showdate, showlocation, shownotes, showlocationanddate FROM Shows WHERE cloverid = ?", new String[]{showID});
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
+    public boolean deleteSingleShowByCloverID(String showID) {
+        return tradeShowDatabase.delete(SHOW_TABLE, SHOW_CLOVERID + "=" + showID, null) > 0;
     }
 }

@@ -82,7 +82,6 @@ public class AddShow extends AppCompatActivity {
         AddShowCategoryTask addShowTask = new AddShowCategoryTask();
         addShowTask.execute();
     }
-
     private void doLocalInsert(Category returnedCategory) {
         //GET THE CLOVER ID FOR LOCAL INSERT
         String cloverCategoryID = returnedCategory.getId();
@@ -124,6 +123,7 @@ public class AddShow extends AppCompatActivity {
                 newShowCategory.setSortOrder(1);
                 newShowCategory.setName(newShowLocationAndDateStringForCategory);
                 List<Reference> fauxItemRefList = new ArrayList<>();
+
                 newShowCategory.setItems(fauxItemRefList);
                 returnedCategory = inventoryConnector.createCategory(newShowCategory);
 

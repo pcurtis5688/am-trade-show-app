@@ -3,6 +3,7 @@ package com.ashtonmansion.tradeshowmanagement.activity;
 import android.accounts.Account;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -16,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
+import com.ashtonmansion.tradeshowmanagement.db.TradeShowDB;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
@@ -71,33 +73,53 @@ public class EditShow extends AppCompatActivity {
             showNameEditText.setText(showName);
         }
 
-        //FETCH LOCAL SHOW DATA
-        GetLocalShowDataTask getLocalDataAndPopulateTask = new GetLocalShowDataTask();
-        getLocalDataAndPopulateTask.execute();
+        getLocalShowDataAndPopulateFields(showID);
     }
 
     private void getLocalShowDataAndPopulateFields(String showID) {
         //// TODO: 8/30/2016
+        TradeShowDB database = new TradeShowDB(editShowActivityContext);
+        Cursor dbShowCursor = database.selectSingleShowByCloverID(showID);
+        showDateEditText.setText(dbShowCursor.getString(3));
+        showLocationEditText.setText(dbShowCursor.getString(4));
+        showNotesEditText.setText(dbShowCursor.getString(5));
     }
 
-    /////////////DATA AND BUTTON ACTION HANDLING
+    public void deleteShowAction(View view) {
+
+    }
+
     public void cancelEditShow(View view) {
         finish();
     }
 
-    private class GetLocalShowDataTask extends AsyncTask<Void, Void, Void> {
+    private class DeleteShowTask extends AsyncTask<Void, Void, Void> {
         private ProgressDialog progressDialog;
+        private boolean recordSuccessfullyDeleted;
 
         @Override
         protected void onPreExecute() {
             progressDialog = new ProgressDialog(editShowActivityContext);
-            progressDialog.setMessage("Loading Show Data...");
+            progressDialog.setMessage("Deleting Show...");
             progressDialog.show();
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-            getLocalShowDataAndPopulateFields(showID);
+            try {
+                merchantAccount = CloverAccount.getAccount(editShowActivityContext);
+                inventoryConnector = new InventoryConnector(editShowActivityContext, merchantAccount, null);
+                inventoryConnector.connect();
+                inventoryConnector.deleteCategory(showID);
+
+                TradeShowDB database = new TradeShowDB(editShowActivityContext);
+                recordSuccessfullyDeleted = database.deleteSingleShowByCloverID(showID);
+            } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
+                Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
+                e1.printStackTrace();
+            } finally {
+                inventoryConnector.disconnect();
+            }
             return null;
         }
 
@@ -105,6 +127,7 @@ public class EditShow extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
             progressDialog.dismiss();
+            finish();
         }
     }
 }
