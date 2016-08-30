@@ -30,6 +30,7 @@ import com.clover.sdk.v1.ServiceException;
 import com.clover.sdk.v3.inventory.Category;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
+import com.clover.sdk.v3.inventory.Option;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,18 +69,61 @@ public class TradeShows extends AppCompatActivity
         inventoryConnector = new InventoryConnector(tradeShowsActivityContext, merchantAccount, null);
         showSelectionTable = (TableLayout) findViewById(R.id.trade_show_selection_table);
 
-        //// TODO: 8/28/2016 start here
         fetchData();
     }
 
+    ////////////DATA HANDLING METHODS///////////////////////////
     private void fetchData() {
-
-
         GetShowListTask getShowListTask = new GetShowListTask();
         getShowListTask.execute();
     }
 
-    ////////////DATA HANDLING METHODS///////////////////////////
+    private void populateTable() {
+        for (Category show : showList) {
+            String testString = "";
+            testString = show.getId() + "," + show.getName() + "," + show.getItems().toString();
+            TextView testTV = new TextView(tradeShowsActivityContext);
+            testTV.setText(testString);
+            TableRow testRow = new TableRow(tradeShowsActivityContext);
+            testRow.addView(testTV);
+            showSelectionTable.addView(testRow);
+            /////////////
+            final String showName = show.getName();
+
+            TableRow newShowRow = new TableRow(tradeShowsActivityContext);
+
+            TextView newShowTV = new TextView(tradeShowsActivityContext);
+            newShowTV.setText(showName);
+
+            Button editShowButton = new Button(tradeShowsActivityContext);
+            editShowButton.setText(getResources().getString(R.string.trade_shows_edit_btn_string));
+            editShowButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    editShowAction(showName);
+                }
+            });
+            newShowRow.addView(newShowTV);
+            newShowRow.addView(editShowButton);
+            showSelectionTable.addView(newShowRow);
+        }
+        ////PUT THE LAST ROW (ADD SHOW BUTTON) IN
+        TableRow addShowButtonRow = new TableRow(tradeShowsActivityContext);
+        Button addShowButton = new Button(tradeShowsActivityContext);
+        addShowButton.setText(getResources().getString(R.string.add_show_string));
+        addShowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addNewShowAction();
+            }
+        });
+        showSelectionTable.addView(addShowButton);
+    }
+
+    private void addNewShowAction() {
+        Intent addShowIntent = new Intent(tradeShowsActivityContext, AddShow.class);
+        startActivity(addShowIntent);
+    }
 
     private void editShowAction(String showName) {
         Intent editShowIntent = new Intent(tradeShowsActivityContext, EditShow.class);
@@ -181,27 +225,7 @@ public class TradeShows extends AppCompatActivity
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-
-            for (Category show : showList) {
-                final String showName = show.getName();
-
-                TableRow newShowRow = new TableRow(tradeShowsActivityContext);
-
-                TextView newShowTV = new TextView(tradeShowsActivityContext);
-                newShowTV.setText(showName);
-
-                Button editShowButton = new Button(tradeShowsActivityContext);
-                editShowButton.setText(getResources().getString(R.string.trade_shows_edit_btn_string));
-                editShowButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        editShowAction(showName);
-                    }
-                });
-                newShowRow.addView(newShowTV);
-                newShowRow.addView(editShowButton);
-                showSelectionTable.addView(newShowRow);
-            }
+            populateTable();
         }
     }
 }

@@ -120,13 +120,24 @@
             android:name="com.ashtonmansion.tradeshowmanagement.activity.ViewBoothDetail"
             android:parentActivityName="com.ashtonmansion.tradeshowmanagement.activity.MakeReservation" />
         <activity
-            android:name="com.ashtonmansion.tradeshowmanagement.activity.EditShow"
-            android:label="@string/title_activity_edit_show"
-            android:parentActivityName="com.ashtonmansion.tradeshowmanagement.HomeActivity"
+            android:name="com.ashtonmansion.tradeshowmanagement.activity.AddShow"
+            android:label="@string/title_activity_add_show"
+            android:parentActivityName="com.ashtonmansion.tradeshowmanagement.activity.TradeShows"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ashtonmansion.tradeshowmanagement.HomeActivity" />
+                android:value="com.ashtonmansion.tradeshowmanagement.activity.TradeShows" />
         </activity>
+        <activity
+            android:name="com.ashtonmansion.tradeshowmanagement.activity.EditShow"
+            android:label="@string/title_activity_edit_show"
+            android:parentActivityName="com.ashtonmansion.tradeshowmanagement.activity.TradeShows"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ashtonmansion.tradeshowmanagement.activity.TradeShows" />
+        </activity>
+
     </application>
+
 </manifest>

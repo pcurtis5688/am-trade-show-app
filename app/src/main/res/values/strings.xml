@@ -34,18 +34,29 @@
     <string name="trade_shows_string">Trade Shows</string>
     <string name="booth_config_show_selection_string">Booth Configuration Show Selection</string>
     <string name="trade_shows_edit_btn_string">Edit Show</string>
-    <string name="add_edit_show_header_string">Add / Edit Show</string>
+    <string name="edit_show_header_string">Edit Show</string>
+    <string name="add_show_string">Add Trade Show</string>
+    <string name="add_show_name_string">Name:</string>
+    <string name="add_show_name_hint">[Name]</string>
     <string name="edit_show_name_string">Name:</string>
     <string name="edit_show_name_hint">[Name]</string>
+    <string name="add_show_date_string">Date:</string>
+    <string name="add_show_date_hint">[Date]</string>
     <string name="edit_show_date_string">Date:</string>
     <string name="edit_show_date_hint">[Date]</string>
+    <string name="add_show_location_string">Location:</string>
+    <string name="add_show_location_hint">[Location]</string>
     <string name="edit_show_location_string">Location:</string>
     <string name="edit_show_location_hint">[Location]</string>
+    <string name="add_show_notes_string">Notes:</string>
+    <string name="add_show_notes_hint">[Notes]</string>
     <string name="edit_show_notes_string">Notes:</string>
     <string name="edit_show_notes_hint">[Notes]</string>
     <string name="delete_show_btn_string">Delete Show</string>
+    <string name="cancel_show_add_string">Cancel New Show</string>
     <string name="cancel_show_edit_string">Cancel</string>
-    <string name="add_or_save_show_string">Add Show / Save Changes</string>
+    <string name="add_new_show_btn_string">Add New Show</string>
+    <string name="save_show_changes_btn_string">Save Changes</string>
 
     <!-- MAKE RESERVATION PAGES STRINGS -->
     <string name="available_booths_header_text">Available Booths</string>
@@ -135,5 +146,6 @@
 
     <!--APPLICATION SETTINGS STRINGS -->
     <string name="application_settings_string">Application Settings</string>
-    <string name="title_activity_edit_show">Add / Edit Show</string>
+    <string name="title_activity_add_show">Add New Trade Show</string>
+    <string name="title_activity_edit_show">Edit Trade Show</string>
 </resources>
