@@ -30,9 +30,7 @@ import com.clover.sdk.v1.ServiceException;
 import com.clover.sdk.v3.inventory.Category;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
-import com.clover.sdk.v3.inventory.Option;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TradeShows extends AppCompatActivity
@@ -44,7 +42,6 @@ public class TradeShows extends AppCompatActivity
     private Account merchantAccount;
     private InventoryConnector inventoryConnector;
     private List<Category> showList;
-    private List<Item> boothListWithCategories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,27 +77,21 @@ public class TradeShows extends AppCompatActivity
 
     private void populateTable() {
         for (Category show : showList) {
-            String testString = "";
-            testString = show.getId() + "," + show.getName() + "," + show.getItems().toString();
-            TextView testTV = new TextView(tradeShowsActivityContext);
-            testTV.setText(testString);
-            TableRow testRow = new TableRow(tradeShowsActivityContext);
-            testRow.addView(testTV);
-            showSelectionTable.addView(testRow);
             /////////////
             final String showName = show.getName();
-
+            final String showID = show.getId();
+            String showNameAndIDString = showName + " (" + showID + ")";
             TableRow newShowRow = new TableRow(tradeShowsActivityContext);
 
             TextView newShowTV = new TextView(tradeShowsActivityContext);
-            newShowTV.setText(showName);
+            newShowTV.setText(showNameAndIDString);
 
             Button editShowButton = new Button(tradeShowsActivityContext);
             editShowButton.setText(getResources().getString(R.string.trade_shows_edit_btn_string));
             editShowButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    editShowAction(showName);
+                    editShowAction(showName, showID);
                 }
             });
             newShowRow.addView(newShowTV);
@@ -108,7 +99,6 @@ public class TradeShows extends AppCompatActivity
             showSelectionTable.addView(newShowRow);
         }
         ////PUT THE LAST ROW (ADD SHOW BUTTON) IN
-        TableRow addShowButtonRow = new TableRow(tradeShowsActivityContext);
         Button addShowButton = new Button(tradeShowsActivityContext);
         addShowButton.setText(getResources().getString(R.string.add_show_string));
         addShowButton.setOnClickListener(new View.OnClickListener() {
@@ -125,9 +115,10 @@ public class TradeShows extends AppCompatActivity
         startActivity(addShowIntent);
     }
 
-    private void editShowAction(String showName) {
+    private void editShowAction(String showName, String showID) {
         Intent editShowIntent = new Intent(tradeShowsActivityContext, EditShow.class);
         editShowIntent.putExtra("showname", showName);
+        editShowIntent.putExtra("showid", showID);
         startActivity(editShowIntent);
     }
 

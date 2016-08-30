@@ -15,6 +15,8 @@ import com.ashtonmansion.amtradeshowmanagement.R;
 public class EditShow extends AppCompatActivity {
     private Context editShowActivityContext;
     private String showName;
+    private String showID;
+
     //UI FIELDS
     private EditText showNameEditText;
     private EditText showDateEditText;
@@ -30,17 +32,10 @@ public class EditShow extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         editShowActivityContext = this;
+        TextView showNameAndIDHeaderTV = (TextView) findViewById(R.id.edit_show_name_and_id_header);
         showNameEditText = (EditText) findViewById(R.id.edit_show_name_field);
         showDateEditText = (EditText) findViewById(R.id.edit_show_date_field);
         showLocationEditText = (EditText) findViewById(R.id.edit_show_location_field);
@@ -50,8 +45,15 @@ public class EditShow extends AppCompatActivity {
         Bundle extrasBundle = getIntent().getExtras();
         if (extrasBundle != null) {
             showName = (String) extrasBundle.get("showname");
+            showID = (String) extrasBundle.get("showid");
+            String showNameAndIDHeader = showName + " (" + showID + ")";
+            showNameAndIDHeaderTV.setText(showNameAndIDHeader);
             showNameEditText.setText(showName);
-        } else {//TODO HANDLE AS IF IT IS A NEW SHOW??
         }
+    }
+
+    /////////////DATA AND BUTTON ACTION HANDLING
+    public void cancelEditShow(View view) {
+        finish();
     }
 }

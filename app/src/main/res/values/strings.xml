@@ -32,7 +32,7 @@
 
     <!-- TRADE SHOWS / SHOW SETUP STRINGS -->
     <string name="trade_shows_string">Trade Shows</string>
-    <string name="booth_config_show_selection_string">Booth Configuration Show Selection</string>
+    <string name="booth_config_show_selection_string">Booth Configuration - Show Selection</string>
     <string name="trade_shows_edit_btn_string">Edit Show</string>
     <string name="edit_show_header_string">Edit Show</string>
     <string name="add_show_string">Add Trade Show</string>
