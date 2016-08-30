@@ -23,7 +23,7 @@
             <TableRow>
 
                 <TextView
-                    android:text="@string/booth_config_show_selection_string"
+                    android:text="@string/trade_shows_string"
                     android:textSize="@dimen/dimen_36sp" />
             </TableRow>
 

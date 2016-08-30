@@ -5,10 +5,8 @@ import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -21,26 +19,12 @@ public class ConfigureBooths extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        ///////////UI WORK/////////////////////////////////////
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configure_booths);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.configure_booths_toolbar);
-        setSupportActionBar(toolbar);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.configure_booths_drawerlayout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_configure_booths);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        ///////////DATA WORK////////////////////////////////////
-        configureBoothsActivityContext = this;
-        //// TODO: 8/28/2016 start here
+        //// TODO: 8/30/2016  
     }
 
+    ////////////////NAVIGATION METHODS//////////////////////////
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.configure_booths_drawerlayout);
@@ -118,4 +102,3 @@ public class ConfigureBooths extends AppCompatActivity
         return true;
     }
 }
-

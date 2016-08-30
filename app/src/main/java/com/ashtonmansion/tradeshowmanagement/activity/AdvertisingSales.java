@@ -86,7 +86,7 @@ public class AdvertisingSales extends AppCompatActivity
             Intent showSetupIntent = new Intent(advertisingSalesActivityContext, TradeShows.class);
             startActivity(showSetupIntent);
         } else if (id == R.id.nav_config_booths_btn) {
-            Intent configureBoothsIntent = new Intent(advertisingSalesActivityContext, ConfigureBooths.class);
+            Intent configureBoothsIntent = new Intent(advertisingSalesActivityContext, ConfigureBoothsShowSelection.class);
             startActivity(configureBoothsIntent);
         } else if (id == R.id.nav_reports_queries_btn) {
             Intent reportsIntent = new Intent(advertisingSalesActivityContext, Reports.class);

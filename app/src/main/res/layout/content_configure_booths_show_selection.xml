@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.ashtonmansion.tradeshowmanagement.activity.ConfigureBooths"
-    tools:showIn="@layout/activity_configure_booths">
+    tools:context="com.ashtonmansion.tradeshowmanagement.activity.ConfigureBoothsShowSelection"
+    tools:showIn="@layout/activity_configure_booths_show_selection">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,7 +23,7 @@
             <TableRow>
 
                 <TextView
-                    android:text="@string/configure_booths_string"
+                    android:text="@string/configure_booth_show_selection_string"
                     android:textSize="@dimen/dimen_24sp"
                     android:textStyle="bold" />
             </TableRow>
@@ -31,7 +31,7 @@
             <TableRow>
 
                 <TableLayout
-                    android:id="@+id/configure_booths_table"
+                    android:id="@+id/configure_booths_show_selection_table"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:stretchColumns="*" />

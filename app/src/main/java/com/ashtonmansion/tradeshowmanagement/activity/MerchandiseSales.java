@@ -86,7 +86,7 @@ public class MerchandiseSales extends AppCompatActivity
             Intent showSetupIntent = new Intent(merchandiseSalesActivityContext, TradeShows.class);
             startActivity(showSetupIntent);
         } else if (id == R.id.nav_config_booths_btn) {
-            Intent configureBoothsIntent = new Intent(merchandiseSalesActivityContext, ConfigureBooths.class);
+            Intent configureBoothsIntent = new Intent(merchandiseSalesActivityContext, ConfigureBoothsShowSelection.class);
             startActivity(configureBoothsIntent);
         } else if (id == R.id.nav_reports_queries_btn) {
             Intent reportsIntent = new Intent(merchandiseSalesActivityContext, Reports.class);

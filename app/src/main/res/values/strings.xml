@@ -58,9 +58,12 @@
     <string name="add_new_show_btn_string">Add New Show</string>
     <string name="save_show_changes_btn_string">Save Changes</string>
 
-    <!-- MAKE RESERVATION PAGES STRINGS -->
+    <!-- CONFIGURE BOOTHS STRINGS //////////////////////////////-->
+    <string name="configure_booth_show_selection_string">Configure Booths - Select Show</string>
+    <string name="show_selection_button_text">Select Show</string>
+    <string name="configure_booths_string">Configure Booths</string>
+    <!-- MAKE RESERVATION PAGES STRINGS ////////////////////////-->
     <string name="available_booths_header_text">Available Booths</string>
-
     <string name="customer_search_prompt">Search Existing Customers:</string>
     <string name="manual_customer_entry_prompt">-OR- Enter a customer manually below</string>
     <string name="add_new_customer_chkbox_label">Add New Customer?</string>

@@ -86,7 +86,7 @@ public class GeneralTicketSales extends AppCompatActivity
             Intent showSetupIntent = new Intent(generalTicketSalesActivityContext, TradeShows.class);
             startActivity(showSetupIntent);
         } else if (id == R.id.nav_config_booths_btn) {
-            Intent configureBoothsIntent = new Intent(generalTicketSalesActivityContext, ConfigureBooths.class);
+            Intent configureBoothsIntent = new Intent(generalTicketSalesActivityContext, ConfigureBoothsShowSelection.class);
             startActivity(configureBoothsIntent);
         } else if (id == R.id.nav_reports_queries_btn) {
             Intent reportsIntent = new Intent(generalTicketSalesActivityContext, Reports.class);

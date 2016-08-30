@@ -85,7 +85,7 @@ public class Reports extends AppCompatActivity implements NavigationView.OnNavig
             Intent showSetupIntent = new Intent(reportsActivityContext, TradeShows.class);
             startActivity(showSetupIntent);
         } else if (id == R.id.nav_config_booths_btn) {
-            Intent configureBoothsIntent = new Intent(reportsActivityContext, ConfigureBooths.class);
+            Intent configureBoothsIntent = new Intent(reportsActivityContext, ConfigureBoothsShowSelection.class);
             startActivity(configureBoothsIntent);
         } else if (id == R.id.nav_reports_queries_btn) {
             // nothing; activity is already active

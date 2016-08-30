@@ -15,7 +15,7 @@ import android.view.MenuItem;
 import com.ashtonmansion.amtradeshowmanagement.R;
 import com.ashtonmansion.tradeshowmanagement.activity.AdvertisingSales;
 import com.ashtonmansion.tradeshowmanagement.activity.AppSettings;
-import com.ashtonmansion.tradeshowmanagement.activity.ConfigureBooths;
+import com.ashtonmansion.tradeshowmanagement.activity.ConfigureBoothsShowSelection;
 import com.ashtonmansion.tradeshowmanagement.activity.EmailConfirmation;
 import com.ashtonmansion.tradeshowmanagement.activity.GeneralTicketSales;
 import com.ashtonmansion.tradeshowmanagement.activity.MakeReservation;
@@ -91,7 +91,7 @@ public class HomeActivity extends AppCompatActivity
             Intent showSetupIntent = new Intent(homeActivityContext, TradeShows.class);
             startActivity(showSetupIntent);
         } else if (id == R.id.nav_config_booths_btn) {
-            Intent configBoothsIntent = new Intent(homeActivityContext, ConfigureBooths.class);
+            Intent configBoothsIntent = new Intent(homeActivityContext, ConfigureBoothsShowSelection.class);
             startActivity(configBoothsIntent);
         } else if (id == R.id.nav_reports_queries_btn) {
             Intent reportsIntent = new Intent(homeActivityContext, Reports.class);

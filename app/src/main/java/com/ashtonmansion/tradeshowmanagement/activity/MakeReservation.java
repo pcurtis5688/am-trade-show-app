@@ -15,7 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -128,7 +127,7 @@ public class MakeReservation extends AppCompatActivity
             Intent showSetupIntent = new Intent(makeReservationActivityContext, TradeShows.class);
             startActivity(showSetupIntent);
         } else if (id == R.id.nav_config_booths_btn) {
-            Intent configureBoothsIntent = new Intent(makeReservationActivityContext, ConfigureBooths.class);
+            Intent configureBoothsIntent = new Intent(makeReservationActivityContext, ConfigureBoothsShowSelection.class);
             startActivity(configureBoothsIntent);
         } else if (id == R.id.nav_reports_queries_btn) {
             Intent reportsIntent = new Intent(makeReservationActivityContext, Reports.class);
