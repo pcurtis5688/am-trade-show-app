@@ -16,7 +16,11 @@ public class TradeShowDBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_CREATE = "CREATE TABLE " +
             "Shows(_id integer primary key, " +
             "cloverid text not null, " +
-            "showname text not null);";
+            "showname text not null, " +
+            "showdate text not null, " +
+            "showlocation text not null, " +
+            "shownotes text not null, " +
+            "showlocationanddate text not null);";
 
     public TradeShowDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
