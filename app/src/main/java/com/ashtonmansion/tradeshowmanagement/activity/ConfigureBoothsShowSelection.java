@@ -35,13 +35,12 @@ import java.util.List;
 
 public class ConfigureBoothsShowSelection extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    ///////ACTIVITY CONTEXT AND UI VARS////////////
+    ///////ACTIVITY CONTEXT AND UI VARS//////////////////
     private Context configureBoothsShowSelectionActivityContext;
     private TableLayout configureBoothsShowSelectionTable;
-    ///////CLOVER VARS ////////////////////////////
+    ///////CLOVER / DATAVARS ////////////////////////////
     private Account merchantAccount;
     private InventoryConnector inventoryConnector;
-    ///////DATA VARS///////////////////////////////
     private List<Category> showList;
 
     @Override
@@ -58,7 +57,7 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_configure_booths);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_configure_booths_show_selection);
         navigationView.setNavigationItemSelectedListener(this);
 
         ///////////DATA WORK////////////////////////////////////
@@ -72,6 +71,7 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
         if (showList.size() > 0) {
             for (Category show : showList) {
                 final String finalizedShowIDString = show.getId();
+                final String finalizedShowNameString = show.getName();
                 TableRow newShowSelectionRow = new TableRow(configureBoothsShowSelectionActivityContext);
 
                 TextView newShowSelectionTitleTV = new TextView(configureBoothsShowSelectionActivityContext);
@@ -82,7 +82,7 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
                 newShowSelectionButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        configureBoothsSelectShowAction(finalizedShowIDString);
+                        configureBoothsSelectShowAction(finalizedShowIDString, finalizedShowNameString);
                     }
                 });
 
@@ -93,8 +93,11 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
         }
     }
 
-    private void configureBoothsSelectShowAction(String showID) {
-        //// TODO: 8/30/2016
+    private void configureBoothsSelectShowAction(String showID, String showName) {
+        Intent configureBoothsForShowIntent = new Intent(configureBoothsShowSelectionActivityContext, ConfigureBooths.class);
+        configureBoothsForShowIntent.putExtra("showid", showID);
+        configureBoothsForShowIntent.putExtra("showname", showName);
+        startActivity(configureBoothsForShowIntent);
     }
 
     ////////////////NAVIGATION METHODS//////////////////////////

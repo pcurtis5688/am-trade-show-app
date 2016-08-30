@@ -30,6 +30,13 @@
 
             <TableRow>
 
+                <TextView
+                    android:id="@+id/configure_booths_show_name_header_tv"
+                    android:textSize="@dimen/dimen_16sp" />
+            </TableRow>
+
+            <TableRow>
+
                 <TableLayout
                     android:id="@+id/configure_booths_table"
                     android:layout_width="match_parent"

@@ -45,6 +45,15 @@
                 android:value="com.ashtonmansion.tradeshowmanagement.HomeActivity" />
         </activity>
         <activity
+            android:name="com.ashtonmansion.tradeshowmanagement.activity.ConfigureBooths"
+            android:label="@string/nav_drawer_config_booths_text"
+            android:parentActivityName="com.ashtonmansion.tradeshowmanagement.activity.ConfigureBoothsShowSelection"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ashtonmansion.tradeshowmanagement.activity.ConfigureBoothsShowSelection" />
+        </activity>
+        <activity
             android:name="com.ashtonmansion.tradeshowmanagement.activity.Reports"
             android:label="@string/nav_drawer_reports_queries_text"
             android:parentActivityName="com.ashtonmansion.tradeshowmanagement.HomeActivity"
@@ -137,7 +146,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ashtonmansion.tradeshowmanagement.activity.TradeShows" />
         </activity>
-        <activity android:name="com.ashtonmansion.tradeshowmanagement.activity.ConfigureBooths"></activity>
     </application>
 
 </manifest>

@@ -9,12 +9,12 @@
     tools:openDrawer="start">
 
     <include
-        layout="@layout/app_bar_configure_booths"
+        layout="@layout/app_bar_configure_booths_show_selection"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view_configure_booths"
+        android:id="@+id/nav_view_configure_booths_show_selection"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
