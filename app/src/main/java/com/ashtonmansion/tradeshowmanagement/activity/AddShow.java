@@ -21,8 +21,13 @@ import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.ServiceException;
+import com.clover.sdk.v3.base.Reference;
 import com.clover.sdk.v3.inventory.Category;
 import com.clover.sdk.v3.inventory.InventoryConnector;
+import com.clover.sdk.v3.inventory.Item;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AddShow extends AppCompatActivity {
     private Context addShowActivityContext;
@@ -118,11 +123,14 @@ public class AddShow extends AppCompatActivity {
                 Category newShowCategory = new Category();
                 newShowCategory.setSortOrder(1);
                 newShowCategory.setName(newShowLocationAndDateStringForCategory);
+                List<Reference> fauxItemRefList = new ArrayList<>();
+                newShowCategory.setItems(fauxItemRefList);
                 returnedCategory = inventoryConnector.createCategory(newShowCategory);
 
                 doLocalInsert(returnedCategory);
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
+                e1.printStackTrace();
             } finally {
                 inventoryConnector.disconnect();
             }
