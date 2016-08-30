@@ -55,6 +55,7 @@ public class TradeShowDB {
     }
 
     public boolean deleteSingleShowByCloverID(String showID) {
-        return tradeShowDatabase.delete(SHOW_TABLE, SHOW_CLOVERID + "=" + showID, null) > 0;
+        String showIDwithTicks = "'" + showID + "'";
+        return tradeShowDatabase.delete(SHOW_TABLE, SHOW_CLOVERID + "=" + showIDwithTicks, null) > 0;
     }
 }

@@ -70,23 +70,23 @@ public class EditShow extends AppCompatActivity {
             showID = (String) extrasBundle.get("showid");
             String showNameAndIDHeader = showName + " (" + showID + ")";
             showNameAndIDHeaderTV.setText(showNameAndIDHeader);
-            showNameEditText.setText(showName);
         }
 
         getLocalShowDataAndPopulateFields(showID);
     }
 
     private void getLocalShowDataAndPopulateFields(String showID) {
-        //// TODO: 8/30/2016
         TradeShowDB database = new TradeShowDB(editShowActivityContext);
         Cursor dbShowCursor = database.selectSingleShowByCloverID(showID);
+        showNameEditText.setText(dbShowCursor.getString(2));
         showDateEditText.setText(dbShowCursor.getString(3));
         showLocationEditText.setText(dbShowCursor.getString(4));
         showNotesEditText.setText(dbShowCursor.getString(5));
     }
 
     public void deleteShowAction(View view) {
-
+        DeleteShowTask deleteShowTask = new DeleteShowTask();
+        deleteShowTask.execute();
     }
 
     public void cancelEditShow(View view) {

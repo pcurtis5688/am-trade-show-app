@@ -82,7 +82,8 @@ public class AddShow extends AppCompatActivity {
         AddShowCategoryTask addShowTask = new AddShowCategoryTask();
         addShowTask.execute();
     }
-    private void doLocalInsert(Category returnedCategory) {
+
+    private void doLocalInsert(String userTypedShowName, Category returnedCategory) {
         //GET THE CLOVER ID FOR LOCAL INSERT
         String cloverCategoryID = returnedCategory.getId();
         //DO THE LOCAL INSERT
@@ -127,7 +128,7 @@ public class AddShow extends AppCompatActivity {
                 newShowCategory.setItems(fauxItemRefList);
                 returnedCategory = inventoryConnector.createCategory(newShowCategory);
 
-                doLocalInsert(returnedCategory);
+                doLocalInsert(newShowNameString, returnedCategory);
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
                 e1.printStackTrace();

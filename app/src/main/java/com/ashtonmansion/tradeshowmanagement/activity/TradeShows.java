@@ -65,10 +65,14 @@ public class TradeShows extends AppCompatActivity
         merchantAccount = CloverAccount.getAccount(tradeShowsActivityContext);
         inventoryConnector = new InventoryConnector(tradeShowsActivityContext, merchantAccount, null);
         showSelectionTable = (TableLayout) findViewById(R.id.trade_show_selection_table);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         fetchData();
     }
-
     ////////////DATA HANDLING METHODS///////////////////////////
     private void fetchData() {
         GetShowListTask getShowListTask = new GetShowListTask();
@@ -76,6 +80,7 @@ public class TradeShows extends AppCompatActivity
     }
 
     private void populateTable() {
+        showSelectionTable.removeAllViews();
         for (Category show : showList) {
             /////////////
             final String showName = show.getName();
