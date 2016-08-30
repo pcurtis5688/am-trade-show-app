@@ -27,8 +27,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.ashtonmansion.tradeshowmanagement.activity.ShowSetup"
-            android:label="@string/nav_drawer_show_setup_text"
+            android:name="com.ashtonmansion.tradeshowmanagement.activity.TradeShows"
+            android:label="@string/trade_shows_string"
             android:parentActivityName="com.ashtonmansion.tradeshowmanagement.HomeActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
@@ -119,6 +119,14 @@
         <activity
             android:name="com.ashtonmansion.tradeshowmanagement.activity.ViewBoothDetail"
             android:parentActivityName="com.ashtonmansion.tradeshowmanagement.activity.MakeReservation" />
+        <activity
+            android:name="com.ashtonmansion.tradeshowmanagement.activity.EditShow"
+            android:label="@string/title_activity_edit_show"
+            android:parentActivityName="com.ashtonmansion.tradeshowmanagement.HomeActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ashtonmansion.tradeshowmanagement.HomeActivity" />
+        </activity>
     </application>
-
 </manifest>

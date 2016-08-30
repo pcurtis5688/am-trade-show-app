@@ -83,7 +83,7 @@ public class ConfigureBooths extends AppCompatActivity
             Intent homeActivityIntent = new Intent(configureBoothsActivityContext, HomeActivity.class);
             startActivity(homeActivityIntent);
         } else if (id == R.id.nav_show_setup_btn) {
-            Intent showSetupIntent = new Intent(configureBoothsActivityContext, ShowSetup.class);
+            Intent showSetupIntent = new Intent(configureBoothsActivityContext, TradeShows.class);
             startActivity(showSetupIntent);
         } else if (id == R.id.nav_config_booths_btn) {
             // nothing ; already in activity

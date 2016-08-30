@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.ashtonmansion.tradeshowmanagement.activity.ShowSetup"
-    tools:showIn="@layout/activity_show_setup">
+    tools:context="com.ashtonmansion.tradeshowmanagement.activity.TradeShows"
+    tools:showIn="@layout/activity_trade_shows">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,16 +17,24 @@
 
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
 
             <TableRow>
 
                 <TextView
-                    android:text="Show Setup"
-                    android:textSize="@dimen/dimen_24sp"
-                    android:textStyle="bold" />
+                    android:text="@string/booth_config_show_selection_string"
+                    android:textSize="@dimen/dimen_36sp" />
             </TableRow>
 
+            <TableRow>
+
+                <TableLayout
+                    android:id="@+id/trade_show_selection_table"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:stretchColumns="*" />
+            </TableRow>
         </TableLayout>
 
     </LinearLayout>

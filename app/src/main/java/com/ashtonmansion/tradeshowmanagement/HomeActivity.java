@@ -3,7 +3,6 @@ package com.ashtonmansion.tradeshowmanagement;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -22,7 +21,7 @@ import com.ashtonmansion.tradeshowmanagement.activity.GeneralTicketSales;
 import com.ashtonmansion.tradeshowmanagement.activity.MakeReservation;
 import com.ashtonmansion.tradeshowmanagement.activity.MerchandiseSales;
 import com.ashtonmansion.tradeshowmanagement.activity.Reports;
-import com.ashtonmansion.tradeshowmanagement.activity.ShowSetup;
+import com.ashtonmansion.tradeshowmanagement.activity.TradeShows;
 import com.ashtonmansion.tradeshowmanagement.activity.SpecialEventSales;
 
 public class HomeActivity extends AppCompatActivity
@@ -48,6 +47,7 @@ public class HomeActivity extends AppCompatActivity
         //////////DATA WORK
         homeActivityContext = this;
         //// TODO: 8/28/2016 start here
+
     }
 
     @Override
@@ -88,7 +88,7 @@ public class HomeActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_show_setup_btn) {
-            Intent showSetupIntent = new Intent(homeActivityContext, ShowSetup.class);
+            Intent showSetupIntent = new Intent(homeActivityContext, TradeShows.class);
             startActivity(showSetupIntent);
         } else if (id == R.id.nav_config_booths_btn) {
             Intent configBoothsIntent = new Intent(homeActivityContext, ConfigureBooths.class);

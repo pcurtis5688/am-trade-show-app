@@ -26,15 +26,22 @@ import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.ServiceException;
+import com.clover.sdk.v3.inventory.Category;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MakeReservation extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    List<Item> boothsAssignedToTradeShow;
+    List<Category> locatedShowCategories;
     private Context makeReservationActivityContext;
     private List<Item> boothList;
+    private List<String> showList;
+    private List<Item> itemsWithCategories;
+
     private InventoryConnector inventoryConnector;
     private Account merchantAccount;
     private TableLayout boothTable;
@@ -118,7 +125,7 @@ public class MakeReservation extends AppCompatActivity
             Intent homeIntent = new Intent(makeReservationActivityContext, HomeActivity.class);
             startActivity(homeIntent);
         } else if (id == R.id.nav_show_setup_btn) {
-            Intent showSetupIntent = new Intent(makeReservationActivityContext, ShowSetup.class);
+            Intent showSetupIntent = new Intent(makeReservationActivityContext, TradeShows.class);
             startActivity(showSetupIntent);
         } else if (id == R.id.nav_config_booths_btn) {
             Intent configureBoothsIntent = new Intent(makeReservationActivityContext, ConfigureBooths.class);
@@ -158,6 +165,30 @@ public class MakeReservation extends AppCompatActivity
         protected Void doInBackground(Void... params) {
             try {
                 boothList = inventoryConnector.getItems();
+                showList = new ArrayList<>();
+                for (Item booth : boothList) {
+                    if (booth.getCategories() != null) {
+                        List<Category> categoryList = booth.getCategories();
+                        for (Category category : categoryList) {
+                            showList.add(category.getName());
+                        }
+                    }
+
+                }
+                itemsWithCategories = inventoryConnector.getItemsWithCategories();
+                List<String> realCats = new ArrayList<>();
+                boothsAssignedToTradeShow = new ArrayList<>();
+                locatedShowCategories = new ArrayList<>();
+                for (Item item : itemsWithCategories) {
+                    List<Category> itemsCats = item.getCategories();
+                    for (Category category : itemsCats) {
+                        if (!category.getName().equalsIgnoreCase("") && category != null) {
+                            locatedShowCategories.add(category);
+                            realCats.add(category.getName());
+                            boothsAssignedToTradeShow.add(item);
+                        }
+                    }
+                }
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
             } finally {
@@ -169,22 +200,41 @@ public class MakeReservation extends AppCompatActivity
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            for (final Item booth : boothList) {
-                TableRow boothRow = new TableRow(makeReservationActivityContext);
-                TextView boothIDTV = new TextView(makeReservationActivityContext);
-                TextView boothName = new TextView(makeReservationActivityContext);
-                boothIDTV.setText(booth.getId());
-                boothName.setText(booth.getName());
-                boothRow.addView(boothIDTV);
-                boothRow.addView(boothName);
-                boothRow.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        viewBoothDetail(booth);
-                    }
-                });
-                boothTable.addView(boothRow);
+            List<String> categoryStringList = new ArrayList<>();
+
+            for (Item booth : itemsWithCategories) {
+                for (Category itemCategory : booth.getCategories()) {
+                    categoryStringList.add(itemCategory.getName());
+                }
+            }
+
+            for (String string : categoryStringList) {
+                TextView categoryTV = new TextView(makeReservationActivityContext);
+                TableRow newCatRow = new TableRow(makeReservationActivityContext);
+                categoryTV.setText(string);
+                newCatRow.addView(categoryTV);
+
+                boothTable.addView(newCatRow);
             }
         }
+
+//                            TableRow boothRow = new TableRow(makeReservationActivityContext);
+//                            TextView boothIDTV = new TextView(makeReservationActivityContext);
+//                            TextView boothName = new TextView(makeReservationActivityContext);
+//                            boothIDTV.setText(booth.getId());
+//                            boothName.setText(booth.getName());
+//                            boothRow.addView(boothIDTV);
+//                            boothRow.addView(boothName);
+//                            boothRow.setOnClickListener(new View.OnClickListener() {
+//                                @Override
+//                                public void onClick(View view) {
+//                                    viewBoothDetail(booth);
+//                                }
+//                            });
+//                            boothTable.addView(boothRow);
+
+
     }
 }
+
+

@@ -83,7 +83,7 @@ public class SpecialEventSales extends AppCompatActivity
             Intent homeActivityIntent = new Intent(specialEventSalesActivityContext, HomeActivity.class);
             startActivity(homeActivityIntent);
         } else if (id == R.id.nav_show_setup_btn) {
-            Intent showSetupIntent = new Intent(specialEventSalesActivityContext, ShowSetup.class);
+            Intent showSetupIntent = new Intent(specialEventSalesActivityContext, TradeShows.class);
             startActivity(showSetupIntent);
         } else if (id == R.id.nav_config_booths_btn) {
             Intent configureBoothsIntent = new Intent(specialEventSalesActivityContext, ConfigureBooths.class);

@@ -22,7 +22,7 @@
             <TableRow>
 
                 <TextView
-                    android:text="Application Settings"
+                    android:text="@string/application_settings_string"
                     android:textSize="@dimen/dimen_24sp"
                     android:textStyle="bold" />
             </TableRow>

@@ -83,7 +83,7 @@ public class AppSettings extends AppCompatActivity
             Intent homeIntent = new Intent(appSettingsActivityContext, HomeActivity.class);
             startActivity(homeIntent);
         } else if (id == R.id.nav_show_setup_btn) {
-            Intent showSetupIntent = new Intent(appSettingsActivityContext, ShowSetup.class);
+            Intent showSetupIntent = new Intent(appSettingsActivityContext, TradeShows.class);
             startActivity(showSetupIntent);
         } else if (id == R.id.nav_config_booths_btn) {
             Intent configureBoothsIntent = new Intent(appSettingsActivityContext, ConfigureBooths.class);

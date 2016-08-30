@@ -30,6 +30,22 @@
     <string name="email_reservations_confirmations_string">Email Reservation Confirmations</string>
     <string name="search_reservations_string">Search Reservations... </string>
 
+    <!-- TRADE SHOWS / SHOW SETUP STRINGS -->
+    <string name="trade_shows_string">Trade Shows</string>
+    <string name="booth_config_show_selection_string">Booth Configuration Show Selection</string>
+    <string name="trade_shows_edit_btn_string">Edit Show</string>
+    <string name="add_edit_show_header_string">Add / Edit Show</string>
+    <string name="edit_show_name_string">Name:</string>
+    <string name="edit_show_name_hint">[Name]</string>
+    <string name="edit_show_date_string">Date:</string>
+    <string name="edit_show_date_hint">[Date]</string>
+    <string name="edit_show_location_string">Location:</string>
+    <string name="edit_show_location_hint">[Location]</string>
+    <string name="edit_show_notes_string">Notes:</string>
+    <string name="edit_show_notes_hint">[Notes]</string>
+    <string name="delete_show_btn_string">Delete Show</string>
+    <string name="cancel_show_edit_string">Cancel</string>
+    <string name="add_or_save_show_string">Add Show / Save Changes</string>
 
     <!-- MAKE RESERVATION PAGES STRINGS -->
     <string name="available_booths_header_text">Available Booths</string>
@@ -115,4 +131,9 @@
     <string name="finalize_reservation_btn_text">Finalize Reservation</string>
     <string name="finalized_reservation_confirmation">Reservation Complete</string>
     <string name="title_activity_app_settings">Application Settings</string>
+
+
+    <!--APPLICATION SETTINGS STRINGS -->
+    <string name="application_settings_string">Application Settings</string>
+    <string name="title_activity_edit_show">Add / Edit Show</string>
 </resources>
