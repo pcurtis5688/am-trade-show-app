@@ -18,6 +18,7 @@
         <TextView
             android:id="@+id/edit_booth_header"
             android:layout_span="2"
+            android:textAlignment="center"
             android:textSize="@dimen/dimen_24sp"
             android:textStyle="bold" />
     </TableRow>
@@ -26,63 +27,76 @@
 
         <TextView
             android:text="@string/edit_booth_number_prompt"
+            android:textAlignment="center"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/edit_booth_number_field"
-            android:hint="@string/edit_booth_number_hint" />
+            android:hint="@string/edit_booth_number_hint"
+            android:textAlignment="center" />
     </TableRow>
 
     <TableRow>
 
         <TextView
             android:text="@string/edit_booth_price_prompt"
+            android:textAlignment="center"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/edit_booth_price_field"
-            android:hint="@string/edit_booth_price_hint" />
+            android:hint="@string/edit_booth_price_hint"
+            android:inputType="numberDecimal"
+            android:textAlignment="center" />
     </TableRow>
 
     <TableRow>
 
         <TextView
             android:text="@string/edit_booth_size_prompt"
+            android:textAlignment="center"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/edit_booth_size_field"
-            android:hint="@string/edit_booth_size_hint" />
+            android:hint="@string/edit_booth_size_hint"
+            android:textAlignment="center" />
     </TableRow>
 
     <TableRow>
 
         <TextView
             android:text="@string/edit_booth_area_prompt"
+            android:textAlignment="center"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/edit_booth_area_field"
-            android:hint="@string/edit_booth_area_hint" />
+            android:hint="@string/edit_booth_area_hint"
+            android:textAlignment="center" />
     </TableRow>
 
     <TableRow>
 
         <TextView
             android:text="@string/edit_booth_category_prompt"
+            android:textAlignment="center"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/edit_booth_category_field"
-            android:hint="@string/edit_booth_category_hint" />
+            android:hint="@string/edit_booth_category_hint"
+            android:textAlignment="center" />
     </TableRow>
 
     <TableRow>
 
         <Button
             android:id="@+id/edit_booth_save_changes_btn"
-            android:layout_column="2"
+            android:layout_marginTop="@dimen/dimen_50dp"
+            android:layout_span="2"
             android:onClick="saveBoothChangesAction"
-            android:text="@string/edit_booth_save_changes_text" />
+            android:text="@string/edit_booth_save_changes_text"
+            android:textAlignment="center" />
     </TableRow>
 </TableLayout>

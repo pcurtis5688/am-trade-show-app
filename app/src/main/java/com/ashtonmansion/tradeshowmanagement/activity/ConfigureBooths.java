@@ -35,6 +35,7 @@ import com.clover.sdk.v3.inventory.Item;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Filter;
 
 public class ConfigureBooths extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -74,7 +75,7 @@ public class ConfigureBooths extends AppCompatActivity
         if (extrasBundle != null) {
             showID = (String) extrasBundle.get("showid");
             showName = (String) extrasBundle.get("showname");
-            configureBoothsShowNameHeader = "Configure Booths - " + showName + "(" + showID + ")";
+            configureBoothsShowNameHeader = "Configure Booths - " + showName;
             configureBoothsForShowHeader = (TextView) findViewById(R.id.show_booths_header);
             configureBoothsForShowHeader.setText(configureBoothsShowNameHeader);
         }
@@ -154,8 +155,11 @@ public class ConfigureBooths extends AppCompatActivity
     }
 
     private void filterBoothsAction() {
-        //// TODO: 8/31/2016
-    } //// TODO: 8/31/2016
+        Intent filterBoothsIntent = new Intent(configureBoothsActivityContext, FilterBooths.class);
+        filterBoothsIntent.putExtra("showid", showID);
+        startActivity(filterBoothsIntent);
+    }
+
     ////////////////NAVIGATION METHODS//////////////////////////
     @Override
     public void onBackPressed() {

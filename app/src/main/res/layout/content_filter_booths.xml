@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.ashtonmansion.tradeshowmanagement.activity.FilterBooths"
+    tools:showIn="@layout/activity_filter_booths">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingEnd="@dimen/dimen_75dp"
+        android:paddingStart="@dimen/dimen_75dp"
+        android:paddingTop="@dimen/dimen_25dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/booth_filter_page_header"
+            android:textAlignment="center"
+            android:textSize="@dimen/dimen_24sp"
+            android:textStyle="bold" />
+
+        <TableLayout
+            android:id="@+id/booth_filter_table"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
+
+            <TableRow>
+
+                <TextView
+                    android:text="@string/booth_filters_number_prompt"
+                    android:textAlignment="center" />
+
+                <EditText
+                    android:id="@+id/booth_filter_boothnumber_field"
+                    android:textAlignment="center" />
+
+                <Button
+                    android:id="@+id/clear_booth_number_filter_btn"
+                    android:textAlignment="center" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:text="@string/booth_filters_price_prompt"
+                    android:textAlignment="center" />
+
+                <EditText
+                    android:id="@+id/booth_filter_min_price_field"
+                    android:inputType="number"
+                    android:textAlignment="center" />
+
+                <EditText
+                    android:id="@+id/booth_filter_max_price_field"
+                    android:inputType="number"
+                    android:textAlignment="center" />
+
+                <Button
+                    android:id="@+id/clear_booth_price_filter_btn"
+                    android:textAlignment="center" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:text="@string/booth_filters_size_prompt"
+                    android:textAlignment="center" />
+
+                <Spinner
+                    android:id="@+id/booth_filter_size_dropdown"
+                    android:spinnerMode="dropdown"
+                    android:textAlignment="center" />
+
+                <Button
+                    android:id="@+id/clear_booth_size_filter_btn"
+                    android:textAlignment="center" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:text="@string/booth_filters_area_prompt"
+                    android:textAlignment="center" />
+
+                <Spinner
+                    android:id="@+id/booth_filter_area_dropdown"
+                    android:spinnerMode="dropdown"
+                    android:textAlignment="center" />
+
+                <Button
+                    android:id="@+id/clear_booth_area_filter_btn"
+                    android:textAlignment="center" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:text="@string/booth_filters_categorytype_prompt"
+                    android:textAlignment="center" />
+
+                <Spinner
+                    android:id="@+id/booth_filter_category_dropdown"
+                    android:spinnerMode="dropdown"
+                    android:textAlignment="center" />
+
+                <Button
+                    android:id="@+id/clear_booth_category_filter_btn"
+                    android:textAlignment="center" />
+            </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TableRow>
+
+                <TextView android:text="PERSISTING BOOTH TABLE? OR SUBMIT" />
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

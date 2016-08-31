@@ -155,6 +155,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ashtonmansion.tradeshowmanagement.activity.ConfigureBooths" />
         </activity>
+        <activity
+            android:name="com.ashtonmansion.tradeshowmanagement.activity.FilterBooths"
+            android:label="@string/title_activity_filter_booths"
+            android:parentActivityName="com.ashtonmansion.tradeshowmanagement.activity.ConfigureBooths"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ashtonmansion.tradeshowmanagement.activity.ConfigureBooths" />
+        </activity>
     </application>
 
 </manifest>
