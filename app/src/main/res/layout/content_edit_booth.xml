@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:stretchColumns="*"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.ashtonmansion.tradeshowmanagement.activity.EditBooth"
+    tools:showIn="@layout/activity_edit_booth">
+
+    <TableRow>
+
+        <TextView
+            android:id="@+id/edit_booth_header"
+            android:layout_span="2"
+            android:textSize="@dimen/dimen_24sp"
+            android:textStyle="bold" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            android:text="@string/edit_booth_number_prompt"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edit_booth_number_field"
+            android:hint="@string/edit_booth_number_hint" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            android:text="@string/edit_booth_price_prompt"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edit_booth_price_field"
+            android:hint="@string/edit_booth_price_hint" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            android:text="@string/edit_booth_size_prompt"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edit_booth_size_field"
+            android:hint="@string/edit_booth_size_hint" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            android:text="@string/edit_booth_area_prompt"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edit_booth_area_field"
+            android:hint="@string/edit_booth_area_hint" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            android:text="@string/edit_booth_category_prompt"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edit_booth_category_field"
+            android:hint="@string/edit_booth_category_hint" />
+    </TableRow>
+
+    <TableRow>
+
+        <Button
+            android:id="@+id/edit_booth_save_changes_btn"
+            android:layout_column="2"
+            android:onClick="saveBoothChangesAction"
+            android:text="@string/edit_booth_save_changes_text" />
+    </TableRow>
+</TableLayout>

@@ -69,6 +69,21 @@
     <string name="configure_show_booths_price_header">Price</string>
     <string name="configure_show_booths_filter_btn_text">Filter</string>
     <string name="configure_show_booths_edit_booth_btn_text">Edit Booth</string>
+
+    <!-- EDIT BOOTH STRINGS /////////////////////////////////////-->
+    <string name="edit_booth_number_prompt">Booth No.:</string>
+    <string name="edit_booth_price_prompt">Price:</string>
+    <string name="edit_booth_size_prompt">Size:</string>
+    <string name="edit_booth_area_prompt">Area:</string>
+    <string name="edit_booth_category_prompt">Category:</string>
+    <string name="edit_booth_number_hint">[Booth Number]</string>
+    <string name="edit_booth_price_hint">[Price]</string>
+    <string name="edit_booth_size_hint">[Size]</string>
+    <string name="edit_booth_area_hint">[Area]</string>
+    <string name="edit_booth_category_hint">[Category]</string>
+    <string name="edit_booth_save_changes_text">Save Booth Changes</string>
+
+
     <!-- MAKE RESERVATION PAGES STRINGS ////////////////////////-->
     <string name="available_booths_header_text">Available Booths</string>
     <string name="customer_search_prompt">Search Existing Customers:</string>
@@ -158,4 +173,5 @@
     <string name="application_settings_string">Application Settings</string>
     <string name="title_activity_add_show">Add New Trade Show</string>
     <string name="title_activity_edit_show">Edit Trade Show</string>
+    <string name="title_activity_edit_booth">EditBooth</string>
 </resources>

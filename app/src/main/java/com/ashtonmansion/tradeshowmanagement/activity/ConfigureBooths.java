@@ -89,7 +89,7 @@ public class ConfigureBooths extends AppCompatActivity
         if (boothList != null && boothList.size() > 0) {
             for (Item booth : boothList) {
                 TableRow newBoothRow = new TableRow(configureBoothsActivityContext);
-                final String finalizedBoothId = booth.getId();
+                final Item finalizedBoothItem = booth;
                 TextView boothNumberTv = new TextView(configureBoothsActivityContext);
                 TextView boothSizeTv = new TextView(configureBoothsActivityContext);
                 TextView boothCustomerTv = new TextView(configureBoothsActivityContext);
@@ -104,7 +104,7 @@ public class ConfigureBooths extends AppCompatActivity
                 editBoothButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        editBoothAction(finalizedBoothId);
+                        editBoothAction(finalizedBoothItem);
                     }
                 });
 
@@ -135,7 +135,7 @@ public class ConfigureBooths extends AppCompatActivity
         boothFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                beginBoothFilterAction();
+                filterBoothsAction();
             }
         });
 
@@ -147,14 +147,15 @@ public class ConfigureBooths extends AppCompatActivity
         boothsForShowTable.addView(boothsForShowTableHeaderRow);
     }
 
-    private void beginBoothFilterAction() {
-        //// TODO: 8/31/2016
+    private void editBoothAction(Item booth) {
+        Intent editBoothIntent = new Intent(configureBoothsActivityContext, EditBooth.class);
+        editBoothIntent.putExtra("booth", booth);
+        startActivity(editBoothIntent);
     }
 
-    private void editBoothAction(String boothId) {
+    private void filterBoothsAction() {
         //// TODO: 8/31/2016
-    }
-
+    } //// TODO: 8/31/2016
     ////////////////NAVIGATION METHODS//////////////////////////
     @Override
     public void onBackPressed() {
