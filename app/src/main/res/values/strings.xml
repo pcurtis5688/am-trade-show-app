@@ -62,6 +62,13 @@
     <string name="configure_booth_show_selection_string">Configure Booths - Select Show</string>
     <string name="show_selection_button_text">Select Show</string>
     <string name="configure_booths_string">Configure Booths</string>
+
+    <string name="configure_show_booths_number_header">Booth No.</string>
+    <string name="configure_show_booths_size_header">Size</string>
+    <string name="configure_show_booths_customer_header">Customer</string>
+    <string name="configure_show_booths_price_header">Price</string>
+    <string name="configure_show_booths_filter_btn_text">Filter</string>
+    <string name="configure_show_booths_edit_booth_btn_text">Edit Booth</string>
     <!-- MAKE RESERVATION PAGES STRINGS ////////////////////////-->
     <string name="available_booths_header_text">Available Booths</string>
     <string name="customer_search_prompt">Search Existing Customers:</string>

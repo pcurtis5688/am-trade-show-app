@@ -23,22 +23,16 @@
             <TableRow>
 
                 <TextView
-                    android:text="@string/configure_booths_string"
+                    android:id="@+id/show_booths_header"
+                    android:textAlignment="center"
                     android:textSize="@dimen/dimen_24sp"
                     android:textStyle="bold" />
             </TableRow>
 
             <TableRow>
 
-                <TextView
-                    android:id="@+id/configure_booths_show_name_header_tv"
-                    android:textSize="@dimen/dimen_16sp" />
-            </TableRow>
-
-            <TableRow>
-
                 <TableLayout
-                    android:id="@+id/configure_booths_table"
+                    android:id="@+id/booths_for_show_table"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:stretchColumns="*" />
