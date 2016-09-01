@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -30,7 +31,6 @@ import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.ServiceException;
-import com.clover.sdk.v1.printer.ReceiptContract;
 import com.clover.sdk.v3.base.Reference;
 import com.clover.sdk.v3.inventory.Category;
 import com.clover.sdk.v3.inventory.InventoryConnector;
@@ -44,6 +44,7 @@ public class BoothReservation extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     /////////////ACTIVITY AND UI VARS
     private Context boothReservationActivityContext;
+    private TableRow rowContainerForTables;
     private TableLayout showSelectionTable;
     private TableLayout boothAvailabilityTable;
     /////////////DATA VARS
@@ -54,6 +55,7 @@ public class BoothReservation extends AppCompatActivity
     private Category chosenShowCategoryObj;
     private List<Item> boothListWithCategories;
     private List<Item> filteredBoothList;
+    private Item selectedBooth;
     /////////////CLOVER VARS
     private Account merchantAccount;
     private InventoryConnector inventoryConnector;
@@ -120,11 +122,13 @@ public class BoothReservation extends AppCompatActivity
 
     private void createBoothListTable() {
         //////////////CLEAR THE SHOW SELECTION TABLE AND ADD BOOTH SELECTION
-        TableRow rowContainerForTable = (TableRow) findViewById(R.id.row_container_for_active_table);
-        rowContainerForTable.removeAllViews();
+        rowContainerForTables = (TableRow) findViewById(R.id.row_container_for_active_table);
+        rowContainerForTables.removeAllViews();
         //////////////
         boothAvailabilityTable = new TableLayout(boothReservationActivityContext);
-        //boothAvailabilityTable.setStretchAllColumns(true);
+        boothAvailabilityTable.setStretchAllColumns(true);
+        boothAvailabilityTable.setMinimumWidth(TableLayout.LayoutParams.MATCH_PARENT);
+        boothAvailabilityTable.setMinimumHeight(TableLayout.LayoutParams.WRAP_CONTENT);
 
         //create header row?
         for (Item showBooth : filteredBoothList) {
@@ -140,7 +144,8 @@ public class BoothReservation extends AppCompatActivity
             selectBoothActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    selectBoothAction(finalizedBoothObject);
+                    selectedBooth = finalizedBoothObject;
+
                 }
             });
 
@@ -149,13 +154,20 @@ public class BoothReservation extends AppCompatActivity
             boothAvailabilityTable.addView(newBoothRow);
         }
 
-        rowContainerForTable.addView(boothAvailabilityTable);
+        rowContainerForTables.addView(boothAvailabilityTable);
     }
 
-    private void selectBoothAction(Item selectedBooth) {
-        //// TODO: 9/1/2016
-        Toast testToast = Toast.makeText(boothReservationActivityContext, "" + selectedBooth.getName(), Toast.LENGTH_SHORT);
-        testToast.show();
+    private void selectBoothAction() {
+        ////EMPTY THE CONTENT ROW
+        rowContainerForTables.removeAllViews();
+        ////CREATE NEW TABLE FOR BOOTH DETAIL OPTIONS AND ADD TO LAYOUT
+        TableLayout boothDetailOptionsTable = new TableLayout(boothReservationActivityContext);
+        TextView boothElectricChkBoxPrompt = new TextView(boothReservationActivityContext);
+        TextView internetSpeedPromptTv = new TextView(boothReservationActivityContext);
+        CheckBox boothElectricChkBox = new CheckBox(boothReservationActivityContext);
+        CheckBox boothInternetChkBox = new CheckBox(boothReservationActivityContext);
+
+
     }
 
     ////////////////NAVIGATION METHODS//////////////////////////

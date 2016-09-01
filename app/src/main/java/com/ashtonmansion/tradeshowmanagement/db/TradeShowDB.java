@@ -22,7 +22,6 @@ public class TradeShowDB {
     public static final String BOOTH_TABLE = "Booths";
     public static final String BOOTH_CLOVERID = "cloverid";
     public static final String BOOTH_NAME = "boothname";
-    public static final String BOOTH_SKU_NUMBER = "boothskunumber";
     public static final String BOOTH_PRICE = "boothprice";
     public static final String BOOTH_SIZE = "boothsize";
     public static final String BOOTH_AREA = "bootharea";
@@ -42,14 +41,12 @@ public class TradeShowDB {
         return cursor.moveToFirst();
     }
 
-
     ////////////// BOOTH DATABASE METHODS//////////////////////////
-    public boolean createBoothItem(String cloverId, String boothName, String boothSKUNumber,
-                                   long boothPrice, String boothSize, String boothArea, String boothCategory) {
+    public boolean createBoothItem(String cloverId, String boothName, long boothPrice,
+                                   String boothSize, String boothArea, String boothCategory) {
         ContentValues boothValues = new ContentValues();
         boothValues.put(BOOTH_CLOVERID, cloverId);
         boothValues.put(BOOTH_NAME, boothName);
-        boothValues.put(BOOTH_SKU_NUMBER, boothSKUNumber);
         boothValues.put(BOOTH_PRICE, boothPrice);
         boothValues.put(BOOTH_SIZE, boothSize);
         boothValues.put(BOOTH_AREA, boothArea);
@@ -63,7 +60,6 @@ public class TradeShowDB {
         ContentValues boothValues = new ContentValues();
         boothValues.put(BOOTH_CLOVERID, cloverId);
         boothValues.put(BOOTH_NAME, boothName);
-        boothValues.put(BOOTH_SKU_NUMBER, boothSKUNumber);
         boothValues.put(BOOTH_PRICE, boothPrice);
         boothValues.put(BOOTH_SIZE, boothSize);
         boothValues.put(BOOTH_AREA, boothArea);

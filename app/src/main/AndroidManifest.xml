@@ -173,15 +173,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ashtonmansion.tradeshowmanagement.activity.ConfigureBooths" />
         </activity>
-        <activity
-            android:name="com.ashtonmansion.tradeshowmanagement.activity.BoothReservationDetails"
-            android:label="@string/title_activity_booth_reservation_details"
-            android:parentActivityName="com.ashtonmansion.tradeshowmanagement.activity.BoothReservation"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ashtonmansion.tradeshowmanagement.activity.BoothReservation" />
-        </activity>
     </application>
 
 </manifest>

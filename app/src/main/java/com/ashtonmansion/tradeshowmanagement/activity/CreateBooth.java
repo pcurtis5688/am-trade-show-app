@@ -16,16 +16,22 @@ import android.widget.EditText;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
 import com.ashtonmansion.tradeshowmanagement.db.TradeShowDB;
+import com.ashtonmansion.tradeshowmanagement.util.GlobalUtils;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.ServiceException;
+import com.clover.sdk.v3.inventory.Attribute;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
+import com.clover.sdk.v3.inventory.Option;
+import com.clover.sdk.v3.inventory.Tag;
 import com.clover.sdk.v3.payments.Payment;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class CreateBooth extends AppCompatActivity {
@@ -55,7 +61,6 @@ public class CreateBooth extends AppCompatActivity {
         createBoothActivityContext = this;
         createBoothNameField = (EditText) findViewById(R.id.create_booth_name_field);
         createBoothNumberField = (EditText) findViewById(R.id.create_booth_number_field);
-
         createBoothPriceField = (EditText) findViewById(R.id.create_booth_price_field);
         createBoothPriceField.addTextChangedListener(new TextWatcher() {
 
@@ -99,6 +104,13 @@ public class CreateBooth extends AppCompatActivity {
 
     private class CreateShowTask extends AsyncTask<Void, Void, Void> {
         private Item newBooth;
+        private String createBoothNameFieldData;
+        private String createBoothSizeFieldData;
+        private String createBoothAreaFieldData;
+        private String createBoothCategoryFieldData;
+        private Tag sizeTag;
+        private Tag areaTag;
+        private Tag categoryTag;
         private TradeShowDB tradeShowDB;
         private boolean localDbCreateSuccess;
 
@@ -110,43 +122,44 @@ public class CreateBooth extends AppCompatActivity {
             progressDialog.show();
 
             newBooth = new Item();
+            createBoothNameFieldData = createBoothNameField.getText().toString();
+            createBoothSizeFieldData = createBoothSizeField.getText().toString();
+            createBoothAreaFieldData = createBoothAreaField.getText().toString();
+            createBoothCategoryFieldData = createBoothCategoryField.getText().toString();
+
+            List<Tag> tagListForBooth = new ArrayList<>();
+            sizeTag = new Tag().setName("Size - " + createBoothSizeField.getText().toString());
+            areaTag = new Tag().setName("Area - " + createBoothAreaField.getText().toString());
+            categoryTag = new Tag().setName("Category - " + createBoothCategoryField.getText().toString());
+
+            tagListForBooth.add(sizeTag);
+            tagListForBooth.add(areaTag);
+            tagListForBooth.add(categoryTag);
+            newBooth.setTags(tagListForBooth);
+
             newBooth.setName(createBoothNameField.getText().toString());
-            newBooth.setSku(createBoothNumberField.getText().toString());
-
-            //// TODO: 8/31/2016 unformat price for clover storage
-            long priceLongFormat = 0;
-            double priceDoubleFormat = 0.00;
-            NumberFormat numberFormatter = NumberFormat.getCurrencyInstance(Locale.US);
-            try {
-                Number parsedNumber = numberFormatter.parse(createBoothPriceField.getText().toString());
-                priceLongFormat = parsedNumber.longValue();
-                priceDoubleFormat = parsedNumber.doubleValue();
-            } catch (ParseException e1) {
-                Log.e("Parse Exception: ", e1.getClass().getName() + ", " + e1.getMessage());
-            } finally {
-                newBooth.setPrice(priceLongFormat);
-            }
-            //// TODO: 8/31/2016 test tags see if can use for the extra data
-
+            newBooth.setPrice(GlobalUtils.getLongFromFormattedPriceString(createBoothPriceField.getText().toString()));
         }
 
         @Override
         protected Void doInBackground(Void... params) {
             try {
+                //// CONNECT TO INVENTORY, CREATE TAGS FOR BOOTH IN INVENTORY, CREATE BOOTH
                 merchantAccount = CloverAccount.getAccount(createBoothActivityContext);
                 inventoryConnector = new InventoryConnector(createBoothActivityContext, merchantAccount, null);
+
                 inventoryConnector.connect();
+                inventoryConnector.createTag(sizeTag);
+                inventoryConnector.createTag(areaTag);
+                inventoryConnector.createTag(categoryTag);
+                String returnedBoothID = inventoryConnector.createItem(newBooth).getId();
 
-                //// CREATE THE BOOTH IN CLOVER
-                String returnedBoothID = (inventoryConnector.createItem(newBooth)).getId();
                 newBooth.setId(returnedBoothID);
-
-                Payment payment = new Payment();
                 /////AFTER GETTING CLOVER ID, DO LOCAL INSERTS
                 tradeShowDB = new TradeShowDB(createBoothActivityContext);
-                localDbCreateSuccess = tradeShowDB.createBoothItem(newBooth.getId(), newBooth.getName(), newBooth.getSku(),
-                        newBooth.getPrice(), newBooth.getAlternateName(), newBooth.getAlternateName(),
-                        newBooth.getAlternateName());
+                localDbCreateSuccess = tradeShowDB.createBoothItem(newBooth.getId(), newBooth.getName(),
+                        newBooth.getPrice(), createBoothSizeFieldData, createBoothAreaFieldData,
+                        createBoothCategoryFieldData);
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
             } finally {
@@ -161,7 +174,6 @@ public class CreateBooth extends AppCompatActivity {
             progressDialog.dismiss();
             if (!localDbCreateSuccess) {
                 Log.e("Add Local Booth: ", "CREATE BOOTH W ID: " + newBooth.getId() + " , " + localDbCreateSuccess);
-                //// TODO: 8/31/2016 validate???? somewhere here.
             }
             finish();
         }
