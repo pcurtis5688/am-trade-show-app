@@ -122,6 +122,8 @@
     <string name="booth_filters_max_price_hint">[Max Price]</string>
 
     <!-- MAKE RESERVATION PAGES STRINGS ////////////////////////-->
+    <string name="select_show_button_text">Select Show</string>
+    <string name="select_booth_action_button_text">Select Booth</string>
     <string name="available_booths_header_text">Available Booths</string>
     <string name="customer_search_prompt">Search Existing Customers:</string>
     <string name="manual_customer_entry_prompt">-OR- Enter a customer manually below</string>
@@ -204,6 +206,7 @@
     <string name="finalize_reservation_btn_text">Finalize Reservation</string>
     <string name="finalized_reservation_confirmation">Reservation Complete</string>
     <string name="title_activity_app_settings">Application Settings</string>
+    <string name="title_activity_booth_reservation_details">BoothReservationDetails</string>
 
 
 </resources>

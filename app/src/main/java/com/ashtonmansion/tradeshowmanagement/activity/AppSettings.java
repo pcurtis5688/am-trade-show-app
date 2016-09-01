@@ -92,7 +92,7 @@ public class AppSettings extends AppCompatActivity
             Intent reportsIntent = new Intent(appSettingsActivityContext, Reports.class);
             startActivity(reportsIntent);
         } else if (id == R.id.nav_make_reservation_btn) {
-            Intent makeReservationIntent = new Intent(appSettingsActivityContext, MakeReservation.class);
+            Intent makeReservationIntent = new Intent(appSettingsActivityContext, BoothReservation.class);
             startActivity(makeReservationIntent);
         } else if (id == R.id.nav_email_reservation_confirmation_btn) {
             Intent emailConfirmationIntent = new Intent(appSettingsActivityContext, EmailConfirmation.class);

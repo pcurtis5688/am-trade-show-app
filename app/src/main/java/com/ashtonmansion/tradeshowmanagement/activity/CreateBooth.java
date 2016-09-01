@@ -22,6 +22,7 @@ import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.ServiceException;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
+import com.clover.sdk.v3.payments.Payment;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -140,6 +141,7 @@ public class CreateBooth extends AppCompatActivity {
                 String returnedBoothID = (inventoryConnector.createItem(newBooth)).getId();
                 newBooth.setId(returnedBoothID);
 
+                Payment payment = new Payment();
                 /////AFTER GETTING CLOVER ID, DO LOCAL INSERTS
                 tradeShowDB = new TradeShowDB(createBoothActivityContext);
                 localDbCreateSuccess = tradeShowDB.createBoothItem(newBooth.getId(), newBooth.getName(), newBooth.getSku(),

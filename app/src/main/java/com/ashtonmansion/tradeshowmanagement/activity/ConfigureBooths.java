@@ -13,8 +13,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +21,6 @@ import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
 import com.ashtonmansion.tradeshowmanagement.HomeActivity;
@@ -40,7 +37,6 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Filter;
 
 public class ConfigureBooths extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -245,7 +241,7 @@ public class ConfigureBooths extends AppCompatActivity
             Intent reportsIntent = new Intent(configureBoothsActivityContext, Reports.class);
             startActivity(reportsIntent);
         } else if (id == R.id.nav_make_reservation_btn) {
-            Intent makeReservationIntent = new Intent(configureBoothsActivityContext, MakeReservation.class);
+            Intent makeReservationIntent = new Intent(configureBoothsActivityContext, BoothReservation.class);
             startActivity(makeReservationIntent);
         } else if (id == R.id.nav_email_reservation_confirmation_btn) {
             Intent emailConfirmationIntent = new Intent(configureBoothsActivityContext, EmailConfirmation.class);

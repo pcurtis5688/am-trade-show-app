@@ -151,7 +151,7 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
             Intent reportsIntent = new Intent(configureBoothsShowSelectionActivityContext, Reports.class);
             startActivity(reportsIntent);
         } else if (id == R.id.nav_make_reservation_btn) {
-            Intent makeReservationIntent = new Intent(configureBoothsShowSelectionActivityContext, MakeReservation.class);
+            Intent makeReservationIntent = new Intent(configureBoothsShowSelectionActivityContext, BoothReservation.class);
             startActivity(makeReservationIntent);
         } else if (id == R.id.nav_email_reservation_confirmation_btn) {
             Intent emailConfirmationIntent = new Intent(configureBoothsShowSelectionActivityContext, EmailConfirmation.class);

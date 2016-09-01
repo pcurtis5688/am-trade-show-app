@@ -92,7 +92,7 @@ public class SpecialEventSales extends AppCompatActivity
             Intent reportsIntent = new Intent(specialEventSalesActivityContext, Reports.class);
             startActivity(reportsIntent);
         } else if (id == R.id.nav_make_reservation_btn) {
-            Intent makeReservationIntent = new Intent(specialEventSalesActivityContext, MakeReservation.class);
+            Intent makeReservationIntent = new Intent(specialEventSalesActivityContext, BoothReservation.class);
             startActivity(makeReservationIntent);
         } else if (id == R.id.nav_email_reservation_confirmation_btn) {
             Intent emailConfirmationIntent = new Intent(specialEventSalesActivityContext, EmailConfirmation.class);
