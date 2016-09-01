@@ -60,4 +60,14 @@ public class TradeShowDBHelper extends SQLiteOpenHelper {
         //RECREATE DATABASE AND TABLES
         onCreate(database);
     }
+
+    public void recreateShowsTable() {
+        getWritableDatabase().execSQL("DROP TABLE IF EXISTS Shows");
+        getWritableDatabase().execSQL(CREATE_SHOW_TABLE);
+    }
+
+    public void recreateBoothsTable() {
+        getWritableDatabase().execSQL("DROP TABLE IF EXISTS Booths");
+        getWritableDatabase().execSQL(CREATE_BOOTH_TABLE);
+    }
 }

@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -15,12 +17,17 @@ import android.widget.TextView;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
 
+import com.ashtonmansion.tradeshowmanagement.db.TradeShowDB;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.ServiceException;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
+
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
 
 public class EditBooth extends AppCompatActivity {
     //////ACTIVITY VARS
@@ -62,11 +69,43 @@ public class EditBooth extends AppCompatActivity {
             editBoothHeaderTv.setText("Edit Booth - " + booth.getName());
             //// TODO: 8/31/2016 string resource
             editBoothNumberField.setText(booth.getSku());
-            //// TODO: 8/31/2016 price handling
-            editBoothPriceField.setText(booth.getPrice().toString());
             editBoothSizeField.setText("set size");
             editBoothAreaField.setText("set area");
             editBoothCategoryField.setText("category?");
+
+            //// TODO: 8/31/2016 price handling
+            editBoothPriceField.setText(booth.getPrice().toString());
+            editBoothPriceField.addTextChangedListener(new TextWatcher() {
+
+                private String current = "";
+
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    if (!charSequence.toString().equals(current)) {
+                        editBoothPriceField.removeTextChangedListener(this);
+                        String cleanString = charSequence.toString().replaceAll("[$,.]", "");
+                        double parsed = Double.parseDouble(cleanString);
+                        NumberFormat numberFormatter = NumberFormat.getCurrencyInstance(Locale.US);
+                        String formattedPrice = numberFormatter.format(parsed / 100.0);
+                        current = formattedPrice;
+                        editBoothPriceField.setText(formattedPrice);
+                        editBoothPriceField.setSelection(formattedPrice.length());
+                        editBoothPriceField.addTextChangedListener(this);
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+
+                }
+            });
+
+
         } else {
             Log.e("Major error: ", "edit booth started without booth obj");
         }
@@ -83,11 +122,17 @@ public class EditBooth extends AppCompatActivity {
 
     private class UpdateBoothTask extends AsyncTask<Void, Void, Void> {
         private ProgressDialog progressDialog;
+        private Item boothToUpdate;
         private String editBoothNumberFieldData;
-        private long editBoothPriceFieldData;
-        // private String editBoothSizeFieldData;
-        //  private String editBoothAreaFieldData;
-        //  private String editBoothCategoryFieldData;
+        private String editBoothPriceFieldData;
+        ////////////////
+        private long priceLongFormat;
+        private double priceDoubleFormat;
+        //////////////
+        private String editBoothSizeFieldData;
+        private String editBoothAreaFieldData;
+        private String editBoothCategoryFieldData;
+        private boolean sqliteUpdateBoothSuccess;
 
         @Override
         protected void onPreExecute() {
@@ -95,11 +140,16 @@ public class EditBooth extends AppCompatActivity {
             progressDialog = new ProgressDialog(editBoothActivityContext);
             progressDialog.setMessage("Saving Booth...");
             progressDialog.show();
+
             editBoothNumberFieldData = editBoothNumberField.getText().toString();
-            editBoothPriceFieldData = Long.parseLong(editBoothPriceField.getText().toString());
-            //    editBoothSizeFieldData = editBoothSizeField.getText().toString();
-            ///     editBoothAreaFieldData = editBoothAreaField.getText().toString();
-            //     editBoothCategoryFieldData = editBoothCategoryField.getText().toString();
+            editBoothSizeFieldData = editBoothSizeField.getText().toString();
+            editBoothAreaFieldData = editBoothAreaField.getText().toString();
+            editBoothCategoryFieldData = editBoothCategoryField.getText().toString();
+
+            //PRICE HANDLING BELOW
+            editBoothPriceFieldData = editBoothPriceField.getText().toString();
+            String cleanString = editBoothPriceFieldData.toString().replaceAll("[$,.]", "");
+            priceLongFormat = Long.parseLong(cleanString);
         }
 
         @Override
@@ -108,14 +158,18 @@ public class EditBooth extends AppCompatActivity {
                 merchantAccount = CloverAccount.getAccount(editBoothActivityContext);
                 inventoryConnector = new InventoryConnector(editBoothActivityContext, merchantAccount, null);
                 inventoryConnector.connect();
-                Item fetchedBooth = inventoryConnector.getItem(booth.getId());
-                fetchedBooth.setSku(editBoothNumberFieldData);
-                fetchedBooth.setPrice(editBoothPriceFieldData);
-                //todo change the other 3 here
-                inventoryConnector.updateItem(fetchedBooth);
-                Item testUpdate = inventoryConnector.getItem(fetchedBooth.getId());
+                boothToUpdate = inventoryConnector.getItem(booth.getId());
+                boothToUpdate.setPrice(priceLongFormat);
+                boothToUpdate.setSku(editBoothNumberFieldData);
+                //// TODO: 9/1/2016 decide which format i should use here. i have both.
+                //boothToUpdate.setPrice(editBoothPriceFieldData);
+                inventoryConnector.updateItem(boothToUpdate);
 
-                // showList = inventoryConnector.getCategories();
+                TradeShowDB tradeShowDatabase = new TradeShowDB(editBoothActivityContext);
+                sqliteUpdateBoothSuccess = tradeShowDatabase.updateSingleBoothByCloverId(boothToUpdate.getId(), boothToUpdate.getName(),
+                        boothToUpdate.getSku(), boothToUpdate.getPrice(), editBoothSizeFieldData,
+                        editBoothAreaFieldData, editBoothCategoryFieldData);
+
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
             } finally {
@@ -127,8 +181,13 @@ public class EditBooth extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            progressDialog.dismiss();
-            closeOutActivity();
+            if (sqliteUpdateBoothSuccess) {
+                progressDialog.dismiss();
+                finish();
+            } else {
+                Log.e("Add Local Booth: ", "CREATE BOOTH W ID: " + boothToUpdate.getId() + " , " + sqliteUpdateBoothSuccess);
+                //// TODO: 8/31/2016 validate???? somewhere here.
+            }
         }
     }
 }

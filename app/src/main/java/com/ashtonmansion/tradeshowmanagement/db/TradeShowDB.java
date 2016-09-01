@@ -27,19 +27,46 @@ public class TradeShowDB {
     public static final String BOOTH_SIZE = "boothsize";
     public static final String BOOTH_AREA = "bootharea";
     public static final String BOOTH_CATEGORY = "boothcategory";
+    public static final String checkTableExistsSQL = "SELECT name FROM sqlite_master WHERE type='table' AND name = ?;";
     ///////////////////DB ITEMS
     private TradeShowDBHelper dbHelper;
     private SQLiteDatabase tradeShowDatabase;
-
 
     public TradeShowDB(Context context) {
         dbHelper = new TradeShowDBHelper(context);
         tradeShowDatabase = dbHelper.getWritableDatabase();
     }
 
+    public boolean isTablePresent(String tableName) {
+        Cursor cursor = tradeShowDatabase.rawQuery(checkTableExistsSQL, new String[]{tableName});
+
+        return cursor.moveToFirst();
+    }
+
+    public void recreateShowsTable() {
+        dbHelper.recreateShowsTable();
+    }
+
+    public void recreateBoothsTable() {
+        dbHelper.recreateBoothsTable();
+    }
+
     ////////////// BOOTH DATABASE METHODS//////////////////////////
     public boolean createBoothItem(String cloverId, String boothName, String boothSKUNumber,
                                    long boothPrice, String boothSize, String boothArea, String boothCategory) {
+        ContentValues boothValues = new ContentValues();
+        boothValues.put(BOOTH_CLOVERID, cloverId);
+        boothValues.put(BOOTH_NAME, boothName);
+        boothValues.put(BOOTH_SKU_NUMBER, boothSKUNumber);
+        boothValues.put(BOOTH_PRICE, boothPrice);
+        boothValues.put(BOOTH_SIZE, boothSize);
+        boothValues.put(BOOTH_AREA, boothArea);
+        boothValues.put(BOOTH_CATEGORY, boothCategory);
+        return tradeShowDatabase.insert(BOOTH_TABLE, null, boothValues) > 0;
+    }
+
+    public boolean updateSingleBoothByCloverId(String cloverId, String boothName, String boothSKUNumber,
+                                               long boothPrice, String boothSize, String boothArea, String boothCategory) {
         ContentValues boothValues = new ContentValues();
         boothValues.put("BOOTH_CLOVERID", cloverId);
         boothValues.put("BOOTH_NAME", boothName);
@@ -48,7 +75,9 @@ public class TradeShowDB {
         boothValues.put("BOOTH_SIZE", boothSize);
         boothValues.put("BOOTH_AREA", boothArea);
         boothValues.put("BOOTH_CATEGORY", boothCategory);
-        return tradeShowDatabase.insert(BOOTH_TABLE, null, boothValues) > 0;
+
+        String cloverIdWithTicks = "'" + cloverId + "'";
+        return tradeShowDatabase.update(BOOTH_TABLE, boothValues, BOOTH_CLOVERID + "=" + cloverIdWithTicks, null) > 0;
     }
 
 

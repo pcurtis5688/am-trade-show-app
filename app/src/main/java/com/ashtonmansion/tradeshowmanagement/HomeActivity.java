@@ -9,6 +9,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -23,6 +24,7 @@ import com.ashtonmansion.tradeshowmanagement.activity.MerchandiseSales;
 import com.ashtonmansion.tradeshowmanagement.activity.Reports;
 import com.ashtonmansion.tradeshowmanagement.activity.TradeShows;
 import com.ashtonmansion.tradeshowmanagement.activity.SpecialEventSales;
+import com.ashtonmansion.tradeshowmanagement.db.TradeShowDB;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -46,10 +48,23 @@ public class HomeActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         //////////DATA WORK
         homeActivityContext = this;
-        //// TODO: 8/28/2016 start here
-
+        runDatabaseCheck();
     }
 
+    private void runDatabaseCheck() {
+        TradeShowDB tradeShowDatabase = new TradeShowDB(homeActivityContext);
+        Log.i("Shows table present: ", "" + tradeShowDatabase.isTablePresent("Shows"));
+        Log.i("Booths table present: ", "" + tradeShowDatabase.isTablePresent("Booths"));
+        if (!tradeShowDatabase.isTablePresent("Shows")) {
+            tradeShowDatabase.recreateShowsTable();
+        }
+        if (!tradeShowDatabase.isTablePresent("Booths")) {
+            tradeShowDatabase.recreateBoothsTable();
+        }
+    }
+
+
+    ////////////////NAVIGATION METHODS
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.home_drawerlayout);
