@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
 import com.ashtonmansion.tradeshowmanagement.HomeActivity;
@@ -180,7 +181,7 @@ public class ConfigureBooths extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_home, menu);
+        getMenuInflater().inflate(R.menu.menu_configure_booths, menu);
         return true;
     }
 
@@ -191,8 +192,9 @@ public class ConfigureBooths extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_create_new_booth_option) {
+            Intent createBoothIntent = new Intent(configureBoothsActivityContext, CreateBooth.class);
+            startActivity(createBoothIntent);
             return true;
         }
 

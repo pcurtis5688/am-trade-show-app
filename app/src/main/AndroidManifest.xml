@@ -36,15 +36,6 @@
                 android:value="com.ashtonmansion.tradeshowmanagement.HomeActivity" />
         </activity>
         <activity
-            android:name="com.ashtonmansion.tradeshowmanagement.activity.ConfigureBoothsShowSelection"
-            android:label="@string/nav_drawer_config_booths_text"
-            android:parentActivityName="com.ashtonmansion.tradeshowmanagement.HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ashtonmansion.tradeshowmanagement.HomeActivity" />
-        </activity>
-        <activity
             android:name="com.ashtonmansion.tradeshowmanagement.activity.ConfigureBooths"
             android:label="@string/nav_drawer_config_booths_text"
             android:parentActivityName="com.ashtonmansion.tradeshowmanagement.activity.ConfigureBoothsShowSelection"
@@ -52,6 +43,15 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ashtonmansion.tradeshowmanagement.activity.ConfigureBoothsShowSelection" />
+        </activity>
+        <activity
+            android:name="com.ashtonmansion.tradeshowmanagement.activity.ConfigureBoothsShowSelection"
+            android:label="@string/nav_drawer_config_booths_text"
+            android:parentActivityName="com.ashtonmansion.tradeshowmanagement.HomeActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ashtonmansion.tradeshowmanagement.HomeActivity" />
         </activity>
         <activity
             android:name="com.ashtonmansion.tradeshowmanagement.activity.Reports"
@@ -145,6 +145,15 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ashtonmansion.tradeshowmanagement.activity.TradeShows" />
+        </activity>
+        <activity
+            android:name="com.ashtonmansion.tradeshowmanagement.activity.CreateBooth"
+            android:label="@string/title_activity_create_booth"
+            android:parentActivityName="com.ashtonmansion.tradeshowmanagement.activity.ConfigureBooths"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ashtonmansion.tradeshowmanagement.activity.ConfigureBooths" />
         </activity>
         <activity
             android:name="com.ashtonmansion.tradeshowmanagement.activity.EditBooth"
