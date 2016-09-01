@@ -44,6 +44,7 @@ public class ConfigureBooths extends AppCompatActivity
     private String configureBoothsShowNameHeader;
     private TableLayout boothsForShowTable;
     private TextView configureBoothsForShowHeader;
+    private ProgressDialog progressDialog;
     //CLOVER VARS
     private Account merchantAccount;
     private InventoryConnector inventoryConnector;
@@ -71,6 +72,8 @@ public class ConfigureBooths extends AppCompatActivity
 
         //DATA AND ACTIVITY WORK
         configureBoothsActivityContext = this;
+        boothsForShowTable = (TableLayout) findViewById(R.id.booths_for_show_table);
+
         Bundle extrasBundle = getIntent().getExtras();
         if (extrasBundle != null) {
             showID = (String) extrasBundle.get("showid");
@@ -79,13 +82,17 @@ public class ConfigureBooths extends AppCompatActivity
             configureBoothsForShowHeader = (TextView) findViewById(R.id.show_booths_header);
             configureBoothsForShowHeader.setText(configureBoothsShowNameHeader);
         }
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
         GetShowBoothsTask getShowBoothsTask = new GetShowBoothsTask();
         getShowBoothsTask.execute();
     }
 
     private void populateBoothsForShowTable() {
-        boothsForShowTable = (TableLayout) findViewById(R.id.booths_for_show_table);
+        boothsForShowTable.removeAllViews();
         populateBoothHeaderRow();
         if (boothList != null && boothList.size() > 0) {
             for (Item booth : boothList) {
@@ -239,8 +246,6 @@ public class ConfigureBooths extends AppCompatActivity
     }
 
     private class GetShowBoothsTask extends AsyncTask<Void, Void, Void> {
-        private ProgressDialog progressDialog;
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();

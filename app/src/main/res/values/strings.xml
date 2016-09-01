@@ -90,6 +90,11 @@
     <string name="booth_filters_size_prompt">Size:</string>
     <string name="booth_filters_area_prompt">Area:</string>
     <string name="booth_filters_categorytype_prompt">Category:</string>
+    <string name="booth_filters_apply_filters_text">Apply Filters</string>
+    <string name="booth_filters_clear_filter_btn_text">Clear</string>
+    <string name="booth_filters_boothnumber_hint">[Booth No.]</string>
+    <string name="booth_filters_min_price_hint">[Min Price]</string>
+    <string name="booth_filters_max_price_hint">[Max Price]</string>
 
     <!-- MAKE RESERVATION PAGES STRINGS ////////////////////////-->
     <string name="available_booths_header_text">Available Booths</string>

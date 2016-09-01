@@ -38,10 +38,13 @@
 
                 <EditText
                     android:id="@+id/booth_filter_boothnumber_field"
+                    android:layout_span="2"
+                    android:hint="@string/booth_filters_boothnumber_hint"
                     android:textAlignment="center" />
 
                 <Button
                     android:id="@+id/clear_booth_number_filter_btn"
+                    android:text="@string/booth_filters_clear_filter_btn_text"
                     android:textAlignment="center" />
             </TableRow>
 
@@ -53,16 +56,19 @@
 
                 <EditText
                     android:id="@+id/booth_filter_min_price_field"
+                    android:hint="@string/booth_filters_min_price_hint"
                     android:inputType="number"
                     android:textAlignment="center" />
 
                 <EditText
                     android:id="@+id/booth_filter_max_price_field"
+                    android:hint="@string/booth_filters_max_price_hint"
                     android:inputType="number"
                     android:textAlignment="center" />
 
                 <Button
                     android:id="@+id/clear_booth_price_filter_btn"
+                    android:text="@string/booth_filters_clear_filter_btn_text"
                     android:textAlignment="center" />
             </TableRow>
 
@@ -74,11 +80,13 @@
 
                 <Spinner
                     android:id="@+id/booth_filter_size_dropdown"
+                    android:layout_span="2"
                     android:spinnerMode="dropdown"
                     android:textAlignment="center" />
 
                 <Button
                     android:id="@+id/clear_booth_size_filter_btn"
+                    android:text="@string/booth_filters_clear_filter_btn_text"
                     android:textAlignment="center" />
             </TableRow>
 
@@ -90,11 +98,13 @@
 
                 <Spinner
                     android:id="@+id/booth_filter_area_dropdown"
+                    android:layout_span="2"
                     android:spinnerMode="dropdown"
                     android:textAlignment="center" />
 
                 <Button
                     android:id="@+id/clear_booth_area_filter_btn"
+                    android:text="@string/booth_filters_clear_filter_btn_text"
                     android:textAlignment="center" />
             </TableRow>
 
@@ -106,22 +116,25 @@
 
                 <Spinner
                     android:id="@+id/booth_filter_category_dropdown"
+                    android:layout_span="2"
                     android:spinnerMode="dropdown"
                     android:textAlignment="center" />
 
                 <Button
                     android:id="@+id/clear_booth_category_filter_btn"
+                    android:text="@string/booth_filters_clear_filter_btn_text"
                     android:textAlignment="center" />
             </TableRow>
-        </TableLayout>
-
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
             <TableRow>
 
-                <TextView android:text="PERSISTING BOOTH TABLE? OR SUBMIT" />
+                <Button
+                    android:id="@+id/booth_filter_apply_filters_btn"
+                    android:layout_column="2"
+                    android:layout_span="2"
+                    android:onClick="applyBoothFiltersAction"
+                    android:text="@string/booth_filters_apply_filters_text"
+                    android:textAlignment="center" />
             </TableRow>
         </TableLayout>
     </LinearLayout>

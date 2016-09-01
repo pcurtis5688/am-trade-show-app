@@ -4,10 +4,14 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FilterBooths extends AppCompatActivity {
     ///////////////ACTIVITY AND UI VARS////////////
@@ -21,6 +25,10 @@ public class FilterBooths extends AppCompatActivity {
     private Spinner boothSizeFilterDropdown;
     private Spinner boothAreaFilterDropdown;
     private Spinner boothCategoryFilterDropdown;
+    ///////////////DATA VARS///////////////////////
+    private List<String> boothSizeDropdownList;
+    private List<String> boothAreaDropdownList;
+    private List<String> boothCategoryDropdownList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +54,20 @@ public class FilterBooths extends AppCompatActivity {
         boothAreaFilterDropdown = (Spinner) findViewById(R.id.booth_filter_area_dropdown);
         boothCategoryFilterDropdown = (Spinner) findViewById(R.id.booth_filter_category_dropdown);
 
+        /////////POPULATE DROPDOWN FILTERS
+        populateDropdownLists();
+    }
+
+    private void populateDropdownLists() {
+        boothSizeDropdownList = new ArrayList<>();
+        boothAreaDropdownList = new ArrayList<>();
+        boothCategoryDropdownList = new ArrayList<>();
+
+        //// TODO: 8/31/2016
+    }
+
+    public void applyBoothFiltersAction(View view) {
+        //// TODO: 8/31/2016 filter booths
     }
 
 }
