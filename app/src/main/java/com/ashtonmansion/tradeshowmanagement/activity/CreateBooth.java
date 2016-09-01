@@ -30,6 +30,7 @@ import java.util.Locale;
 public class CreateBooth extends AppCompatActivity {
     ///////ACTIVITY VARS
     private Context createBoothActivityContext;
+    private ProgressDialog progressDialog;
     ///////CLOVER VARS
     private Account merchantAccount;
     private InventoryConnector inventoryConnector;
@@ -95,13 +96,8 @@ public class CreateBooth extends AppCompatActivity {
         createShowTask.execute();
     }
 
-    private void closeOutActivity() {
-        finish();
-    }
-
     private class CreateShowTask extends AsyncTask<Void, Void, Void> {
         private Item newBooth;
-        private ProgressDialog progressDialog;
         private TradeShowDB tradeShowDB;
         private boolean localDbCreateSuccess;
 
@@ -129,8 +125,6 @@ public class CreateBooth extends AppCompatActivity {
             } finally {
                 newBooth.setPrice(priceLongFormat);
             }
-            Log.i("priceLongFormat: ", "" + priceLongFormat);
-            Log.i("priceDoubleFormat: ", "" + priceDoubleFormat);
             //// TODO: 8/31/2016 test tags see if can use for the extra data
 
         }
@@ -162,13 +156,12 @@ public class CreateBooth extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            if (localDbCreateSuccess) {
-                progressDialog.dismiss();
-                closeOutActivity();
-            } else {
+            progressDialog.dismiss();
+            if (!localDbCreateSuccess) {
                 Log.e("Add Local Booth: ", "CREATE BOOTH W ID: " + newBooth.getId() + " , " + localDbCreateSuccess);
                 //// TODO: 8/31/2016 validate???? somewhere here.
             }
+            finish();
         }
     }
 }

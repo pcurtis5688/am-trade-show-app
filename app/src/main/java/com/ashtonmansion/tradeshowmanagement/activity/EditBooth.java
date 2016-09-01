@@ -74,8 +74,6 @@ public class EditBooth extends AppCompatActivity {
             editBoothAreaField.setText("set area");
             editBoothCategoryField.setText("category?");
 
-            //// TODO: 8/31/2016 price handling
-            editBoothPriceField.setText(booth.getPrice().toString());
             editBoothPriceField.addTextChangedListener(new TextWatcher() {
 
                 private String current = "";
@@ -105,7 +103,7 @@ public class EditBooth extends AppCompatActivity {
 
                 }
             });
-
+            editBoothPriceField.setText(booth.getPrice().toString());
 
         } else {
             Log.e("Major error: ", "edit booth started without booth obj");
@@ -179,8 +177,8 @@ public class EditBooth extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
+            progressDialog.dismiss();
             if (sqliteUpdateBoothSuccess) {
-                progressDialog.dismiss();
                 finish();
             } else {
                 Log.e("Add Local Booth: ", "CREATE BOOTH W ID: " + boothToUpdate.getId() + " , " + sqliteUpdateBoothSuccess);

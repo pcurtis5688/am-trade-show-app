@@ -13,6 +13,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,8 +36,10 @@ import com.clover.sdk.v3.inventory.Category;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Filter;
 
 public class ConfigureBooths extends AppCompatActivity
@@ -107,7 +111,16 @@ public class ConfigureBooths extends AppCompatActivity
                 boothNumberTv.setText(booth.getSku());
                 boothSizeTv.setText("SET SIZES");
                 boothCustomerTv.setText("CUSTOMER OR AVAIL");
-                boothPriceTv.setText(booth.getPrice().toString());
+
+                long boothPriceLong = booth.getPrice();
+                String priceLongString = Long.toString(boothPriceLong);
+                String cleanString = priceLongString.replaceAll("[$,.]", "");
+                double parsedBoothPriceDouble = Double.parseDouble(cleanString);
+
+                NumberFormat numberFormatter = NumberFormat.getCurrencyInstance(Locale.US);
+                String formattedPrice = numberFormatter.format(parsedBoothPriceDouble / 100.0);
+                boothPriceTv.setText(formattedPrice);
+
                 editBoothButton.setText(getResources().getString(R.string.configure_show_booths_edit_booth_btn_text));
                 editBoothButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -125,6 +138,19 @@ public class ConfigureBooths extends AppCompatActivity
                 boothsForShowTable.addView(newBoothRow);
             }
         }
+        TableRow addBoothButtonRow = new TableRow(configureBoothsActivityContext);
+        Button addBoothButton = new Button(configureBoothsActivityContext);
+        addBoothButton.setText(getResources().getString(R.string.action_create_new_booth_string));
+        addBoothButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent createBoothIntent = new Intent(configureBoothsActivityContext, CreateBooth.class);
+                startActivity(createBoothIntent);
+            }
+        });
+        addBoothButton.setLayoutParams(new TableRow.LayoutParams(4));
+        addBoothButtonRow.addView(addBoothButton);
+        boothsForShowTable.addView(addBoothButtonRow);
     }
 
     private void populateBoothHeaderRow() {
@@ -247,12 +273,11 @@ public class ConfigureBooths extends AppCompatActivity
     }
 
     private class GetShowBoothsTask extends AsyncTask<Void, Void, Void> {
-        private ProgressDialog progressDialog;
+        private ProgressDialog progressDialog = new ProgressDialog(configureBoothsActivityContext);
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = new ProgressDialog(configureBoothsActivityContext);
             progressDialog.setMessage("Loading Booths...");
             progressDialog.show();
         }
@@ -290,8 +315,8 @@ public class ConfigureBooths extends AppCompatActivity
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            populateBoothsForShowTable();
             progressDialog.dismiss();
+            populateBoothsForShowTable();
         }
     }
 }
