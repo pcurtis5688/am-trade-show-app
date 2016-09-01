@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
  * Created by paul on 8/29/2016.
  */
 public class TradeShowDB {
+    ///////////////////SHOW TABLE
     public static final String SHOW_TABLE = "Shows";
     public static final String SHOW_ID = "_id";
     public static final String SHOW_CLOVERID = "cloverid";
@@ -17,14 +18,41 @@ public class TradeShowDB {
     public static final String SHOW_LOCATION = "showlocation";
     public static final String SHOW_NOTES = "shownotes";
     public static final String SHOW_LOCATION_AND_DATE_COLUMN = "showlocationanddate";
+    ///////////////////BOOTH TABLE
+    public static final String BOOTH_TABLE = "Booths";
+    public static final String BOOTH_CLOVERID = "cloverid";
+    public static final String BOOTH_NAME = "boothname";
+    public static final String BOOTH_SKU_NUMBER = "boothskunumber";
+    public static final String BOOTH_PRICE = "boothprice";
+    public static final String BOOTH_SIZE = "boothsize";
+    public static final String BOOTH_AREA = "bootharea";
+    public static final String BOOTH_CATEGORY = "boothcategory";
+    ///////////////////DB ITEMS
     private TradeShowDBHelper dbHelper;
     private SQLiteDatabase tradeShowDatabase;
+
 
     public TradeShowDB(Context context) {
         dbHelper = new TradeShowDBHelper(context);
         tradeShowDatabase = dbHelper.getWritableDatabase();
     }
 
+    ////////////// BOOTH DATABASE METHODS//////////////////////////
+    public boolean createBoothItem(String cloverId, String boothName, String boothSKUNumber,
+                                   long boothPrice, String boothSize, String boothArea, String boothCategory) {
+        ContentValues boothValues = new ContentValues();
+        boothValues.put("BOOTH_CLOVERID", cloverId);
+        boothValues.put("BOOTH_NAME", boothName);
+        boothValues.put("BOOTH_SKU_NUMBER", boothSKUNumber);
+        boothValues.put("BOOTH_PRICE", boothPrice);
+        boothValues.put("BOOTH_SIZE", boothSize);
+        boothValues.put("BOOTH_AREA", boothArea);
+        boothValues.put("BOOTH_CATEGORY", boothCategory);
+        return tradeShowDatabase.insert(BOOTH_TABLE, null, boothValues) > 0;
+    }
+
+
+    ////////////// SHOW DATABASE METHODS///////////////////////////
     public long createShowRecord(String cloverId, String showName, String showDate,
                                  String showLocation, String showNotes, String newShowLocationAndDateString) {
         ContentValues values = new ContentValues();

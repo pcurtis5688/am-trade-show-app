@@ -82,12 +82,13 @@
 
     <!-- CREATE BOOTH STRINGS////////////////////////////////////-->
     <string name="create_booth_header_string">Create Booth</string>
-
+    <string name="create_booth_name_prompt">Booth Name:</string>
     <string name="create_booth_number_prompt">Booth No.:</string>
     <string name="create_booth_price_prompt">Price:</string>
     <string name="create_booth_size_prompt">Size:</string>
     <string name="create_booth_area_prompt">Area:</string>
     <string name="create_booth_category_prompt">Category:</string>
+    <string name="create_booth_name_hint">[Booth Name]</string>
     <string name="create_booth_number_hint">[Booth Number]</string>
     <string name="create_booth_price_hint">[Price]</string>
     <string name="create_booth_size_hint">[Size]</string>
