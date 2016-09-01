@@ -44,7 +44,6 @@ public class ConfigureBooths extends AppCompatActivity
     private String configureBoothsShowNameHeader;
     private TableLayout boothsForShowTable;
     private TextView configureBoothsForShowHeader;
-    private ProgressDialog progressDialog;
     //CLOVER VARS
     private Account merchantAccount;
     private InventoryConnector inventoryConnector;
@@ -246,6 +245,8 @@ public class ConfigureBooths extends AppCompatActivity
     }
 
     private class GetShowBoothsTask extends AsyncTask<Void, Void, Void> {
+        private ProgressDialog progressDialog;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
