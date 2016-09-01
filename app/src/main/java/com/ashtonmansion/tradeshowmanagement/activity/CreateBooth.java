@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -20,6 +22,10 @@ import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.ServiceException;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
+
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
 
 public class CreateBooth extends AppCompatActivity {
     ///////ACTIVITY VARS
@@ -44,9 +50,41 @@ public class CreateBooth extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ////CONNECT FIELD ITEMS
+        createBoothActivityContext = this;
         createBoothNameField = (EditText) findViewById(R.id.create_booth_name_field);
         createBoothNumberField = (EditText) findViewById(R.id.create_booth_number_field);
+
         createBoothPriceField = (EditText) findViewById(R.id.create_booth_price_field);
+        createBoothPriceField.addTextChangedListener(new TextWatcher() {
+
+            private String current = "";
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!charSequence.toString().equals(current)) {
+                    createBoothPriceField.removeTextChangedListener(this);
+                    String cleanString = charSequence.toString().replaceAll("[$,.]", "");
+                    double parsed = Double.parseDouble(cleanString);
+                    NumberFormat numberFormatter = NumberFormat.getCurrencyInstance(Locale.US);
+                    String formattedPrice = numberFormatter.format(parsed / 100.0);
+                    current = formattedPrice;
+                    createBoothPriceField.setText(formattedPrice);
+                    createBoothPriceField.setSelection(formattedPrice.length());
+                    createBoothPriceField.addTextChangedListener(this);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
         createBoothSizeField = (EditText) findViewById(R.id.create_booth_size_field);
         createBoothAreaField = (EditText) findViewById(R.id.create_booth_area_field);
         createBoothCategoryField = (EditText) findViewById(R.id.create_booth_category_field);
@@ -77,7 +115,22 @@ public class CreateBooth extends AppCompatActivity {
             newBooth = new Item();
             newBooth.setName(createBoothNameField.getText().toString());
             newBooth.setSku(createBoothNumberField.getText().toString());
-            newBooth.setPrice(Long.getLong(createBoothPriceField.getText().toString()));
+
+            //// TODO: 8/31/2016 unformat price for clover storage
+            long priceLongFormat = 0;
+            double priceDoubleFormat = 0.00;
+            NumberFormat numberFormatter = NumberFormat.getCurrencyInstance(Locale.US);
+            try {
+                Number parsedNumber = numberFormatter.parse(createBoothPriceField.getText().toString());
+                priceLongFormat = parsedNumber.longValue();
+                priceDoubleFormat = parsedNumber.doubleValue();
+            } catch (ParseException e1) {
+                Log.e("Parse Exception: ", e1.getClass().getName() + ", " + e1.getMessage());
+            } finally {
+                newBooth.setPrice(priceLongFormat);
+            }
+            Log.i("priceLongFormat: ", "" + priceLongFormat);
+            Log.i("priceDoubleFormat: ", "" + priceDoubleFormat);
             //// TODO: 8/31/2016 test tags see if can use for the extra data
 
         }

@@ -15,17 +15,6 @@
     <TableRow>
 
         <TextView
-            android:id="@+id/create_booth_header"
-            android:layout_span="2"
-            android:text="@string/create_booth_header_string"
-            android:textAlignment="center"
-            android:textSize="@dimen/dimen_36sp"
-            android:textStyle="bold" />
-    </TableRow>
-
-    <TableRow>
-
-        <TextView
             android:text="@string/create_booth_name_prompt"
             android:textAlignment="center"
             android:textSize="@dimen/dimen_24sp"
@@ -37,6 +26,7 @@
             android:textAlignment="center"
             android:textSize="@dimen/dimen_24sp" />
     </TableRow>
+
     <TableRow>
 
         <TextView
