@@ -3,6 +3,7 @@ package com.ashtonmansion.tradeshowmanagement.activity;
 import android.accounts.Account;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -116,10 +117,6 @@ public class EditBooth extends AppCompatActivity {
         updateBoothTask.execute();
     }
 
-    private void closeOutActivity() {
-        finish();
-    }
-
     private class UpdateBoothTask extends AsyncTask<Void, Void, Void> {
         private ProgressDialog progressDialog;
         private Item boothToUpdate;
@@ -158,20 +155,21 @@ public class EditBooth extends AppCompatActivity {
                 merchantAccount = CloverAccount.getAccount(editBoothActivityContext);
                 inventoryConnector = new InventoryConnector(editBoothActivityContext, merchantAccount, null);
                 inventoryConnector.connect();
+
                 boothToUpdate = inventoryConnector.getItem(booth.getId());
                 boothToUpdate.setPrice(priceLongFormat);
                 boothToUpdate.setSku(editBoothNumberFieldData);
-                //// TODO: 9/1/2016 decide which format i should use here. i have both.
-                //boothToUpdate.setPrice(editBoothPriceFieldData);
+
                 inventoryConnector.updateItem(boothToUpdate);
 
                 TradeShowDB tradeShowDatabase = new TradeShowDB(editBoothActivityContext);
                 sqliteUpdateBoothSuccess = tradeShowDatabase.updateSingleBoothByCloverId(boothToUpdate.getId(), boothToUpdate.getName(),
                         boothToUpdate.getSku(), boothToUpdate.getPrice(), editBoothSizeFieldData,
                         editBoothAreaFieldData, editBoothCategoryFieldData);
-
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
+            } catch (SQLiteException e2) {
+                Log.e("SQLiteExcptn: ", e2.getClass().getName() + " - " + e2.getMessage());
             } finally {
                 inventoryConnector.disconnect();
             }
@@ -186,7 +184,6 @@ public class EditBooth extends AppCompatActivity {
                 finish();
             } else {
                 Log.e("Add Local Booth: ", "CREATE BOOTH W ID: " + boothToUpdate.getId() + " , " + sqliteUpdateBoothSuccess);
-                //// TODO: 8/31/2016 validate???? somewhere here.
             }
         }
     }

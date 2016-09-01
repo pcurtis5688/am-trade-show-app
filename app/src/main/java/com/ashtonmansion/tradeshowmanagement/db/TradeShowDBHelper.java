@@ -11,6 +11,7 @@ import android.util.Log;
 public class TradeShowDBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "AMTradeShowDB";
     private static final int DATABASE_VERSION = 1;
+
     // SHOW_TABLE creation sql statement
     private static final String CREATE_SHOW_TABLE = "CREATE TABLE " +
             "Shows(_id integer primary key, " +
@@ -20,6 +21,7 @@ public class TradeShowDBHelper extends SQLiteOpenHelper {
             "showlocation text not null, " +
             "shownotes text not null, " +
             "showlocationanddate text not null);";
+
     // BOOTH_TABLE creation sql statement
     private static final String CREATE_BOOTH_TABLE = "CREATE TABLE " +
             "Booths(_id integer primary key, " +
@@ -61,6 +63,7 @@ public class TradeShowDBHelper extends SQLiteOpenHelper {
         onCreate(database);
     }
 
+    //////////////////////MANUAL DATABASE MAINTENANCE METHODS/////////
     public void recreateShowsTable() {
         getWritableDatabase().execSQL("DROP TABLE IF EXISTS Shows");
         getWritableDatabase().execSQL(CREATE_SHOW_TABLE);

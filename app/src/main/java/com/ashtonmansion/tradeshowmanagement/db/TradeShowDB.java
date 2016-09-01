@@ -39,17 +39,9 @@ public class TradeShowDB {
 
     public boolean isTablePresent(String tableName) {
         Cursor cursor = tradeShowDatabase.rawQuery(checkTableExistsSQL, new String[]{tableName});
-
         return cursor.moveToFirst();
     }
 
-    public void recreateShowsTable() {
-        dbHelper.recreateShowsTable();
-    }
-
-    public void recreateBoothsTable() {
-        dbHelper.recreateBoothsTable();
-    }
 
     ////////////// BOOTH DATABASE METHODS//////////////////////////
     public boolean createBoothItem(String cloverId, String boothName, String boothSKUNumber,
@@ -67,17 +59,22 @@ public class TradeShowDB {
 
     public boolean updateSingleBoothByCloverId(String cloverId, String boothName, String boothSKUNumber,
                                                long boothPrice, String boothSize, String boothArea, String boothCategory) {
+        boolean updateSuccess = false;
         ContentValues boothValues = new ContentValues();
-        boothValues.put("BOOTH_CLOVERID", cloverId);
-        boothValues.put("BOOTH_NAME", boothName);
-        boothValues.put("BOOTH_SKU_NUMBER", boothSKUNumber);
-        boothValues.put("BOOTH_PRICE", boothPrice);
-        boothValues.put("BOOTH_SIZE", boothSize);
-        boothValues.put("BOOTH_AREA", boothArea);
-        boothValues.put("BOOTH_CATEGORY", boothCategory);
+        boothValues.put(BOOTH_CLOVERID, cloverId);
+        boothValues.put(BOOTH_NAME, boothName);
+        boothValues.put(BOOTH_SKU_NUMBER, boothSKUNumber);
+        boothValues.put(BOOTH_PRICE, boothPrice);
+        boothValues.put(BOOTH_SIZE, boothSize);
+        boothValues.put(BOOTH_AREA, boothArea);
+        boothValues.put(BOOTH_CATEGORY, boothCategory);
 
         String cloverIdWithTicks = "'" + cloverId + "'";
-        return tradeShowDatabase.update(BOOTH_TABLE, boothValues, BOOTH_CLOVERID + "=" + cloverIdWithTicks, null) > 0;
+        int updateResultInt = tradeShowDatabase.update(BOOTH_TABLE, boothValues, BOOTH_CLOVERID + "=" + cloverIdWithTicks, null);
+        if (updateResultInt == 0) {
+            updateSuccess = true;
+        }
+        return updateSuccess;
     }
 
 
@@ -129,5 +126,14 @@ public class TradeShowDB {
             mCursor.moveToFirst();
         }
         return mCursor;
+    }
+
+    //////////////////////MANUAL DATABASE MAINTENANCE METHODS/////////
+    public void recreateShowsTable() {
+        dbHelper.recreateShowsTable();
+    }
+
+    public void recreateBoothsTable() {
+        dbHelper.recreateBoothsTable();
     }
 }
