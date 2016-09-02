@@ -141,6 +141,8 @@ public class ConfigureBooths extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent createBoothIntent = new Intent(configureBoothsActivityContext, CreateBooth.class);
+                createBoothIntent.putExtra("showid", showID);
+                createBoothIntent.putExtra("showname", showName);
                 startActivity(createBoothIntent);
             }
         });
@@ -216,6 +218,8 @@ public class ConfigureBooths extends AppCompatActivity
 
         if (id == R.id.action_create_new_booth_option) {
             Intent createBoothIntent = new Intent(configureBoothsActivityContext, CreateBooth.class);
+            createBoothIntent.putExtra("showid", showID);
+            createBoothIntent.putExtra("showname", showName);
             startActivity(createBoothIntent);
             return true;
         }

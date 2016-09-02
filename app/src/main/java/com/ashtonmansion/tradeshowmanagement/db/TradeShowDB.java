@@ -22,12 +22,14 @@ public class TradeShowDB {
     public static final String BOOTH_TABLE = "Booths";
     public static final String BOOTH_CLOVERID = "cloverid";
     public static final String BOOTH_NAME = "boothname";
+    public static final String BOOTH_NUMBER = "boothnumber";
     public static final String BOOTH_PRICE = "boothprice";
     public static final String BOOTH_SIZE = "boothsize";
     public static final String BOOTH_AREA = "bootharea";
     public static final String BOOTH_CATEGORY = "boothcategory";
-    public static final String checkTableExistsSQL = "SELECT name FROM sqlite_master WHERE type='table' AND name = ?;";
-    ///////////////////DB ITEMS
+    ///////////////////UTILITY STRINGS AND DATABASE ITEMS
+    public static final String checkTableExistsSQL = "SELECT name " +
+            "FROM sqlite_master " + "WHERE type='table' AND name = ?;";
     private TradeShowDBHelper dbHelper;
     private SQLiteDatabase tradeShowDatabase;
 
@@ -42,11 +44,13 @@ public class TradeShowDB {
     }
 
     ////////////// BOOTH DATABASE METHODS//////////////////////////
-    public boolean createBoothItem(String cloverId, String boothName, long boothPrice,
-                                   String boothSize, String boothArea, String boothCategory) {
+    public boolean createBoothItem(String cloverId, String boothName, String boothNumber,
+                                   long boothPrice, String boothSize, String boothArea,
+                                   String boothCategory) {
         ContentValues boothValues = new ContentValues();
         boothValues.put(BOOTH_CLOVERID, cloverId);
         boothValues.put(BOOTH_NAME, boothName);
+        boothValues.put(BOOTH_NUMBER, boothNumber);
         boothValues.put(BOOTH_PRICE, boothPrice);
         boothValues.put(BOOTH_SIZE, boothSize);
         boothValues.put(BOOTH_AREA, boothArea);
@@ -54,8 +58,9 @@ public class TradeShowDB {
         return tradeShowDatabase.insert(BOOTH_TABLE, null, boothValues) > 0;
     }
 
-    public boolean updateSingleBoothByCloverId(String cloverId, String boothName, String boothSKUNumber,
-                                               long boothPrice, String boothSize, String boothArea, String boothCategory) {
+    public boolean updateSingleBoothByCloverId(String cloverId, String boothName, String boothNumber,
+                                               long boothPrice, String boothSize, String boothArea,
+                                               String boothCategory) {
         boolean updateSuccess = false;
         ContentValues boothValues = new ContentValues();
         boothValues.put(BOOTH_CLOVERID, cloverId);

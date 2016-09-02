@@ -27,7 +27,7 @@ public class TradeShowDBHelper extends SQLiteOpenHelper {
             "Booths(_id integer primary key, " +
             "cloverid text not null, " +
             "boothname text not null, " +
-            "boothskunumber text not null, " +
+            "boothnumber text not null, " +
             "boothprice text not null, " +
             "boothsize text not null, " +
             "bootharea text not null, " +
