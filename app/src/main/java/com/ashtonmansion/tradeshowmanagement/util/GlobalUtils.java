@@ -22,4 +22,8 @@ public class GlobalUtils {
         }
         return priceLongFormat;
     }
+
+    public static void valuesTester(String keyName, String value) {
+        Log.d("Key: " + keyName, ",Value: " + value);
+    }
 }

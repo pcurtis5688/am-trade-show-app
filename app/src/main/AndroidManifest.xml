@@ -149,11 +149,7 @@
         <activity
             android:name="com.ashtonmansion.tradeshowmanagement.activity.CreateBooth"
             android:label="@string/title_activity_create_booth"
-            android:parentActivityName="com.ashtonmansion.tradeshowmanagement.activity.ConfigureBooths"
             android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ashtonmansion.tradeshowmanagement.activity.ConfigureBooths" />
         </activity>
         <activity
             android:name="com.ashtonmansion.tradeshowmanagement.activity.EditBooth"

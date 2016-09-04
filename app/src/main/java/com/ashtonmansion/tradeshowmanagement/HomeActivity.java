@@ -49,9 +49,7 @@ public class HomeActivity extends AppCompatActivity
         //////////DATA WORK
         homeActivityContext = this;
         runDatabaseCheck();
-        TradeShowDB database = new TradeShowDB(homeActivityContext);
-        database.recreateBoothsTable();
-        database.recreateShowsTable();
+
     }
 
     private void runDatabaseCheck() {
@@ -59,13 +57,12 @@ public class HomeActivity extends AppCompatActivity
         Log.i("Shows table present: ", "" + tradeShowDatabase.isTablePresent("Shows"));
         Log.i("Booths table present: ", "" + tradeShowDatabase.isTablePresent("Booths"));
         if (!tradeShowDatabase.isTablePresent("Shows")) {
-            tradeShowDatabase.recreateShowsTable();
+            tradeShowDatabase.getDbHelper().recreateShowsTable();
         }
         if (!tradeShowDatabase.isTablePresent("Booths")) {
-            tradeShowDatabase.recreateBoothsTable();
+            tradeShowDatabase.getDbHelper().recreateBoothsTable();
         }
     }
-
 
     ////////////////NAVIGATION METHODS
     @Override

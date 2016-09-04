@@ -50,6 +50,7 @@ public class ConfigureBooths extends AppCompatActivity
     private InventoryConnector inventoryConnector;
     private List<String> refIdStringList;
     private List<Item> boothList;
+    private Category selectedShowCat;
     //DATA VARS
     private String showID;
     private String showName;
@@ -76,8 +77,9 @@ public class ConfigureBooths extends AppCompatActivity
 
         Bundle extrasBundle = getIntent().getExtras();
         if (extrasBundle != null) {
-            showID = (String) extrasBundle.get("showid");
-            showName = (String) extrasBundle.get("showname");
+            selectedShowCat = (Category) extrasBundle.get("showcat");
+            showID = selectedShowCat.getId();
+            showName = selectedShowCat.getName();
             configureBoothsShowNameHeader = "Configure Booths - " + showName;
             configureBoothsForShowHeader = (TextView) findViewById(R.id.show_booths_header);
             configureBoothsForShowHeader.setText(configureBoothsShowNameHeader);
@@ -296,6 +298,8 @@ public class ConfigureBooths extends AppCompatActivity
                         showCat = category;
                     }
                 }
+                //todo line below causes hang ; need to find on return to method and send
+                //todo the show info back
                 List<Reference> itemReferenceList = showCat.getItems();
                 if (itemReferenceList != null && itemReferenceList.size() > 0) {
                     for (Reference reference : itemReferenceList) {
@@ -315,8 +319,8 @@ public class ConfigureBooths extends AppCompatActivity
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            progressDialog.dismiss();
             populateBoothsForShowTable();
+            progressDialog.dismiss();
         }
     }
 }

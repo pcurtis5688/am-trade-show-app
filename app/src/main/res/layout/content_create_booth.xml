@@ -12,6 +12,12 @@
     tools:context="com.ashtonmansion.tradeshowmanagement.activity.CreateBooth"
     tools:showIn="@layout/activity_create_booth">
 
+    <TextView
+        android:id="@+id/create_booth_activity_header_w_showname"
+        android:textAlignment="center"
+        android:textSize="@dimen/dimen_24sp"
+        android:textStyle="bold" />
+
     <TableRow>
 
         <TextView
@@ -106,13 +112,12 @@
     <TableRow>
 
         <Button
-            android:id="@+id/create_booth_finalize_btn"
+            android:id="@+id/finalize_booth_creation_btn"
             android:layout_column="1"
             android:layout_marginTop="@dimen/dimen_25dp"
-            android:onClick="createBoothFinalizeAction"
+            android:onClick="finalizeBoothCreation"
             android:text="@string/create_booth_finish_booth_creation_str"
             android:textAlignment="center"
-            android:textSize="@dimen/dimen_24sp"
-            android:textStyle="bold|italic" />
+            android:textSize="@dimen/dimen_24sp" />
     </TableRow>
 </TableLayout>

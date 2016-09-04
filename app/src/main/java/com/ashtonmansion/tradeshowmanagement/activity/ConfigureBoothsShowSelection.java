@@ -69,34 +69,34 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
 
     private void populateShowSelectionTable() {
         if (showList.size() > 0) {
-            for (Category show : showList) {
-                final String finalizedShowIDString = show.getId();
-                final String finalizedShowNameString = show.getName();
+            for (Category showCat : showList) {
+                final Category finalizedShowCat = showCat;
+                final String finalizedShowIDString = showCat.getId();
+                final String finalizedShowNameString = showCat.getName();
                 TableRow newShowSelectionRow = new TableRow(configureBoothsShowSelectionActivityContext);
 
                 TextView newShowSelectionTitleTV = new TextView(configureBoothsShowSelectionActivityContext);
-                newShowSelectionTitleTV.setText(show.getName());
+                newShowSelectionTitleTV.setText(showCat.getName());
 
-                Button newShowSelectionButton = new Button(configureBoothsShowSelectionActivityContext);
-                newShowSelectionButton.setText(getResources().getString(R.string.show_selection_button_text));
-                newShowSelectionButton.setOnClickListener(new View.OnClickListener() {
+                Button showSelectionButton = new Button(configureBoothsShowSelectionActivityContext);
+                showSelectionButton.setText(getResources().getString(R.string.show_selection_button_text));
+                showSelectionButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        configureBoothsSelectShowAction(finalizedShowIDString, finalizedShowNameString);
+                        configureBoothsSelectShowAction(finalizedShowCat);
                     }
                 });
 
                 newShowSelectionRow.addView(newShowSelectionTitleTV);
-                newShowSelectionRow.addView(newShowSelectionButton);
+                newShowSelectionRow.addView(showSelectionButton);
                 configureBoothsShowSelectionTable.addView(newShowSelectionRow);
             }
         }
     }
 
-    private void configureBoothsSelectShowAction(String showID, String showName) {
+    private void configureBoothsSelectShowAction(Category showCat) {
         Intent configureBoothsForShowIntent = new Intent(configureBoothsShowSelectionActivityContext, ConfigureBooths.class);
-        configureBoothsForShowIntent.putExtra("showid", showID);
-        configureBoothsForShowIntent.putExtra("showname", showName);
+        configureBoothsForShowIntent.putExtra("showcat", showCat);
         startActivity(configureBoothsForShowIntent);
     }
 

@@ -30,6 +30,9 @@ public class TradeShowDB {
     ///////////////////UTILITY STRINGS AND DATABASE ITEMS
     public static final String checkTableExistsSQL = "SELECT name " +
             "FROM sqlite_master " + "WHERE type='table' AND name = ?;";
+
+
+
     private TradeShowDBHelper dbHelper;
     private SQLiteDatabase tradeShowDatabase;
 
@@ -129,12 +132,7 @@ public class TradeShowDB {
         return mCursor;
     }
 
-    //////////////////////MANUAL DATABASE MAINTENANCE METHODS/////////
-    public void recreateShowsTable() {
-        dbHelper.recreateShowsTable();
-    }
-
-    public void recreateBoothsTable() {
-        dbHelper.recreateBoothsTable();
+    public TradeShowDBHelper getDbHelper() {
+        return dbHelper;
     }
 }

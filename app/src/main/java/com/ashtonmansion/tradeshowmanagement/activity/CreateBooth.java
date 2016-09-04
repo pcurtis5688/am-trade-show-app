@@ -13,6 +13,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
 import com.ashtonmansion.tradeshowmanagement.db.TradeShowDB;
@@ -34,12 +35,6 @@ import java.util.Locale;
 
 public class CreateBooth extends AppCompatActivity {
     ///////ACTIVITY VARS
-    private Context createBoothActivityContext;
-    ///////CLOVER VARS
-    private Account merchantAccount;
-    private InventoryConnector inventoryConnector;
-    private String showID;
-    private String showName;
     ///////UI AND DATA VARS
     private EditText createBoothNameField;
     private EditText createBoothNumberField;
@@ -47,17 +42,30 @@ public class CreateBooth extends AppCompatActivity {
     private EditText createBoothSizeField;
     private EditText createBoothAreaField;
     private EditText createBoothCategoryField;
+    private Context createBoothActivityContext;
+    ///////CLOVER VARS
+    private Account merchantAccount;
+    private InventoryConnector inventoryConnector;
+    private String showID;
+    private String showName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        createBoothActivityContext = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_booth);
         Toolbar toolbar = (Toolbar) findViewById(R.id.create_booth_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        ////CONNECT FIELD ITEMS
-        createBoothActivityContext = this;
+        ///////GET CURRENT SHOWID & SHOWNAME from CONFIGURE BOOTHS ACTIVITY
+        Bundle extrasBundle = getIntent().getExtras();
+        if (extrasBundle != null) {
+            showID = (String) extrasBundle.get("showid");
+            showName = (String) extrasBundle.get("showname"); ////CONNECT FIELD ITEMS
+            TextView createBoothActivityHeader = (TextView) findViewById(R.id.create_booth_activity_header_w_showname);
+            createBoothActivityHeader.setText(String.valueOf(getResources().getString(R.string.title_activity_create_booth) + " - " + showName));
+        }
+        //////DEFINE REST OF THE UI FIELDS FOR ACTIVITY
         createBoothNameField = (EditText) findViewById(R.id.create_booth_name_field);
         createBoothNumberField = (EditText) findViewById(R.id.create_booth_number_field);
         createBoothPriceField = (EditText) findViewById(R.id.create_booth_price_field);
@@ -90,131 +98,129 @@ public class CreateBooth extends AppCompatActivity {
 
             }
         });
-
         createBoothSizeField = (EditText) findViewById(R.id.create_booth_size_field);
         createBoothAreaField = (EditText) findViewById(R.id.create_booth_area_field);
         createBoothCategoryField = (EditText) findViewById(R.id.create_booth_category_field);
-        ///////GET CURRENT SHOWID & SHOWNAME from CONFIGURE BOOTHS ACTIVITY
-        Bundle extrasBundle = getIntent().getExtras();
-        if (extrasBundle != null) {
-            showID = extrasBundle.get("showid").toString();
-            showName = extrasBundle.get("showname").toString();
-        }
-    }
-
-    public void createBoothFinalizeAction(View view) {
-        CreateBoothTask createBoothTask = new CreateBoothTask();
-        createBoothTask.execute();
     }
 
     private class CreateBoothTask extends AsyncTask<Void, Void, Void> {
+        //////PROGRESS VARS
         private ProgressDialog progressDialog;
+        //////NEW BOOTH DATA VARS
         private Item newBooth = new Item();
-        private Item newBoothItemReturned = new Item();
         private String createBoothNameFieldData;
         private String createBoothNumberFieldData;
+        private String createBoothPriceFieldData;
         private String createBoothSizeFieldData;
         private String createBoothAreaFieldData;
         private String createBoothCategoryFieldData;
-        private List<Tag> tagListForNewBooth = new ArrayList<>();
-        private Category matchingShowPulledFromClover = new Category();
-        private List<Category> showListForNewBooth = new ArrayList<>();
-        private List<Reference> boothReferenceListForShow = new ArrayList<>();
-        private Reference newBoothReferenceForShow = new Reference();
-        //LOCAL DATABASE VARS
-        private TradeShowDB tradeShowDB;
-        private boolean localDbCreateSuccess;
+        /////////////below are def new objects dont' need to worry
+        private List<Category> newBoothCategories;
+        private List<Tag> newBoothTags;
+        private Reference newBoothReference;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = new ProgressDialog(createBoothActivityContext);
-            progressDialog.setMessage("Creating Booth...");
-            progressDialog.show();
-            ///////////////GRAB DATA FROM UI FIELDS
+//            progressDialog = new ProgressDialog(createBoothActivityContext);
+//            progressDialog.setMessage("Saving New Booth...");
+//            progressDialog.show();
+
             createBoothNameFieldData = createBoothNameField.getText().toString();
             createBoothNumberFieldData = createBoothNumberField.getText().toString();
+            createBoothPriceFieldData = createBoothPriceField.getText().toString();
             createBoothSizeFieldData = createBoothSizeField.getText().toString();
             createBoothAreaFieldData = createBoothAreaField.getText().toString();
             createBoothCategoryFieldData = createBoothCategoryField.getText().toString();
-            ///////////////CREATE A NEW ITEM OBJECT AND POPULATE DATA
-            newBooth.setName(createBoothNameFieldData);
-            newBooth.setSku(createBoothNumberFieldData);
-            newBooth.setPrice(GlobalUtils.getLongFromFormattedPriceString(createBoothPriceField.getText().toString()));
-
-            //// TODO: 9/2/2016 price is still effed grab from edit booth
         }
 
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                //////////CONNECT TO INVENTORY
                 merchantAccount = CloverAccount.getAccount(createBoothActivityContext);
                 inventoryConnector = new InventoryConnector(createBoothActivityContext, merchantAccount, null);
                 inventoryConnector.connect();
+                ///////////////CREATE A NEW ITEM OBJECT AND POPULATE DATA
+                newBooth.setName(createBoothNameFieldData);
+                newBooth.setSku(createBoothNumberFieldData); ////in effect, booth no.
+                //// TODO: 9/2/2016 price is still effed grab from edit booth
+                newBooth.setPrice(GlobalUtils.getLongFromFormattedPriceString(createBoothPriceFieldData));
 
-                //////////SET ITEM OBJ FOR NEW BOOTH TO THE ID CLOVER-RETURNED ITEM
-                //////////EVERYTHING AFTER ABOVE LINE NEEDS TO USE THE ITEM OBJ RETURNED
-                newBoothItemReturned = inventoryConnector.createItem(newBooth);
+                newBooth = inventoryConnector.createItem(newBooth);
+                newBoothReference = new Reference();
+                newBoothReference.setId(newBooth.getId());
+                GlobalUtils.valuesTester("NorthPoleShID:", showID);
+                GlobalUtils.valuesTester("NewBoothID:", newBooth.getId());
+                GlobalUtils.valuesTester("boothrefstr", newBoothReference.toString());
 
-                //////////CREATE EACH NEW TAG ASSIGNED TO THE NEW BOOTH IN INV.
-                tagListForNewBooth.add(new Tag().setName("Size - " + createBoothSizeFieldData));
-                tagListForNewBooth.add(new Tag().setName("Area - " + createBoothAreaFieldData));
-                tagListForNewBooth.add(new Tag().setName("Category - " + createBoothCategoryFieldData));
-                for (Tag newBoothTag : tagListForNewBooth) {
-                    inventoryConnector.createTag(newBoothTag);
+                //// TODO: 9/3/2016 virtually last thing is to add the booth item to the category prior to updating in clovewr
+                for (Category tempShowCat : inventoryConnector.getCategories()) {
+                    if (tempShowCat.getId().equalsIgnoreCase(showID)) {
+                        newBoothCategories = new ArrayList<>();
+                        newBoothCategories.add(tempShowCat);
+                        List<Reference> showCategoryItemList;
+                        if (null != tempShowCat.getItems() && tempShowCat.getItems().size() > 0) {
+                            showCategoryItemList = tempShowCat.getItems();
+                            showCategoryItemList.add(newBoothReference);
+                            GlobalUtils.valuesTester("CategoryID :", showCategoryItemList.get(0).getId());
+                            tempShowCat.setItems(showCategoryItemList);
+                        } else {
+                            showCategoryItemList = new ArrayList<>();
+                            showCategoryItemList.add(newBoothReference);
+                            tempShowCat.setItems(showCategoryItemList);
+                        }
+                        newBooth.setCategories(newBoothCategories);
+                        inventoryConnector.updateCategory(tempShowCat);
+                    }
                 }
-                newBoothItemReturned.setTags(tagListForNewBooth);
 
-                //////NOW, CONFIGURE THE CATEGORY (SHOW) FOR THE NEW BOOTH
-                List<Category> entireShowList = inventoryConnector.getCategories();
-                for (Category tempShow : entireShowList) {
-                    if (tempShow.getId().equalsIgnoreCase(showID))
-                        matchingShowPulledFromClover = tempShow;
-                }
-                showListForNewBooth.add(matchingShowPulledFromClover);
-                newBoothItemReturned.setCategories(showListForNewBooth);
-
-                /////CREATE BOOTH REFERENCE OBJECT AND PROPERLY ADD TO SYSTEM
-                newBoothReferenceForShow.setId(newBoothItemReturned.getId());
-                /////IF SHOW OBJECT ALREADY HAD OTHER BOOTHS, OTHERWISE MAKE NEW LIST
-                if (matchingShowPulledFromClover.getItems().size() > 0) {
-                    boothReferenceListForShow = matchingShowPulledFromClover.getItems();
-                } else {
-                    boothReferenceListForShow = new ArrayList<>();
-                }
-                boothReferenceListForShow.add(newBoothReferenceForShow);
-                matchingShowPulledFromClover.setItems(boothReferenceListForShow);
-                inventoryConnector.updateCategory(matchingShowPulledFromClover);
-                inventoryConnector.updateItem(newBoothItemReturned);
-                /////DO LOCAL DATABASE INSERTS USING THE COMPLETE CLOVER OBJECT
-                tradeShowDB = new TradeShowDB(createBoothActivityContext);
-                localDbCreateSuccess =
-                        tradeShowDB.createBoothItem(
-                                newBoothItemReturned.getId(),
-                                newBoothItemReturned.getName(),
-                                newBoothItemReturned.getSku(),
-                                newBoothItemReturned.getPrice(),
-                                createBoothSizeFieldData,
-                                createBoothAreaFieldData,
-                                createBoothCategoryFieldData);
+                Tag boothSizeTagWithID = inventoryConnector.createTag(new Tag().setName("Size - " + createBoothSizeFieldData));
+                Tag boothAreaTagWithID = inventoryConnector.createTag(new Tag().setName("Area - " + createBoothAreaFieldData));
+                Tag boothCategoryTagWithID = inventoryConnector.createTag(new Tag().setName("Category - " + createBoothCategoryFieldData));
+                newBoothTags = new ArrayList<>();
+                newBoothTags.add(boothSizeTagWithID);
+                newBoothTags.add(boothAreaTagWithID);
+                newBoothTags.add(boothCategoryTagWithID);
+                newBooth.setTags(newBoothTags);
+                inventoryConnector.updateItem(newBooth);
+                inventoryConnector.updateItemStock(newBooth.getId(), 1);
+                GlobalUtils.valuesTester("SizeTagID: ", boothSizeTagWithID.getId());
+                GlobalUtils.valuesTester("AreaTagID: ", boothAreaTagWithID.getId());
+                GlobalUtils.valuesTester("CatTagID: ", boothCategoryTagWithID.getId());
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
             } finally {
                 inventoryConnector.disconnect();
             }
+
+            /////DO LOCAL DATABASE INSERTS USING THE COMPLETE CLOVER OBJECT
+            TradeShowDB tradeShowDB = new TradeShowDB(createBoothActivityContext);
+
+            boolean successfulBoothCreationLOCAL = tradeShowDB.createBoothItem(
+                    newBooth.getId(),
+                    newBooth.getName(),
+                    newBooth.getSku(),
+                    newBooth.getPrice(),
+                    createBoothSizeFieldData,
+                    createBoothAreaFieldData,
+                    createBoothCategoryFieldData);
+
+            if (!successfulBoothCreationLOCAL)
+                Log.e("Add Local Booth: ", "CREATE BOOTH W ID: " + newBooth.getId() + " , <<FAILED>>");
+
             return null;
         }
 
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            progressDialog.dismiss();
-            if (!localDbCreateSuccess) {
-                Log.e("Add Local Booth: ", "CREATE BOOTH W ID: " + newBooth.getId() + " , " + localDbCreateSuccess);
-            } else {
-                finish();
-            }
+            finish();
+    //        progressDialog.dismiss();
         }
+    }
+
+    public void finalizeBoothCreation(View view) {
+        CreateBoothTask createBoothTask = new CreateBoothTask();
+        createBoothTask.execute();
     }
 }
