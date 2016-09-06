@@ -238,9 +238,6 @@ public class BoothReservation extends AppCompatActivity
         } else if (id == R.id.nav_merchandise_sales_btn) {
             Intent merchandiseSalesIntent = new Intent(boothReservationActivityContext, MerchandiseSales.class);
             startActivity(merchandiseSalesIntent);
-        } else if (id == R.id.nav_app_settings_btn) {
-            Intent appSettingsIntent = new Intent(boothReservationActivityContext, AppSettings.class);
-            startActivity(appSettingsIntent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.make_reservation_drawerlayout);

@@ -15,7 +15,6 @@ import android.view.MenuItem;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
 import com.ashtonmansion.tradeshowmanagement.activity.AdvertisingSales;
-import com.ashtonmansion.tradeshowmanagement.activity.AppSettings;
 import com.ashtonmansion.tradeshowmanagement.activity.ConfigureBoothsShowSelection;
 import com.ashtonmansion.tradeshowmanagement.activity.EmailConfirmation;
 import com.ashtonmansion.tradeshowmanagement.activity.GeneralTicketSales;
@@ -130,8 +129,7 @@ public class HomeActivity extends AppCompatActivity
             Intent merchandiseSalesIntent = new Intent(homeActivityContext, MerchandiseSales.class);
             startActivity(merchandiseSalesIntent);
         } else if (id == R.id.nav_app_settings_btn) {
-            Intent appSettingsIntent = new Intent(homeActivityContext, AppSettings.class);
-            startActivity(appSettingsIntent);
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.home_drawerlayout);

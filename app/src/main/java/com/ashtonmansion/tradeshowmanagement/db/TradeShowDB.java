@@ -95,6 +95,10 @@ public class TradeShowDB {
         return tradeShowDatabase.insert(SHOW_TABLE, null, values);
     }
 
+    public boolean deleteSingleBoothByBoothID(String boothID){
+        String boothIDWithTicks = "'" + boothID + "'";
+        return tradeShowDatabase.delete(BOOTH_TABLE, BOOTH_CLOVERID + "=" + boothIDWithTicks, null) > 0;
+    }
 
     public boolean updateSingleShowByCloverID(String cloverId, String showName, String showDate,
                                               String showLocation, String showNotes,

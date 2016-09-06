@@ -168,9 +168,6 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
         } else if (id == R.id.nav_merchandise_sales_btn) {
             Intent merchandiseSalesIntent = new Intent(configureBoothsShowSelectionActivityContext, MerchandiseSales.class);
             startActivity(merchandiseSalesIntent);
-        } else if (id == R.id.nav_app_settings_btn) {
-            Intent appSettingsIntent = new Intent(configureBoothsShowSelectionActivityContext, AppSettings.class);
-            startActivity(appSettingsIntent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.configure_booths_show_selection_drawerlayout);

@@ -92,6 +92,20 @@
     <TableRow>
 
         <Button
+            android:id="@+id/delete_booth_btn"
+            android:layout_marginTop="@dimen/dimen_50dp"
+            android:onClick="deleteBoothAction"
+            android:text="@string/delete_booth_btn_text"
+            android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/edit_booth_cancel_btn"
+            android:layout_marginTop="@dimen/dimen_50dp"
+            android:onClick="cancelEditBooth"
+            android:text="@string/edit_booth_cancel_btn_text"
+            android:textAlignment="center" />
+
+        <Button
             android:id="@+id/edit_booth_save_changes_btn"
             android:layout_marginTop="@dimen/dimen_50dp"
             android:layout_span="2"

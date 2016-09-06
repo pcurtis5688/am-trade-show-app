@@ -122,9 +122,10 @@ public class CreateBooth extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-//            progressDialog = new ProgressDialog(createBoothActivityContext);
-//            progressDialog.setMessage("Saving New Booth...");
-//            progressDialog.show();
+            //// TODO: 9/4/2016 fix this when done with createbooth testing
+            // progressDialog = new ProgressDialog(createBoothActivityContext);
+            // progressDialog.setMessage("Saving New Booth...");
+            // progressDialog.show();
 
             createBoothNameFieldData = createBoothNameField.getText().toString();
             createBoothNumberFieldData = createBoothNumberField.getText().toString();
@@ -146,51 +147,73 @@ public class CreateBooth extends AppCompatActivity {
                 //// TODO: 9/2/2016 price is still effed grab from edit booth
                 newBooth.setPrice(GlobalUtils.getLongFromFormattedPriceString(createBoothPriceFieldData));
 
-                newBooth = inventoryConnector.createItem(newBooth);
-                newBoothReference = new Reference();
-                newBoothReference.setId(newBooth.getId());
-                GlobalUtils.valuesTester("NorthPoleShID:", showID);
-                GlobalUtils.valuesTester("NewBoothID:", newBooth.getId());
-                GlobalUtils.valuesTester("boothrefstr", newBoothReference.toString());
 
                 //// TODO: 9/3/2016 virtually last thing is to add the booth item to the category prior to updating in clovewr
-                for (Category tempShowCat : inventoryConnector.getCategories()) {
-                    if (tempShowCat.getId().equalsIgnoreCase(showID)) {
+                for (Category theCategory : inventoryConnector.getCategories()) {
+                    if (theCategory.getId().equalsIgnoreCase(showID)) {
+                        newBooth = inventoryConnector.createItem(newBooth);
+                        inventoryConnector.addItemToCategory(newBooth.getId(), theCategory.getId());
+                        newBoothReference = new Reference();
+                        /////sfd
+                        newBoothReference.setId(newBooth.getId());
+                        ////                        GlobalUtils.valuesTester("invconnitemgrpid", inventoryConnector.getItems());
+                        GlobalUtils.valuesTester("invconnitemgrpid", inventoryConnector.getItems().toString());
+                        GlobalUtils.valuesTester("NorthPoleShID:", showID);
+                        GlobalUtils.valuesTester("NewBoothID:", newBooth.getId());
+
+                        /////////////////////////HANDLE THE ITEM'S
                         newBoothCategories = new ArrayList<>();
-                        newBoothCategories.add(tempShowCat);
+                        newBoothCategories.add(theCategory);
+                        newBooth.setCategories(newBoothCategories);
+
                         List<Reference> showCategoryItemList;
-                        if (null != tempShowCat.getItems() && tempShowCat.getItems().size() > 0) {
-                            showCategoryItemList = tempShowCat.getItems();
+                        if (null != theCategory.getItems() && theCategory.getItems().size() > 0) {
+                            showCategoryItemList = new ArrayList<>();
+                            for (Reference reference : theCategory.getItems()) {
+                                showCategoryItemList.add(reference);
+                            }
                             showCategoryItemList.add(newBoothReference);
-                            GlobalUtils.valuesTester("CategoryID :", showCategoryItemList.get(0).getId());
-                            tempShowCat.setItems(showCategoryItemList);
+//                          ////todo IF CATEGORY ALREADY HAS THE NEW BOOTH REFERENCE, SKIP OTHERWISE DO THIS
+                            theCategory.setItems(showCategoryItemList);
                         } else {
                             showCategoryItemList = new ArrayList<>();
                             showCategoryItemList.add(newBoothReference);
-                            tempShowCat.setItems(showCategoryItemList);
+                            theCategory.setItems(showCategoryItemList);
                         }
-                        newBooth.setCategories(newBoothCategories);
-                        inventoryConnector.updateCategory(tempShowCat);
+                        inventoryConnector.updateCategory(theCategory);
+
+
                     }
                 }
 
+
+                List<Reference> boothReferenceInList = new ArrayList<>();
+                boothReferenceInList.add(newBoothReference);
                 Tag boothSizeTagWithID = inventoryConnector.createTag(new Tag().setName("Size - " + createBoothSizeFieldData));
+                boothSizeTagWithID.setItems(boothReferenceInList);
                 Tag boothAreaTagWithID = inventoryConnector.createTag(new Tag().setName("Area - " + createBoothAreaFieldData));
+                boothAreaTagWithID.setItems(boothReferenceInList);
                 Tag boothCategoryTagWithID = inventoryConnector.createTag(new Tag().setName("Category - " + createBoothCategoryFieldData));
+                boothCategoryTagWithID.setItems(boothReferenceInList);
+
                 newBoothTags = new ArrayList<>();
                 newBoothTags.add(boothSizeTagWithID);
                 newBoothTags.add(boothAreaTagWithID);
                 newBoothTags.add(boothCategoryTagWithID);
                 newBooth.setTags(newBoothTags);
+
+                inventoryConnector.updateTag(boothSizeTagWithID);
+                inventoryConnector.updateTag(boothAreaTagWithID);
+                inventoryConnector.updateTag(boothCategoryTagWithID);
                 inventoryConnector.updateItem(newBooth);
                 inventoryConnector.updateItemStock(newBooth.getId(), 1);
+
                 GlobalUtils.valuesTester("SizeTagID: ", boothSizeTagWithID.getId());
                 GlobalUtils.valuesTester("AreaTagID: ", boothAreaTagWithID.getId());
                 GlobalUtils.valuesTester("CatTagID: ", boothCategoryTagWithID.getId());
+
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
-            } finally {
-                inventoryConnector.disconnect();
             }
 
             /////DO LOCAL DATABASE INSERTS USING THE COMPLETE CLOVER OBJECT
@@ -207,7 +230,7 @@ public class CreateBooth extends AppCompatActivity {
 
             if (!successfulBoothCreationLOCAL)
                 Log.e("Add Local Booth: ", "CREATE BOOTH W ID: " + newBooth.getId() + " , <<FAILED>>");
-
+            inventoryConnector.disconnect();
             return null;
         }
 
@@ -215,7 +238,7 @@ public class CreateBooth extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
             finish();
-    //        progressDialog.dismiss();
+            progressDialog.dismiss();
         }
     }
 

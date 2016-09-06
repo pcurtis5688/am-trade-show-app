@@ -108,9 +108,6 @@ public class AdvertisingSales extends AppCompatActivity
         } else if (id == R.id.nav_merchandise_sales_btn) {
             Intent merchandiseSalesIntent = new Intent(advertisingSalesActivityContext, MerchandiseSales.class);
             startActivity(merchandiseSalesIntent);
-        } else if (id == R.id.nav_app_settings_btn) {
-            Intent appSettingsIntent = new Intent(advertisingSalesActivityContext, AppSettings.class);
-            startActivity(appSettingsIntent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.advertising_sales_drawerlayout);

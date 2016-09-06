@@ -109,8 +109,7 @@ public class GeneralTicketSales extends AppCompatActivity
             Intent merchandiseSalesIntent = new Intent(generalTicketSalesActivityContext, MerchandiseSales.class);
             startActivity(merchandiseSalesIntent);
         } else if (id == R.id.nav_app_settings_btn) {
-            Intent appSettingsIntent = new Intent(generalTicketSalesActivityContext, AppSettings.class);
-            startActivity(appSettingsIntent);
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.general_ticket_sales_drawerlayout);

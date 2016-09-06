@@ -114,9 +114,8 @@ public class AddShow extends AppCompatActivity {
                 Category newShowCategory = new Category();
                 newShowCategory.setSortOrder(1);
                 newShowCategory.setName(newShowLocationAndDateStringForCategory);
-                List<Reference> fauxItemRefList = new ArrayList<>();
-
-                newShowCategory.setItems(fauxItemRefList);
+                List<Reference> itemRefList = newShowCategory.getItems();
+                newShowCategory.setItems(itemRefList);
                 returnedCategory = inventoryConnector.createCategory(newShowCategory);
 
                 doLocalInsert(newShowNameString, returnedCategory);

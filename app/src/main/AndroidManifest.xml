@@ -117,15 +117,6 @@
                 android:value="com.ashtonmansion.tradeshowmanagement.HomeActivity" />
         </activity>
         <activity
-            android:name="com.ashtonmansion.tradeshowmanagement.activity.AppSettings"
-            android:label="@string/nav_drawer_app_settings_text"
-            android:parentActivityName="com.ashtonmansion.tradeshowmanagement.HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ashtonmansion.tradeshowmanagement.HomeActivity" />
-        </activity>
-        <activity
             android:name="com.ashtonmansion.tradeshowmanagement.activity.ViewBoothDetail"
             android:parentActivityName="com.ashtonmansion.tradeshowmanagement.activity.BoothReservation" />
         <activity
@@ -149,8 +140,7 @@
         <activity
             android:name="com.ashtonmansion.tradeshowmanagement.activity.CreateBooth"
             android:label="@string/title_activity_create_booth"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name="com.ashtonmansion.tradeshowmanagement.activity.EditBooth"
             android:label="@string/title_activity_edit_booth"
