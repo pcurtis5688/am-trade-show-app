@@ -54,6 +54,7 @@ public class EditBooth extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        editBoothActivityContext = this;
         //////////////////NAVIGATION AND UI WORK//////////////
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_booth);
@@ -64,9 +65,6 @@ public class EditBooth extends AppCompatActivity {
         TextView editBoothHeaderTv = (TextView) findViewById(R.id.edit_booth_header);
         editBoothNumberField = (EditText) findViewById(R.id.edit_booth_number_field);
         editBoothPriceField = (EditText) findViewById(R.id.edit_booth_price_field);
-        editBoothSizeField = (EditText) findViewById(R.id.edit_booth_size_field);
-        editBoothAreaField = (EditText) findViewById(R.id.edit_booth_area_field);
-        editBoothCategoryField = (EditText) findViewById(R.id.edit_booth_category_field);
         editBoothPriceField.addTextChangedListener(new TextWatcher() {
 
             private String current = "";
@@ -96,10 +94,11 @@ public class EditBooth extends AppCompatActivity {
 
             }
         });
+        editBoothSizeField = (EditText) findViewById(R.id.edit_booth_size_field);
+        editBoothAreaField = (EditText) findViewById(R.id.edit_booth_area_field);
+        editBoothCategoryField = (EditText) findViewById(R.id.edit_booth_category_field);
 
         //////////////////DATA WORK///////////////////////////
-        editBoothActivityContext = this;
-
         Bundle extrasBundle = getIntent().getExtras();
         if (extrasBundle != null) {
             booth = (Item) extrasBundle.get("booth");
@@ -111,6 +110,7 @@ public class EditBooth extends AppCompatActivity {
             GetBoothDetailsTask getBoothDetailsTask = new GetBoothDetailsTask();
             getBoothDetailsTask.execute();
         } else {
+            Log.e("Major Error: ", "Edit Booth Activity started without a booth reference");
             finish();
         }
     }
@@ -192,12 +192,9 @@ public class EditBooth extends AppCompatActivity {
         private Item boothToUpdate;
         private String editBoothNumberFieldData;
         private String editBoothPriceFieldData;
-        private long priceLongFormat;
         private String editBoothSizeFieldData;
         private String editBoothAreaFieldData;
         private String editBoothCategoryFieldData;
-        /////// LOCAL DATABASE INFO
-        private boolean sqliteUpdateBoothSuccess;
 
         @Override
         protected void onPreExecute() {
@@ -209,8 +206,6 @@ public class EditBooth extends AppCompatActivity {
             editBoothNumberFieldData = editBoothNumberField.getText().toString();
             //PRICE HANDLING BELOW
             editBoothPriceFieldData = editBoothPriceField.getText().toString();
-            String cleanString = editBoothPriceFieldData.replaceAll("[$,.]", "");
-            priceLongFormat = Long.parseLong(cleanString);
 
             ///'TAG' FIELD HANDLING
             editBoothSizeFieldData = editBoothSizeField.getText().toString();
@@ -231,24 +226,21 @@ public class EditBooth extends AppCompatActivity {
                 merchantAccount = CloverAccount.getAccount(editBoothActivityContext);
                 inventoryConnector = new InventoryConnector(editBoothActivityContext, merchantAccount, null);
                 inventoryConnector.connect();
+
+                //////////BOOTH UPDATES
+                boothToUpdate = inventoryConnector.getItem(booth.getId());
+                boothToUpdate.setName(editBoothNumberFieldData);
+                boothToUpdate.setSku(editBoothNumberFieldData);
+                boothToUpdate.setPrice(GlobalUtils.getLongFromFormattedPriceString(editBoothPriceFieldData));
+
                 //////////TAG UPDATES
                 // TODO: 9/7/2016 following 3 necessary since we already are going to update the list etc
                 inventoryConnector.updateTag(sizeTag);
                 inventoryConnector.updateTag(areaTag);
                 inventoryConnector.updateTag(categoryTag);
-                //////////BOOTH UPDATES
-                boothToUpdate = inventoryConnector.getItem(booth.getId());
-                boothToUpdate.setSku(editBoothNumberFieldData);
-                boothToUpdate.setPrice(priceLongFormat);
                 boothToUpdate.setTags(boothTags);
                 inventoryConnector.updateItem(boothToUpdate);
-                //////////LOCAL UPDATES
-                TradeShowDB tradeShowDatabase = new TradeShowDB(editBoothActivityContext);
-                sqliteUpdateBoothSuccess = tradeShowDatabase.updateSingleBoothByCloverId(boothToUpdate.getId(), boothToUpdate.getName(),
-                        boothToUpdate.getSku(), boothToUpdate.getPrice(), editBoothSizeFieldData,
-                        editBoothAreaFieldData, editBoothCategoryFieldData);
-                if (!sqliteUpdateBoothSuccess)
-                    Log.e("Err Edit Booth: ", "Booth w/ ID: " + boothToUpdate.getId());
+
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
             } catch (SQLiteException e2) {
@@ -256,6 +248,20 @@ public class EditBooth extends AppCompatActivity {
             } finally {
                 inventoryConnector.disconnect();
             }
+
+            //////////LOCAL UPDATES
+            TradeShowDB tradeShowDatabase = new TradeShowDB(editBoothActivityContext);
+            boolean sqliteUpdateBoothSuccess = tradeShowDatabase.updateSingleBoothByCloverId(
+                    boothToUpdate.getId(),
+                    boothToUpdate.getName(),
+                    boothToUpdate.getSku(),
+                    boothToUpdate.getPrice(),
+                    editBoothSizeFieldData,
+                    editBoothAreaFieldData,
+                    editBoothCategoryFieldData);
+            if (!sqliteUpdateBoothSuccess)
+                Log.e("Err Edit Booth: ", "Booth w/ ID: " + boothToUpdate.getId());
+            tradeShowDatabase = null;
             return null;
         }
 

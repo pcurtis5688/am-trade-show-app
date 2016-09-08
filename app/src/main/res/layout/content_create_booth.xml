@@ -95,6 +95,12 @@
     </TableRow>
 
     <TableRow>
+        <Button
+            android:id="@+id/create_booth_cancel_btn"
+            android:layout_marginTop="@dimen/dimen_50dp"
+            android:onClick="cancelCreateBooth"
+            android:text="@string/create_booth_cancel_btn_text"
+            android:textAlignment="center" />
 
         <Button
             android:id="@+id/finalize_booth_creation_btn"

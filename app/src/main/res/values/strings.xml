@@ -95,6 +95,7 @@
     <string name="create_booth_size_hint">[Size]</string>
     <string name="create_booth_area_hint">[Area]</string>
     <string name="create_booth_category_hint">[Category]</string>
+    <string name="create_booth_cancel_btn_text">Cancel</string>
     <string name="create_booth_finish_booth_creation_str">Create Booth</string>
     <string name="create_booth_progress_dialog_text">Creating Booth. . . </string>
 
