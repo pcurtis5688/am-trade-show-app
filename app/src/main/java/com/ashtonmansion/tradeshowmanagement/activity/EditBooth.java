@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.ashtonmansion.amtradeshowmanagement.R;
 
 import com.ashtonmansion.tradeshowmanagement.db.TradeShowDB;
+import com.ashtonmansion.tradeshowmanagement.util.GlobalUtils;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
@@ -41,6 +42,9 @@ public class EditBooth extends AppCompatActivity {
     private Tag sizeTag;
     private Tag areaTag;
     private Tag categoryTag;
+    private int sizeTagInx;
+    private int areaTagInx;
+    private int categoryTagInx;
     //////UI VARS
     private EditText editBoothNumberField;
     private EditText editBoothPriceField;
@@ -111,12 +115,6 @@ public class EditBooth extends AppCompatActivity {
         }
     }
 
-    public void saveBoothChangesAction(View view) {
-        UpdateBoothTask updateBoothTask = new UpdateBoothTask();
-        updateBoothTask.execute();
-    }
-
-
     private class GetBoothDetailsTask extends AsyncTask<Void, Void, Void> {
         /////// CLOVER CONNECTION
         private Account merchantAccount;
@@ -155,6 +153,7 @@ public class EditBooth extends AppCompatActivity {
 
     private void populateExtraData() {
         Log.d("Booth ID: ", booth.getId() + "Fetching tags...");
+        int tagInx = 0;
         for (Tag currentTag : boothTags) {
             Log.d("currenttagid: ", currentTag.getId() + " currenttagname: " + currentTag.getName());
             String currentTagSubstring1 = currentTag.getName().substring(0, 3);
@@ -164,19 +163,23 @@ public class EditBooth extends AppCompatActivity {
             if (currentTag.getName().substring(0, 4).equalsIgnoreCase("size")) {
                 editBoothSizeField.setText(currentTag.getName());
                 sizeTag = currentTag;
+                sizeTagInx = tagInx;
                 Log.d("Booth ID: ", booth.getId() + "Size tag: " + sizeTag.toString());
             } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("area")) {
                 editBoothAreaField.setText(currentTag.getName());
                 areaTag = currentTag;
+                areaTagInx = tagInx;
                 Log.d("Booth ID: ", booth.getId() + "Area tag: " + areaTag.toString());
             } else if (currentTag.getName().substring(0, 8).equalsIgnoreCase("category")) {
                 editBoothCategoryField.setText(currentTag.getName());
                 categoryTag = currentTag;
+                categoryTagInx = tagInx;
                 Log.d("Booth ID: ", booth.getId() + "Category tag: " + categoryTag.toString());
             } else {
                 Log.d("Booth ID: ", booth.getId() + " - Tag'" + currentTag.getName() + "' found and skipped.");
             }
         }
+        tagInx++;
         Log.d("Booth ID: ", booth.getId() + " - Tag Scan Complete.");
     }
 
@@ -187,7 +190,6 @@ public class EditBooth extends AppCompatActivity {
         private InventoryConnector inventoryConnector;
         /////// SELECTED BOOTH DATA
         private Item boothToUpdate;
-        private List<Tag> updatedTagList;
         private String editBoothNumberFieldData;
         private String editBoothPriceFieldData;
         private long priceLongFormat;
@@ -205,14 +207,22 @@ public class EditBooth extends AppCompatActivity {
             progressDialog.show();
 
             editBoothNumberFieldData = editBoothNumberField.getText().toString();
-            editBoothSizeFieldData = editBoothSizeField.getText().toString();
-            editBoothAreaFieldData = editBoothAreaField.getText().toString();
-            editBoothCategoryFieldData = editBoothCategoryField.getText().toString();
-
             //PRICE HANDLING BELOW
             editBoothPriceFieldData = editBoothPriceField.getText().toString();
             String cleanString = editBoothPriceFieldData.replaceAll("[$,.]", "");
             priceLongFormat = Long.parseLong(cleanString);
+
+            ///'TAG' FIELD HANDLING
+            editBoothSizeFieldData = editBoothSizeField.getText().toString();
+            editBoothAreaFieldData = editBoothAreaField.getText().toString();
+            editBoothCategoryFieldData = editBoothCategoryField.getText().toString();
+            sizeTag.setName(GlobalUtils.getFormattedTagName(editBoothSizeFieldData, "Size"));
+            areaTag.setName(GlobalUtils.getFormattedTagName(editBoothAreaFieldData, "Area"));
+            categoryTag.setName(GlobalUtils.getFormattedTagName(editBoothCategoryFieldData, "Category"));
+            boothTags.set(sizeTagInx, sizeTag);
+            boothTags.set(areaTagInx, areaTag);
+            boothTags.set(categoryTagInx, categoryTag);
+            //////
         }
 
         @Override
@@ -221,16 +231,18 @@ public class EditBooth extends AppCompatActivity {
                 merchantAccount = CloverAccount.getAccount(editBoothActivityContext);
                 inventoryConnector = new InventoryConnector(editBoothActivityContext, merchantAccount, null);
                 inventoryConnector.connect();
-
-                ////////
-                inventoryConnector.getItem(booth.getId()).clearTags();
-
-
+                //////////TAG UPDATES
+                // TODO: 9/7/2016 following 3 necessary since we already are going to update the list etc
+                inventoryConnector.updateTag(sizeTag);
+                inventoryConnector.updateTag(areaTag);
+                inventoryConnector.updateTag(categoryTag);
+                //////////BOOTH UPDATES
                 boothToUpdate = inventoryConnector.getItem(booth.getId());
-                boothToUpdate.setPrice(priceLongFormat);
                 boothToUpdate.setSku(editBoothNumberFieldData);
+                boothToUpdate.setPrice(priceLongFormat);
+                boothToUpdate.setTags(boothTags);
                 inventoryConnector.updateItem(boothToUpdate);
-
+                //////////LOCAL UPDATES
                 TradeShowDB tradeShowDatabase = new TradeShowDB(editBoothActivityContext);
                 sqliteUpdateBoothSuccess = tradeShowDatabase.updateSingleBoothByCloverId(boothToUpdate.getId(), boothToUpdate.getName(),
                         boothToUpdate.getSku(), boothToUpdate.getPrice(), editBoothSizeFieldData,
@@ -304,5 +316,10 @@ public class EditBooth extends AppCompatActivity {
     public void deleteBoothAction(View view) {
         DeleteBoothTask deleteBoothTask = new DeleteBoothTask();
         deleteBoothTask.execute();
+    }
+
+    public void saveBoothChangesAction(View view) {
+        UpdateBoothTask updateBoothTask = new UpdateBoothTask();
+        updateBoothTask.execute();
     }
 }

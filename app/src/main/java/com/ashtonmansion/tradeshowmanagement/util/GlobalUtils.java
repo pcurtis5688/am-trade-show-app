@@ -26,4 +26,18 @@ public class GlobalUtils {
     public static void valuesTester(String keyName, String value) {
         Log.d("Key: " + keyName, ",Value: " + value);
     }
+
+    public static String getFormattedTagName(String tagFieldData, String tagType) {
+        String formattedTagName = "";
+        if (tagType.equalsIgnoreCase("Size")) {
+            formattedTagName = "Size - " + tagFieldData;
+        } else if (tagType.equalsIgnoreCase("Area")) {
+            formattedTagName = "Area - " + tagFieldData;
+        } else if (tagType.equalsIgnoreCase("Category")) {
+            formattedTagName = "Category - " + tagFieldData;
+        } else {
+            Log.e("UnknownTagType: ", " passed to GlobalUtils");
+        }
+        return formattedTagName;
+    }
 }

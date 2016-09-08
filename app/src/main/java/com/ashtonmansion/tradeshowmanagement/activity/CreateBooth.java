@@ -108,7 +108,7 @@ public class CreateBooth extends AppCompatActivity {
 
     private class CreateBoothTask extends AsyncTask<Void, Void, Void> {
         //////PROGRESS VARS
-       // private ProgressDialog progressDialog;
+        // private ProgressDialog progressDialog;
         //////NEW BOOTH DATA VARS
         private Item newBooth;
         private String createBoothNumberFieldData;
@@ -188,17 +188,18 @@ public class CreateBooth extends AppCompatActivity {
 
                     }
                 }
-
+                String formattedBoothSizeTagName = GlobalUtils.getFormattedTagName(createBoothSizeFieldData, "Size");
+                String formattedBoothAreaTagName = GlobalUtils.getFormattedTagName(createBoothAreaFieldData, "Area");
+                String formattedBoothCategoryTagName = GlobalUtils.getFormattedTagName(createBoothCategoryFieldData, "Category");
 
                 List<Reference> boothReferenceInList = new ArrayList<>();
                 boothReferenceInList.add(newBoothReference);
-                Tag boothSizeTagWithID = inventoryConnector.createTag(new Tag().setName("Size - " + createBoothSizeFieldData));
+                Tag boothSizeTagWithID = inventoryConnector.createTag(new Tag().setName(formattedBoothSizeTagName));
                 boothSizeTagWithID.setItems(boothReferenceInList);
-                Tag boothAreaTagWithID = inventoryConnector.createTag(new Tag().setName("Area - " + createBoothAreaFieldData));
+                Tag boothAreaTagWithID = inventoryConnector.createTag(new Tag().setName(formattedBoothAreaTagName));
                 boothAreaTagWithID.setItems(boothReferenceInList);
-                Tag boothCategoryTagWithID = inventoryConnector.createTag(new Tag().setName("Category - " + createBoothCategoryFieldData));
+                Tag boothCategoryTagWithID = inventoryConnector.createTag(new Tag().setName(formattedBoothCategoryTagName));
                 boothCategoryTagWithID.setItems(boothReferenceInList);
-
                 newBoothTags = new ArrayList<>();
                 newBoothTags.add(boothSizeTagWithID);
                 newBoothTags.add(boothAreaTagWithID);
