@@ -28,6 +28,7 @@ import com.clover.sdk.v3.inventory.Item;
 import com.clover.sdk.v3.inventory.Tag;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -102,12 +103,12 @@ public class EditBooth extends AppCompatActivity {
             editBoothHeaderTv.setText(getApplicationContext().getString(R.string.edit_booth_header_string, booth.getName()));
             editBoothNumberField.setText(booth.getSku());
             editBoothPriceField.setText(booth.getPrice().toString());
+            ////
+            GetBoothDetailsTask getBoothDetailsTask = new GetBoothDetailsTask();
+            getBoothDetailsTask.execute();
         } else {
             finish();
         }
-
-        GetBoothDetailsTask getBoothDetailsTask = new GetBoothDetailsTask();
-        getBoothDetailsTask.execute();
     }
 
     public void saveBoothChangesAction(View view) {
@@ -115,10 +116,6 @@ public class EditBooth extends AppCompatActivity {
         updateBoothTask.execute();
     }
 
-    public void deleteBoothAction(View view) {
-        DeleteBoothTask deleteBoothTask = new DeleteBoothTask();
-        deleteBoothTask.execute();
-    }
 
     private class GetBoothDetailsTask extends AsyncTask<Void, Void, Void> {
         /////// CLOVER CONNECTION
@@ -136,9 +133,13 @@ public class EditBooth extends AppCompatActivity {
             inventoryConnector = new InventoryConnector(editBoothActivityContext, merchantAccount, null);
             inventoryConnector.connect();
             try {
-                boothTags = inventoryConnector.getTagsForItem(booth.getId());
+                if (inventoryConnector.getItem(booth.getId()).hasTags()) {
+                    boothTags = inventoryConnector.getItem(booth.getId()).getTags();
+                } else {
+                    boothTags = new ArrayList<>();
+                }
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
-                Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
+                Log.d("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
             } finally {
                 inventoryConnector.disconnect();
             }
@@ -155,15 +156,20 @@ public class EditBooth extends AppCompatActivity {
     private void populateExtraData() {
         Log.d("Booth ID: ", booth.getId() + "Fetching tags...");
         for (Tag currentTag : boothTags) {
-            if (currentTag.getName().substring(0, 3).equalsIgnoreCase("size")) {
+            Log.d("currenttagid: ", currentTag.getId() + " currenttagname: " + currentTag.getName());
+            String currentTagSubstring1 = currentTag.getName().substring(0, 3);
+            String currentTagSubstring2 = currentTag.getName().substring(0, 7);
+            Log.d("Substring1: ", currentTagSubstring1);
+            Log.d("Substring2: ", currentTagSubstring2);
+            if (currentTag.getName().substring(0, 4).equalsIgnoreCase("size")) {
                 editBoothSizeField.setText(currentTag.getName());
                 sizeTag = currentTag;
                 Log.d("Booth ID: ", booth.getId() + "Size tag: " + sizeTag.toString());
-            } else if (currentTag.getName().substring(0, 3).equalsIgnoreCase("area")) {
+            } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("area")) {
                 editBoothAreaField.setText(currentTag.getName());
                 areaTag = currentTag;
                 Log.d("Booth ID: ", booth.getId() + "Area tag: " + areaTag.toString());
-            } else if (currentTag.getName().substring(0, 7).equalsIgnoreCase("category")) {
+            } else if (currentTag.getName().substring(0, 8).equalsIgnoreCase("category")) {
                 editBoothCategoryField.setText(currentTag.getName());
                 categoryTag = currentTag;
                 Log.d("Booth ID: ", booth.getId() + "Category tag: " + categoryTag.toString());
@@ -181,6 +187,7 @@ public class EditBooth extends AppCompatActivity {
         private InventoryConnector inventoryConnector;
         /////// SELECTED BOOTH DATA
         private Item boothToUpdate;
+        private List<Tag> updatedTagList;
         private String editBoothNumberFieldData;
         private String editBoothPriceFieldData;
         private long priceLongFormat;
@@ -215,10 +222,13 @@ public class EditBooth extends AppCompatActivity {
                 inventoryConnector = new InventoryConnector(editBoothActivityContext, merchantAccount, null);
                 inventoryConnector.connect();
 
+                ////////
+                inventoryConnector.getItem(booth.getId()).clearTags();
+
+
                 boothToUpdate = inventoryConnector.getItem(booth.getId());
                 boothToUpdate.setPrice(priceLongFormat);
                 boothToUpdate.setSku(editBoothNumberFieldData);
-
                 inventoryConnector.updateItem(boothToUpdate);
 
                 TradeShowDB tradeShowDatabase = new TradeShowDB(editBoothActivityContext);
@@ -285,5 +295,14 @@ public class EditBooth extends AppCompatActivity {
             progressDialog.dismiss();
             finish();
         }
+    }
+
+    public void cancelEditBooth(View view) {
+        finish();
+    }
+
+    public void deleteBoothAction(View view) {
+        DeleteBoothTask deleteBoothTask = new DeleteBoothTask();
+        deleteBoothTask.execute();
     }
 }

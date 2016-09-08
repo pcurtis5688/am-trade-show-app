@@ -17,7 +17,7 @@
 
         <TextView
             android:id="@+id/edit_booth_header"
-            android:layout_span="2"
+            android:layout_span="3"
             android:textAlignment="center"
             android:textSize="@dimen/dimen_24sp"
             android:textStyle="bold" />
@@ -33,6 +33,7 @@
         <EditText
             android:id="@+id/edit_booth_number_field"
             android:hint="@string/edit_booth_number_hint"
+            android:layout_span="2"
             android:textAlignment="center" />
     </TableRow>
 
@@ -46,6 +47,7 @@
         <EditText
             android:id="@+id/edit_booth_price_field"
             android:hint="@string/edit_booth_price_hint"
+            android:layout_span="2"
             android:inputType="numberDecimal"
             android:textAlignment="center" />
     </TableRow>
@@ -60,6 +62,7 @@
         <EditText
             android:id="@+id/edit_booth_size_field"
             android:hint="@string/edit_booth_size_hint"
+            android:layout_span="2"
             android:textAlignment="center" />
     </TableRow>
 
@@ -73,6 +76,7 @@
         <EditText
             android:id="@+id/edit_booth_area_field"
             android:hint="@string/edit_booth_area_hint"
+            android:layout_span="2"
             android:textAlignment="center" />
     </TableRow>
 
@@ -86,6 +90,7 @@
         <EditText
             android:id="@+id/edit_booth_category_field"
             android:hint="@string/edit_booth_category_hint"
+            android:layout_span="2"
             android:textAlignment="center" />
     </TableRow>
 

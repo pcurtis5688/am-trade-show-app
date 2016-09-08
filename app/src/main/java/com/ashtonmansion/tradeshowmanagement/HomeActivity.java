@@ -48,7 +48,9 @@ public class HomeActivity extends AppCompatActivity
         //////////DATA WORK
         homeActivityContext = this;
         runDatabaseCheck();
-
+        TradeShowDB db = new TradeShowDB(homeActivityContext);
+        db.getDbHelper().recreateBoothsTable();
+        db.getDbHelper().recreateShowsTable();
     }
 
     private void runDatabaseCheck() {

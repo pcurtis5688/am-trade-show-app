@@ -36,7 +36,6 @@ import java.util.Locale;
 public class CreateBooth extends AppCompatActivity {
     ///////ACTIVITY VARS
     ///////UI AND DATA VARS
-    private EditText createBoothNameField;
     private EditText createBoothNumberField;
     private EditText createBoothPriceField;
     private EditText createBoothSizeField;
@@ -66,7 +65,6 @@ public class CreateBooth extends AppCompatActivity {
             createBoothActivityHeader.setText(String.valueOf(getResources().getString(R.string.title_activity_create_booth) + " - " + showName));
         }
         //////DEFINE REST OF THE UI FIELDS FOR ACTIVITY
-        createBoothNameField = (EditText) findViewById(R.id.create_booth_name_field);
         createBoothNumberField = (EditText) findViewById(R.id.create_booth_number_field);
         createBoothPriceField = (EditText) findViewById(R.id.create_booth_price_field);
         createBoothPriceField.addTextChangedListener(new TextWatcher() {
@@ -103,12 +101,16 @@ public class CreateBooth extends AppCompatActivity {
         createBoothCategoryField = (EditText) findViewById(R.id.create_booth_category_field);
     }
 
+    public void finalizeBoothCreation(View view) {
+        CreateBoothTask createBoothTask = new CreateBoothTask();
+        createBoothTask.execute();
+    }
+
     private class CreateBoothTask extends AsyncTask<Void, Void, Void> {
         //////PROGRESS VARS
-        private ProgressDialog progressDialog;
+       // private ProgressDialog progressDialog;
         //////NEW BOOTH DATA VARS
-        private Item newBooth = new Item();
-        private String createBoothNameFieldData;
+        private Item newBooth;
         private String createBoothNumberFieldData;
         private String createBoothPriceFieldData;
         private String createBoothSizeFieldData;
@@ -127,7 +129,6 @@ public class CreateBooth extends AppCompatActivity {
             // progressDialog.setMessage("Saving New Booth...");
             // progressDialog.show();
 
-            createBoothNameFieldData = createBoothNameField.getText().toString();
             createBoothNumberFieldData = createBoothNumberField.getText().toString();
             createBoothPriceFieldData = createBoothPriceField.getText().toString();
             createBoothSizeFieldData = createBoothSizeField.getText().toString();
@@ -141,12 +142,14 @@ public class CreateBooth extends AppCompatActivity {
                 merchantAccount = CloverAccount.getAccount(createBoothActivityContext);
                 inventoryConnector = new InventoryConnector(createBoothActivityContext, merchantAccount, null);
                 inventoryConnector.connect();
+
                 ///////////////CREATE A NEW ITEM OBJECT AND POPULATE DATA
-                newBooth.setName(createBoothNameFieldData);
+                newBooth = new Item();
+                //// TODO: 9/7/2016 make sure this is decided upon (temp use of sku twice)w
+                newBooth.setName(createBoothNumberFieldData);
                 newBooth.setSku(createBoothNumberFieldData); ////in effect, booth no.
                 //// TODO: 9/2/2016 price is still effed grab from edit booth
                 newBooth.setPrice(GlobalUtils.getLongFromFormattedPriceString(createBoothPriceFieldData));
-
 
                 //// TODO: 9/3/2016 virtually last thing is to add the booth item to the category prior to updating in clovewr
                 for (Category theCategory : inventoryConnector.getCategories()) {
@@ -201,7 +204,7 @@ public class CreateBooth extends AppCompatActivity {
                 newBoothTags.add(boothAreaTagWithID);
                 newBoothTags.add(boothCategoryTagWithID);
                 newBooth.setTags(newBoothTags);
-
+                inventoryConnector.getItem(newBooth.getId()).setTags(newBoothTags);
                 inventoryConnector.updateTag(boothSizeTagWithID);
                 inventoryConnector.updateTag(boothAreaTagWithID);
                 inventoryConnector.updateTag(boothCategoryTagWithID);
@@ -216,12 +219,12 @@ public class CreateBooth extends AppCompatActivity {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
             }
 
+            //// TODO: 9/7/2016 decide on name issue and change here 
             /////DO LOCAL DATABASE INSERTS USING THE COMPLETE CLOVER OBJECT
             TradeShowDB tradeShowDB = new TradeShowDB(createBoothActivityContext);
-
             boolean successfulBoothCreationLOCAL = tradeShowDB.createBoothItem(
                     newBooth.getId(),
-                    newBooth.getName(),
+                    newBooth.getId(),
                     newBooth.getSku(),
                     newBooth.getPrice(),
                     createBoothSizeFieldData,
@@ -230,6 +233,7 @@ public class CreateBooth extends AppCompatActivity {
 
             if (!successfulBoothCreationLOCAL)
                 Log.e("Add Local Booth: ", "CREATE BOOTH W ID: " + newBooth.getId() + " , <<FAILED>>");
+            tradeShowDB = null;
             inventoryConnector.disconnect();
             return null;
         }
@@ -237,13 +241,10 @@ public class CreateBooth extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
+            //progressDialog.dismiss();
             finish();
-            progressDialog.dismiss();
         }
     }
 
-    public void finalizeBoothCreation(View view) {
-        CreateBoothTask createBoothTask = new CreateBoothTask();
-        createBoothTask.execute();
-    }
+
 }

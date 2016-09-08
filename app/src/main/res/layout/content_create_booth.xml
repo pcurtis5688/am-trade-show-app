@@ -21,21 +21,6 @@
     <TableRow>
 
         <TextView
-            android:text="@string/create_booth_name_prompt"
-            android:textAlignment="center"
-            android:textSize="@dimen/dimen_24sp"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/create_booth_name_field"
-            android:hint="@string/create_booth_name_hint"
-            android:textAlignment="center"
-            android:textSize="@dimen/dimen_24sp" />
-    </TableRow>
-
-    <TableRow>
-
-        <TextView
             android:text="@string/create_booth_number_prompt"
             android:textAlignment="center"
             android:textSize="@dimen/dimen_24sp"

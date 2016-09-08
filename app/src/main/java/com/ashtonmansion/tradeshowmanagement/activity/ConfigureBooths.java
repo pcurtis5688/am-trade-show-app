@@ -105,7 +105,6 @@ public class ConfigureBooths extends AppCompatActivity
         boothsForShowTable.removeAllViews();
         populateBoothHeaderRow();
 
-
         if (boothList != null && boothList.size() > 0) {
             for (Item booth : boothList) {
                 TableRow newBoothRow = new TableRow(configureBoothsActivityContext);
@@ -339,10 +338,11 @@ public class ConfigureBooths extends AppCompatActivity
 
                 //////////////FIND CATEGORY IN CLOVER & POPULATE BOOTH REFERENCE LIST
                 List<Category> categoryList = inventoryConnector.getCategories();
+                List<Reference> boothReferenceList = new ArrayList<>();
                 for (Category category : categoryList) {
                     if (category.getId().equalsIgnoreCase(showID)) {
                         showCategory = category;
-                        boothReferenceList = showCategory.getItems();
+                        if (showCategory.hasItems()) boothReferenceList = showCategory.getItems();
                     }
                 }
 
