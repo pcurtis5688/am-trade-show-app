@@ -22,7 +22,6 @@ import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.ServiceException;
-import com.clover.sdk.v3.base.Reference;
 import com.clover.sdk.v3.inventory.Category;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
@@ -44,7 +43,6 @@ public class CreateBooth extends AppCompatActivity {
     private EditText createBoothCategoryField;
     ///////CLOVER VARS
     private Item newBooth;
-    private List<Tag> newBoothTags;
     private String showID;
 
     @Override
@@ -120,22 +118,18 @@ public class CreateBooth extends AppCompatActivity {
         private String formattedBoothAreaTagName;
         private String formattedBoothCategoryTagName;
         /////////////below are def new objects dont' need to worry
-        private Category show;
+        // private Category show;
         private List<Category> showObjectInListForBooth;
-        private Reference newBoothReference;
-        private List<Reference> newBoothReferenceInList;
         private Tag boothSizeTagWithID;
         private Tag boothAreaTagWithID;
         private Tag boothCategoryTagWithID;
-        private List<Tag> newBoothTags;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            //// TODO: 9/4/2016 fix this when done with createbooth testing
-            // progressDialog = new ProgressDialog(createBoothActivityContext);
-            // progressDialog.setMessage("Saving New Booth...");
-            // progressDialog.show();
+            progressDialog = new ProgressDialog(createBoothActivityContext);
+            progressDialog.setMessage("Saving New Booth...");
+            progressDialog.show();
             //////////////GRAB DATA FROM FIELDS AND POPULATE DATA FIELDS PRIOR TO CREATION
             createBoothNumberFieldData = createBoothNumberField.getText().toString();
             createBoothPriceFieldData = createBoothPriceField.getText().toString();
@@ -152,10 +146,7 @@ public class CreateBooth extends AppCompatActivity {
             newBooth.setSku(createBoothNumberFieldData); ////in effect, booth no.
             newBooth.setPrice(GlobalUtils.getLongFromFormattedPriceString(createBoothPriceFieldData));
             //////////////INITIALIZE ADDITIONAL ITEMS
-            newBoothReference = new Reference();
-            newBoothReferenceInList = new ArrayList<>();
-            newBoothTags = new ArrayList<>();
-
+            showObjectInListForBooth = new ArrayList<>();
         }
 
         @Override
@@ -164,52 +155,29 @@ public class CreateBooth extends AppCompatActivity {
                 merchantAccount = CloverAccount.getAccount(createBoothActivityContext);
                 inventoryConnector = new InventoryConnector(createBoothActivityContext, merchantAccount, null);
                 inventoryConnector.connect();
-                /////CREATE BOOTH, GET ID, MAKE NEW BOOTH REFERENCE, ADD TO A LIST
+                /////CREATE BOOTH AND AND ASSIGN RETURN BOOTH TO THE SAME (W ID)
                 newBooth = inventoryConnector.createItem(newBooth);
-                newBoothReference.setId(newBooth.getId());
-                newBoothReferenceInList.add(newBoothReference);
 
                 /////LOCATE THE SHOW OBJECT (CATEGORY), ADD REF TO NEW BOOTH, UPDATE
-                for (Category theCategory : inventoryConnector.getCategories()) {
-                    if (theCategory.getId().equalsIgnoreCase(showID)) {
-                        show = theCategory;
-                        // boothListForShow = show.getItems();
-                        // boothListForShow.add(newBoothReference);
-                        // show.setItems(boothListForShow);
-                        // // TODO: 9/8/2016 new two lines are probably redundant
-                        show.getItems().add(newBoothReference);
+                for (Category show : inventoryConnector.getCategories()) {
+                    if (show.getId().equalsIgnoreCase(showID)) {
                         inventoryConnector.addItemToCategory(newBooth.getId(), show.getId());
-                        inventoryConnector.updateCategory(show);
+                        showObjectInListForBooth.add(show);
+                        newBooth.setCategories(showObjectInListForBooth);
+                        inventoryConnector.updateItem(newBooth);
+                        inventoryConnector.updateItemStock(newBooth.getId(), 1);
                     }
                 }
-
-                //// TODO: 9/8/2016 uncomment if above statement doesn't handle
-                //                showObjectInListForBooth = new ArrayList<>();
-                //                showObjectInListForBooth.add(show);
-                //                newBooth.setCategories(showObjectInListForBooth);
+                List<String> boothIdInStringList = new ArrayList<>();
+                boothIdInStringList.add(newBooth.getId());
 
                 boothSizeTagWithID = inventoryConnector.createTag(new Tag().setName(formattedBoothSizeTagName));
                 boothAreaTagWithID = inventoryConnector.createTag(new Tag().setName(formattedBoothAreaTagName));
                 boothCategoryTagWithID = inventoryConnector.createTag(new Tag().setName(formattedBoothCategoryTagName));
-                boothSizeTagWithID.setItems(newBoothReferenceInList);
-                boothAreaTagWithID.setItems(newBoothReferenceInList);
-                boothCategoryTagWithID.setItems(newBoothReferenceInList);
-                inventoryConnector.updateTag(boothSizeTagWithID);
-                inventoryConnector.updateTag(boothAreaTagWithID);
-                inventoryConnector.updateTag(boothCategoryTagWithID);
 
-                newBoothTags.add(boothSizeTagWithID);
-                newBoothTags.add(boothAreaTagWithID);
-                newBoothTags.add(boothCategoryTagWithID);
-                //// TODO: 9/8/2016 test if need below statement
-                //   inventoryConnector.getItem(newBooth.getId()).setTags(newBoothTags);
-                newBooth.setTags(newBoothTags);
-                inventoryConnector.updateItem(newBooth);
-                inventoryConnector.updateItemStock(newBooth.getId(), 1);
-
-                GlobalUtils.valuesTester("SizeTagID: ", boothSizeTagWithID.getId());
-                GlobalUtils.valuesTester("AreaTagID: ", boothAreaTagWithID.getId());
-                GlobalUtils.valuesTester("CatTagID: ", boothCategoryTagWithID.getId());
+                inventoryConnector.assignItemsToTag(boothSizeTagWithID.getId(), boothIdInStringList);
+                inventoryConnector.assignItemsToTag(boothAreaTagWithID.getId(), boothIdInStringList);
+                inventoryConnector.assignItemsToTag(boothCategoryTagWithID.getId(), boothIdInStringList);
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
             } finally {
@@ -237,7 +205,7 @@ public class CreateBooth extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            //progressDialog.dismiss();
+            progressDialog.dismiss();
             finish();
         }
     }

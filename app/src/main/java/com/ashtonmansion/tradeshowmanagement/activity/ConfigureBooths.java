@@ -119,16 +119,15 @@ public class ConfigureBooths extends AppCompatActivity
                 Tag sizeTag = null;
                 Tag areaTag = null;
                 Tag categoryTag = null;
-                List<Tag> boothTags = booth.getTags();
                 /////////////////////
-                for (Tag currentTag : boothTags) {
-                    if (currentTag.getName().substring(0, 3).equalsIgnoreCase("size")) {
+                for (Tag currentTag : booth.getTags()) {
+                    if (currentTag.getName().substring(0, 4).equalsIgnoreCase("size")) {
                         sizeTag = currentTag;
                         boothSizeTv.setText(sizeTag.getName());
-                    } else if (currentTag.getName().substring(0, 3).equalsIgnoreCase("area")) {
+                    } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("area")) {
                         areaTag = currentTag;
                         boothAreaTv.setText(areaTag.getName());
-                    } else if (currentTag.getName().substring(0, 7).equalsIgnoreCase("category")) {
+                    } else if (currentTag.getName().substring(0, 8).equalsIgnoreCase("category")) {
                         categoryTag = currentTag;
                         boothCategoryTv.setText(categoryTag.getName());
                     }
@@ -348,7 +347,9 @@ public class ConfigureBooths extends AppCompatActivity
 
                 //////////////FIND CATEGORY IN CLOVER & POPULATE BOOTH REFERENCE LIST
                 for (Reference boothRef : boothReferenceList) {
-                    boothList.add(inventoryConnector.getItem(boothRef.getId()));
+                    Item currentBooth = inventoryConnector.getItem(boothRef.getId());
+                    currentBooth.setTags(inventoryConnector.getTagsForItem(currentBooth.getId()));
+                    boothList.add(currentBooth);
                 }
 
                 //// TODO: 9/6/2016 find customer for each booth
