@@ -40,4 +40,16 @@ public class GlobalUtils {
         }
         return formattedTagName;
     }
+
+    public static String getUnformattedTagName(String tagName, String tagType){
+        String unformattedString = "";
+        if (tagType.equalsIgnoreCase("Size") || tagType.equalsIgnoreCase("Area")){
+            unformattedString = tagName.substring(7);
+        } else if (tagType.equalsIgnoreCase("Category")){
+            unformattedString = tagName.substring(11);
+        } else {
+            Log.d("GlobalUt:", " an unrecognized tag type was passed to GlobalUtils");
+        }
+        return unformattedString;
+    }
 }

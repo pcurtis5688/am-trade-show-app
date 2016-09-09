@@ -102,85 +102,33 @@ public class EditBooth extends AppCompatActivity {
         Bundle extrasBundle = getIntent().getExtras();
         if (extrasBundle != null) {
             booth = (Item) extrasBundle.get("booth");
-            //// TODO: 8/31/2016 string resources
             editBoothHeaderTv.setText(getApplicationContext().getString(R.string.edit_booth_header_string, booth.getName()));
             editBoothNumberField.setText(booth.getSku());
             editBoothPriceField.setText(booth.getPrice().toString());
-            ////
-            GetBoothDetailsTask getBoothDetailsTask = new GetBoothDetailsTask();
-            getBoothDetailsTask.execute();
-        } else {
-            Log.e("Major Error: ", "Edit Booth Activity started without a booth reference");
-            finish();
+
+            boothTags = booth.getTags();
+            populateTagFields();
         }
     }
 
-    private class GetBoothDetailsTask extends AsyncTask<Void, Void, Void> {
-        /////// CLOVER CONNECTION
-        private Account merchantAccount;
-        private InventoryConnector inventoryConnector;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            merchantAccount = CloverAccount.getAccount(editBoothActivityContext);
-            inventoryConnector = new InventoryConnector(editBoothActivityContext, merchantAccount, null);
-            inventoryConnector.connect();
-            try {
-                if (inventoryConnector.getItem(booth.getId()).hasTags()) {
-                    boothTags = inventoryConnector.getItem(booth.getId()).getTags();
-                } else {
-                    boothTags = new ArrayList<>();
-                }
-            } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
-                Log.d("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
-            } finally {
-                inventoryConnector.disconnect();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            populateExtraData();
-        }
-    }
-
-    private void populateExtraData() {
-        Log.d("Booth ID: ", booth.getId() + "Fetching tags...");
+    private void populateTagFields() {
         int tagInx = 0;
         for (Tag currentTag : boothTags) {
-            Log.d("currenttagid: ", currentTag.getId() + " currenttagname: " + currentTag.getName());
-            String currentTagSubstring1 = currentTag.getName().substring(0, 3);
-            String currentTagSubstring2 = currentTag.getName().substring(0, 7);
-            Log.d("Substring1: ", currentTagSubstring1);
-            Log.d("Substring2: ", currentTagSubstring2);
             if (currentTag.getName().substring(0, 4).equalsIgnoreCase("size")) {
-                editBoothSizeField.setText(currentTag.getName());
+                editBoothSizeField.setText(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Size"));
                 sizeTag = currentTag;
                 sizeTagInx = tagInx;
-                Log.d("Booth ID: ", booth.getId() + "Size tag: " + sizeTag.toString());
             } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("area")) {
-                editBoothAreaField.setText(currentTag.getName());
+                editBoothAreaField.setText(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Area"));
                 areaTag = currentTag;
                 areaTagInx = tagInx;
-                Log.d("Booth ID: ", booth.getId() + "Area tag: " + areaTag.toString());
             } else if (currentTag.getName().substring(0, 8).equalsIgnoreCase("category")) {
-                editBoothCategoryField.setText(currentTag.getName());
+                editBoothCategoryField.setText(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Category"));
                 categoryTag = currentTag;
                 categoryTagInx = tagInx;
-                Log.d("Booth ID: ", booth.getId() + "Category tag: " + categoryTag.toString());
-            } else {
-                Log.d("Booth ID: ", booth.getId() + " - Tag'" + currentTag.getName() + "' found and skipped.");
             }
         }
         tagInx++;
-        Log.d("Booth ID: ", booth.getId() + " - Tag Scan Complete.");
     }
 
     private class UpdateBoothTask extends AsyncTask<Void, Void, Void> {
@@ -203,21 +151,16 @@ public class EditBooth extends AppCompatActivity {
             progressDialog.setMessage("Saving Booth...");
             progressDialog.show();
 
+            ////GRAB FIELD DATA UPON UPDATE START
             editBoothNumberFieldData = editBoothNumberField.getText().toString();
-            //PRICE HANDLING BELOW
+            //// TODO: 9/8/2016 price handling here
             editBoothPriceFieldData = editBoothPriceField.getText().toString();
-
-            ///'TAG' FIELD HANDLING
             editBoothSizeFieldData = editBoothSizeField.getText().toString();
             editBoothAreaFieldData = editBoothAreaField.getText().toString();
             editBoothCategoryFieldData = editBoothCategoryField.getText().toString();
             sizeTag.setName(GlobalUtils.getFormattedTagName(editBoothSizeFieldData, "Size"));
             areaTag.setName(GlobalUtils.getFormattedTagName(editBoothAreaFieldData, "Area"));
             categoryTag.setName(GlobalUtils.getFormattedTagName(editBoothCategoryFieldData, "Category"));
-            boothTags.set(sizeTagInx, sizeTag);
-            boothTags.set(areaTagInx, areaTag);
-            boothTags.set(categoryTagInx, categoryTag);
-            //////
         }
 
         @Override
@@ -227,20 +170,17 @@ public class EditBooth extends AppCompatActivity {
                 inventoryConnector = new InventoryConnector(editBoothActivityContext, merchantAccount, null);
                 inventoryConnector.connect();
 
-                //////////BOOTH UPDATES
+                //////////BOOTH UPDATE PROCESS
                 boothToUpdate = inventoryConnector.getItem(booth.getId());
                 boothToUpdate.setName(editBoothNumberFieldData);
                 boothToUpdate.setSku(editBoothNumberFieldData);
                 boothToUpdate.setPrice(GlobalUtils.getLongFromFormattedPriceString(editBoothPriceFieldData));
+                inventoryConnector.updateItem(boothToUpdate);
 
                 //////////TAG UPDATES
-                // TODO: 9/7/2016 following 3 necessary since we already are going to update the list etc
                 inventoryConnector.updateTag(sizeTag);
                 inventoryConnector.updateTag(areaTag);
                 inventoryConnector.updateTag(categoryTag);
-                boothToUpdate.setTags(boothTags);
-                inventoryConnector.updateItem(boothToUpdate);
-
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
             } catch (SQLiteException e2) {

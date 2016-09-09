@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
 import com.ashtonmansion.tradeshowmanagement.HomeActivity;
+import com.ashtonmansion.tradeshowmanagement.util.GlobalUtils;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
@@ -132,11 +133,11 @@ public class ConfigureBooths extends AppCompatActivity
                         boothCategoryTv.setText(categoryTag.getName());
                     }
                 }
-                if (null != sizeTag) boothSizeTv.setText(sizeTag.getName());
+                if (null != sizeTag) boothSizeTv.setText(GlobalUtils.getUnformattedTagName(sizeTag.getName(), "Size"));
                 else Log.d("booth size tag :", "null");
-                if (null != areaTag) boothAreaTv.setText(areaTag.getName());
+                if (null != areaTag) boothAreaTv.setText(GlobalUtils.getUnformattedTagName(areaTag.getName(), "Area"));
                 else Log.d("booth area tag :", "null");
-                if (null != categoryTag) boothCategoryTv.setText(categoryTag.getName());
+                if (null != categoryTag) boothCategoryTv.setText(GlobalUtils.getUnformattedTagName(categoryTag.getName(), "Category"));
                 else Log.d("booth cat tag :", "null");
                 //////////////////////
                 boothNumberTv.setText(booth.getSku());
