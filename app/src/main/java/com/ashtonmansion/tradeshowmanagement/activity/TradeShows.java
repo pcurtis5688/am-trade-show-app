@@ -182,7 +182,7 @@ public class TradeShows extends AppCompatActivity
             Intent reportsIntent = new Intent(tradeShowsActivityContext, Reports.class);
             startActivity(reportsIntent);
         } else if (id == R.id.nav_make_reservation_btn) {
-            Intent makeReservationIntent = new Intent(tradeShowsActivityContext, BoothReservation.class);
+            Intent makeReservationIntent = new Intent(tradeShowsActivityContext, BoothReservationShowSelection.class);
             startActivity(makeReservationIntent);
         } else if (id == R.id.nav_email_reservation_confirmation_btn) {
             Intent emailConfirmationIntent = new Intent(tradeShowsActivityContext, EmailConfirmation.class);

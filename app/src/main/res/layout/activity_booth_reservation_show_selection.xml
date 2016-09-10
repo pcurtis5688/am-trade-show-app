@@ -9,7 +9,7 @@
     tools:openDrawer="start">
 
     <include
-        layout="@layout/app_bar_make_reservation"
+        layout="@layout/app_bar_booth_reservation_show_selection"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

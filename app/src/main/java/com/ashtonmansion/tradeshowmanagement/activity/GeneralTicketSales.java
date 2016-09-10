@@ -92,7 +92,7 @@ public class GeneralTicketSales extends AppCompatActivity
             Intent reportsIntent = new Intent(generalTicketSalesActivityContext, Reports.class);
             startActivity(reportsIntent);
         } else if (id == R.id.nav_make_reservation_btn) {
-            Intent makeReservationIntent = new Intent(generalTicketSalesActivityContext, BoothReservation.class);
+            Intent makeReservationIntent = new Intent(generalTicketSalesActivityContext, BoothReservationShowSelection.class);
             startActivity(makeReservationIntent);
         } else if (id == R.id.nav_email_reservation_confirmation_btn) {
             Intent emailConfirmationIntent = new Intent(generalTicketSalesActivityContext, EmailConfirmation.class);

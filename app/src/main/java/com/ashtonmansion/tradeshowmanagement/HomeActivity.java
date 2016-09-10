@@ -18,7 +18,7 @@ import com.ashtonmansion.tradeshowmanagement.activity.AdvertisingSales;
 import com.ashtonmansion.tradeshowmanagement.activity.ConfigureBoothsShowSelection;
 import com.ashtonmansion.tradeshowmanagement.activity.EmailConfirmation;
 import com.ashtonmansion.tradeshowmanagement.activity.GeneralTicketSales;
-import com.ashtonmansion.tradeshowmanagement.activity.BoothReservation;
+import com.ashtonmansion.tradeshowmanagement.activity.BoothReservationShowSelection;
 import com.ashtonmansion.tradeshowmanagement.activity.MerchandiseSales;
 import com.ashtonmansion.tradeshowmanagement.activity.Reports;
 import com.ashtonmansion.tradeshowmanagement.activity.TradeShows;
@@ -113,7 +113,7 @@ public class HomeActivity extends AppCompatActivity
             Intent reportsIntent = new Intent(homeActivityContext, Reports.class);
             startActivity(reportsIntent);
         } else if (id == R.id.nav_make_reservation_btn) {
-            Intent makeReservationIntent = new Intent(homeActivityContext, BoothReservation.class);
+            Intent makeReservationIntent = new Intent(homeActivityContext, BoothReservationShowSelection.class);
             startActivity(makeReservationIntent);
         } else if (id == R.id.nav_email_reservation_confirmation_btn) {
             Intent emailConfirmationIntent = new Intent(homeActivityContext, EmailConfirmation.class);

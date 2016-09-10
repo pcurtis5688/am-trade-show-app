@@ -92,7 +92,7 @@ public class MerchandiseSales extends AppCompatActivity
             Intent reportsIntent = new Intent(merchandiseSalesActivityContext, Reports.class);
             startActivity(reportsIntent);
         } else if (id == R.id.nav_make_reservation_btn) {
-            Intent makeReservationIntent = new Intent(merchandiseSalesActivityContext, BoothReservation.class);
+            Intent makeReservationIntent = new Intent(merchandiseSalesActivityContext, BoothReservationShowSelection.class);
             startActivity(makeReservationIntent);
         } else if (id == R.id.nav_email_reservation_confirmation_btn) {
             Intent emailConfirmationIntent = new Intent(merchandiseSalesActivityContext, EmailConfirmation.class);

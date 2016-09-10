@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -189,7 +190,9 @@ public class ConfigureBooths extends AppCompatActivity
                 startActivity(createBoothIntent);
             }
         });
-        addBoothButton.setLayoutParams(new TableRow.LayoutParams(4));
+        TableRow.LayoutParams params = new TableRow.LayoutParams();
+        params.span=6;
+        addBoothButton.setLayoutParams(params);
         addBoothButtonRow.addView(addBoothButton);
         showTable.addView(addBoothButtonRow);
     }
@@ -294,7 +297,7 @@ public class ConfigureBooths extends AppCompatActivity
             Intent reportsIntent = new Intent(configureBoothsActivityContext, Reports.class);
             startActivity(reportsIntent);
         } else if (id == R.id.nav_make_reservation_btn) {
-            Intent makeReservationIntent = new Intent(configureBoothsActivityContext, BoothReservation.class);
+            Intent makeReservationIntent = new Intent(configureBoothsActivityContext, BoothReservationShowSelection.class);
             startActivity(makeReservationIntent);
         } else if (id == R.id.nav_email_reservation_confirmation_btn) {
             Intent emailConfirmationIntent = new Intent(configureBoothsActivityContext, EmailConfirmation.class);

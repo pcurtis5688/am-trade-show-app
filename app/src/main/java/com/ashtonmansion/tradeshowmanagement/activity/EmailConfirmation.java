@@ -92,7 +92,7 @@ public class EmailConfirmation extends AppCompatActivity
             Intent reportsIntent = new Intent(emailConfirmationActivityContext, Reports.class);
             startActivity(reportsIntent);
         } else if (id == R.id.nav_make_reservation_btn) {
-            Intent makeReservationIntent = new Intent(emailConfirmationActivityContext, BoothReservation.class);
+            Intent makeReservationIntent = new Intent(emailConfirmationActivityContext, BoothReservationShowSelection.class);
             startActivity(makeReservationIntent);
         } else if (id == R.id.nav_email_reservation_confirmation_btn) {
             // nothing ; already in activity

@@ -90,7 +90,7 @@ public class Reports extends AppCompatActivity implements NavigationView.OnNavig
         } else if (id == R.id.nav_reports_queries_btn) {
             // nothing; activity is already active
         } else if (id == R.id.nav_make_reservation_btn) {
-            Intent makeReservationIntent = new Intent(reportsActivityContext, BoothReservation.class);
+            Intent makeReservationIntent = new Intent(reportsActivityContext, BoothReservationShowSelection.class);
             startActivity(makeReservationIntent);
         } else if (id == R.id.nav_email_reservation_confirmation_btn) {
             Intent emailConfirmationIntent = new Intent(reportsActivityContext, EmailConfirmation.class);
