@@ -217,6 +217,10 @@
     <string name="title_activity_booth_reservation_details">BoothReservationDetails</string>
     <string name="title_activity_dev_tools">Developer Options</string>
 
+    <!-- BOOTH RESERVATION STRINGS //////////////////-->
+    <string name="booth_reservation_header_text">Booth Selection</string>
+
+
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->
@@ -274,6 +278,7 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
+    <string name="title_activity_booth_reservation">BoothReservation</string>
 
 
 </resources>

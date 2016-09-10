@@ -191,7 +191,7 @@ public class ConfigureBooths extends AppCompatActivity
             }
         });
         TableRow.LayoutParams params = new TableRow.LayoutParams();
-        params.span=6;
+        params.span=7;
         addBoothButton.setLayoutParams(params);
         addBoothButtonRow.addView(addBoothButton);
         showTable.addView(addBoothButtonRow);

@@ -140,7 +140,7 @@
         <activity
             android:name="com.ashtonmansion.tradeshowmanagement.activity.CreateBooth"
             android:label="@string/title_activity_create_booth"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.ashtonmansion.tradeshowmanagement.activity.EditBooth"
             android:label="@string/title_activity_edit_booth"
@@ -158,6 +158,15 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ashtonmansion.tradeshowmanagement.activity.ConfigureBooths" />
+        </activity>
+        <activity
+            android:name="com.ashtonmansion.tradeshowmanagement.activity.BoothReservation"
+            android:label="@string/title_activity_booth_reservation"
+            android:parentActivityName="com.ashtonmansion.tradeshowmanagement.activity.BoothReservationShowSelection"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ashtonmansion.tradeshowmanagement.activity.BoothReservationShowSelection" />
         </activity>
     </application>
 

@@ -151,61 +151,9 @@ public class BoothReservationShowSelection extends AppCompatActivity
     }
 
     private void selectShowForReservation(Category showObj) {
-        chosenShowId = showObj.getId();
-        chosenShowCategoryObj = showObj;
-        chosenShowName = showObj.getName();
-        GetShowBoothsTask getShowBoothListTask = new GetShowBoothsTask();
-        getShowBoothListTask.execute();
-    }
-
-    private void createBoothListTable() {
-        //////////////CLEAR THE SHOW SELECTION TABLE AND ADD BOOTH SELECTION
-        rowContainerForTables = (TableRow) findViewById(R.id.row_container_for_active_table);
-        rowContainerForTables.removeAllViews();
-        //////////////
-        boothAvailabilityTable = new TableLayout(boothReservationActivityContext);
-        boothAvailabilityTable.setStretchAllColumns(true);
-        boothAvailabilityTable.setMinimumWidth(TableLayout.LayoutParams.MATCH_PARENT);
-        boothAvailabilityTable.setMinimumHeight(TableLayout.LayoutParams.WRAP_CONTENT);
-
-        //create header row?
-        for (Item showBooth : filteredBoothList) {
-            final Item finalizedBoothObject = showBooth;
-            TableRow newBoothRow = new TableRow(boothReservationActivityContext);
-            newBoothRow.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-
-            TextView newBoothNameTv = new TextView(boothReservationActivityContext);
-            newBoothNameTv.setText(showBooth.getName());
-
-            Button selectBoothActionButton = new Button(boothReservationActivityContext);
-            selectBoothActionButton.setText(getResources().getString(R.string.select_booth_action_button_text));
-            selectBoothActionButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    selectedBooth = finalizedBoothObject;
-
-                }
-            });
-
-            newBoothRow.addView(newBoothNameTv);
-            newBoothRow.addView(selectBoothActionButton);
-            boothAvailabilityTable.addView(newBoothRow);
-        }
-
-        rowContainerForTables.addView(boothAvailabilityTable);
-    }
-
-    private void selectBoothAction() {
-        ////EMPTY THE CONTENT ROW
-        rowContainerForTables.removeAllViews();
-        ////CREATE NEW TABLE FOR BOOTH DETAIL OPTIONS AND ADD TO LAYOUT
-        TableLayout boothDetailOptionsTable = new TableLayout(boothReservationActivityContext);
-        TextView boothElectricChkBoxPrompt = new TextView(boothReservationActivityContext);
-        TextView internetSpeedPromptTv = new TextView(boothReservationActivityContext);
-        CheckBox boothElectricChkBox = new CheckBox(boothReservationActivityContext);
-        CheckBox boothInternetChkBox = new CheckBox(boothReservationActivityContext);
-
-
+        Intent boothSelectionIntent = new Intent(boothReservationActivityContext, BoothReservation.class);
+        boothSelectionIntent.putExtra("show", showObj);
+        startActivity(boothSelectionIntent);
     }
 
     ////////////////NAVIGATION METHODS//////////////////////////
@@ -281,55 +229,6 @@ public class BoothReservationShowSelection extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.make_reservation_drawerlayout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-
-    private class GetShowBoothsTask extends AsyncTask<Void, Void, Void> {
-        private ProgressDialog progressDialog2 = new ProgressDialog(boothReservationActivityContext);
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog2.setMessage("Loading Booths...");
-            progressDialog2.show();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                merchantAccount = CloverAccount.getAccount(boothReservationActivityContext);
-                inventoryConnector = new InventoryConnector(boothReservationActivityContext, merchantAccount, null);
-                inventoryConnector.connect();
-                referenceIdStringList = new ArrayList<>();
-                List<Category> categoryList = inventoryConnector.getCategories();
-                Category showCat = null;
-                for (Category category : categoryList) {
-                    if (category.getName().equalsIgnoreCase(chosenShowName)) {
-                        showCat = category;
-                    }
-                }
-                List<Reference> itemReferenceList = showCat.getItems();
-                if (itemReferenceList != null && itemReferenceList.size() > 0) {
-                    for (Reference reference : itemReferenceList) {
-                        referenceIdStringList.add(reference.getId());
-                        filteredBoothList = new ArrayList<>();
-                        filteredBoothList.add(inventoryConnector.getItem(reference.getId()));
-                    }
-                }
-            } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
-                Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
-            } finally {
-                inventoryConnector.disconnect();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            progressDialog2.dismiss();
-            createBoothListTable();
-        }
     }
 }
 

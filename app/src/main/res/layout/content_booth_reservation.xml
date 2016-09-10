@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.ashtonmansion.tradeshowmanagement.activity.BoothReservation"
+    tools:showIn="@layout/activity_booth_reservation">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/dimen_75dp"
+        android:paddingStart="@dimen/dimen_75dp"
+        android:paddingTop="@dimen/dimen_25dp">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/booth_reservation_header_text"
+                    android:textSize="@dimen/dimen_36sp" />
+            </TableRow>
+            <TableRow>
+                <TableLayout
+                    android:id="@+id/booth_selection_booth_table"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:stretchColumns="*"/>
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>
