@@ -142,7 +142,7 @@ public class BoothReservation extends AppCompatActivity {
 
     private void selectBoothAction() {
 
-        //// TODO: 9/10/2016 do once all super activity smooth
+        // TODO: 9/10/2016 do once all super activity smooth
     }
 
 }

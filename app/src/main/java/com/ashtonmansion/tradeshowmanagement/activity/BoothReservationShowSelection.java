@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -129,12 +130,13 @@ public class BoothReservationShowSelection extends AppCompatActivity
             String showName = decoupledShowNameArr.get(0);
             String showDate = decoupledShowNameArr.get(1);
             String showLocation = decoupledShowNameArr.get(2);
-            String showNameForUser = showName + "(" + showDate + " - " + showLocation + ")";
+            String showNameForUser = showName + " (" + showDate + " - " + showLocation + ")";
 
             TableRow newShowSelectionRow = new TableRow(boothReservationActivityContext);
+
             TextView showSelectionNameTv = new TextView(boothReservationActivityContext);
             showSelectionNameTv.setText(showNameForUser);
-            newShowSelectionRow.addView(showSelectionNameTv);
+            showSelectionNameTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
 
             Button showSelectButton = new Button(boothReservationActivityContext);
             showSelectButton.setText(getResources().getString(R.string.select_show_button_text));
@@ -144,6 +146,8 @@ public class BoothReservationShowSelection extends AppCompatActivity
                     selectShowForReservation(finalizedShowObject);
                 }
             });
+
+            newShowSelectionRow.addView(showSelectionNameTv);
             newShowSelectionRow.addView(showSelectButton);
 
             showSelectionTable.addView(newShowSelectionRow);
