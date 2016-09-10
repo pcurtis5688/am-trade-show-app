@@ -129,6 +129,7 @@
     <string name="booth_filters_max_price_hint">[Max Price]</string>
 
     <!-- MAKE RESERVATION PAGES STRINGS ////////////////////////-->
+    <string name="booth_reservation_show_selection_header_text">Booth Reservation - Select Show</string>
     <string name="select_show_button_text">Select Show</string>
     <string name="select_booth_action_button_text">Select Booth</string>
     <string name="available_booths_header_text">Available Booths</string>
