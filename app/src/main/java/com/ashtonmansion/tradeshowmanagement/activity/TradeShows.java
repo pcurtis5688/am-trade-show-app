@@ -30,6 +30,7 @@ import com.clover.sdk.v1.ServiceException;
 import com.clover.sdk.v3.inventory.Category;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class TradeShows extends AppCompatActivity
@@ -72,6 +73,7 @@ public class TradeShows extends AppCompatActivity
 
         fetchData();
     }
+
     ////////////DATA HANDLING METHODS///////////////////////////
     private void fetchData() {
         GetShowListTask getShowListTask = new GetShowListTask();
@@ -82,20 +84,24 @@ public class TradeShows extends AppCompatActivity
         showSelectionTable.removeAllViews();
         for (Category show : showList) {
             /////////////
-            final String showName = show.getName();
-            final String showID = show.getId();
-            String showNameAndIDString = showName + " (" + showID + ")";
-            TableRow newShowRow = new TableRow(tradeShowsActivityContext);
+            final Category finalizedShow = show;
+            String showID = show.getId();
+            List<String> decoupledShowArray = Arrays.asList(show.getName().split(","));
+            String showName = decoupledShowArray.get(0);
+            String showDate = decoupledShowArray.get(1);
+            String showLocation = decoupledShowArray.get(2);
+            String showNotes = decoupledShowArray.get(3);
+            String showNameAndIDString = showName + " (" + showDate + " - " + showLocation + ")";
 
+            TableRow newShowRow = new TableRow(tradeShowsActivityContext);
             TextView newShowTV = new TextView(tradeShowsActivityContext);
             newShowTV.setText(showNameAndIDString);
-
             Button editShowButton = new Button(tradeShowsActivityContext);
             editShowButton.setText(getResources().getString(R.string.trade_shows_edit_btn_string));
             editShowButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    editShowAction(showName, showID);
+                    editShowAction(finalizedShow);
                 }
             });
             newShowRow.addView(newShowTV);
@@ -119,10 +125,9 @@ public class TradeShows extends AppCompatActivity
         startActivity(addShowIntent);
     }
 
-    private void editShowAction(String showName, String showID) {
+    private void editShowAction(Category showToPass) {
         Intent editShowIntent = new Intent(tradeShowsActivityContext, EditShow.class);
-        editShowIntent.putExtra("showname", showName);
-        editShowIntent.putExtra("showid", showID);
+        editShowIntent.putExtra("show", showToPass);
         startActivity(editShowIntent);
     }
 

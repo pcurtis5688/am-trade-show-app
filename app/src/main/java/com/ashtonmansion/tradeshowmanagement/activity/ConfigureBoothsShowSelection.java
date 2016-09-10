@@ -31,6 +31,7 @@ import com.clover.sdk.v1.ServiceException;
 import com.clover.sdk.v3.inventory.Category;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class ConfigureBoothsShowSelection extends AppCompatActivity
@@ -70,14 +71,17 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
     private void populateShowSelectionTable() {
         if (showList.size() > 0) {
             for (Category showCat : showList) {
-                final Category finalizedShowCat = showCat;
                 final String finalizedShowIDString = showCat.getId();
-                final String finalizedShowNameString = showCat.getName();
+                final Category finalizedShowCat = showCat;
+                List<String> decoupledShowNameArr = Arrays.asList(showCat.getName().split(","));
+                String showName = decoupledShowNameArr.get(0);
+                String showDate = decoupledShowNameArr.get(1);
+                String showLocation = decoupledShowNameArr.get(2);
+                String showNameForUser = showName + "(" + showDate + " - " + showLocation + ")";
+
                 TableRow newShowSelectionRow = new TableRow(configureBoothsShowSelectionActivityContext);
-
                 TextView newShowSelectionTitleTV = new TextView(configureBoothsShowSelectionActivityContext);
-                newShowSelectionTitleTV.setText(showCat.getName());
-
+                newShowSelectionTitleTV.setText(showNameForUser);
                 Button showSelectionButton = new Button(configureBoothsShowSelectionActivityContext);
                 showSelectionButton.setText(getResources().getString(R.string.show_selection_button_text));
                 showSelectionButton.setOnClickListener(new View.OnClickListener() {
@@ -86,7 +90,6 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
                         configureBoothsSelectShowAction(finalizedShowCat);
                     }
                 });
-
                 newShowSelectionRow.addView(newShowSelectionTitleTV);
                 newShowSelectionRow.addView(showSelectionButton);
                 configureBoothsShowSelectionTable.addView(newShowSelectionRow);

@@ -29,18 +29,15 @@ import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.ServiceException;
-import com.clover.sdk.v1.customer.CustomerConnector;
 import com.clover.sdk.v3.base.Reference;
-import com.clover.sdk.v3.customers.Customer;
 import com.clover.sdk.v3.inventory.Category;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
 import com.clover.sdk.v3.inventory.Tag;
-import com.clover.sdk.v3.order.Order;
-import com.clover.sdk.v3.order.OrderConnector;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -48,18 +45,20 @@ public class ConfigureBooths extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     //CONTEXT AND UI FIELDS
     private Context configureBoothsActivityContext;
-    private String configureBoothsShowNameHeader;
-    private TableLayout boothsForShowTable;
-    private TextView configureBoothsForShowHeader;
+    private TableLayout showTable;
+    private TextView showNameHeaderTV;
     //CLOVER VARS
     private Account merchantAccount;
     private InventoryConnector inventoryConnector;
-    private CustomerConnector customerConnector;
     private List<Item> boothList;
     //DATA VARS
+    private Category show;
     private String showID;
     private String showName;
-    private Category showCategory;
+    private String showDate;
+    private String showLocation;
+    private String showNotes;
+    private String userShowName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,18 +78,22 @@ public class ConfigureBooths extends AppCompatActivity
 
         //DATA AND ACTIVITY WORK
         configureBoothsActivityContext = this;
-        boothsForShowTable = (TableLayout) findViewById(R.id.booths_for_show_table);
+        showTable = (TableLayout) findViewById(R.id.booths_for_show_table);
 
         Bundle extrasBundle = getIntent().getExtras();
         if (extrasBundle != null) {
             Category passedCategoryObject = (Category) extrasBundle.get("showcat");
             if (null != passedCategoryObject) {
                 showID = passedCategoryObject.getId();
-                showName = passedCategoryObject.getName();
+                List<String> decoupledShowArray = Arrays.asList(passedCategoryObject.getName().split(","));
+                showName = decoupledShowArray.get(0);
+                showDate = decoupledShowArray.get(1);
+                showLocation = decoupledShowArray.get(2);
+                showNotes = decoupledShowArray.get(3);
+                userShowName = showName + " (" + showDate + " - " + showLocation + ")";
             }
-            configureBoothsShowNameHeader = "Configure Booths - " + showName;
-            configureBoothsForShowHeader = (TextView) findViewById(R.id.show_booths_header);
-            configureBoothsForShowHeader.setText(configureBoothsShowNameHeader);
+            showNameHeaderTV = (TextView) findViewById(R.id.show_booths_header);
+            showNameHeaderTV.setText(userShowName);
         }
     }
 
@@ -103,7 +106,7 @@ public class ConfigureBooths extends AppCompatActivity
 
     private void populateBoothsForShowTable() {
 
-        boothsForShowTable.removeAllViews();
+        showTable.removeAllViews();
         populateBoothHeaderRow();
 
         if (boothList != null && boothList.size() > 0) {
@@ -133,11 +136,14 @@ public class ConfigureBooths extends AppCompatActivity
                         boothCategoryTv.setText(categoryTag.getName());
                     }
                 }
-                if (null != sizeTag) boothSizeTv.setText(GlobalUtils.getUnformattedTagName(sizeTag.getName(), "Size"));
+                if (null != sizeTag)
+                    boothSizeTv.setText(GlobalUtils.getUnformattedTagName(sizeTag.getName(), "Size"));
                 else Log.d("booth size tag :", "null");
-                if (null != areaTag) boothAreaTv.setText(GlobalUtils.getUnformattedTagName(areaTag.getName(), "Area"));
+                if (null != areaTag)
+                    boothAreaTv.setText(GlobalUtils.getUnformattedTagName(areaTag.getName(), "Area"));
                 else Log.d("booth area tag :", "null");
-                if (null != categoryTag) boothCategoryTv.setText(GlobalUtils.getUnformattedTagName(categoryTag.getName(), "Category"));
+                if (null != categoryTag)
+                    boothCategoryTv.setText(GlobalUtils.getUnformattedTagName(categoryTag.getName(), "Category"));
                 else Log.d("booth cat tag :", "null");
                 //////////////////////
                 boothNumberTv.setText(booth.getSku());
@@ -168,7 +174,7 @@ public class ConfigureBooths extends AppCompatActivity
                 newBoothRow.addView(boothCategoryTv);
                 newBoothRow.addView(boothCustomerTv);
                 newBoothRow.addView(editBoothButton);
-                boothsForShowTable.addView(newBoothRow);
+                showTable.addView(newBoothRow);
             }
         }
         TableRow addBoothButtonRow = new TableRow(configureBoothsActivityContext);
@@ -185,9 +191,8 @@ public class ConfigureBooths extends AppCompatActivity
         });
         addBoothButton.setLayoutParams(new TableRow.LayoutParams(4));
         addBoothButtonRow.addView(addBoothButton);
-        boothsForShowTable.addView(addBoothButtonRow);
+        showTable.addView(addBoothButtonRow);
     }
-
 
     private void populateBoothHeaderRow() {
         TableRow boothsForShowTableHeaderRow = new TableRow(configureBoothsActivityContext);
@@ -220,7 +225,7 @@ public class ConfigureBooths extends AppCompatActivity
         boothsForShowTableHeaderRow.addView(boothAreaHeaderTv);
         boothsForShowTableHeaderRow.addView(boothCategoryHeaderTv);
         boothsForShowTableHeaderRow.addView(boothCustomerHeaderTv);
-        boothsForShowTable.addView(boothsForShowTableHeaderRow);
+        showTable.addView(boothsForShowTableHeaderRow);
     }
 
     private void editBoothAction(Item booth) {
@@ -324,7 +329,7 @@ public class ConfigureBooths extends AppCompatActivity
             progressDialog.setMessage("Loading Booths...");
             progressDialog.show();
             boothList = new ArrayList<>();
-            showCategory = null;
+            show = null;
         }
 
         @Override
@@ -341,8 +346,8 @@ public class ConfigureBooths extends AppCompatActivity
                 List<Reference> boothReferenceList = new ArrayList<>();
                 for (Category category : categoryList) {
                     if (category.getId().equalsIgnoreCase(showID)) {
-                        showCategory = category;
-                        if (showCategory.hasItems()) boothReferenceList = showCategory.getItems();
+                        show = category;
+                        if (show.hasItems()) boothReferenceList = show.getItems();
                     }
                 }
 

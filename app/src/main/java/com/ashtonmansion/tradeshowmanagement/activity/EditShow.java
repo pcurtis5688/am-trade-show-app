@@ -27,21 +27,28 @@ import com.clover.sdk.v3.inventory.Category;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class EditShow extends AppCompatActivity {
     private Context editShowActivityContext;
-    private String showName;
-    private String showID;
+    //CLOVER ACCESS VARS
+    private Account merchantAccount;
+    private InventoryConnector inventoryConnector;
+    private Category show;
     //UI FIELDS
     private EditText showNameEditText;
     private EditText showDateEditText;
     private EditText showLocationEditText;
     private EditText showNotesEditText;
-    //CLOVER ACCESS VARS
-    private Account merchantAccount;
-    private InventoryConnector inventoryConnector;
-    //UPON SAVING CHANGES VARS
+    //TEMPORARY UTILITY STRINGS
+    private String showID;
+    private String formattedFullShowName;
+    private String showName;
+    private String showDate;
+    private String showLocation;
+    private String showNotes;
+    //VARS TO SAVE
     private String editedShowName;
     private String editedShowDate;
     private String editedShowLocation;
@@ -64,26 +71,33 @@ public class EditShow extends AppCompatActivity {
         showDateEditText = (EditText) findViewById(R.id.edit_show_date_field);
         showLocationEditText = (EditText) findViewById(R.id.edit_show_location_field);
         showNotesEditText = (EditText) findViewById(R.id.edit_show_notes_field);
-
-        ////////////DATA HANDLING//////////////////////////////
+        ////////////DATA HANDLING/////////////////
         Bundle extrasBundle = getIntent().getExtras();
         if (extrasBundle != null) {
-            showName = (String) extrasBundle.get("showname");
-            showID = (String) extrasBundle.get("showid");
+            show = (Category) extrasBundle.get("show");
+            showID = show.getId();
+            formattedFullShowName = show.getName();
+            decoupleShowName();
+            populateFields();
             String showNameAndIDHeader = showName + " (" + showID + ")";
             showNameAndIDHeaderTV.setText(showNameAndIDHeader);
         }
 
-        getLocalShowDataAndPopulateFields(showID);
     }
 
-    private void getLocalShowDataAndPopulateFields(String showID) {
-        TradeShowDB database = new TradeShowDB(editShowActivityContext);
-        Cursor dbShowCursor = database.selectSingleShowByCloverID(showID);
-        showNameEditText.setText(dbShowCursor.getString(2));
-        showDateEditText.setText(dbShowCursor.getString(3));
-        showLocationEditText.setText(dbShowCursor.getString(4));
-        showNotesEditText.setText(dbShowCursor.getString(5));
+    private void decoupleShowName() {
+        List<String> splitShowNameArray = Arrays.asList(formattedFullShowName.split(","));
+        showName = splitShowNameArray.get(0);
+        showDate = splitShowNameArray.get(1);
+        showLocation = splitShowNameArray.get(2);
+        showNotes = splitShowNameArray.get(3);
+    }
+
+    private void populateFields(){
+        showNameEditText.setText(showName);
+        showDateEditText.setText(showDate);
+        showLocationEditText.setText(showLocation);
+        showNotesEditText.setText(showNotes);
     }
 
     public void saveShowChangesAction(View view) {
