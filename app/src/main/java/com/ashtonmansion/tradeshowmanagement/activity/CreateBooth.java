@@ -96,9 +96,6 @@ public class CreateBooth extends AppCompatActivity {
             String showName = (String) extrasBundle.get("showname"); ////CONNECT FIELD ITEMS
             TextView createBoothActivityHeader = (TextView) findViewById(R.id.create_booth_activity_header_w_showname);
             createBoothActivityHeader.setText(String.valueOf(getResources().getString(R.string.title_activity_create_booth) + " - " + showName));
-        } else {
-            Log.e("Major Error: ", "Create Booth Activity started without a show reference");
-            finish();
         }
     }
 
@@ -117,8 +114,6 @@ public class CreateBooth extends AppCompatActivity {
         private String formattedBoothSizeTagName;
         private String formattedBoothAreaTagName;
         private String formattedBoothCategoryTagName;
-        /////////////below are def new objects dont' need to worry
-        // private Category show;
         private List<Category> showObjectInListForBooth;
         private Tag boothSizeTagWithID;
         private Tag boothAreaTagWithID;
@@ -184,7 +179,6 @@ public class CreateBooth extends AppCompatActivity {
                 inventoryConnector.disconnect();
             }
 
-            //// TODO: 9/7/2016 decide on name issue and change here
             /////DO LOCAL DATABASE INSERTS USING THE COMPLETE CLOVER OBJECT
             TradeShowDB tradeShowDB = new TradeShowDB(createBoothActivityContext);
             boolean successfulBoothCreationLOCAL = tradeShowDB.createBoothItem(

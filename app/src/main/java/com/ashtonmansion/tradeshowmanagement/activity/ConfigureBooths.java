@@ -182,7 +182,7 @@ public class ConfigureBooths extends AppCompatActivity
             }
         });
         TableRow.LayoutParams params = new TableRow.LayoutParams();
-        params.span=7;
+        params.span = 7;
         addBoothButton.setLayoutParams(params);
         addBoothButtonRow.addView(addBoothButton);
         showTable.addView(addBoothButtonRow);
@@ -351,15 +351,6 @@ public class ConfigureBooths extends AppCompatActivity
                     currentBooth.setTags(inventoryConnector.getTagsForItem(currentBooth.getId()));
                     boothList.add(currentBooth);
                 }
-
-                //// TODO: 9/6/2016 find customer for each booth
-                //customerConnector = new CustomerConnector(configureBoothsActivityContext, merchantAccount, null);
-                //  customerConnector.getCustomer().getOrders()
-                //getBoothCustomer(boothRef.getId())??
-                //OrderConnector orderConnector = new OrderConnector(configureBoothsActivityContext, merchantAccount, null);
-                //Item itemtest = new Item();
-                //Order orderTest = new Order();
-                // orderTest
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
             } finally {

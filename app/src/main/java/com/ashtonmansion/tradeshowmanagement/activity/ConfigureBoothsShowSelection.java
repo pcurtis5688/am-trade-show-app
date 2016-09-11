@@ -77,7 +77,7 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
                 String showName = decoupledShowNameArr.get(0);
                 String showDate = decoupledShowNameArr.get(1);
                 String showLocation = decoupledShowNameArr.get(2);
-                String showNameForUser = showName + "(" + showDate + " - " + showLocation + ")";
+                String showNameForUser = showName + " (" + showDate + " - " + showLocation + ")";
 
                 TableRow newShowSelectionRow = new TableRow(configureBoothsShowSelectionActivityContext);
                 TextView newShowSelectionTitleTV = new TextView(configureBoothsShowSelectionActivityContext);

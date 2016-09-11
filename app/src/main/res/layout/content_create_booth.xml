@@ -95,16 +95,17 @@
     </TableRow>
 
     <TableRow>
+
         <Button
             android:id="@+id/create_booth_cancel_btn"
-            android:layout_marginTop="@dimen/dimen_50dp"
+            android:layout_marginTop="@dimen/dimen_25dp"
             android:onClick="cancelCreateBooth"
             android:text="@string/create_booth_cancel_btn_text"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:textSize="@dimen/dimen_24sp" />
 
         <Button
             android:id="@+id/finalize_booth_creation_btn"
-            android:layout_column="1"
             android:layout_marginTop="@dimen/dimen_25dp"
             android:onClick="finalizeBoothCreation"
             android:text="@string/create_booth_finish_booth_creation_str"

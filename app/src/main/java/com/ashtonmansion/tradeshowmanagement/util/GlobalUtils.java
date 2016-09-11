@@ -14,16 +14,17 @@ public class GlobalUtils {
 
     public static long getLongFromFormattedPriceString(String priceString) {
         String passedString = priceString;
-        //long number = Long.parseLong(passedString);
-
         Number number2 = 0;
+        double doubleNumber = 0;
         NumberFormat format = NumberFormat.getCurrencyInstance();
         try {
             number2 = format.parse(passedString);
+            doubleNumber = number2.doubleValue();
+            doubleNumber = doubleNumber * 100;
         } catch (ParseException e) {
             Log.d("ParseExcpt: ", e.getMessage());
         }
-        long longPrice = number2.longValue();
+        long longPrice = (long) doubleNumber;
 
         return longPrice;
     }
