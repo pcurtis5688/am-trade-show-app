@@ -141,13 +141,7 @@ public class ConfigureBooths extends AppCompatActivity
                 //// TODO: 9/5/2016 fix custmoer
                 boothCustomerTv.setText("customerhere");
                 ////////////////////PRICE BELOW
-                //// TODO: 9/10/2016 fix below. is causing decimal loss 
-                long boothPriceLong = booth.getPrice();
-                String priceLongString = Long.toString(boothPriceLong);
-                String cleanString = priceLongString.replaceAll("[$,.]", "");
-                double parsedBoothPriceDouble = Double.parseDouble(cleanString);
-                NumberFormat numberFormatter = NumberFormat.getCurrencyInstance(Locale.US);
-                String formattedPrice = numberFormatter.format(parsedBoothPriceDouble / 100.0);
+                String formattedPrice = GlobalUtils.getFormattedPriceStringFromLong(booth.getPrice());
                 boothPriceTv.setText(formattedPrice);
                 /////////SET UP EDIT BOOTH BUTTON ON END OF TABLE
                 final Item finalizedBoothItem = booth;

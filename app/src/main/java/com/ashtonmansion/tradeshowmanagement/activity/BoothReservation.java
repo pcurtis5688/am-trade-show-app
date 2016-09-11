@@ -3,6 +3,7 @@ package com.ashtonmansion.tradeshowmanagement.activity;
 import android.accounts.Account;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -144,6 +145,7 @@ public class BoothReservation extends AppCompatActivity {
 
         if (boothList.size() > 0) {
             for (Item booth : boothList) {
+                final Item finalizedBooth = booth;
                 /////////CREATE NEW ROW AND NECESSARY TEXTVIEWS
                 TableRow newBoothRow = new TableRow(boothReservationActivityContext);
                 TextView boothNumberTv = new TextView(boothReservationActivityContext);
@@ -155,8 +157,9 @@ public class BoothReservation extends AppCompatActivity {
 
                 /////////POPULATE TVS / HANDLE ANY PROCESSING
                 boothNumberTv.setText(booth.getSku());
-                //// TODO: 9/11/2016 do price correctly
-                boothPriceTv.setText(booth.getPrice().toString());
+                /////////HANDLE PRICE
+                String formattedPrice = GlobalUtils.getFormattedPriceStringFromLong(booth.getPrice());
+                boothPriceTv.setText(formattedPrice);
                 boothCustomerTv.setText("customerhere");
 
                 Tag sizeTag = null;
@@ -175,6 +178,14 @@ public class BoothReservation extends AppCompatActivity {
                     }
                 }
 
+                Button reserveBoothButton = new Button(boothReservationActivityContext);
+                reserveBoothButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        reserveBoothAction(show, finalizedBooth);
+                    }
+                });
+                reserveBoothButton.setText(getResources().getString(R.string.reserve_booth_button_text));
                 ///////////POPULATE THE NEW ROW AND ADD TO TABLE
                 newBoothRow.addView(boothNumberTv);
                 newBoothRow.addView(boothPriceTv);
@@ -182,6 +193,7 @@ public class BoothReservation extends AppCompatActivity {
                 newBoothRow.addView(boothAreaTv);
                 newBoothRow.addView(boothCategoryTv);
                 newBoothRow.addView(boothCustomerTv);
+                newBoothRow.addView(reserveBoothButton);
                 boothListTable.addView(newBoothRow);
             }
         } else {
@@ -216,7 +228,10 @@ public class BoothReservation extends AppCompatActivity {
         boothListTable.addView(boothSelectionTableHeaderRow);
     }
 
-    private void selectBoothAction() {
-        //// TODO: 9/10/2016 do once all super activity smooth
+    private void reserveBoothAction(Category show, Item boothToReserve) {
+        Intent reserveBoothIntent = new Intent(boothReservationActivityContext, ReserveBoothDetails.class);
+        reserveBoothIntent.putExtra("show", show);
+        reserveBoothIntent.putExtra("booth", boothToReserve);
+        startActivity(reserveBoothIntent);
     }
 }

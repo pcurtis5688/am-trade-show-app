@@ -228,7 +228,7 @@
 
     <!-- BOOTH RESERVATION STRINGS //////////////////-->
     <string name="booth_reservation_header_text">Booth Selection</string>
-
+    <string name="reserve_booth_button_text">Reserve Booth</string>
 
     <!-- Strings related to Settings -->
 
@@ -280,13 +280,10 @@
 
     <!-- Example settings for Notifications -->
     <string name="pref_header_notifications">Notifications</string>
-
     <string name="pref_title_new_message_notifications">New message notifications</string>
-
     <string name="pref_title_ringtone">Ringtone</string>
     <string name="pref_ringtone_silent">Silent</string>
-
     <string name="pref_title_vibrate">Vibrate</string>
-
+    <string name="title_activity_reserve_booth_details">Reserve Booth Details</string>
 
 </resources>

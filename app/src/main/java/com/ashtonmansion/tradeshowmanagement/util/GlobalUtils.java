@@ -29,6 +29,15 @@ public class GlobalUtils {
         return longPrice;
     }
 
+    public static String getFormattedPriceStringFromLong(long longPrice){
+        String priceLongString = Long.toString(longPrice);
+        String cleanString = priceLongString.replaceAll("[$,.]", "");
+        double parsedBoothPriceDouble = Double.parseDouble(cleanString);
+        NumberFormat numberFormatter = NumberFormat.getCurrencyInstance(Locale.US);
+        String formattedPrice = numberFormatter.format(parsedBoothPriceDouble / 100.0);
+        return formattedPrice;
+    }
+
     public static void valuesTester(String keyName, String value) {
         Log.d("Key: " + keyName, ",Value: " + value);
     }
