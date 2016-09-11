@@ -2,6 +2,7 @@ package com.ashtonmansion.tradeshowmanagement.util;
 
 import android.util.Log;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
@@ -12,15 +13,19 @@ import java.util.Locale;
 public class GlobalUtils {
 
     public static long getLongFromFormattedPriceString(String priceString) {
-        long priceLongFormat = 0;
-        NumberFormat numberFormatter = NumberFormat.getCurrencyInstance(Locale.US);
+        String passedString = priceString;
+        //long number = Long.parseLong(passedString);
+
+        Number number2 = 0;
+        NumberFormat format = NumberFormat.getCurrencyInstance();
         try {
-            Number parsedNumber = numberFormatter.parse(priceString);
-            priceLongFormat = parsedNumber.longValue();
-        } catch (ParseException e1) {
-            Log.e("Parse Exception: ", e1.getClass().getName() + ", " + e1.getMessage());
+            number2 = format.parse(passedString);
+        } catch (ParseException e) {
+            Log.d("ParseExcpt: ", e.getMessage());
         }
-        return priceLongFormat;
+        long longPrice = number2.longValue();
+
+        return longPrice;
     }
 
     public static void valuesTester(String keyName, String value) {
@@ -41,11 +46,11 @@ public class GlobalUtils {
         return formattedTagName;
     }
 
-    public static String getUnformattedTagName(String tagName, String tagType){
+    public static String getUnformattedTagName(String tagName, String tagType) {
         String unformattedString = "";
-        if (tagType.equalsIgnoreCase("Size") || tagType.equalsIgnoreCase("Area")){
+        if (tagType.equalsIgnoreCase("Size") || tagType.equalsIgnoreCase("Area")) {
             unformattedString = tagName.substring(7);
-        } else if (tagType.equalsIgnoreCase("Category")){
+        } else if (tagType.equalsIgnoreCase("Category")) {
             unformattedString = tagName.substring(11);
         } else {
             Log.d("GlobalUt:", " an unrecognized tag type was passed to GlobalUtils");

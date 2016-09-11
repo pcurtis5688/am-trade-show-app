@@ -13,12 +13,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
+import com.ashtonmansion.tradeshowmanagement.util.GlobalUtils;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
@@ -27,20 +27,29 @@ import com.clover.sdk.v3.base.Reference;
 import com.clover.sdk.v3.inventory.Category;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
+import com.clover.sdk.v3.inventory.Tag;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class BoothReservation extends AppCompatActivity {
     private Context boothReservationActivityContext;
+    ////////UI OBJECTS
+    private TableLayout boothListTable;
+    private TextView boothSelectionHeaderTV;
     ////////CLOVER DATA
     private Account merchantAccount;
     private InventoryConnector inventoryConnector;
-    private Category passedShowObj;
-    private Category show;
     private List<Item> boothList;
-    ////////UI OBJECTS
-    private TableLayout boothListTable;
+    ////////SHOW VARS
+    private Category show;
+    private String showID;
+    private String showName;
+    private String showDate;
+    private String showLocation;
+    private String showNotes;
+    private String userShowName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,15 +57,6 @@ public class BoothReservation extends AppCompatActivity {
         setContentView(R.layout.activity_booth_reservation);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //////////////FIELD DEFINITIONS & DATA HANDLING
@@ -65,14 +65,27 @@ public class BoothReservation extends AppCompatActivity {
 
         Bundle extrasBundle = getIntent().getExtras();
         if (extrasBundle != null) {
-            passedShowObj = (Category) extrasBundle.get("show");
+            Category passedCategoryObject = (Category) extrasBundle.get("show");
+            if (null != passedCategoryObject) {
+                showID = passedCategoryObject.getId();
+                List<String> decoupledShowArray = Arrays.asList(passedCategoryObject.getName().split(","));
+                showName = decoupledShowArray.get(0);
+                showDate = decoupledShowArray.get(1);
+                showLocation = decoupledShowArray.get(2);
+                showNotes = decoupledShowArray.get(3);
+                userShowName = showName + " (" + showDate + " - " + showLocation + ")";
+            }
+            boothSelectionHeaderTV = (TextView) findViewById(R.id.booth_selection_header);
+            boothSelectionHeaderTV.setText(userShowName);
         }
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
         GetShowBoothsTask getShowBoothsTask = new GetShowBoothsTask();
         getShowBoothsTask.execute();
     }
-
-
 
     private class GetShowBoothsTask extends AsyncTask<Void, Void, Void> {
         private ProgressDialog progressDialog;
@@ -97,7 +110,7 @@ public class BoothReservation extends AppCompatActivity {
                 List<Category> categoryList = inventoryConnector.getCategories();
                 List<Reference> boothReferenceList = new ArrayList<>();
                 for (Category category : categoryList) {
-                    if (category.getId().equalsIgnoreCase(passedShowObj.getId())) {
+                    if (category.getId().equalsIgnoreCase(showID)) {
                         show = category;
                         if (show.hasItems()) boothReferenceList = show.getItems();
                     }
@@ -126,23 +139,84 @@ public class BoothReservation extends AppCompatActivity {
     }
 
     private void createBoothSelectionTable() {
+        boothListTable.removeAllViews();
+        populateBoothSelectionHeaderRow();
 
-        for (Item booth : boothList) {
-            TableRow newBoothRow = new TableRow(boothReservationActivityContext);
+        if (boothList.size() > 0) {
+            for (Item booth : boothList) {
+                /////////CREATE NEW ROW AND NECESSARY TEXTVIEWS
+                TableRow newBoothRow = new TableRow(boothReservationActivityContext);
+                TextView boothNumberTv = new TextView(boothReservationActivityContext);
+                TextView boothPriceTv = new TextView(boothReservationActivityContext);
+                TextView boothSizeTv = new TextView(boothReservationActivityContext);
+                TextView boothAreaTv = new TextView(boothReservationActivityContext);
+                TextView boothCategoryTv = new TextView(boothReservationActivityContext);
+                TextView boothCustomerTv = new TextView(boothReservationActivityContext);
 
-            TextView boothNumberTv = new TextView(boothReservationActivityContext);
-            boothNumberTv.setText(booth.getSku());
+                /////////POPULATE TVS / HANDLE ANY PROCESSING
+                boothNumberTv.setText(booth.getSku());
+                //// TODO: 9/11/2016 do price correctly
+                boothPriceTv.setText(booth.getPrice().toString());
+                boothCustomerTv.setText("customerhere");
 
-            newBoothRow.addView(boothNumberTv);
+                Tag sizeTag = null;
+                Tag areaTag = null;
+                Tag categoryTag = null;
+                for (Tag currentTag : booth.getTags()) {
+                    if (currentTag.getName().substring(0, 4).equalsIgnoreCase("size")) {
+                        sizeTag = currentTag;
+                        boothSizeTv.setText(GlobalUtils.getUnformattedTagName(sizeTag.getName(), "Size"));
+                    } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("area")) {
+                        areaTag = currentTag;
+                        boothAreaTv.setText(GlobalUtils.getUnformattedTagName(areaTag.getName(), "Area"));
+                    } else if (currentTag.getName().substring(0, 8).equalsIgnoreCase("category")) {
+                        categoryTag = currentTag;
+                        boothCategoryTv.setText(GlobalUtils.getUnformattedTagName(categoryTag.getName(), "Category"));
+                    }
+                }
 
-            boothListTable.addView(newBoothRow);
-
+                ///////////POPULATE THE NEW ROW AND ADD TO TABLE
+                newBoothRow.addView(boothNumberTv);
+                newBoothRow.addView(boothPriceTv);
+                newBoothRow.addView(boothSizeTv);
+                newBoothRow.addView(boothAreaTv);
+                newBoothRow.addView(boothCategoryTv);
+                newBoothRow.addView(boothCustomerTv);
+                boothListTable.addView(newBoothRow);
+            }
+        } else {
+            TextView noBoothsForShowTV = new TextView(boothReservationActivityContext);
+            noBoothsForShowTV.setText(getResources().getString(R.string.booth_reservation_no_booths_for_show_text));
+            boothListTable.addView(noBoothsForShowTV);
         }
     }
 
-    private void selectBoothAction() {
+    private void populateBoothSelectionHeaderRow() {
+        TableRow boothSelectionTableHeaderRow = new TableRow(boothReservationActivityContext);
+        TextView boothNumberHeaderTv = new TextView(boothReservationActivityContext);
+        TextView boothPriceHeaderTv = new TextView(boothReservationActivityContext);
+        TextView boothSizeHeaderTv = new TextView(boothReservationActivityContext);
+        TextView boothAreaHeaderTv = new TextView(boothReservationActivityContext);
+        TextView boothCategoryHeaderTv = new TextView(boothReservationActivityContext);
+        TextView boothCustomerHeaderTv = new TextView(boothReservationActivityContext);
 
-        // TODO: 9/10/2016 do once all super activity smooth
+        boothNumberHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_number_header));
+        boothPriceHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_price_header));
+        boothSizeHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_size_header));
+        boothAreaHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_area_header));
+        boothCategoryHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_category_header));
+        boothCustomerHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_customer_header));
+
+        boothSelectionTableHeaderRow.addView(boothNumberHeaderTv);
+        boothSelectionTableHeaderRow.addView(boothPriceHeaderTv);
+        boothSelectionTableHeaderRow.addView(boothSizeHeaderTv);
+        boothSelectionTableHeaderRow.addView(boothAreaHeaderTv);
+        boothSelectionTableHeaderRow.addView(boothCategoryHeaderTv);
+        boothSelectionTableHeaderRow.addView(boothCustomerHeaderTv);
+        boothListTable.addView(boothSelectionTableHeaderRow);
     }
 
+    private void selectBoothAction() {
+        //// TODO: 9/10/2016 do once all super activity smooth
+    }
 }

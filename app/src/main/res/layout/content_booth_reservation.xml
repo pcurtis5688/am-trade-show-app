@@ -23,17 +23,20 @@
             <TableRow>
 
                 <TextView
+                    android:id="@+id/booth_selection_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/booth_reservation_header_text"
+                    android:layout_marginBottom="@dimen/dimen_25dp"
                     android:textSize="@dimen/dimen_36sp" />
             </TableRow>
+
             <TableRow>
+
                 <TableLayout
                     android:id="@+id/booth_selection_booth_table"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:stretchColumns="*"/>
+                    android:stretchColumns="*" />
             </TableRow>
         </TableLayout>
     </LinearLayout>

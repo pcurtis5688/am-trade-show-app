@@ -17,6 +17,7 @@
     <string name="title_activity_filter_booths">Filter Booth List</string>
     <string name="title_activity_make_reservation">Make A Reservation</string>
     <string name="title_activity_create_booth">Create Booth</string>
+    <string name="title_activity_booth_reservation">Booth Reservation</string>
 
     <!-- NAV DRAWER STRINGS -->
     <string name="nav_drawer_home_header">Home</string>
@@ -132,6 +133,7 @@
     <string name="booth_reservation_show_selection_header_text">Booth Reservation - Select Show</string>
     <string name="select_show_button_text">Select Show</string>
     <string name="select_booth_action_button_text">Select Booth</string>
+    <string name="booth_reservation_no_booths_for_show_text">No Booths assigned to Show</string>
     <string name="available_booths_header_text">Available Booths</string>
     <string name="customer_search_prompt">Search Existing Customers:</string>
     <string name="manual_customer_entry_prompt">-OR- Enter a customer manually below</string>
@@ -211,6 +213,13 @@
     <string name="customer_phone_label">Customer Phone</string>
     <string name="customer_phone_hint">[Phone]</string>
 
+    <string name="booth_selection_booth_number_header">Booth No.</string>
+    <string name="booth_selection_booth_size_header">Size</string>
+    <string name="booth_selection_booth_area_header">Area</string>
+    <string name="booth_selection_booth_category_header">Category</string>
+    <string name="booth_selection_booth_customer_header">Customer</string>
+    <string name="booth_selection_booth_price_header">Price</string>
+
     <string name="finalize_reservation_btn_text">Finalize Reservation</string>
     <string name="finalized_reservation_confirmation">Reservation Complete</string>
     <string name="title_activity_app_settings">Application Settings</string>
@@ -278,7 +287,6 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
-    <string name="title_activity_booth_reservation">BoothReservation</string>
 
 
 </resources>

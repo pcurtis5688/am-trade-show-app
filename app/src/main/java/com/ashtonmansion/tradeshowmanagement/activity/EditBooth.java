@@ -138,6 +138,7 @@ public class EditBooth extends AppCompatActivity {
         private InventoryConnector inventoryConnector;
         /////// SELECTED BOOTH DATA
         private Item boothToUpdate;
+        private List<String> boothIdInStringList;
         private String editBoothNumberFieldData;
         private String editBoothPriceFieldData;
         private String editBoothSizeFieldData;
@@ -152,12 +153,24 @@ public class EditBooth extends AppCompatActivity {
             progressDialog.show();
 
             ////GRAB FIELD DATA UPON UPDATE START
+            String boothIdString = booth.getId();
+            boothIdInStringList = new ArrayList<>();
+            boothIdInStringList.add(boothIdString);
             editBoothNumberFieldData = editBoothNumberField.getText().toString();
             //// TODO: 9/8/2016 price handling here
             editBoothPriceFieldData = editBoothPriceField.getText().toString();
             editBoothSizeFieldData = editBoothSizeField.getText().toString();
             editBoothAreaFieldData = editBoothAreaField.getText().toString();
             editBoothCategoryFieldData = editBoothCategoryField.getText().toString();
+            if (null == sizeTag) {
+                sizeTag = new Tag();
+            }
+            if (null == areaTag) {
+                areaTag = new Tag();
+            }
+            if (null == categoryTag) {
+                categoryTag = new Tag();
+            }
             sizeTag.setName(GlobalUtils.getFormattedTagName(editBoothSizeFieldData, "Size"));
             areaTag.setName(GlobalUtils.getFormattedTagName(editBoothAreaFieldData, "Area"));
             categoryTag.setName(GlobalUtils.getFormattedTagName(editBoothCategoryFieldData, "Category"));
@@ -178,9 +191,24 @@ public class EditBooth extends AppCompatActivity {
                 inventoryConnector.updateItem(boothToUpdate);
 
                 //////////TAG UPDATES
-                inventoryConnector.updateTag(sizeTag);
-                inventoryConnector.updateTag(areaTag);
-                inventoryConnector.updateTag(categoryTag);
+                if (sizeTag.hasId()) {
+                    inventoryConnector.updateTag(sizeTag);
+                } else {
+                    inventoryConnector.createTag(sizeTag);
+                    inventoryConnector.assignItemsToTag(categoryTag.getId(), boothIdInStringList);
+                }
+                if (areaTag.hasId()) {
+                    inventoryConnector.updateTag(areaTag);
+                } else {
+                    inventoryConnector.createTag(areaTag);
+                    inventoryConnector.assignItemsToTag(categoryTag.getId(), boothIdInStringList);
+                }
+                if (categoryTag.hasId()) {
+                    inventoryConnector.updateTag(categoryTag);
+                } else {
+                    inventoryConnector.createTag(categoryTag);
+                    inventoryConnector.assignItemsToTag(categoryTag.getId(), boothIdInStringList);
+                }
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
             } catch (SQLiteException e2) {
@@ -190,6 +218,7 @@ public class EditBooth extends AppCompatActivity {
             }
 
             //////////LOCAL UPDATES
+            // TODO: 9/10/2016 finish all local stuff later
             TradeShowDB tradeShowDatabase = new TradeShowDB(editBoothActivityContext);
             boolean sqliteUpdateBoothSuccess = tradeShowDatabase.updateSingleBoothByCloverId(
                     boothToUpdate.getId(),

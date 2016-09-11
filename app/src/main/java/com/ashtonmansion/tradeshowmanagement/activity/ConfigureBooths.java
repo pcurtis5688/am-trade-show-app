@@ -113,7 +113,6 @@ public class ConfigureBooths extends AppCompatActivity
         if (boothList != null && boothList.size() > 0) {
             for (Item booth : boothList) {
                 TableRow newBoothRow = new TableRow(configureBoothsActivityContext);
-                TextView boothNameTv = new TextView(configureBoothsActivityContext);
                 TextView boothNumberTv = new TextView(configureBoothsActivityContext);
                 TextView boothPriceTv = new TextView(configureBoothsActivityContext);
                 TextView boothSizeTv = new TextView(configureBoothsActivityContext);
@@ -128,29 +127,21 @@ public class ConfigureBooths extends AppCompatActivity
                 for (Tag currentTag : booth.getTags()) {
                     if (currentTag.getName().substring(0, 4).equalsIgnoreCase("size")) {
                         sizeTag = currentTag;
-                        boothSizeTv.setText(sizeTag.getName());
+                        boothSizeTv.setText(GlobalUtils.getUnformattedTagName(sizeTag.getName(), "Size"));
                     } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("area")) {
                         areaTag = currentTag;
-                        boothAreaTv.setText(areaTag.getName());
+                        boothAreaTv.setText(GlobalUtils.getUnformattedTagName(areaTag.getName(), "Area"));
                     } else if (currentTag.getName().substring(0, 8).equalsIgnoreCase("category")) {
                         categoryTag = currentTag;
-                        boothCategoryTv.setText(categoryTag.getName());
+                        boothCategoryTv.setText(GlobalUtils.getUnformattedTagName(categoryTag.getName(), "Category"));
                     }
                 }
-                if (null != sizeTag)
-                    boothSizeTv.setText(GlobalUtils.getUnformattedTagName(sizeTag.getName(), "Size"));
-                else Log.d("booth size tag :", "null");
-                if (null != areaTag)
-                    boothAreaTv.setText(GlobalUtils.getUnformattedTagName(areaTag.getName(), "Area"));
-                else Log.d("booth area tag :", "null");
-                if (null != categoryTag)
-                    boothCategoryTv.setText(GlobalUtils.getUnformattedTagName(categoryTag.getName(), "Category"));
-                else Log.d("booth cat tag :", "null");
                 //////////////////////
                 boothNumberTv.setText(booth.getSku());
                 //// TODO: 9/5/2016 fix custmoer
                 boothCustomerTv.setText("customerhere");
                 ////////////////////PRICE BELOW
+                //// TODO: 9/10/2016 fix below. is causing decimal loss 
                 long boothPriceLong = booth.getPrice();
                 String priceLongString = Long.toString(boothPriceLong);
                 String cleanString = priceLongString.replaceAll("[$,.]", "");
