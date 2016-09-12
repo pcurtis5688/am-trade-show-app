@@ -53,7 +53,6 @@ public class EditShow extends AppCompatActivity {
     private String editedShowDate;
     private String editedShowLocation;
     private String editedShowNotes;
-    private String editedShowLocationAndDateString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +104,7 @@ public class EditShow extends AppCompatActivity {
         editedShowDate = showDateEditText.getText().toString();
         editedShowLocation = showLocationEditText.getText().toString();
         editedShowNotes = showNotesEditText.getText().toString();
-        editedShowLocationAndDateString = editedShowLocation + " - " + editedShowDate;
+        formattedFullShowName = editedShowName + "," + editedShowDate + "," + editedShowLocation + "," + editedShowNotes;
 
         UpdateShowTask updateShowTask = new UpdateShowTask();
         updateShowTask.execute();
@@ -140,13 +139,13 @@ public class EditShow extends AppCompatActivity {
                 Category updatedShowCategory = new Category();
                 updatedShowCategory.setId(showID);
                 updatedShowCategory.setSortOrder(1);
-                updatedShowCategory.setName(editedShowLocationAndDateString);
+                updatedShowCategory.setName(formattedFullShowName);
 
                 inventoryConnector.updateCategory(updatedShowCategory);
 
                 TradeShowDB database = new TradeShowDB(editShowActivityContext);
                 recordSuccessfullyUpdated = database.updateSingleShowByCloverID(showID, editedShowName,
-                        editedShowDate, editedShowLocation, editedShowNotes, editedShowLocationAndDateString);
+                        editedShowDate, editedShowLocation, editedShowNotes, formattedFullShowName);
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
                 e1.printStackTrace();

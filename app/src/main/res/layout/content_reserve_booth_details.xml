@@ -8,7 +8,6 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:stretchColumns="*"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.ashtonmansion.tradeshowmanagement.activity.ReserveBoothDetails"
     tools:showIn="@layout/activity_reserve_booth_details">
@@ -19,38 +18,54 @@
             android:id="@+id/booth_reservation_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_25dp"
             android:textAlignment="center"
             android:textSize="@dimen/dimen_36sp" />
     </TableRow>
 
     <TableRow>
 
-        <TextView android:text="@string/booth_reservation_price_label" />
+        <TextView
+            android:text="@string/booth_reservation_price_label"
+            android:textSize="@dimen/dimen_24sp" />
 
-        <TextView android:id="@+id/booth_reservation_details_price" />
+        <TextView
+            android:id="@+id/booth_reservation_details_price"
+            android:textSize="@dimen/dimen_24sp" />
     </TableRow>
 
     <TableRow>
 
-        <TextView android:text="@string/booth_reservation_size_label" />
+        <TextView
+            android:text="@string/booth_reservation_size_label"
+            android:textSize="@dimen/dimen_24sp" />
 
-        <TextView android:id="@+id/booth_reservation_details_size" />
-
+        <TextView
+            android:id="@+id/booth_reservation_details_size"
+            android:textSize="@dimen/dimen_24sp" />
     </TableRow>
 
     <TableRow>
 
-        <TextView android:text="@string/booth_reservation_area_label" />
+        <TextView
+            android:text="@string/booth_reservation_area_label"
+            android:textSize="@dimen/dimen_24sp" />
 
-        <TextView android:id="@+id/booth_reservation_details_area" />
-
+        <TextView
+            android:id="@+id/booth_reservation_details_area"
+            android:textSize="@dimen/dimen_24sp" />
     </TableRow>
 
     <TableRow>
 
-        <TextView android:text="@string/booth_reservation_category_label" />
+        <TextView
+            android:text="@string/booth_reservation_category_label"
+            android:textSize="@dimen/dimen_24sp" />
 
-        <TextView android:id="@+id/booth_reservation_details_category" />
+        <TextView
+            android:id="@+id/booth_reservation_details_category"
+            android:textSize="@dimen/dimen_24sp" />
 
     </TableRow>
+
 </TableLayout>
