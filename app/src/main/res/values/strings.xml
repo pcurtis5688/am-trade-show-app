@@ -236,7 +236,7 @@
     <string name="booth_reservation_no_size_data">No Size Defined for Booth</string>
     <string name="booth_reservation_no_area_data">No Area Defined for Booth</string>
     <string name="booth_reservation_no_category_data">No Category Defined for Booth</string>
-
+    <string name="booth_tag_not_available">N/A</string>
     <!-- Strings related to Settings -->
     <string name="pref_header_general">General</string>
     <string name="pref_title_social_recommendations">Enable social recommendations</string>

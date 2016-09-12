@@ -168,13 +168,28 @@ public class BoothReservation extends AppCompatActivity {
                 for (Tag currentTag : booth.getTags()) {
                     if (currentTag.getName().substring(0, 4).equalsIgnoreCase("size")) {
                         sizeTag = currentTag;
-                        boothSizeTv.setText(GlobalUtils.getUnformattedTagName(sizeTag.getName(), "Size"));
+                        String unformattedSizeTagName = GlobalUtils.getUnformattedTagName(sizeTag.getName(), "Size");
+                        if (unformattedSizeTagName.length() > 0){
+                            boothSizeTv.setText(unformattedSizeTagName);
+                        } else {
+                            boothSizeTv.setText(getResources().getString(R.string.booth_tag_not_available));
+                        }
                     } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("area")) {
                         areaTag = currentTag;
-                        boothAreaTv.setText(GlobalUtils.getUnformattedTagName(areaTag.getName(), "Area"));
+                        String unformattedAreaTagName = GlobalUtils.getUnformattedTagName(areaTag.getName(), "Area");
+                        if (unformattedAreaTagName.length() > 0){
+                            boothAreaTv.setText(unformattedAreaTagName);
+                        } else {
+                            boothAreaTv.setText(getResources().getString(R.string.booth_tag_not_available));
+                        }
                     } else if (currentTag.getName().substring(0, 8).equalsIgnoreCase("category")) {
                         categoryTag = currentTag;
-                        boothCategoryTv.setText(GlobalUtils.getUnformattedTagName(categoryTag.getName(), "Category"));
+                        String unformattedCategoryTagName = GlobalUtils.getUnformattedTagName(categoryTag.getName(), "Category");
+                        if (unformattedCategoryTagName.length() > 0){
+                            boothCategoryTv.setText(unformattedCategoryTagName);
+                        } else {
+                            boothCategoryTv.setText(getResources().getString(R.string.booth_tag_not_available));
+                        }
                     }
                 }
 

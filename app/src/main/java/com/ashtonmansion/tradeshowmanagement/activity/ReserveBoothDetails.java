@@ -89,7 +89,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
         if (sizeTag != null) {
             String unformattedSizeTagName = GlobalUtils.getUnformattedTagName(sizeTag.getName(), "Size");
             if (unformattedSizeTagName.length() > 0) {
-                boothReservationSizeTV.setText(GlobalUtils.getUnformattedTagName(sizeTag.getName(), "Size"));
+                boothReservationSizeTV.setText(unformattedSizeTagName);
             } else {
                 boothReservationSizeTV.setText(getResources().getString(R.string.booth_reservation_no_size_data));
             }
@@ -99,7 +99,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
         if (areaTag != null) {
             String unformattedAreaTagName = GlobalUtils.getUnformattedTagName(areaTag.getName(), "Area");
             if (unformattedAreaTagName.length() > 0) {
-                boothReservationAreaTV.setText(GlobalUtils.getUnformattedTagName(areaTag.getName(), "Area"));
+                boothReservationAreaTV.setText(unformattedAreaTagName);
             } else {
                 boothReservationAreaTV.setText(getResources().getString(R.string.booth_reservation_no_area_data));
             }
@@ -109,7 +109,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
         if (categoryTag != null) {
             String unformattedCategoryTagName = GlobalUtils.getUnformattedTagName(categoryTag.getName(), "Category");
             if (unformattedCategoryTagName.length() > 0) {
-                boothReservationCategoryTV.setText(GlobalUtils.getUnformattedTagName(categoryTag.getName(), "Category"));
+                boothReservationCategoryTV.setText(unformattedCategoryTagName);
             } else {
                 boothReservationCategoryTV.setText(getResources().getString(R.string.booth_reservation_no_category_data));
             }
