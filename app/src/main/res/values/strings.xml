@@ -227,17 +227,18 @@
     <string name="title_activity_dev_tools">Developer Options</string>
 
     <!-- BOOTH RESERVATION STRINGS //////////////////-->
-    <string name="booth_reservation_header_text">Booth Selection</string>
+    <string name="booth_reservation_details_header_text">%1$s - Booth No.: %2$s</string>
     <string name="reserve_booth_button_text">Reserve Booth</string>
     <string name="booth_reservation_price_label">Booth Price:</string>
     <string name="booth_reservation_size_label">Booth Size:</string>
     <string name="booth_reservation_area_label">Booth Area:</string>
     <string name="booth_reservation_category_label">Booth Category:</string>
+    <string name="booth_reservation_no_size_data">No Size Defined for Booth</string>
+    <string name="booth_reservation_no_area_data">No Area Defined for Booth</string>
+    <string name="booth_reservation_no_category_data">No Category Defined for Booth</string>
+
     <!-- Strings related to Settings -->
-
-    <!-- Example General settings -->
     <string name="pref_header_general">General</string>
-
     <string name="pref_title_social_recommendations">Enable social recommendations</string>
     <string name="pref_description_social_recommendations">Recommendations for people to contact
         based on your message history
