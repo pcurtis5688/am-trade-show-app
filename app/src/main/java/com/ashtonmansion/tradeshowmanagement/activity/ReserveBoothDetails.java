@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
+import com.ashtonmansion.tradeshowmanagement.util.GlobalUtils;
 import com.clover.sdk.v3.inventory.Category;
 import com.clover.sdk.v3.inventory.Item;
 
@@ -28,7 +29,6 @@ public class ReserveBoothDetails extends AppCompatActivity {
     ///////BOOTH DATA
     private Item booth;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,10 +36,9 @@ public class ReserveBoothDetails extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        /////ASSIGN CONTEXT AS WELL AS GET UI HANDLERS
-        reserveBoothDetailsActivityContext = this;
 
         /////GET DATA PASSED FROM BOOTH SELECTION
+        reserveBoothDetailsActivityContext = this;
         Bundle extrasBundle = getIntent().getExtras();
         if (extrasBundle != null) {
             show = (Category) extrasBundle.get("show");
@@ -48,7 +47,14 @@ public class ReserveBoothDetails extends AppCompatActivity {
             decoupleShowName(show);
 
             TextView boothReservationHeader = (TextView) findViewById(R.id.booth_reservation_header);
+            TextView boothReservationPriceTV = (TextView) findViewById(R.id.booth_reservation_details_price);
+            //TextView boothReservationSizeTV = (TextView) findViewById(R.id.booth_reservation_details_size);
+            //TextView boothReservationAreaTV = (TextView) findViewById(R.id.booth_reservation_details_area);
+            //TextView boothReservationCategoryTV = (TextView) findViewById(R.id.booth_reservation_details_category);
+
             boothReservationHeader.setText(showName + " - Booth Number: " + booth.getSku());
+            boothReservationPriceTV.setText(GlobalUtils.getFormattedPriceStringFromLong(booth.getPrice()));
+            //boothReservationSizeTV.setText();
         }
     }
 

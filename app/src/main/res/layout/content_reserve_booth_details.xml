@@ -20,6 +20,37 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:textSize="@dimen/dimen_24sp" />
+            android:textSize="@dimen/dimen_36sp" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView android:text="@string/booth_reservation_price_label" />
+
+        <TextView android:id="@+id/booth_reservation_details_price" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView android:text="@string/booth_reservation_size_label" />
+
+        <TextView android:id="@+id/booth_reservation_details_size" />
+
+    </TableRow>
+
+    <TableRow>
+
+        <TextView android:text="@string/booth_reservation_area_label" />
+
+        <TextView android:id="@+id/booth_reservation_details_area" />
+
+    </TableRow>
+
+    <TableRow>
+
+        <TextView android:text="@string/booth_reservation_category_label" />
+
+        <TextView android:id="@+id/booth_reservation_details_category" />
+
     </TableRow>
 </TableLayout>

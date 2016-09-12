@@ -229,7 +229,10 @@
     <!-- BOOTH RESERVATION STRINGS //////////////////-->
     <string name="booth_reservation_header_text">Booth Selection</string>
     <string name="reserve_booth_button_text">Reserve Booth</string>
-
+    <string name="booth_reservation_price_label">Booth Price:</string>
+    <string name="booth_reservation_size_label">Booth Size:</string>
+    <string name="booth_reservation_area_label">Booth Area:</string>
+    <string name="booth_reservation_category_label">Booth Category:</string>
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->
