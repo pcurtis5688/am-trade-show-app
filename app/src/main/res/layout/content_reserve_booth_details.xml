@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.ashtonmansion.tradeshowmanagement.activity.ReserveBoothDetails"
     tools:showIn="@layout/activity_reserve_booth_details">
 
-    <TableRow>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingEnd="@dimen/dimen_75dp"
+        android:paddingStart="@dimen/dimen_75dp"
+        android:paddingTop="@dimen/dimen_25dp">
 
         <TextView
             android:id="@+id/booth_reservation_header"
@@ -21,51 +23,104 @@
             android:layout_marginBottom="@dimen/dimen_25dp"
             android:textAlignment="center"
             android:textSize="@dimen/dimen_36sp" />
-    </TableRow>
 
-    <TableRow>
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:stretchColumns="*">
 
-        <TextView
-            android:text="@string/booth_reservation_price_label"
-            android:textSize="@dimen/dimen_24sp" />
+            <TableRow>
 
-        <TextView
-            android:id="@+id/booth_reservation_details_price"
-            android:textSize="@dimen/dimen_24sp" />
-    </TableRow>
+                <TextView
+                    android:text="@string/booth_reservation_price_label"
+                    android:textSize="@dimen/dimen_24sp" />
 
-    <TableRow>
+                <TextView
+                    android:id="@+id/booth_reservation_details_price"
+                    android:textSize="@dimen/dimen_24sp" />
 
-        <TextView
-            android:text="@string/booth_reservation_size_label"
-            android:textSize="@dimen/dimen_24sp" />
+                <TextView
+                    android:text="@string/booth_reservation_size_label"
+                    android:textSize="@dimen/dimen_24sp" />
 
-        <TextView
-            android:id="@+id/booth_reservation_details_size"
-            android:textSize="@dimen/dimen_24sp" />
-    </TableRow>
+                <TextView
+                    android:id="@+id/booth_reservation_details_size"
+                    android:textSize="@dimen/dimen_24sp" />
+            </TableRow>
 
-    <TableRow>
+            <TableRow>
 
-        <TextView
-            android:text="@string/booth_reservation_area_label"
-            android:textSize="@dimen/dimen_24sp" />
+                <TextView
+                    android:text="@string/booth_reservation_area_label"
+                    android:textSize="@dimen/dimen_24sp" />
 
-        <TextView
-            android:id="@+id/booth_reservation_details_area"
-            android:textSize="@dimen/dimen_24sp" />
-    </TableRow>
+                <TextView
+                    android:id="@+id/booth_reservation_details_area"
+                    android:textSize="@dimen/dimen_24sp" />
 
-    <TableRow>
+                <TextView
+                    android:text="@string/booth_reservation_category_label"
+                    android:textSize="@dimen/dimen_24sp" />
 
-        <TextView
-            android:text="@string/booth_reservation_category_label"
-            android:textSize="@dimen/dimen_24sp" />
+                <TextView
+                    android:id="@+id/booth_reservation_details_category"
+                    android:textSize="@dimen/dimen_24sp" />
+            </TableRow>
 
-        <TextView
-            android:id="@+id/booth_reservation_details_category"
-            android:textSize="@dimen/dimen_24sp" />
+            <TableRow android:layout_marginTop="@dimen/dimen_12dp">
 
-    </TableRow>
+                <RadioGroup
+                    android:id="@+id/booth_reservation_new_or_existing_radiogrp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_span="4"
+                    android:orientation="horizontal">
 
-</TableLayout>
+                    <RadioButton
+                        android:id="@+id/booth_reservation_new_customer_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="@string/booth_reservation_new_customer_text" />
+
+                    <RadioButton
+                        android:id="@+id/booth_reservation_existing_customer_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/booth_reservation_existing_customer_text" />
+
+                </RadioGroup>
+            </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:id="@+id/newCustomerTableLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_12dp"
+            android:stretchColumns="*">
+
+            <TableRow>
+
+                <TextView android:text="testttt" />
+            </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:id="@+id/existingCustomerTableLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_12dp"
+            android:stretchColumns="*"
+            android:visibility="gone">
+
+            <TableRow>
+
+                <EditText
+                    android:id="@+id/booth_reservation_search_existing_customers_field"
+                    android:layout_width="match_parent"
+                    android:hint="@string/booth_reservation_search_customer_hint" />
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

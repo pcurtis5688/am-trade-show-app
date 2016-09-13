@@ -237,6 +237,11 @@
     <string name="booth_reservation_no_area_data">No Area Defined for Booth</string>
     <string name="booth_reservation_no_category_data">No Category Defined for Booth</string>
     <string name="booth_tag_not_available">N/A</string>
+    <string name="booth_reservation_new_customer_text">New Customer</string>
+    <string name="booth_reservation_existing_customer_text">Existing Customer</string>
+    <string name="booth_reservation_search_customer_hint">Search Existing Customers...</string>
+
+
     <!-- Strings related to Settings -->
     <string name="pref_header_general">General</string>
     <string name="pref_title_social_recommendations">Enable social recommendations</string>

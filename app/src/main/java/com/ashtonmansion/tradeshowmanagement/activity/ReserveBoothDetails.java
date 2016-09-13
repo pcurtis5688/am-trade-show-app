@@ -7,6 +7,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.RadioGroup;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
@@ -59,6 +62,29 @@ public class ReserveBoothDetails extends AppCompatActivity {
             boothReservationPriceTV.setText(GlobalUtils.getFormattedPriceStringFromLong(booth.getPrice()));
             populateTagFields();
         }
+        //////////SET UP CUSTOMER-RELATED FIELDS
+        setupCustomerFields();
+    }
+
+    private void setupCustomerFields() {
+        final TableLayout newCustomerTableLayout = (TableLayout) findViewById(R.id.newCustomerTableLayout);
+        final TableLayout existingCustomerTableLayout = (TableLayout) findViewById(R.id.existingCustomerTableLayout);
+
+        RadioGroup newOrExistingRadioGrp = (RadioGroup) findViewById(R.id.booth_reservation_new_or_existing_radiogrp);
+        newOrExistingRadioGrp.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                if (checkedId == R.id.booth_reservation_new_customer_btn) {
+                    existingCustomerTableLayout.setVisibility(View.GONE);
+                    newCustomerTableLayout.setVisibility(View.VISIBLE);
+                } else if (checkedId == R.id.booth_reservation_existing_customer_btn) {
+                    newCustomerTableLayout.setVisibility(View.GONE);
+                    existingCustomerTableLayout.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        EditText searchExistingCustomersField = (EditText) findViewById(R.id.booth_reservation_search_existing_customers_field);
     }
 
     private void decoupleShowName(Category show) {
@@ -117,4 +143,5 @@ public class ReserveBoothDetails extends AppCompatActivity {
             boothReservationCategoryTV.setText(getResources().getString(R.string.booth_reservation_no_category_data));
         }
     }
+
 }
