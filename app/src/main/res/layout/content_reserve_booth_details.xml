@@ -102,7 +102,64 @@
 
             <TableRow>
 
-                <TextView android:text="testttt" />
+                <EditText
+                    android:id="@+id/br_new_customer_first_name_field"
+                    android:hint="@string/br_new_customer_first_name_hint" />
+
+                <EditText
+                    android:id="@+id/br_new_customer_last_name_field"
+                    android:hint="@string/br_new_customer_last_name_hint" />
+
+            </TableRow>
+
+            <TableRow>
+
+                <TextView android:text="@string/br_new_customer_phone_field_label" />
+
+                <EditText
+                    android:id="@+id/br_new_customer_phone_field"
+                    android:hint="@string/br_new_customer_phone_field_hint" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView android:text="@string/br_new_customer_email_field_label" />
+
+                <EditText
+                    android:id="@+id/br_new_customer_email_field"
+                    android:hint="@string/br_new_customer_email_field_hint" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView android:text="@string/br_new_customer_address_field_label" />
+
+                <EditText
+                    android:id="@+id/br_new_customer_address_line_1_field"
+                    android:hint="@string/br_new_customer_address_field1_hint" />
+            </TableRow>
+
+            <TableRow>
+
+                <EditText
+                    android:id="@+id/br_new_customer_address_line_2_field"
+                    android:layout_column="1"
+                    android:hint="@string/br_new_customer_address_field2_hint" />
+            </TableRow>
+
+            <TableRow>
+
+                <EditText
+                    android:id="@+id/br_new_customer_address_line_3_field"
+                    android:layout_column="1"
+                    android:hint="@string/br_new_customer_address_field3_hint" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView android:text="@string/br_new_custoemr_is_marketing_allowed_label" />
+
+                <CheckBox android:id="@+id/br_new_customer_is_marketing_allowed_chkbox" />
             </TableRow>
         </TableLayout>
 
@@ -120,6 +177,14 @@
                     android:id="@+id/booth_reservation_search_existing_customers_field"
                     android:layout_width="match_parent"
                     android:hint="@string/booth_reservation_search_customer_hint" />
+            </TableRow>
+
+            <TableRow>
+
+                <ListView
+                    android:id="@+id/existing_customers_lv"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_200dp" />
             </TableRow>
         </TableLayout>
     </LinearLayout>
