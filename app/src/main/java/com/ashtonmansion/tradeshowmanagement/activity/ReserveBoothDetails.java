@@ -12,7 +12,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -21,6 +21,7 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
 import com.ashtonmansion.tradeshowmanagement.util.CustomersAdapter;
@@ -51,29 +52,17 @@ public class ReserveBoothDetails extends AppCompatActivity {
     private Category show;
     private String showID;
     private String showName;
-    private String showDate;
-    private String showLocation;
-    private String showNotes;
     ///////BOOTH DATA
     private Item booth;
     private List<Tag> boothTags;
     private Tag sizeTag;
     private Tag areaTag;
     private Tag categoryTag;
-    ///////EXISTING CUSTOMER LIST AND UI ITEMS
+    /////// CUSTOMER DATA
+    private String newOrExistingCustomerFlag;
     private ArrayList<Customer> existingCustomers;
-    ///////NEW CUSTOMER UI FIELDS
-    private EditText newCustomerFirstNameField;
-    private EditText newCustomerLastNameField;
-    private EditText newCustomerPhoneNumberField;
-    private EditText newCustomerEmailAddressField;
-    private EditText newCustomerAddressLine1Field;
-    private EditText newCustomerAddressLine2Field;
-    private EditText newCustomerAddressLine3Field;
-    private EditText newCustomerCityField;
-    private Spinner newCustomerStateSpinner;
-    private EditText newCustomerZipCodeField;
-    private CheckBox newCustomerIsMarketingAllowedChkbox;
+    private Customer newCustomerCreated;
+    private Customer existingCustomerSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,9 +117,9 @@ public class ReserveBoothDetails extends AppCompatActivity {
     private void decoupleShowName(Category show) {
         List<String> splitShowNameArray = Arrays.asList(show.getName().split(","));
         showName = splitShowNameArray.get(0);
-        showDate = splitShowNameArray.get(1);
-        showLocation = splitShowNameArray.get(2);
-        showNotes = splitShowNameArray.get(3);
+        String showDate = splitShowNameArray.get(1);
+        String showLocation = splitShowNameArray.get(2);
+        String showNotes = splitShowNameArray.get(3);
     }
 
     private void populateTagObjects() {
@@ -227,7 +216,17 @@ public class ReserveBoothDetails extends AppCompatActivity {
         ////////ATTACH ADAPTER TO THE EXISTING CUSTOMER LISTVIEW
         ListView existingCustomersListview = (ListView) findViewById(R.id.existing_customers_lv);
         existingCustomersListview.setAdapter(customersAdapter);
-
+        existingCustomersListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Customer clickedCustomer = customersAdapter.getItem(position);
+                setExistingCustomerInformation(clickedCustomer);
+                view.setPressed(true);
+                //// TODO: 9/13/2016 remove; below for testing only
+                Toast testToast = Toast.makeText(reserveBoothDetailsActivityContext, "test: " + clickedCustomer.getFirstName(), Toast.LENGTH_SHORT);
+                testToast.show();
+            }
+        });
         ///////ATTACH TO SEARCH FIELD AND ADD LISTENER
         EditText searchExistingCustomersField = (EditText) findViewById(R.id.booth_reservation_search_existing_customers_field);
         //// TODO: 9/13/2016 fix this filter
@@ -258,31 +257,18 @@ public class ReserveBoothDetails extends AppCompatActivity {
         RadioButton existingCustomerRB = (RadioButton) findViewById(R.id.booth_reservation_existing_customer_btn);
 
         if (newCustomerRB.isChecked()) {
-            createNewCustomerFromReserveBoothFields();
+            newOrExistingCustomerFlag = "New";
+            CreateNewCustomerTask createNewCustomerTask = new CreateNewCustomerTask();
+            createNewCustomerTask.execute();
         } else if (existingCustomerRB.isChecked()) {
+            newOrExistingCustomerFlag = "Existing";
             //// TODO: 9/13/2016 decide what needs to be done here before moving forward with other booth res tasks
         }
     }
 
-    private void createNewCustomerFromReserveBoothFields() {
-        newCustomerFirstNameField = (EditText) findViewById(R.id.br_new_customer_first_name_field);
-        newCustomerLastNameField = (EditText) findViewById(R.id.br_new_customer_last_name_field);
-        newCustomerPhoneNumberField = (EditText) findViewById(R.id.br_new_customer_phone_field);
-        newCustomerEmailAddressField = (EditText) findViewById(R.id.br_new_customer_email_field);
-        newCustomerAddressLine1Field = (EditText) findViewById(R.id.br_new_customer_address_line_1_field);
-        newCustomerAddressLine2Field = (EditText) findViewById(R.id.br_new_customer_address_line_2_field);
-        newCustomerAddressLine3Field = (EditText) findViewById(R.id.br_new_customer_address_line_3_field);
-        newCustomerCityField = (EditText) findViewById(R.id.br_new_customer_city_field);
-        newCustomerStateSpinner = (Spinner) findViewById(R.id.br_new_customer_state_spinner);
-        newCustomerZipCodeField = (EditText) findViewById(R.id.br_new_customer_zip_code_field);
-        newCustomerIsMarketingAllowedChkbox = (CheckBox) findViewById(R.id.br_new_customer_is_marketing_allowed_chkbox);
-
-        CreateNewCustomerTask createNewCustomerTask = new CreateNewCustomerTask();
-        createNewCustomerTask.execute();
-    }
-
     private class CreateNewCustomerTask extends AsyncTask<Void, Void, Void> {
         private ProgressDialog progressDialog;
+        private Customer newCustomerObject;
         private String newCustomerID;
         private String newCustomerFirstName;
         private String newCustomerLastName;
@@ -302,6 +288,17 @@ public class ReserveBoothDetails extends AppCompatActivity {
             progressDialog = new ProgressDialog(reserveBoothDetailsActivityContext);
             progressDialog.setMessage(getResources().getString(R.string.br_new_customer_creating_new_customer_text));
             progressDialog.show();
+            EditText newCustomerFirstNameField = (EditText) findViewById(R.id.br_new_customer_first_name_field);
+            EditText newCustomerLastNameField = (EditText) findViewById(R.id.br_new_customer_last_name_field);
+            EditText newCustomerPhoneNumberField = (EditText) findViewById(R.id.br_new_customer_phone_field);
+            EditText newCustomerEmailAddressField = (EditText) findViewById(R.id.br_new_customer_email_field);
+            EditText newCustomerAddressLine1Field = (EditText) findViewById(R.id.br_new_customer_address_line_1_field);
+            EditText newCustomerAddressLine2Field = (EditText) findViewById(R.id.br_new_customer_address_line_2_field);
+            EditText newCustomerAddressLine3Field = (EditText) findViewById(R.id.br_new_customer_address_line_3_field);
+            EditText newCustomerCityField = (EditText) findViewById(R.id.br_new_customer_city_field);
+            Spinner newCustomerStateSpinner = (Spinner) findViewById(R.id.br_new_customer_state_spinner);
+            EditText newCustomerZipCodeField = (EditText) findViewById(R.id.br_new_customer_zip_code_field);
+            CheckBox newCustomerIsMarketingAllowedChkbox = (CheckBox) findViewById(R.id.br_new_customer_is_marketing_allowed_chkbox);
             newCustomerFirstName = newCustomerFirstNameField.getText().toString();
             newCustomerLastName = newCustomerLastNameField.getText().toString();
             newCustomerPhoneNumber = newCustomerPhoneNumberField.getText().toString();
@@ -323,8 +320,8 @@ public class ReserveBoothDetails extends AppCompatActivity {
                 customerConnector = new CustomerConnector(reserveBoothDetailsActivityContext, merchantAccount, null);
                 customerConnector.connect();
 
-                Customer returnedCustomerObject = customerConnector.createCustomer(newCustomerFirstName, newCustomerLastName, newCustomerIsMarketingAllowed);
-                newCustomerID = returnedCustomerObject.getId();
+                newCustomerObject = customerConnector.createCustomer(newCustomerFirstName, newCustomerLastName, newCustomerIsMarketingAllowed);
+                newCustomerID = newCustomerObject.getId();
                 customerConnector.addPhoneNumber(newCustomerID, newCustomerPhoneNumber);
                 customerConnector.addEmailAddress(newCustomerID, newCustomerEmailAddress);
                 customerConnector.addAddress(newCustomerID, newCustomerAddressLine1, newCustomerAddressLine2, newCustomerAddressLine3, newCustomerCity, newCustomerState, newCustomerZipCode);
@@ -339,13 +336,24 @@ public class ReserveBoothDetails extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            continueBoothReservation();
+            setNewCustomerObject(newCustomerObject);
             progressDialog.dismiss();
         }
     }
 
+    private void setNewCustomerObject(Customer customer) {
+        newCustomerCreated = customer;
+        continueBoothReservation();
+    }
+
+    private void setExistingCustomerInformation(Customer customer) {
+        existingCustomerSelected = customer;
+        continueBoothReservation();
+    }
+
     private void continueBoothReservation() {
-        //// TODO: 9/13/2016 call create new order task ehre after necessary operations
+        //// TODO: I am here for reservation, except for some customer cleanup
+
     }
 
     private class CreateNewOrderTask extends AsyncTask<Void, Void, Void> {
@@ -360,6 +368,13 @@ public class ReserveBoothDetails extends AppCompatActivity {
             progressDialog.show();
 
             reservationOrder = new Order();
+            List<Customer> customerInListForOrder = new ArrayList<>();
+            if (newOrExistingCustomerFlag.equalsIgnoreCase("New")) {
+                customerInListForOrder.add(newCustomerCreated);
+            } else {
+                customerInListForOrder.add(existingCustomerSelected);
+            }
+            //reservationOrder.setCustomers(customerInListForOrder);
             //// TODO: 9/13/2016 here is where most remainder work will be, in orders.
         }
 

@@ -16,8 +16,16 @@ import java.util.ArrayList;
  * Created by paul on 9/13/2016.
  */
 public class CustomersAdapter extends ArrayAdapter<Customer> {
+    private ArrayList<Customer> customers;
+
     public CustomersAdapter(Context context, ArrayList<Customer> customers) {
         super(context, 0, customers);
+        this.customers = customers;
+    }
+
+    @Override
+    public Customer getItem(int position) {
+        return customers.get(position);
     }
 
     @Override
