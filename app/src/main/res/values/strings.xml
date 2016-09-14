@@ -241,6 +241,9 @@
     <string name="booth_reservation_existing_customer_text">Existing Customer</string>
     <string name="booth_reservation_search_customer_hint">Search Existing Customers...</string>
     <string name="booth_reservation_loading_existing_customers_text">Loading Existing Customers. . .</string>
+    <string name="booth_reservation_cancel_booth_reservation_btn_text">Cancel Reservation</string>
+    <string name="booth_reservation_reserve_booth_btn_text">Reserve Booth</string>
+
     <!-- BOOTH RESERVATION - new customer strings///////////-->
     <string name="br_new_customer_first_name_hint">[First Name]</string>
     <string name="br_new_customer_last_name_hint">[Last Name]</string>
@@ -252,7 +255,10 @@
     <string name="br_new_customer_address_field1_hint">[Address Line 1]</string>
     <string name="br_new_customer_address_field2_hint">[Line 2]</string>
     <string name="br_new_customer_address_field3_hint">[Line 3]</string>
-    <string name="br_new_custoemr_is_marketing_allowed_label">Is Marketing Allowed?</string>
+    <string name="br_new_customer_city_field_hint">[City]</string>
+    <string name="br_new_customer_zip_field_hint">[Zip Code]</string>
+    <string name="br_new_customer_is_marketing_allowed_label">Is Marketing Allowed?</string>
+    <string name="br_new_customer_creating_new_customer_text">Creating New Customer. . .</string>
 
     <!-- Strings related to Settings -->
     <string name="pref_header_general">General</string>

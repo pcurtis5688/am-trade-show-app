@@ -13,9 +13,12 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -53,8 +56,19 @@ public class ReserveBoothDetails extends AppCompatActivity {
     private Tag sizeTag;
     private Tag areaTag;
     private Tag categoryTag;
-    ///////CUSTOMER DATA
+    ///////CUSTOMER DATA & UI FIELDS
     private List<Customer> existingCustomers;
+    private EditText newCustomerFirstNameField;
+    private EditText newCustomerLastNameField;
+    private EditText newCustomerPhoneNumberField;
+    private EditText newCustomerEmailAddressField;
+    private EditText newCustomerAddressLine1Field;
+    private EditText newCustomerAddressLine2Field;
+    private EditText newCustomerAddressLine3Field;
+    private EditText newCustomerCityField;
+    private Spinner newCustomerStateSpinner;
+    private EditText newCustomerZipCodeField;
+    private CheckBox newCustomerIsMarketingAllowedChkbox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -205,7 +219,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
         ////////ITERATE OVER CUSTOMER LIST, CREATE STRING LIST
         List<String> existingCustomerStrings = new ArrayList<>();
         for (Customer currentCustomer : existingCustomers) {
-            String customerString = currentCustomer.getLastName() + "," + currentCustomer.getFirstName() + " (" + currentCustomer.getId() + ")";
+            String customerString = currentCustomer.getLastName() + ", " + currentCustomer.getFirstName() + " (" + currentCustomer.getId() + ")";
             existingCustomerStrings.add(customerString);
         }
 
@@ -235,5 +249,105 @@ public class ReserveBoothDetails extends AppCompatActivity {
             public void afterTextChanged(Editable arg0) {
             }
         });
+    }
+
+    public void cancelBoothReservation(View view) {
+        finish();
+    }
+
+    public void finalizeBoothReservation(View view) {
+        RadioButton newCustomerRB = (RadioButton) findViewById(R.id.booth_reservation_new_customer_btn);
+        RadioButton existingCustomerRB = (RadioButton) findViewById(R.id.booth_reservation_existing_customer_btn);
+
+        if (newCustomerRB.isChecked()) {
+            createNewCustomerFromReserveBoothFields();
+        } else if (existingCustomerRB.isChecked()) {
+            continueBoothReservation();
+        }
+    }
+
+    private void createNewCustomerFromReserveBoothFields() {
+        newCustomerFirstNameField = (EditText) findViewById(R.id.br_new_customer_first_name_field);
+        newCustomerLastNameField = (EditText) findViewById(R.id.br_new_customer_last_name_field);
+        newCustomerPhoneNumberField = (EditText) findViewById(R.id.br_new_customer_phone_field);
+        newCustomerEmailAddressField = (EditText) findViewById(R.id.br_new_customer_email_field);
+        newCustomerAddressLine1Field = (EditText) findViewById(R.id.br_new_customer_address_line_1_field);
+        newCustomerAddressLine2Field = (EditText) findViewById(R.id.br_new_customer_address_line_2_field);
+        newCustomerAddressLine3Field = (EditText) findViewById(R.id.br_new_customer_address_line_3_field);
+        newCustomerCityField = (EditText) findViewById(R.id.br_new_customer_city_field);
+        newCustomerStateSpinner = (Spinner) findViewById(R.id.br_new_customer_state_spinner);
+        newCustomerZipCodeField = (EditText) findViewById(R.id.br_new_customer_zip_code_field);
+        newCustomerIsMarketingAllowedChkbox = (CheckBox) findViewById(R.id.br_new_customer_is_marketing_allowed_chkbox);
+
+        CreateNewCustomerTask createNewCustomerTask = new CreateNewCustomerTask();
+        createNewCustomerTask.execute();
+    }
+
+    private class CreateNewCustomerTask extends AsyncTask<Void, Void, Void> {
+        //////////PRIVATELY NECESSARY OBJECTS & UTILITY LISTS ONLY
+        private ProgressDialog progressDialog;
+        private String newCustomerID;
+        private String newCustomerFirstName;
+        private String newCustomerLastName;
+        private String newCustomerPhoneNumber;
+        private String newCustomerEmailAddress;
+        private String newCustomerAddressLine1;
+        private String newCustomerAddressLine2;
+        private String newCustomerAddressLine3;
+        private String newCustomerCity;
+        private String newCustomerState;
+        private String newCustomerZipCode;
+        private boolean newCustomerIsMarketingAllowed;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(reserveBoothDetailsActivityContext);
+            progressDialog.setMessage(getResources().getString(R.string.br_new_customer_creating_new_customer_text));
+            progressDialog.show();
+            newCustomerFirstName = newCustomerFirstNameField.getText().toString();
+            newCustomerLastName = newCustomerLastNameField.getText().toString();
+            newCustomerPhoneNumber = newCustomerPhoneNumberField.getText().toString();
+            newCustomerEmailAddress = newCustomerEmailAddressField.getText().toString();
+            newCustomerAddressLine1 = newCustomerAddressLine1Field.getText().toString();
+            newCustomerAddressLine2 = newCustomerAddressLine2Field.getText().toString();
+            newCustomerAddressLine3 = newCustomerAddressLine3Field.getText().toString();
+            newCustomerCity = newCustomerCityField.getText().toString();
+            newCustomerState = newCustomerStateSpinner.getSelectedItem().toString();
+            newCustomerZipCode = newCustomerZipCodeField.getText().toString();
+            newCustomerIsMarketingAllowed = newCustomerIsMarketingAllowedChkbox.isChecked();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                //////CONNECT CLOVER ACCT & CUSTOMER CONNECTOR
+                merchantAccount = CloverAccount.getAccount(reserveBoothDetailsActivityContext);
+                customerConnector = new CustomerConnector(reserveBoothDetailsActivityContext, merchantAccount, null);
+                customerConnector.connect();
+
+                Customer returnedCustomerObject = customerConnector.createCustomer(newCustomerFirstName, newCustomerLastName, newCustomerIsMarketingAllowed);
+                newCustomerID = returnedCustomerObject.getId();
+                customerConnector.addPhoneNumber(newCustomerID, newCustomerPhoneNumber);
+                customerConnector.addEmailAddress(newCustomerID, newCustomerEmailAddress);
+                customerConnector.addAddress(newCustomerID, newCustomerAddressLine1, newCustomerAddressLine2, newCustomerAddressLine3, newCustomerCity, newCustomerState, newCustomerZipCode);
+            } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
+                Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
+            } finally {
+                customerConnector.disconnect();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            continueBoothReservation();
+            progressDialog.dismiss();
+        }
+    }
+
+    private void continueBoothReservation() {
+        //// TODO: 9/13/2016 finish this after all customer handling
     }
 }
