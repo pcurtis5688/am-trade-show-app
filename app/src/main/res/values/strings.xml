@@ -246,6 +246,7 @@
     <string name="booth_reservation_reserving_booth_pd_text">Making Booth Reservation. . .</string>
     <string name="booth_reservation_electricity_prompt">Include Electricity?</string>
     <string name="booth_reservation_internet_speed_prompt">Internet Speed?</string>
+    <string name="booth_reservation_select_customer_warning">Please Select a Customer. . .</string>
     <!-- BOOTH RESERVATION - new customer strings///////////-->
     <string name="br_new_customer_first_name_hint">[First Name]</string>
     <string name="br_new_customer_last_name_hint">[Last Name]</string>

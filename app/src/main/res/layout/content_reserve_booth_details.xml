@@ -218,7 +218,9 @@
                 <ListView
                     android:id="@+id/existing_customers_lv"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimen_200dp" />
+                    android:layout_height="@dimen/dimen_200dp"
+                    android:choiceMode="singleChoice"
+                    android:listSelector="@color/lv_pressed"/>
             </TableRow>
         </TableLayout>
 

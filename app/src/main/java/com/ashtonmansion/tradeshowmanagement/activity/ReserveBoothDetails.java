@@ -39,6 +39,7 @@ import com.clover.sdk.v3.inventory.Tag;
 import com.clover.sdk.v3.order.LineItem;
 import com.clover.sdk.v3.order.Order;
 import com.clover.sdk.v3.order.OrderConnector;
+import com.clover.sdk.v3.order.OrderContract;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,8 +64,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
     /////// CUSTOMER DATA
     private String newOrExistingCustomerFlag;
     private List<Customer> existingCustomers;
-    private Customer newCustomerCreated;
-    private Customer existingCustomerSelected;
+    private Customer customerForOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -231,10 +231,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Customer clickedCustomer = customersAdapter.getItem(position);
                 setExistingCustomerInformation(clickedCustomer);
-                view.setPressed(true);
-                //// TODO: 9/13/2016 remove; below for testing only
-                Toast testToast = Toast.makeText(reserveBoothDetailsActivityContext, "test: " + clickedCustomer.getFirstName(), Toast.LENGTH_SHORT);
-                testToast.show();
+                view.setSelected(true);
             }
         });
         ///////ATTACH TO SEARCH FIELD AND ADD LISTENER
@@ -272,6 +269,12 @@ public class ReserveBoothDetails extends AppCompatActivity {
             createNewCustomerTask.execute();
         } else if (existingCustomerRB.isChecked()) {
             newOrExistingCustomerFlag = "Existing";
+            if (customerForOrder != null && customerForOrder.hasId()) {
+                continueBoothReservation();
+            } else {
+                Toast selectACustomerWarning = Toast.makeText(reserveBoothDetailsActivityContext, getResources().getString(R.string.booth_reservation_select_customer_warning), Toast.LENGTH_SHORT);
+                selectACustomerWarning.show();
+            }
             //// TODO: 9/13/2016 decide what needs to be done here before moving forward with other booth res tasks
         }
     }
@@ -335,8 +338,6 @@ public class ReserveBoothDetails extends AppCompatActivity {
                 customerConnector.addPhoneNumber(newCustomerID, newCustomerPhoneNumber);
                 customerConnector.addEmailAddress(newCustomerID, newCustomerEmailAddress);
                 customerConnector.addAddress(newCustomerID, newCustomerAddressLine1, newCustomerAddressLine2, newCustomerAddressLine3, newCustomerCity, newCustomerState, newCustomerZipCode);
-                v1CustomerCreated = customerConnector.getCustomer(newCustomerID);
-                newV3Customer = GlobalUtils.getv3CustomerFromv1Customer(v1CustomerCreated, v1CustomerCreated.getPhoneNumbers(), v1CustomerCreated.getEmailAddresses(), v1CustomerCreated.getAddresses());
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
             } finally {
@@ -348,23 +349,23 @@ public class ReserveBoothDetails extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            setNewCustomerObject(newV3Customer);
+            setNewCustomerObject(v1CustomerCreated);
             progressDialog.dismiss();
         }
     }
 
-    private void setNewCustomerObject(Customer customer) {
-        newCustomerCreated = customer;
+    private void setNewCustomerObject(com.clover.sdk.v1.customer.Customer customer) {
+        customerForOrder = GlobalUtils.getv3CustomerFromv1Customer(customer, customer.getPhoneNumbers(), customer.getEmailAddresses(), customer.getAddresses());
         continueBoothReservation();
     }
 
     private void setExistingCustomerInformation(Customer customer) {
-        existingCustomerSelected = customer;
-        continueBoothReservation();
+        customerForOrder = customer;
     }
 
     private void continueBoothReservation() {
         //// TODO: I am here for reservation, except for some customer cleanup
+        //// TODO: 9/14/2016 after, move onto next and final task : 
         CreateNewOrderTask createNewOrderTask = new CreateNewOrderTask();
         createNewOrderTask.execute();
     }
@@ -372,6 +373,15 @@ public class ReserveBoothDetails extends AppCompatActivity {
     private class CreateNewOrderTask extends AsyncTask<Void, Void, Void> {
         private ProgressDialog progressDialog;
         private Order reservationOrder;
+        ///BOOTH AND REFERENCE
+        private Item boothToReserve;
+        private Reference boothReference;
+        ///LINE ITEMS
+        private LineItem boothLineItem;
+        private List<LineItem> orderLineItems;
+        ///CUSTOMER
+        private Customer orderCustomer;
+        private List<Customer> customerInListForOrder;
 
         @Override
         protected void onPreExecute() {
@@ -379,34 +389,36 @@ public class ReserveBoothDetails extends AppCompatActivity {
             progressDialog = new ProgressDialog(reserveBoothDetailsActivityContext);
             progressDialog.setMessage(getResources().getString(R.string.booth_reservation_reserving_booth_pd_text));
             progressDialog.show();
-
-            reservationOrder = new Order();
-            List<Customer> customerInListForOrder = new ArrayList<>();
-            if (newOrExistingCustomerFlag.equalsIgnoreCase("New")) {
-                customerInListForOrder.add(newCustomerCreated);
-            } else {
-                customerInListForOrder.add(existingCustomerSelected);
-            }
-            reservationOrder.setCustomers(customerInListForOrder);
-            LineItem item = new LineItem();
-            List<LineItem> lineItems = new ArrayList<>();
-            Reference boothRef = new Reference();
-            boothRef.setId(booth.getId());
-            item.setItem(boothRef);
-            lineItems.add(item);
-            reservationOrder.setLineItems(lineItems);
-            //// TODO: 9/13/2016 here is where most remainder work will be, in orders.
+            /////MAKE LOCAL COPIES OF OBJECTS FOR ASYNC TASK
+            boothToReserve = booth;
+            orderCustomer = customerForOrder;
+            /////MAKE CUSTOMER LIST
+            customerInListForOrder = new ArrayList<>();
+            customerInListForOrder.add(orderCustomer);
+            /////MAKE REFERENCE TO THE RESERVED BOOTH AND ADD TO LINE ITEM LIST
+            boothReference = new Reference();
+            boothReference.setId(boothToReserve.getId());
+            boothLineItem = new LineItem();
+            boothLineItem.setItem(boothReference);
+            orderLineItems = new ArrayList<>();
+            orderLineItems.add(boothLineItem);
         }
 
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                //////CONNECT CLOVER ACCT & CUSTOMER CONNECTOR
+                //////CONNECT CLOVER ACCT & ORDER CONNECTOR
                 merchantAccount = CloverAccount.getAccount(reserveBoothDetailsActivityContext);
                 orderConnector = new OrderConnector(reserveBoothDetailsActivityContext, merchantAccount, null);
                 orderConnector.connect();
 
-                orderConnector.createOrder(reservationOrder);
+
+                /////CREATE AN ORDER AND GRAB RETURNED OBJECT HANDLE
+                //reservationOrder.setCustomers(customerInListForOrder);
+                //reservationOrder.setLineItems(orderLineItems);
+                /////SET ORDER CUSTOMERS TO THE SELECTED OR CREATED CUSTOMER
+                /////SET LINE ITEMS FOR THE ORDER, INCLUDING THE BOOTH
+                /////UPDATE THE ORDER
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
             } finally {
