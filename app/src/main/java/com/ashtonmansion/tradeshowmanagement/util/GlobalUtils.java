@@ -2,9 +2,16 @@ package com.ashtonmansion.tradeshowmanagement.util;
 
 import android.util.Log;
 
+import com.clover.sdk.v3.customers.Customer;
+import com.clover.sdk.v3.customers.PhoneNumber;
+import com.clover.sdk.v3.customers.EmailAddress;
+import com.clover.sdk.v3.customers.Address;
+
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -29,7 +36,7 @@ public class GlobalUtils {
         return longPrice;
     }
 
-    public static String getFormattedPriceStringFromLong(long longPrice){
+    public static String getFormattedPriceStringFromLong(long longPrice) {
         String priceLongString = Long.toString(longPrice);
         String cleanString = priceLongString.replaceAll("[$,.]", "");
         double parsedBoothPriceDouble = Double.parseDouble(cleanString);
@@ -66,5 +73,65 @@ public class GlobalUtils {
             Log.d("GlobalUt:", " an unrecognized tag type was passed to GlobalUtils");
         }
         return unformattedString;
+    }
+
+    public static Customer getv3CustomerFromv1Customer(com.clover.sdk.v1.customer.Customer v1customer,
+                                                       List<com.clover.sdk.v1.customer.PhoneNumber> v1PhoneNumbers,
+                                                       List<com.clover.sdk.v1.customer.EmailAddress> v1EmailAddresses,
+                                                       List<com.clover.sdk.v1.customer.Address> v1Addresses) {
+        ////CREATE NEW V3CUSTOMER SET SINGULAR FIELDS
+        Customer v3Customer = new Customer();
+        v3Customer.setId(v1customer.getId());
+        v3Customer.setFirstName(v1customer.getFirstName());
+        v3Customer.setLastName(v1customer.getLastName());
+        v3Customer.setMarketingAllowed(v1customer.getMarketingAllowed());
+        ////TAKE THE CUSTOMERS V1 PHONE NUMBER LIST, CONVERT, AND SET V3 CUSTOMER PHONE LIST
+        v3Customer.setPhoneNumbers(getv3PhoneNumberListFromV1(v1PhoneNumbers));
+        ////TAKE THE CUSTOMERS V1 EMAIL ADDRESS LIST, CONVERT, AND SET V3 CUSTOMER EMAIL ADDRESSES
+        v3Customer.setEmailAddresses(getv3EmailAddressesFromV1(v1EmailAddresses));
+        ////TAKE THE CUSTOMERS V1 ADDRESS LIST, CONVERT, AND SET V3 CUSTOMER ADDRESSES
+        v3Customer.setAddresses(getv3AddressesFromV1(v1Addresses));
+        ////RETURN THE NEW CUSTOMER
+        return v3Customer;
+    }
+
+    private static List<PhoneNumber> getv3PhoneNumberListFromV1(List<com.clover.sdk.v1.customer.PhoneNumber> v1PhoneNumbers) {
+        List<PhoneNumber> v3PhoneNumberList = new ArrayList<>();
+        for (com.clover.sdk.v1.customer.PhoneNumber v1PhoneNumber : v1PhoneNumbers) {
+            PhoneNumber v3PhoneNumber = new PhoneNumber();
+            v3PhoneNumber.setId(v1PhoneNumber.getId());
+            v3PhoneNumber.setPhoneNumber(v1PhoneNumber.getPhoneNumber());
+            v3PhoneNumberList.add(v3PhoneNumber);
+        }
+        return v3PhoneNumberList;
+    }
+
+    private static List<EmailAddress> getv3EmailAddressesFromV1(List<com.clover.sdk.v1.customer.EmailAddress> v1EmailAddresses) {
+        List<EmailAddress> v3EmailAddresses = new ArrayList<>();
+        for (com.clover.sdk.v1.customer.EmailAddress v1EmailAddress : v1EmailAddresses) {
+            EmailAddress v3EmailAddress = new EmailAddress();
+            v3EmailAddress.setId(v1EmailAddress.getId());
+            v3EmailAddress.setEmailAddress(v1EmailAddress.getEmailAddress());
+            v3EmailAddresses.add(v3EmailAddress);
+        }
+        return v3EmailAddresses;
+    }
+
+    private static List<Address> getv3AddressesFromV1(List<com.clover.sdk.v1.customer.Address> v1Addresses) {
+        List<Address> v3Addresses = new ArrayList<>();
+
+        for (com.clover.sdk.v1.customer.Address v1Address : v1Addresses) {
+            Address v3Address = new Address();
+            v3Address.setId(v1Address.getId());
+            v3Address.setAddress1(v1Address.getAddress1());
+            v3Address.setAddress2(v1Address.getAddress2());
+            v3Address.setAddress3(v1Address.getAddress3());
+            v3Address.setCity(v1Address.getCity());
+            v3Address.setState(v1Address.getState());
+            v3Address.setZip(v1Address.getZip());
+            v3Address.setCountry("USA");
+            v3Addresses.add(v3Address);
+        }
+        return v3Addresses;
     }
 }

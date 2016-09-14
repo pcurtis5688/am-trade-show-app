@@ -8,17 +8,18 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
-import com.clover.sdk.v1.customer.Customer;
+import com.clover.sdk.v3.customers.Customer;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by paul on 9/13/2016.
  */
 public class CustomersAdapter extends ArrayAdapter<Customer> {
-    private ArrayList<Customer> customers;
+    private List<Customer> customers;
 
-    public CustomersAdapter(Context context, ArrayList<Customer> customers) {
+    public CustomersAdapter(Context context, List<Customer> customers) {
         super(context, 0, customers);
         this.customers = customers;
     }

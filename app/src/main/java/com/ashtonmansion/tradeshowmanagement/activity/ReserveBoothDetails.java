@@ -31,10 +31,12 @@ import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.ServiceException;
 import com.clover.sdk.v1.customer.CustomerConnector;
-import com.clover.sdk.v1.customer.Customer;
+import com.clover.sdk.v3.base.Reference;
+import com.clover.sdk.v3.customers.Customer;
 import com.clover.sdk.v3.inventory.Category;
 import com.clover.sdk.v3.inventory.Item;
 import com.clover.sdk.v3.inventory.Tag;
+import com.clover.sdk.v3.order.LineItem;
 import com.clover.sdk.v3.order.Order;
 import com.clover.sdk.v3.order.OrderConnector;
 
@@ -60,7 +62,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
     private Tag categoryTag;
     /////// CUSTOMER DATA
     private String newOrExistingCustomerFlag;
-    private ArrayList<Customer> existingCustomers;
+    private List<Customer> existingCustomers;
     private Customer newCustomerCreated;
     private Customer existingCustomerSelected;
 
@@ -174,6 +176,8 @@ public class ReserveBoothDetails extends AppCompatActivity {
     private class GetCustomerListTask extends AsyncTask<Void, Void, Void> {
         //////////PRIVATELY NECESSARY OBJECTS & UTILITY LISTS ONLY
         private ProgressDialog progressDialog;
+        private List<com.clover.sdk.v1.customer.Customer> existingv1Customers;
+        private List<Customer> v3CustomerList;
 
         @Override
         protected void onPreExecute() {
@@ -182,6 +186,8 @@ public class ReserveBoothDetails extends AppCompatActivity {
             progressDialog.setMessage(getResources().getString(R.string.booth_reservation_loading_existing_customers_text));
             progressDialog.show();
             existingCustomers = new ArrayList<>();
+            existingv1Customers = new ArrayList<>();
+            v3CustomerList = new ArrayList<>();
         }
 
         @Override
@@ -192,7 +198,10 @@ public class ReserveBoothDetails extends AppCompatActivity {
                 customerConnector = new CustomerConnector(reserveBoothDetailsActivityContext, merchantAccount, null);
                 customerConnector.connect();
 
-                existingCustomers = (ArrayList<Customer>) customerConnector.getCustomers();
+                existingv1Customers = customerConnector.getCustomers();
+                for (com.clover.sdk.v1.customer.Customer v1Customer : existingv1Customers) {
+                    v3CustomerList.add(GlobalUtils.getv3CustomerFromv1Customer(v1Customer, v1Customer.getPhoneNumbers(), v1Customer.getEmailAddresses(), v1Customer.getAddresses()));
+                }
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
             } finally {
@@ -204,6 +213,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
+            existingCustomers = v3CustomerList;
             populateExistingCustomersListview();
             progressDialog.dismiss();
         }
@@ -268,7 +278,8 @@ public class ReserveBoothDetails extends AppCompatActivity {
 
     private class CreateNewCustomerTask extends AsyncTask<Void, Void, Void> {
         private ProgressDialog progressDialog;
-        private Customer newCustomerObject;
+        private com.clover.sdk.v1.customer.Customer v1CustomerCreated;
+        private Customer newV3Customer;
         private String newCustomerID;
         private String newCustomerFirstName;
         private String newCustomerLastName;
@@ -319,12 +330,13 @@ public class ReserveBoothDetails extends AppCompatActivity {
                 merchantAccount = CloverAccount.getAccount(reserveBoothDetailsActivityContext);
                 customerConnector = new CustomerConnector(reserveBoothDetailsActivityContext, merchantAccount, null);
                 customerConnector.connect();
-
-                newCustomerObject = customerConnector.createCustomer(newCustomerFirstName, newCustomerLastName, newCustomerIsMarketingAllowed);
-                newCustomerID = newCustomerObject.getId();
+                v1CustomerCreated = customerConnector.createCustomer(newCustomerFirstName, newCustomerLastName, newCustomerIsMarketingAllowed);
+                newCustomerID = v1CustomerCreated.getId();
                 customerConnector.addPhoneNumber(newCustomerID, newCustomerPhoneNumber);
                 customerConnector.addEmailAddress(newCustomerID, newCustomerEmailAddress);
                 customerConnector.addAddress(newCustomerID, newCustomerAddressLine1, newCustomerAddressLine2, newCustomerAddressLine3, newCustomerCity, newCustomerState, newCustomerZipCode);
+                v1CustomerCreated = customerConnector.getCustomer(newCustomerID);
+                newV3Customer = GlobalUtils.getv3CustomerFromv1Customer(v1CustomerCreated, v1CustomerCreated.getPhoneNumbers(), v1CustomerCreated.getEmailAddresses(), v1CustomerCreated.getAddresses());
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
             } finally {
@@ -336,7 +348,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            setNewCustomerObject(newCustomerObject);
+            setNewCustomerObject(newV3Customer);
             progressDialog.dismiss();
         }
     }
@@ -353,7 +365,8 @@ public class ReserveBoothDetails extends AppCompatActivity {
 
     private void continueBoothReservation() {
         //// TODO: I am here for reservation, except for some customer cleanup
-
+        CreateNewOrderTask createNewOrderTask = new CreateNewOrderTask();
+        createNewOrderTask.execute();
     }
 
     private class CreateNewOrderTask extends AsyncTask<Void, Void, Void> {
@@ -374,7 +387,14 @@ public class ReserveBoothDetails extends AppCompatActivity {
             } else {
                 customerInListForOrder.add(existingCustomerSelected);
             }
-            //reservationOrder.setCustomers(customerInListForOrder);
+            reservationOrder.setCustomers(customerInListForOrder);
+            LineItem item = new LineItem();
+            List<LineItem> lineItems = new ArrayList<>();
+            Reference boothRef = new Reference();
+            boothRef.setId(booth.getId());
+            item.setItem(boothRef);
+            lineItems.add(item);
+            reservationOrder.setLineItems(lineItems);
             //// TODO: 9/13/2016 here is where most remainder work will be, in orders.
         }
 
@@ -398,9 +418,12 @@ public class ReserveBoothDetails extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            //// TODO: 9/13/2016 close out activity method
             progressDialog.dismiss();
+            closeOutBoothReservationActivity();
         }
     }
 
+    private void closeOutBoothReservationActivity() {
+        finish();
+    }
 }
