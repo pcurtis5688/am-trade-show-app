@@ -23,6 +23,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
+import com.ashtonmansion.tradeshowmanagement.util.CustomersAdapter;
 import com.ashtonmansion.tradeshowmanagement.util.GlobalUtils;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
@@ -33,6 +34,8 @@ import com.clover.sdk.v1.customer.Customer;
 import com.clover.sdk.v3.inventory.Category;
 import com.clover.sdk.v3.inventory.Item;
 import com.clover.sdk.v3.inventory.Tag;
+import com.clover.sdk.v3.order.Order;
+import com.clover.sdk.v3.order.OrderConnector;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,6 +46,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
     ///////CLOVER DATA
     private Account merchantAccount;
     private CustomerConnector customerConnector;
+    private OrderConnector orderConnector;
     ///////SHOW DATA
     private Category show;
     private String showID;
@@ -56,8 +60,9 @@ public class ReserveBoothDetails extends AppCompatActivity {
     private Tag sizeTag;
     private Tag areaTag;
     private Tag categoryTag;
-    ///////CUSTOMER DATA & UI FIELDS
-    private List<Customer> existingCustomers;
+    ///////EXISTING CUSTOMER LIST AND UI ITEMS
+    private ArrayList<Customer> existingCustomers;
+    ///////NEW CUSTOMER UI FIELDS
     private EditText newCustomerFirstNameField;
     private EditText newCustomerLastNameField;
     private EditText newCustomerPhoneNumberField;
@@ -198,7 +203,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
                 customerConnector = new CustomerConnector(reserveBoothDetailsActivityContext, merchantAccount, null);
                 customerConnector.connect();
 
-                existingCustomers = customerConnector.getCustomers();
+                existingCustomers = (ArrayList<Customer>) customerConnector.getCustomers();
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
             } finally {
@@ -216,29 +221,22 @@ public class ReserveBoothDetails extends AppCompatActivity {
     }
 
     private void populateExistingCustomersListview() {
-        ////////ITERATE OVER CUSTOMER LIST, CREATE STRING LIST
-        List<String> existingCustomerStrings = new ArrayList<>();
-        for (Customer currentCustomer : existingCustomers) {
-            String customerString = currentCustomer.getLastName() + ", " + currentCustomer.getFirstName() + " (" + currentCustomer.getId() + ")";
-            existingCustomerStrings.add(customerString);
-        }
+        ////////UTILIZE CUSTOM ADAPTER
+        final CustomersAdapter customersAdapter = new CustomersAdapter(reserveBoothDetailsActivityContext, existingCustomers);
 
-        ////////SET ARRAYADAPTER TO LISTVIEW
+        ////////ATTACH ADAPTER TO THE EXISTING CUSTOMER LISTVIEW
         ListView existingCustomersListview = (ListView) findViewById(R.id.existing_customers_lv);
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_list_item_1,
-                existingCustomerStrings);
-        existingCustomersListview.setAdapter(arrayAdapter);
+        existingCustomersListview.setAdapter(customersAdapter);
 
-        ///////GET SEARCH HANDLER AND ADD LISTENER
+        ///////ATTACH TO SEARCH FIELD AND ADD LISTENER
         EditText searchExistingCustomersField = (EditText) findViewById(R.id.booth_reservation_search_existing_customers_field);
+        //// TODO: 9/13/2016 fix this filter
         searchExistingCustomersField.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
                 // When user changed the Text
-                arrayAdapter.getFilter().filter(cs);
+                customersAdapter.getFilter().filter(cs);
             }
 
             @Override
@@ -262,7 +260,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
         if (newCustomerRB.isChecked()) {
             createNewCustomerFromReserveBoothFields();
         } else if (existingCustomerRB.isChecked()) {
-            continueBoothReservation();
+            //// TODO: 9/13/2016 decide what needs to be done here before moving forward with other booth res tasks
         }
     }
 
@@ -284,7 +282,6 @@ public class ReserveBoothDetails extends AppCompatActivity {
     }
 
     private class CreateNewCustomerTask extends AsyncTask<Void, Void, Void> {
-        //////////PRIVATELY NECESSARY OBJECTS & UTILITY LISTS ONLY
         private ProgressDialog progressDialog;
         private String newCustomerID;
         private String newCustomerFirstName;
@@ -348,6 +345,47 @@ public class ReserveBoothDetails extends AppCompatActivity {
     }
 
     private void continueBoothReservation() {
-        //// TODO: 9/13/2016 finish this after all customer handling
+        //// TODO: 9/13/2016 call create new order task ehre after necessary operations
     }
+
+    private class CreateNewOrderTask extends AsyncTask<Void, Void, Void> {
+        private ProgressDialog progressDialog;
+        private Order reservationOrder;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(reserveBoothDetailsActivityContext);
+            progressDialog.setMessage(getResources().getString(R.string.booth_reservation_reserving_booth_pd_text));
+            progressDialog.show();
+
+            reservationOrder = new Order();
+            //// TODO: 9/13/2016 here is where most remainder work will be, in orders.
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                //////CONNECT CLOVER ACCT & CUSTOMER CONNECTOR
+                merchantAccount = CloverAccount.getAccount(reserveBoothDetailsActivityContext);
+                orderConnector = new OrderConnector(reserveBoothDetailsActivityContext, merchantAccount, null);
+                orderConnector.connect();
+
+                orderConnector.createOrder(reservationOrder);
+            } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
+                Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
+            } finally {
+                orderConnector.disconnect();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            //// TODO: 9/13/2016 close out activity method
+            progressDialog.dismiss();
+        }
+    }
+
 }

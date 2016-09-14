@@ -243,7 +243,9 @@
     <string name="booth_reservation_loading_existing_customers_text">Loading Existing Customers. . .</string>
     <string name="booth_reservation_cancel_booth_reservation_btn_text">Cancel Reservation</string>
     <string name="booth_reservation_reserve_booth_btn_text">Reserve Booth</string>
-
+    <string name="booth_reservation_reserving_booth_pd_text">Making Booth Reservation. . .</string>
+    <string name="booth_reservation_electricity_prompt">Include Electricity?</string>
+    <string name="booth_reservation_internet_speed_prompt">Internet Speed?</string>
     <!-- BOOTH RESERVATION - new customer strings///////////-->
     <string name="br_new_customer_first_name_hint">[First Name]</string>
     <string name="br_new_customer_last_name_hint">[Last Name]</string>

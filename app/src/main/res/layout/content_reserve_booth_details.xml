@@ -67,6 +67,21 @@
                     android:textSize="@dimen/dimen_24sp" />
             </TableRow>
 
+            <TableRow>
+
+                <TextView
+                    android:text="@string/booth_reservation_electricity_prompt"
+                    android:textSize="@dimen/dimen_24sp" />
+
+                <CheckBox android:id="@+id/br_include_electricity_chkbox" />
+
+                <TextView
+                    android:text="@string/booth_reservation_internet_speed_prompt"
+                    android:textSize="@dimen/dimen_24sp" />
+
+                <Spinner android:id="@+id/br_internet_speed_spinner" />
+            </TableRow>
+
             <TableRow android:layout_marginTop="@dimen/dimen_12dp">
 
                 <RadioGroup
