@@ -15,6 +15,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/nav_home_text"
-        android:textSize="@dimen/dimen_24sp"
-        android:textStyle="bold" />
+        style="@style/activity_header_style" />
 </LinearLayout>

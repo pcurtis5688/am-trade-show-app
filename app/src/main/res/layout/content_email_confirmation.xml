@@ -26,8 +26,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/email_reservations_confirmations_string"
-                    android:textSize="@dimen/dimen_24sp"
-                    android:textStyle="bold" />
+                    style="@style/activity_header_style" />
             </TableRow>
 
             <TableRow>

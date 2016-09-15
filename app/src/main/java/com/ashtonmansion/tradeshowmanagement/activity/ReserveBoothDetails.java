@@ -34,12 +34,13 @@ import com.clover.sdk.v1.customer.CustomerConnector;
 import com.clover.sdk.v3.base.Reference;
 import com.clover.sdk.v3.customers.Customer;
 import com.clover.sdk.v3.inventory.Category;
+import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
+import com.clover.sdk.v3.inventory.PriceType;
 import com.clover.sdk.v3.inventory.Tag;
 import com.clover.sdk.v3.order.LineItem;
 import com.clover.sdk.v3.order.Order;
 import com.clover.sdk.v3.order.OrderConnector;
-import com.clover.sdk.v3.order.OrderContract;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,6 +52,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
     private Account merchantAccount;
     private CustomerConnector customerConnector;
     private OrderConnector orderConnector;
+    private InventoryConnector inventoryConnector;
     ///////SHOW DATA
     private Category show;
     private String showID;
@@ -97,81 +99,6 @@ public class ReserveBoothDetails extends AppCompatActivity {
         setupCustomerFields();
     }
 
-    private void setupCustomerFields() {
-        final TableLayout newCustomerTableLayout = (TableLayout) findViewById(R.id.newCustomerTableLayout);
-        final TableLayout existingCustomerTableLayout = (TableLayout) findViewById(R.id.existingCustomerTableLayout);
-
-        RadioGroup newOrExistingRadioGrp = (RadioGroup) findViewById(R.id.booth_reservation_new_or_existing_radiogrp);
-        newOrExistingRadioGrp.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
-                if (checkedId == R.id.booth_reservation_new_customer_btn) {
-                    existingCustomerTableLayout.setVisibility(View.GONE);
-                    newCustomerTableLayout.setVisibility(View.VISIBLE);
-                } else if (checkedId == R.id.booth_reservation_existing_customer_btn) {
-                    newCustomerTableLayout.setVisibility(View.GONE);
-                    existingCustomerTableLayout.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-    }
-
-    private void decoupleShowName(Category show) {
-        List<String> splitShowNameArray = Arrays.asList(show.getName().split(","));
-        showName = splitShowNameArray.get(0);
-        String showDate = splitShowNameArray.get(1);
-        String showLocation = splitShowNameArray.get(2);
-        String showNotes = splitShowNameArray.get(3);
-    }
-
-    private void populateTagObjects() {
-        for (Tag currentTag : boothTags) {
-            if (currentTag.getName().substring(0, 4).equalsIgnoreCase("size")) {
-                sizeTag = currentTag;
-            } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("area")) {
-                areaTag = currentTag;
-            } else if (currentTag.getName().substring(0, 8).equalsIgnoreCase("category")) {
-                categoryTag = currentTag;
-            }
-        }
-    }
-
-    private void populateTagFields() {
-        TextView boothReservationSizeTV = (TextView) findViewById(R.id.booth_reservation_details_size);
-        TextView boothReservationAreaTV = (TextView) findViewById(R.id.booth_reservation_details_area);
-        TextView boothReservationCategoryTV = (TextView) findViewById(R.id.booth_reservation_details_category);
-
-        if (sizeTag != null) {
-            String unformattedSizeTagName = GlobalUtils.getUnformattedTagName(sizeTag.getName(), "Size");
-            if (unformattedSizeTagName.length() > 0) {
-                boothReservationSizeTV.setText(unformattedSizeTagName);
-            } else {
-                boothReservationSizeTV.setText(getResources().getString(R.string.booth_reservation_no_size_data));
-            }
-        } else {
-            boothReservationSizeTV.setText(getResources().getString(R.string.booth_reservation_no_size_data));
-        }
-        if (areaTag != null) {
-            String unformattedAreaTagName = GlobalUtils.getUnformattedTagName(areaTag.getName(), "Area");
-            if (unformattedAreaTagName.length() > 0) {
-                boothReservationAreaTV.setText(unformattedAreaTagName);
-            } else {
-                boothReservationAreaTV.setText(getResources().getString(R.string.booth_reservation_no_area_data));
-            }
-        } else {
-            boothReservationAreaTV.setText(getResources().getString(R.string.booth_reservation_no_area_data));
-        }
-        if (categoryTag != null) {
-            String unformattedCategoryTagName = GlobalUtils.getUnformattedTagName(categoryTag.getName(), "Category");
-            if (unformattedCategoryTagName.length() > 0) {
-                boothReservationCategoryTV.setText(unformattedCategoryTagName);
-            } else {
-                boothReservationCategoryTV.setText(getResources().getString(R.string.booth_reservation_no_category_data));
-            }
-        } else {
-            boothReservationCategoryTV.setText(getResources().getString(R.string.booth_reservation_no_category_data));
-        }
-    }
 
     private class GetCustomerListTask extends AsyncTask<Void, Void, Void> {
         //////////PRIVATELY NECESSARY OBJECTS & UTILITY LISTS ONLY
@@ -273,10 +200,111 @@ public class ReserveBoothDetails extends AppCompatActivity {
                 continueBoothReservation();
             } else {
                 Toast selectACustomerWarning = Toast.makeText(reserveBoothDetailsActivityContext, getResources().getString(R.string.booth_reservation_select_customer_warning), Toast.LENGTH_SHORT);
+
                 selectACustomerWarning.show();
             }
             //// TODO: 9/13/2016 decide what needs to be done here before moving forward with other booth res tasks
         }
+    }
+
+    private void setNewCustomerObject(com.clover.sdk.v1.customer.Customer customer) {
+        customerForOrder = GlobalUtils.getv3CustomerFromv1Customer(customer, customer.getPhoneNumbers(), customer.getEmailAddresses(), customer.getAddresses());
+        continueBoothReservation();
+    }
+
+    private void setExistingCustomerInformation(Customer customer) {
+        customerForOrder = customer;
+    }
+
+    private void continueBoothReservation() {
+        //// TODO: I am here for reservation, except for some customer cleanup
+        //// TODO: 9/14/2016 after, move onto next and final task : 
+        CreateNewOrderTask createNewOrderTask = new CreateNewOrderTask();
+        createNewOrderTask.execute();
+    }
+
+    private class CreateNewOrderTask extends AsyncTask<Void, Void, Void> {
+        private ProgressDialog progressDialog;
+        private Order boothOrder;
+        private String newOrderID;
+        ///BOOTH AND REFERENCE
+        private String boothId;
+        private Item boothItem;
+        private Reference boothReference;
+        ///LINE ITEMS
+        private LineItem boothLineItem;
+        private List<LineItem> orderLineItems;
+        ///CUSTOMER
+        private Customer orderCustomer;
+        private List<Customer> customerInListForOrder;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(reserveBoothDetailsActivityContext);
+            progressDialog.setMessage(getResources().getString(R.string.booth_reservation_reserving_booth_pd_text));
+            progressDialog.show();
+            /////MAKE LOCAL COPIES OF OBJECTS FOR ASYNC TASK
+            boothId = booth.getId();
+            orderCustomer = customerForOrder;
+            /////MAKE CUSTOMER LIST
+            customerInListForOrder = new ArrayList<>();
+            customerInListForOrder.add(orderCustomer);
+            /////MAKE REFERENCE TO THE RESERVED BOOTH AND ADD TO LINE ITEM LIST
+            boothReference = new Reference();
+            boothReference.setId(boothId);
+            boothLineItem = new LineItem();
+            boothLineItem.setItem(boothReference);
+            orderLineItems = new ArrayList<>();
+            orderLineItems.add(boothLineItem);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                //////CONNECT ORDER AND INVENTORY CONNECTIONS
+                merchantAccount = CloverAccount.getAccount(reserveBoothDetailsActivityContext);
+                orderConnector = new OrderConnector(reserveBoothDetailsActivityContext, merchantAccount, null);
+                inventoryConnector = new InventoryConnector(reserveBoothDetailsActivityContext, merchantAccount, null);
+                orderConnector.connect();
+                inventoryConnector.connect();
+
+                ///// CREATE A NEW ORDER AND FETCH ID
+                boothOrder = orderConnector.createOrder(new Order());
+                newOrderID = boothOrder.getId();
+                ///////////////////////
+                ///// GET BOOTH FROM INVENTORY CONNECTOR.
+                boothItem = inventoryConnector.getItem(boothId);
+                // if (boothItem.getPriceType() == PriceType.FIXED){
+                orderConnector.addFixedPriceLineItem(boothOrder.getId(), boothItem.getId(), null, null);
+                // }
+                //// TODO: 9/14/2016 if works do other price types
+                /////CREATE AN ORDER AND GRAB RETURNED OBJECT HANDLE
+                //reservationOrder.setCustomers(customerInListForOrder);
+                //reservationOrder.setLineItems(orderLineItems);
+                /////SET ORDER CUSTOMERS TO THE SELECTED OR CREATED CUSTOMER
+                /////SET LINE ITEMS FOR THE ORDER, INCLUDING THE BOOTH
+                /////UPDATE THE ORDER
+            } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
+                Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
+            } finally {
+                orderConnector.disconnect();
+                inventoryConnector.disconnect();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            progressDialog.dismiss();
+            closeOutBoothReservationActivity();
+        }
+    }
+
+    /////////////////////////ignore below for now
+    private void closeOutBoothReservationActivity() {
+        finish();
     }
 
     private class CreateNewCustomerTask extends AsyncTask<Void, Void, Void> {
@@ -354,88 +382,79 @@ public class ReserveBoothDetails extends AppCompatActivity {
         }
     }
 
-    private void setNewCustomerObject(com.clover.sdk.v1.customer.Customer customer) {
-        customerForOrder = GlobalUtils.getv3CustomerFromv1Customer(customer, customer.getPhoneNumbers(), customer.getEmailAddresses(), customer.getAddresses());
-        continueBoothReservation();
-    }
+    private void setupCustomerFields() {
+        final TableLayout newCustomerTableLayout = (TableLayout) findViewById(R.id.newCustomerTableLayout);
+        final TableLayout existingCustomerTableLayout = (TableLayout) findViewById(R.id.existingCustomerTableLayout);
 
-    private void setExistingCustomerInformation(Customer customer) {
-        customerForOrder = customer;
-    }
-
-    private void continueBoothReservation() {
-        //// TODO: I am here for reservation, except for some customer cleanup
-        //// TODO: 9/14/2016 after, move onto next and final task : 
-        CreateNewOrderTask createNewOrderTask = new CreateNewOrderTask();
-        createNewOrderTask.execute();
-    }
-
-    private class CreateNewOrderTask extends AsyncTask<Void, Void, Void> {
-        private ProgressDialog progressDialog;
-        private Order reservationOrder;
-        ///BOOTH AND REFERENCE
-        private Item boothToReserve;
-        private Reference boothReference;
-        ///LINE ITEMS
-        private LineItem boothLineItem;
-        private List<LineItem> orderLineItems;
-        ///CUSTOMER
-        private Customer orderCustomer;
-        private List<Customer> customerInListForOrder;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(reserveBoothDetailsActivityContext);
-            progressDialog.setMessage(getResources().getString(R.string.booth_reservation_reserving_booth_pd_text));
-            progressDialog.show();
-            /////MAKE LOCAL COPIES OF OBJECTS FOR ASYNC TASK
-            boothToReserve = booth;
-            orderCustomer = customerForOrder;
-            /////MAKE CUSTOMER LIST
-            customerInListForOrder = new ArrayList<>();
-            customerInListForOrder.add(orderCustomer);
-            /////MAKE REFERENCE TO THE RESERVED BOOTH AND ADD TO LINE ITEM LIST
-            boothReference = new Reference();
-            boothReference.setId(boothToReserve.getId());
-            boothLineItem = new LineItem();
-            boothLineItem.setItem(boothReference);
-            orderLineItems = new ArrayList<>();
-            orderLineItems.add(boothLineItem);
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                //////CONNECT CLOVER ACCT & ORDER CONNECTOR
-                merchantAccount = CloverAccount.getAccount(reserveBoothDetailsActivityContext);
-                orderConnector = new OrderConnector(reserveBoothDetailsActivityContext, merchantAccount, null);
-                orderConnector.connect();
-
-
-                /////CREATE AN ORDER AND GRAB RETURNED OBJECT HANDLE
-                //reservationOrder.setCustomers(customerInListForOrder);
-                //reservationOrder.setLineItems(orderLineItems);
-                /////SET ORDER CUSTOMERS TO THE SELECTED OR CREATED CUSTOMER
-                /////SET LINE ITEMS FOR THE ORDER, INCLUDING THE BOOTH
-                /////UPDATE THE ORDER
-            } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
-                Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
-            } finally {
-                orderConnector.disconnect();
+        RadioGroup newOrExistingRadioGrp = (RadioGroup) findViewById(R.id.booth_reservation_new_or_existing_radiogrp);
+        newOrExistingRadioGrp.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                if (checkedId == R.id.booth_reservation_new_customer_btn) {
+                    existingCustomerTableLayout.setVisibility(View.GONE);
+                    newCustomerTableLayout.setVisibility(View.VISIBLE);
+                } else if (checkedId == R.id.booth_reservation_existing_customer_btn) {
+                    newCustomerTableLayout.setVisibility(View.GONE);
+                    existingCustomerTableLayout.setVisibility(View.VISIBLE);
+                }
             }
-            return null;
-        }
+        });
+    }
 
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            progressDialog.dismiss();
-            closeOutBoothReservationActivity();
+    private void decoupleShowName(Category show) {
+        List<String> splitShowNameArray = Arrays.asList(show.getName().split(","));
+        showName = splitShowNameArray.get(0);
+        String showDate = splitShowNameArray.get(1);
+        String showLocation = splitShowNameArray.get(2);
+        String showNotes = splitShowNameArray.get(3);
+    }
+
+    private void populateTagObjects() {
+        for (Tag currentTag : boothTags) {
+            if (currentTag.getName().substring(0, 4).equalsIgnoreCase("size")) {
+                sizeTag = currentTag;
+            } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("area")) {
+                areaTag = currentTag;
+            } else if (currentTag.getName().substring(0, 8).equalsIgnoreCase("category")) {
+                categoryTag = currentTag;
+            }
         }
     }
 
-    private void closeOutBoothReservationActivity() {
-        finish();
+    private void populateTagFields() {
+        TextView boothReservationSizeTV = (TextView) findViewById(R.id.booth_reservation_details_size);
+        TextView boothReservationAreaTV = (TextView) findViewById(R.id.booth_reservation_details_area);
+        TextView boothReservationCategoryTV = (TextView) findViewById(R.id.booth_reservation_details_category);
+
+        if (sizeTag != null) {
+            String unformattedSizeTagName = GlobalUtils.getUnformattedTagName(sizeTag.getName(), "Size");
+            if (unformattedSizeTagName.length() > 0) {
+                boothReservationSizeTV.setText(unformattedSizeTagName);
+            } else {
+                boothReservationSizeTV.setText(getResources().getString(R.string.booth_reservation_no_size_data));
+            }
+        } else {
+            boothReservationSizeTV.setText(getResources().getString(R.string.booth_reservation_no_size_data));
+        }
+        if (areaTag != null) {
+            String unformattedAreaTagName = GlobalUtils.getUnformattedTagName(areaTag.getName(), "Area");
+            if (unformattedAreaTagName.length() > 0) {
+                boothReservationAreaTV.setText(unformattedAreaTagName);
+            } else {
+                boothReservationAreaTV.setText(getResources().getString(R.string.booth_reservation_no_area_data));
+            }
+        } else {
+            boothReservationAreaTV.setText(getResources().getString(R.string.booth_reservation_no_area_data));
+        }
+        if (categoryTag != null) {
+            String unformattedCategoryTagName = GlobalUtils.getUnformattedTagName(categoryTag.getName(), "Category");
+            if (unformattedCategoryTagName.length() > 0) {
+                boothReservationCategoryTV.setText(unformattedCategoryTagName);
+            } else {
+                boothReservationCategoryTV.setText(getResources().getString(R.string.booth_reservation_no_category_data));
+            }
+        } else {
+            boothReservationCategoryTV.setText(getResources().getString(R.string.booth_reservation_no_category_data));
+        }
     }
 }

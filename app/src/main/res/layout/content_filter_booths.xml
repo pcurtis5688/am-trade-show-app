@@ -21,8 +21,7 @@
             android:layout_height="wrap_content"
             android:text="@string/booth_filter_page_header"
             android:textAlignment="center"
-            android:textSize="@dimen/dimen_24sp"
-            android:textStyle="bold" />
+            style="@style/activity_header_style" />
 
         <TableLayout
             android:id="@+id/booth_filter_table"

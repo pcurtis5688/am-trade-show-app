@@ -23,8 +23,7 @@
             <TextView
                 android:id="@+id/edit_show_name_and_id_header"
                 android:layout_span="2"
-                android:textAlignment="center"
-                android:textSize="@dimen/dimen_36sp" />
+                style="@style/activity_header_style" />
         </TableRow>
 
         <TableRow>

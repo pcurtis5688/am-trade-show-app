@@ -17,4 +17,8 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="activity_header_style">
+        <item name="android:textSize">@dimen/dimen_36sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>

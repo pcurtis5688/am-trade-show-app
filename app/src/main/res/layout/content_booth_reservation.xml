@@ -27,7 +27,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dimen_25dp"
-                    android:textSize="@dimen/dimen_36sp" />
+                    style="@style/activity_header_style"/>
             </TableRow>
 
             <TableRow>

@@ -23,8 +23,7 @@
 
                 <TextView
                     android:text="@string/nav_drawer_merchandise_sales_text"
-                    android:textSize="@dimen/dimen_24sp"
-                    android:textStyle="bold" />
+                    style="@style/activity_header_style" />
             </TableRow>
         </TableLayout>
     </LinearLayout>

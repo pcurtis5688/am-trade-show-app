@@ -78,8 +78,8 @@ public class EditShow extends AppCompatActivity {
             formattedFullShowName = show.getName();
             decoupleShowName();
             populateFields();
-            String showNameAndIDHeader = showName + " (" + showID + ")";
-            showNameAndIDHeaderTV.setText(showNameAndIDHeader);
+            String editShowHeader = getResources().getString(R.string.edit_show_header_string, showName, showDate, showLocation);
+            showNameAndIDHeaderTV.setText(editShowHeader);
         }
 
     }
@@ -92,7 +92,7 @@ public class EditShow extends AppCompatActivity {
         showNotes = splitShowNameArray.get(3);
     }
 
-    private void populateFields(){
+    private void populateFields() {
         showNameEditText.setText(showName);
         showDateEditText.setText(showDate);
         showLocationEditText.setText(showLocation);

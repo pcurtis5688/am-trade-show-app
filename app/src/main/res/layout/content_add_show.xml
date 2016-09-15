@@ -23,8 +23,7 @@
             <TextView
                 android:layout_span="2"
                 android:text="@string/add_show_string"
-                android:textAlignment="center"
-                android:textSize="@dimen/dimen_36sp" />
+                style="@style/activity_header_style"/>
         </TableRow>
 
         <TableRow>

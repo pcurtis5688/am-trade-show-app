@@ -24,7 +24,7 @@
 
                 <TextView
                     android:text="@string/trade_shows_string"
-                    android:textSize="@dimen/dimen_36sp" />
+                    style="@style/activity_header_style" />
             </TableRow>
 
             <TableRow>

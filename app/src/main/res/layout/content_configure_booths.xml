@@ -26,7 +26,7 @@
                     android:id="@+id/show_booths_header"
                     android:layout_marginBottom="@dimen/dimen_25dp"
                     android:textAlignment="center"
-                    android:textSize="@dimen/dimen_24sp"
+                    android:textSize="@dimen/dimen_36sp"
                     android:textStyle="bold" />
             </TableRow>
 

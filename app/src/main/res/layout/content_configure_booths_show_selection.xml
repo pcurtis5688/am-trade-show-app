@@ -24,8 +24,7 @@
 
                 <TextView
                     android:text="@string/configure_booth_show_selection_string"
-                    android:textSize="@dimen/dimen_24sp"
-                    android:textStyle="bold" />
+                    android:textSize="@dimen/dimen_36sp"/>
             </TableRow>
 
             <TableRow>

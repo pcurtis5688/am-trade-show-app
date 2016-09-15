@@ -19,8 +19,7 @@
             android:id="@+id/edit_booth_header"
             android:layout_span="3"
             android:textAlignment="center"
-            android:textSize="@dimen/dimen_24sp"
-            android:textStyle="bold" />
+            style="@style/activity_header_style" />
     </TableRow>
 
     <TableRow>
