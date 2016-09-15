@@ -112,8 +112,6 @@ public class ReserveBoothDetails extends AppCompatActivity {
     }
 
     private void continueBoothReservation() {
-        //// TODO: I am here for reservation, except for some customer cleanup
-        //// TODO: 9/14/2016 after, move onto next and final task : 
         CreateNewOrderTask createNewOrderTask = new CreateNewOrderTask();
         createNewOrderTask.execute();
     }

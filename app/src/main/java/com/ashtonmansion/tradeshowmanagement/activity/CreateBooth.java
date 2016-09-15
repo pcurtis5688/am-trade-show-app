@@ -43,7 +43,7 @@ public class CreateBooth extends AppCompatActivity {
     private EditText createBoothTypeField;
     ///////CLOVER VARS
     private Item newBooth;
-    private String showID;
+    private Category show;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,10 +92,9 @@ public class CreateBooth extends AppCompatActivity {
         ///////GET CURRENT SHOWID & SHOWNAME from CONFIGURE BOOTHS ACTIVITY
         Bundle extrasBundle = getIntent().getExtras();
         if (extrasBundle != null) {
-            showID = (String) extrasBundle.get("showid");
-            String showName = (String) extrasBundle.get("showname"); ////CONNECT FIELD ITEMS
+            show = (Category) extrasBundle.get("show");
             TextView createBoothActivityHeader = (TextView) findViewById(R.id.create_booth_activity_header_w_showname);
-            createBoothActivityHeader.setText(String.valueOf(getResources().getString(R.string.title_activity_create_booth) + " - " + showName));
+            createBoothActivityHeader.setText(String.valueOf(getResources().getString(R.string.title_activity_create_booth) + " - " + show.getName()));
         }
     }
 
@@ -138,7 +137,7 @@ public class CreateBooth extends AppCompatActivity {
             //////////////CREATE A NEW ITEM OBJECT AND POPULATE DATA
             newBooth = new Item();
             newBooth.setName(createBoothNumberFieldData);
-            newBooth.setSku(createBoothNumberFieldData); ////in effect, booth no.
+            newBooth.setSku(createBoothNumberFieldData);
             newBooth.setPrice(GlobalUtils.getLongFromFormattedPriceString(createBoothPriceFieldData));
             //////////////INITIALIZE ADDITIONAL ITEMS
             showObjectInListForBooth = new ArrayList<>();
@@ -154,10 +153,10 @@ public class CreateBooth extends AppCompatActivity {
                 newBooth = inventoryConnector.createItem(newBooth);
 
                 /////LOCATE THE SHOW OBJECT (CATEGORY), ADD REF TO NEW BOOTH, UPDATE
-                for (Category show : inventoryConnector.getCategories()) {
-                    if (show.getId().equalsIgnoreCase(showID)) {
-                        inventoryConnector.addItemToCategory(newBooth.getId(), show.getId());
-                        showObjectInListForBooth.add(show);
+                for (Category currentShow : inventoryConnector.getCategories()) {
+                    if (currentShow.getId().equalsIgnoreCase(show.getId())) {
+                        inventoryConnector.addItemToCategory(newBooth.getId(), currentShow.getId());
+                        showObjectInListForBooth.add(currentShow);
                         newBooth.setCategories(showObjectInListForBooth);
                         inventoryConnector.updateItem(newBooth);
                         inventoryConnector.updateItemStock(newBooth.getId(), 1);

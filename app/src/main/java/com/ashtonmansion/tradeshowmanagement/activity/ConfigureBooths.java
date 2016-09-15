@@ -44,7 +44,6 @@ public class ConfigureBooths extends AppCompatActivity
     //CONTEXT AND UI FIELDS
     private Context configureBoothsActivityContext;
     private TableLayout showTable;
-    private TextView showNameHeaderTV;
     //CLOVER VARS
     private Account merchantAccount;
     private InventoryConnector inventoryConnector;
@@ -52,11 +51,7 @@ public class ConfigureBooths extends AppCompatActivity
     //DATA VARS
     private Category show;
     private String showID;
-    private String showName;
-    private String showDate;
-    private String showLocation;
-    private String showNotes;
-    private String userShowName;
+    private String formattedShowName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,16 +78,16 @@ public class ConfigureBooths extends AppCompatActivity
             Category passedCategoryObject = (Category) extrasBundle.get("showcat");
             if (null != passedCategoryObject) {
                 show = passedCategoryObject;
-                showID = passedCategoryObject.getId();
-                List<String> decoupledShowArray = Arrays.asList(passedCategoryObject.getName().split(","));
-                showName = decoupledShowArray.get(0);
-                showDate = decoupledShowArray.get(1);
-                showLocation = decoupledShowArray.get(2);
-                showNotes = decoupledShowArray.get(3);
-                userShowName = showName + " (" + showDate + " - " + showLocation + ")";
+                showID = show.getId();
+                List<String> decoupledShowArray = Arrays.asList(show.getName().split(","));
+                String showName = decoupledShowArray.get(0);
+                String showDate = decoupledShowArray.get(1);
+                String showLocation = decoupledShowArray.get(2);
+                String showNotes = decoupledShowArray.get(3);
+                formattedShowName = showName + " (" + showDate + " - " + showLocation + ")";
             }
-            showNameHeaderTV = (TextView) findViewById(R.id.show_booths_header);
-            showNameHeaderTV.setText(userShowName);
+            TextView showNameHeaderTV = (TextView) findViewById(R.id.show_booths_header);
+            showNameHeaderTV.setText(formattedShowName);
         }
     }
 
@@ -168,8 +163,7 @@ public class ConfigureBooths extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent createBoothIntent = new Intent(configureBoothsActivityContext, CreateBooth.class);
-                createBoothIntent.putExtra("showid", showID);
-                createBoothIntent.putExtra("showname", showName);
+                createBoothIntent.putExtra("show", show);
                 startActivity(createBoothIntent);
             }
         });
@@ -226,68 +220,7 @@ public class ConfigureBooths extends AppCompatActivity
         startActivity(filterBoothsIntent);
     }
 
-    ////////////////NAVIGATION METHODS//////////////////////////
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.configure_booths_drawerlayout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_configure_booths, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        if (id == R.id.action_create_new_booth_option) {
-            Intent createBoothIntent = new Intent(configureBoothsActivityContext, CreateBooth.class);
-            createBoothIntent.putExtra("showid", showID);
-            createBoothIntent.putExtra("showname", showName);
-            startActivity(createBoothIntent);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_home_btn) {
-            Intent homeActivityIntent = new Intent(configureBoothsActivityContext, HomeActivity.class);
-            startActivity(homeActivityIntent);
-        } else if (id == R.id.nav_show_setup_btn) {
-            Intent showSetupIntent = new Intent(configureBoothsActivityContext, TradeShows.class);
-            startActivity(showSetupIntent);
-        } else if (id == R.id.nav_config_booths_btn) {
-            // nothing ; already in activity
-        } else if (id == R.id.nav_make_reservation_btn) {
-            Intent makeReservationIntent = new Intent(configureBoothsActivityContext, BoothReservationShowSelection.class);
-            startActivity(makeReservationIntent);
-        } else if (id == R.id.nav_app_settings_btn) {
-            Intent applicationSettingsIntent = new Intent(configureBoothsActivityContext, ApplicationSettings.class);
-            startActivity(applicationSettingsIntent);
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.configure_booths_drawerlayout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
 
     private class GetShowBoothsTask extends AsyncTask<Void, Void, Void> {
         //////////PRIVATELY NECESSARY OBJECTS & UTILITY LISTS ONLY
@@ -340,5 +273,67 @@ public class ConfigureBooths extends AppCompatActivity
             populateBoothsForShowTable();
             progressDialog.dismiss();
         }
+    }
+
+    ////////////////NAVIGATION METHODS//////////////////////////
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.configure_booths_drawerlayout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_configure_booths, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == R.id.action_create_new_booth_option) {
+            Intent createBoothIntent = new Intent(configureBoothsActivityContext, CreateBooth.class);
+            createBoothIntent.putExtra("show", show);
+            startActivity(createBoothIntent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_home_btn) {
+            Intent homeActivityIntent = new Intent(configureBoothsActivityContext, HomeActivity.class);
+            startActivity(homeActivityIntent);
+        } else if (id == R.id.nav_show_setup_btn) {
+            Intent showSetupIntent = new Intent(configureBoothsActivityContext, TradeShows.class);
+            startActivity(showSetupIntent);
+        } else if (id == R.id.nav_config_booths_btn) {
+            // nothing ; already in activity
+        } else if (id == R.id.nav_make_reservation_btn) {
+            Intent makeReservationIntent = new Intent(configureBoothsActivityContext, BoothReservationShowSelection.class);
+            startActivity(makeReservationIntent);
+        } else if (id == R.id.nav_app_settings_btn) {
+            Intent applicationSettingsIntent = new Intent(configureBoothsActivityContext, ApplicationSettings.class);
+            startActivity(applicationSettingsIntent);
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.configure_booths_drawerlayout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }
