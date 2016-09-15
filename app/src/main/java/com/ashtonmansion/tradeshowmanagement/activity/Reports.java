@@ -108,7 +108,8 @@ public class Reports extends AppCompatActivity implements NavigationView.OnNavig
             Intent merchandiseSalesIntent = new Intent(reportsActivityContext, MerchandiseSales.class);
             startActivity(merchandiseSalesIntent);
         } else if (id == R.id.nav_app_settings_btn) {
-
+            Intent applicationSettingsIntent = new Intent(reportsActivityContext, ApplicationSettings.class);
+            startActivity(applicationSettingsIntent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.reports_drawerlayout);

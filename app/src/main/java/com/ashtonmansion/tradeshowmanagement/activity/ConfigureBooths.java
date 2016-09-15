@@ -299,6 +299,9 @@ public class ConfigureBooths extends AppCompatActivity
         } else if (id == R.id.nav_merchandise_sales_btn) {
             Intent merchandiseSalesIntent = new Intent(configureBoothsActivityContext, MerchandiseSales.class);
             startActivity(merchandiseSalesIntent);
+        } else if (id == R.id.nav_app_settings_btn){
+            Intent applicationSettingsIntent = new Intent(configureBoothsActivityContext, ApplicationSettings.class);
+            startActivity(applicationSettingsIntent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.configure_booths_drawerlayout);

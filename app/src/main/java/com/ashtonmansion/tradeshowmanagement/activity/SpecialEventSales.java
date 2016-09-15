@@ -109,7 +109,8 @@ public class SpecialEventSales extends AppCompatActivity
             Intent merchandiseSalesIntent = new Intent(specialEventSalesActivityContext, MerchandiseSales.class);
             startActivity(merchandiseSalesIntent);
         } else if (id == R.id.nav_app_settings_btn) {
-
+            Intent applicationSettingsIntent = new Intent(specialEventSalesActivityContext, ApplicationSettings.class);
+            startActivity(applicationSettingsIntent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.special_event_sales_drawerlayout);

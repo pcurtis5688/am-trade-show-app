@@ -200,8 +200,8 @@ public class TradeShows extends AppCompatActivity
             Intent merchandiseSalesIntent = new Intent(tradeShowsActivityContext, MerchandiseSales.class);
             startActivity(merchandiseSalesIntent);
         } else if (id == R.id.nav_app_settings_btn) {
-
-
+            Intent applicationSettingsIntent = new Intent(tradeShowsActivityContext, ApplicationSettings.class);
+            startActivity(applicationSettingsIntent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.show_setup_drawerlayout);

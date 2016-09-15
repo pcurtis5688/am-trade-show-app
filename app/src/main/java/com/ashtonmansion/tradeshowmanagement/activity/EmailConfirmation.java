@@ -108,7 +108,10 @@ public class EmailConfirmation extends AppCompatActivity
         } else if (id == R.id.nav_merchandise_sales_btn) {
             Intent merchandiseSalesIntent = new Intent(emailConfirmationActivityContext, MerchandiseSales.class);
             startActivity(merchandiseSalesIntent);
-        } 
+        } else if (id == R.id.nav_app_settings_btn){
+            Intent applicationSettingsIntent = new Intent(emailConfirmationActivityContext, ApplicationSettings.class);
+            startActivity(applicationSettingsIntent);
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.email_confirmation_drawerlayout);
         drawer.closeDrawer(GravityCompat.START);

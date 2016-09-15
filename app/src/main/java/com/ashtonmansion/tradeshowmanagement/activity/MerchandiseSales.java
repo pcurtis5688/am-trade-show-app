@@ -109,7 +109,8 @@ public class MerchandiseSales extends AppCompatActivity
         } else if (id == R.id.nav_merchandise_sales_btn) {
             //nothing ; already in activity
         } else if (id == R.id.nav_app_settings_btn) {
-
+            Intent applicationSettingsIntent = new Intent(merchandiseSalesActivityContext, ApplicationSettings.class);
+            startActivity(applicationSettingsIntent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.merchandise_sales_drawerlayout);

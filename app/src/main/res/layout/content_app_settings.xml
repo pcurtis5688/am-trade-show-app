@@ -22,8 +22,8 @@
             <TableRow>
 
                 <TextView
-                    android:text="@string/application_settings_string"
-                    style="@style/activity_header_style" />
+                    style="@style/activity_header_style"
+                    android:text="@string/application_settings_string" />
             </TableRow>
         </TableLayout>
     </LinearLayout>
