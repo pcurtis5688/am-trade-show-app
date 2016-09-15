@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -24,11 +22,14 @@ import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.ServiceException;
+import com.clover.sdk.v1.customer.CustomerConnector;
 import com.clover.sdk.v3.base.Reference;
 import com.clover.sdk.v3.inventory.Category;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
 import com.clover.sdk.v3.inventory.Tag;
+import com.clover.sdk.v3.order.Order;
+import com.clover.sdk.v3.order.OrderConnector;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,8 +41,6 @@ public class BoothReservation extends AppCompatActivity {
     private TableLayout boothListTable;
     private TextView boothSelectionHeaderTV;
     ////////CLOVER DATA
-    private Account merchantAccount;
-    private InventoryConnector inventoryConnector;
     private List<Item> boothList;
     ////////SHOW VARS
     private Category show;
@@ -89,6 +88,9 @@ public class BoothReservation extends AppCompatActivity {
     }
 
     private class GetShowBoothsTask extends AsyncTask<Void, Void, Void> {
+        private Account merchantAccount;
+        private InventoryConnector inventoryConnector;
+        private OrderConnector orderConnector;
         private ProgressDialog progressDialog;
 
         @Override
@@ -106,6 +108,7 @@ public class BoothReservation extends AppCompatActivity {
                 merchantAccount = CloverAccount.getAccount(boothReservationActivityContext);
                 inventoryConnector = new InventoryConnector(boothReservationActivityContext, merchantAccount, null);
                 inventoryConnector.connect();
+                //orderConnector = new OrderConnector(boothReservationActivityContext, merchantAccount, null);
 
                 ////////FIND CATEGORY IN CLOVER, POPULATE BOOTH REFERENCE LIST
                 List<Category> categoryList = inventoryConnector.getCategories();
@@ -121,7 +124,9 @@ public class BoothReservation extends AppCompatActivity {
                 for (Reference boothRef : boothReferenceList) {
                     Item currentBooth = inventoryConnector.getItem(boothRef.getId());
                     currentBooth.setTags(inventoryConnector.getTagsForItem(currentBooth.getId()));
-                    boothList.add(currentBooth);
+                    if (currentBooth.hasItemStock() && currentBooth.getItemStock().getQuantity() > 0) {
+                        boothList.add(currentBooth);
+                    }
                 }
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
@@ -169,7 +174,7 @@ public class BoothReservation extends AppCompatActivity {
                     if (currentTag.getName().substring(0, 4).equalsIgnoreCase("size")) {
                         sizeTag = currentTag;
                         String unformattedSizeTagName = GlobalUtils.getUnformattedTagName(sizeTag.getName(), "Size");
-                        if (unformattedSizeTagName.length() > 0){
+                        if (unformattedSizeTagName.length() > 0) {
                             boothSizeTv.setText(unformattedSizeTagName);
                         } else {
                             boothSizeTv.setText(getResources().getString(R.string.booth_tag_not_available));
@@ -177,7 +182,7 @@ public class BoothReservation extends AppCompatActivity {
                     } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("area")) {
                         areaTag = currentTag;
                         String unformattedAreaTagName = GlobalUtils.getUnformattedTagName(areaTag.getName(), "Area");
-                        if (unformattedAreaTagName.length() > 0){
+                        if (unformattedAreaTagName.length() > 0) {
                             boothAreaTv.setText(unformattedAreaTagName);
                         } else {
                             boothAreaTv.setText(getResources().getString(R.string.booth_tag_not_available));
@@ -185,7 +190,7 @@ public class BoothReservation extends AppCompatActivity {
                     } else if (currentTag.getName().substring(0, 8).equalsIgnoreCase("category")) {
                         categoryTag = currentTag;
                         String unformattedCategoryTagName = GlobalUtils.getUnformattedTagName(categoryTag.getName(), "Category");
-                        if (unformattedCategoryTagName.length() > 0){
+                        if (unformattedCategoryTagName.length() > 0) {
                             boothCategoryTv.setText(unformattedCategoryTagName);
                         } else {
                             boothCategoryTv.setText(getResources().getString(R.string.booth_tag_not_available));
@@ -214,7 +219,13 @@ public class BoothReservation extends AppCompatActivity {
         } else {
             TextView noBoothsForShowTV = new TextView(boothReservationActivityContext);
             noBoothsForShowTV.setText(getResources().getString(R.string.booth_reservation_no_booths_for_show_text));
-            boothListTable.addView(noBoothsForShowTV);
+            noBoothsForShowTV.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            TableRow noBoothsForShowRow = new TableRow(boothReservationActivityContext);
+            TableRow.LayoutParams params = new TableRow.LayoutParams();
+            params.span = 6;
+            params.topMargin = 50;
+            noBoothsForShowRow.addView(noBoothsForShowTV, params);
+            boothListTable.addView(noBoothsForShowRow);
         }
     }
 
@@ -228,11 +239,22 @@ public class BoothReservation extends AppCompatActivity {
         TextView boothCustomerHeaderTv = new TextView(boothReservationActivityContext);
 
         boothNumberHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_number_header));
+        boothNumberHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
+
         boothPriceHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_price_header));
+        boothPriceHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
+
         boothSizeHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_size_header));
+        boothSizeHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
+
         boothAreaHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_area_header));
+        boothAreaHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
+
         boothCategoryHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_category_header));
+        boothCategoryHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
+
         boothCustomerHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_customer_header));
+        boothCustomerHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
 
         boothSelectionTableHeaderRow.addView(boothNumberHeaderTv);
         boothSelectionTableHeaderRow.addView(boothPriceHeaderTv);
