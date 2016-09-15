@@ -150,27 +150,9 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
             startActivity(showSetupIntent);
         } else if (id == R.id.nav_config_booths_btn) {
             // nothing ; already in activity
-        } else if (id == R.id.nav_reports_queries_btn) {
-            Intent reportsIntent = new Intent(configureBoothsShowSelectionActivityContext, Reports.class);
-            startActivity(reportsIntent);
         } else if (id == R.id.nav_make_reservation_btn) {
             Intent makeReservationIntent = new Intent(configureBoothsShowSelectionActivityContext, BoothReservationShowSelection.class);
             startActivity(makeReservationIntent);
-        } else if (id == R.id.nav_email_reservation_confirmation_btn) {
-            Intent emailConfirmationIntent = new Intent(configureBoothsShowSelectionActivityContext, EmailConfirmation.class);
-            startActivity(emailConfirmationIntent);
-        } else if (id == R.id.nav_advertising_sales_btn) {
-            Intent advertisingSalesIntent = new Intent(configureBoothsShowSelectionActivityContext, AdvertisingSales.class);
-            startActivity(advertisingSalesIntent);
-        } else if (id == R.id.nav_general_tix_sales_btn) {
-            Intent generalTicketSalesIntent = new Intent(configureBoothsShowSelectionActivityContext, GeneralTicketSales.class);
-            startActivity(generalTicketSalesIntent);
-        } else if (id == R.id.nav_special_events_sales_btn) {
-            Intent specialEventSalesIntent = new Intent(configureBoothsShowSelectionActivityContext, SpecialEventSales.class);
-            startActivity(specialEventSalesIntent);
-        } else if (id == R.id.nav_merchandise_sales_btn) {
-            Intent merchandiseSalesIntent = new Intent(configureBoothsShowSelectionActivityContext, MerchandiseSales.class);
-            startActivity(merchandiseSalesIntent);
         } else if (id == R.id.nav_app_settings_btn){
             Intent applicationSettingsIntent = new Intent(configureBoothsShowSelectionActivityContext, ApplicationSettings.class);
             startActivity(applicationSettingsIntent);

@@ -14,16 +14,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
-import com.ashtonmansion.tradeshowmanagement.activity.AdvertisingSales;
 import com.ashtonmansion.tradeshowmanagement.activity.ApplicationSettings;
 import com.ashtonmansion.tradeshowmanagement.activity.ConfigureBoothsShowSelection;
-import com.ashtonmansion.tradeshowmanagement.activity.EmailConfirmation;
-import com.ashtonmansion.tradeshowmanagement.activity.GeneralTicketSales;
 import com.ashtonmansion.tradeshowmanagement.activity.BoothReservationShowSelection;
-import com.ashtonmansion.tradeshowmanagement.activity.MerchandiseSales;
-import com.ashtonmansion.tradeshowmanagement.activity.Reports;
 import com.ashtonmansion.tradeshowmanagement.activity.TradeShows;
-import com.ashtonmansion.tradeshowmanagement.activity.SpecialEventSales;
 import com.ashtonmansion.tradeshowmanagement.db.TradeShowDB;
 
 public class HomeActivity extends AppCompatActivity
@@ -110,27 +104,9 @@ public class HomeActivity extends AppCompatActivity
         } else if (id == R.id.nav_config_booths_btn) {
             Intent configBoothsIntent = new Intent(homeActivityContext, ConfigureBoothsShowSelection.class);
             startActivity(configBoothsIntent);
-        } else if (id == R.id.nav_reports_queries_btn) {
-            Intent reportsIntent = new Intent(homeActivityContext, Reports.class);
-            startActivity(reportsIntent);
         } else if (id == R.id.nav_make_reservation_btn) {
             Intent makeReservationIntent = new Intent(homeActivityContext, BoothReservationShowSelection.class);
             startActivity(makeReservationIntent);
-        } else if (id == R.id.nav_email_reservation_confirmation_btn) {
-            Intent emailConfirmationIntent = new Intent(homeActivityContext, EmailConfirmation.class);
-            startActivity(emailConfirmationIntent);
-        } else if (id == R.id.nav_advertising_sales_btn) {
-            Intent advertisingSalesIntent = new Intent(homeActivityContext, AdvertisingSales.class);
-            startActivity(advertisingSalesIntent);
-        } else if (id == R.id.nav_general_tix_sales_btn) {
-            Intent generalTicketSalesIntent = new Intent(homeActivityContext, GeneralTicketSales.class);
-            startActivity(generalTicketSalesIntent);
-        } else if (id == R.id.nav_special_events_sales_btn) {
-            Intent specialEventSalesIntent = new Intent(homeActivityContext, SpecialEventSales.class);
-            startActivity(specialEventSalesIntent);
-        } else if (id == R.id.nav_merchandise_sales_btn) {
-            Intent merchandiseSalesIntent = new Intent(homeActivityContext, MerchandiseSales.class);
-            startActivity(merchandiseSalesIntent);
         } else if (id == R.id.nav_app_settings_btn) {
             Intent applicationSettingsIntent = new Intent(homeActivityContext, ApplicationSettings.class);
             startActivity(applicationSettingsIntent);

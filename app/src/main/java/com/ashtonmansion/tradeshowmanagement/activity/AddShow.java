@@ -6,8 +6,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -16,7 +14,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
-import com.ashtonmansion.tradeshowmanagement.db.TradeShowDB;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
@@ -24,27 +21,19 @@ import com.clover.sdk.v1.ServiceException;
 import com.clover.sdk.v3.base.Reference;
 import com.clover.sdk.v3.inventory.Category;
 import com.clover.sdk.v3.inventory.InventoryConnector;
-import com.clover.sdk.v3.inventory.Item;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AddShow extends AppCompatActivity {
+    /////CONTEXT AND SHOW NAME
     private Context addShowActivityContext;
-    //CLOVER ACCESS VARS
-    private Account merchantAccount;
-    private InventoryConnector inventoryConnector;
-    private Category returnedCategory;
-    //UI VARS
     private String formattedFullShowName;
+    /////UI FIELDS
     private EditText newShowNameField;
     private EditText newShowDateField;
     private EditText newShowLocationField;
     private EditText newShowNotesField;
-    private String newShowNameString;
-    private String newShowDateString;
-    private String newShowLocationString;
-    private String newShowNotesString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,22 +53,12 @@ public class AddShow extends AppCompatActivity {
     }
 
     ////////DATA METHODS AND BUTTON ACTIONS////////////////////
-    //// TODO: 9/9/2016 rerewrite this after comma-delimited implementation
-    private void doLocalInsert(String userTypedShowName, Category returnedCategory) {
-        //GET THE CLOVER ID FOR LOCAL INSERT
-        String cloverCategoryID = returnedCategory.getId();
-        //DO THE LOCAL INSERT
-        TradeShowDB database = new TradeShowDB(addShowActivityContext);
-        database.createShowRecord(cloverCategoryID, newShowNameString, newShowDateString,
-                newShowLocationString, newShowNotesString, formattedFullShowName);
-    }
-
     public void addNewShowAction(View view) {
         //GRAB NEW SHOW DATA
-        newShowNameString = newShowNameField.getText().toString();
-        newShowDateString = newShowDateField.getText().toString();
-        newShowLocationString = newShowLocationField.getText().toString();
-        newShowNotesString = newShowNotesField.getText().toString();
+        String newShowNameString = newShowNameField.getText().toString();
+        String newShowDateString = newShowDateField.getText().toString();
+        String newShowLocationString = newShowLocationField.getText().toString();
+        String newShowNotesString = newShowNotesField.getText().toString();
         formattedFullShowName = newShowNameString + "," + newShowDateString + "," + newShowLocationString + "," + newShowNotesString;
         AddShowCategoryTask addShowTask = new AddShowCategoryTask();
         addShowTask.execute();
@@ -87,6 +66,9 @@ public class AddShow extends AppCompatActivity {
 
     private class AddShowCategoryTask extends AsyncTask<Void, Void, Void> {
         private ProgressDialog progressDialog;
+        //CLOVER ACCESS VARS
+        private Account merchantAccount;
+        private InventoryConnector inventoryConnector;
 
         @Override
         protected void onPreExecute() {
@@ -102,14 +84,14 @@ public class AddShow extends AppCompatActivity {
                 merchantAccount = CloverAccount.getAccount(addShowActivityContext);
                 inventoryConnector = new InventoryConnector(addShowActivityContext, merchantAccount, null);
                 inventoryConnector.connect();
+
                 //CREATE NEW CATEGORY AND SET DATA, ADD TO CLOVER
                 Category newShowCategory = new Category();
                 newShowCategory.setSortOrder(1);
                 newShowCategory.setName(formattedFullShowName);
                 List<Reference> itemRefList = new ArrayList<>();
                 newShowCategory.setItems(itemRefList);
-                returnedCategory = inventoryConnector.createCategory(newShowCategory);
-                
+                inventoryConnector.createCategory(newShowCategory);
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
                 e1.printStackTrace();
@@ -123,12 +105,11 @@ public class AddShow extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
             progressDialog.dismiss();
-            insertLocallyAndCloseOutActivity();
+            closeOutActivity();
         }
     }
 
-    private void insertLocallyAndCloseOutActivity() {
-        //// TODO: 9/9/2016 do local insert here.
+    private void closeOutActivity() {
         Toast showAddedToast = Toast.makeText(addShowActivityContext, "Show Added!", Toast.LENGTH_SHORT);
         showAddedToast.show();
         finish();

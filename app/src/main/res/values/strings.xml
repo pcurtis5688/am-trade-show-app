@@ -68,6 +68,7 @@
     <string name="cancel_show_edit_string">Cancel</string>
     <string name="add_new_show_btn_string">Add New Show</string>
     <string name="save_show_changes_btn_string">Save Changes</string>
+    <string name="no_trade_shows_available_string">Currently no trade shows have been created. Please create one.</string>
 
 
     <!-- CONFIGURE BOOTHS STRINGS //////////////////////////////-->
@@ -78,7 +79,7 @@
     <string name="configure_show_booths_number_header">Booth No.</string>
     <string name="configure_show_booths_size_header">Size</string>
     <string name="configure_show_booths_area_header">Area</string>
-    <string name="configure_show_booths_category_header">Category</string>
+    <string name="configure_show_booths_type_header">Type</string>
     <string name="configure_show_booths_customer_header">Customer</string>
     <string name="configure_show_booths_price_header">Price</string>
     <string name="configure_show_booths_filter_btn_text">Filter Booths</string>
@@ -90,13 +91,13 @@
     <string name="create_booth_price_prompt">Price:</string>
     <string name="create_booth_size_prompt">Size:</string>
     <string name="create_booth_area_prompt">Area:</string>
-    <string name="create_booth_category_prompt">Category:</string>
+    <string name="create_booth_type_prompt">Booth Type:</string>
     <string name="create_booth_name_hint">[Booth Name]</string>
     <string name="create_booth_number_hint">[Booth Number]</string>
     <string name="create_booth_price_hint">[Price]</string>
     <string name="create_booth_size_hint">[Size]</string>
     <string name="create_booth_area_hint">[Area]</string>
-    <string name="create_booth_category_hint">[Category]</string>
+    <string name="create_booth_type_hint">[Booth Type]</string>
     <string name="create_booth_cancel_btn_text">Cancel</string>
     <string name="create_booth_finish_booth_creation_str">Create Booth</string>
     <string name="create_booth_progress_dialog_text">Creating Booth. . . </string>
@@ -107,12 +108,12 @@
     <string name="edit_booth_price_prompt">Price:</string>
     <string name="edit_booth_size_prompt">Size:</string>
     <string name="edit_booth_area_prompt">Area:</string>
-    <string name="edit_booth_category_prompt">Category:</string>
+    <string name="edit_booth_type_prompt">Booth Type:</string>
     <string name="edit_booth_number_hint">[Booth Number]</string>
     <string name="edit_booth_price_hint">[Price]</string>
     <string name="edit_booth_size_hint">[Size]</string>
     <string name="edit_booth_area_hint">[Area]</string>
-    <string name="edit_booth_category_hint">[Category]</string>
+    <string name="edit_booth_type_hint">[Booth Type]</string>
     <string name="delete_booth_btn_text">Delete Booth</string>
     <string name="edit_booth_cancel_btn_text">Cancel</string>
     <string name="edit_booth_save_changes_text">Save Booth Changes</string>
@@ -233,10 +234,10 @@
     <string name="booth_reservation_price_label">Booth Price:</string>
     <string name="booth_reservation_size_label">Booth Size:</string>
     <string name="booth_reservation_area_label">Booth Area:</string>
-    <string name="booth_reservation_category_label">Booth Category:</string>
+    <string name="booth_reservation_type_label">Booth Type:</string>
     <string name="booth_reservation_no_size_data">No Size Defined for Booth</string>
     <string name="booth_reservation_no_area_data">No Area Defined for Booth</string>
-    <string name="booth_reservation_no_category_data">No Category Defined for Booth</string>
+    <string name="booth_reservation_no_type_data">No Type Defined for Booth</string>
     <string name="booth_tag_not_available">N/A</string>
     <string name="booth_reservation_new_customer_text">New Customer</string>
     <string name="booth_reservation_existing_customer_text">Existing Customer</string>

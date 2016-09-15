@@ -55,8 +55,8 @@ public class GlobalUtils {
             formattedTagName = "Size - " + tagFieldData;
         } else if (tagType.equalsIgnoreCase("Area")) {
             formattedTagName = "Area - " + tagFieldData;
-        } else if (tagType.equalsIgnoreCase("Category")) {
-            formattedTagName = "Category - " + tagFieldData;
+        } else if (tagType.equalsIgnoreCase("Type")) {
+            formattedTagName = "Type - " + tagFieldData;
         } else {
             Log.e("UnknownTagType: ", " passed to GlobalUtils");
         }
@@ -65,10 +65,10 @@ public class GlobalUtils {
 
     public static String getUnformattedTagName(String tagName, String tagType) {
         String unformattedString = "";
-        if (tagType.equalsIgnoreCase("Size") || tagType.equalsIgnoreCase("Area")) {
+        if (tagType.equalsIgnoreCase("Size")
+                || tagType.equalsIgnoreCase("Area")
+                || tagType.equalsIgnoreCase("Type")) {
             unformattedString = tagName.substring(7);
-        } else if (tagType.equalsIgnoreCase("Category")) {
-            unformattedString = tagName.substring(11);
         } else {
             Log.d("GlobalUt:", " an unrecognized tag type was passed to GlobalUtils");
         }

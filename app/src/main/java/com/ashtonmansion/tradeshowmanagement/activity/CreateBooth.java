@@ -40,7 +40,7 @@ public class CreateBooth extends AppCompatActivity {
     private EditText createBoothPriceField;
     private EditText createBoothSizeField;
     private EditText createBoothAreaField;
-    private EditText createBoothCategoryField;
+    private EditText createBoothTypeField;
     ///////CLOVER VARS
     private Item newBooth;
     private String showID;
@@ -87,7 +87,7 @@ public class CreateBooth extends AppCompatActivity {
         });
         createBoothSizeField = (EditText) findViewById(R.id.create_booth_size_field);
         createBoothAreaField = (EditText) findViewById(R.id.create_booth_area_field);
-        createBoothCategoryField = (EditText) findViewById(R.id.create_booth_category_field);
+        createBoothTypeField = (EditText) findViewById(R.id.create_booth_type_field);
 
         ///////GET CURRENT SHOWID & SHOWNAME from CONFIGURE BOOTHS ACTIVITY
         Bundle extrasBundle = getIntent().getExtras();
@@ -110,14 +110,14 @@ public class CreateBooth extends AppCompatActivity {
         private String createBoothPriceFieldData;
         private String createBoothSizeFieldData;
         private String createBoothAreaFieldData;
-        private String createBoothCategoryFieldData;
+        private String createBoothTypeFieldData;
         private String formattedBoothSizeTagName;
         private String formattedBoothAreaTagName;
-        private String formattedBoothCategoryTagName;
+        private String formattedBoothTypeTagName;
         private List<Category> showObjectInListForBooth;
         private Tag boothSizeTagWithID;
         private Tag boothAreaTagWithID;
-        private Tag boothCategoryTagWithID;
+        private Tag boothTypeTagWithID;
 
         @Override
         protected void onPreExecute() {
@@ -130,11 +130,11 @@ public class CreateBooth extends AppCompatActivity {
             createBoothPriceFieldData = createBoothPriceField.getText().toString();
             createBoothSizeFieldData = createBoothSizeField.getText().toString();
             createBoothAreaFieldData = createBoothAreaField.getText().toString();
-            createBoothCategoryFieldData = createBoothCategoryField.getText().toString();
+            createBoothTypeFieldData = createBoothTypeField.getText().toString();
             //////////////ADD PREFIX TO PSEUDO-TAG FIELDS
             formattedBoothSizeTagName = GlobalUtils.getFormattedTagName(createBoothSizeFieldData, "Size");
             formattedBoothAreaTagName = GlobalUtils.getFormattedTagName(createBoothAreaFieldData, "Area");
-            formattedBoothCategoryTagName = GlobalUtils.getFormattedTagName(createBoothCategoryFieldData, "Category");
+            formattedBoothTypeTagName = GlobalUtils.getFormattedTagName(createBoothTypeFieldData, "Type");
             //////////////CREATE A NEW ITEM OBJECT AND POPULATE DATA
             newBooth = new Item();
             newBooth.setName(createBoothNumberFieldData);
@@ -168,11 +168,11 @@ public class CreateBooth extends AppCompatActivity {
 
                 boothSizeTagWithID = inventoryConnector.createTag(new Tag().setName(formattedBoothSizeTagName));
                 boothAreaTagWithID = inventoryConnector.createTag(new Tag().setName(formattedBoothAreaTagName));
-                boothCategoryTagWithID = inventoryConnector.createTag(new Tag().setName(formattedBoothCategoryTagName));
+                boothTypeTagWithID = inventoryConnector.createTag(new Tag().setName(formattedBoothTypeTagName));
 
                 inventoryConnector.assignItemsToTag(boothSizeTagWithID.getId(), boothIdInStringList);
                 inventoryConnector.assignItemsToTag(boothAreaTagWithID.getId(), boothIdInStringList);
-                inventoryConnector.assignItemsToTag(boothCategoryTagWithID.getId(), boothIdInStringList);
+                inventoryConnector.assignItemsToTag(boothTypeTagWithID.getId(), boothIdInStringList);
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
             } finally {
@@ -188,7 +188,7 @@ public class CreateBooth extends AppCompatActivity {
                     newBooth.getPrice(),
                     createBoothSizeFieldData,
                     createBoothAreaFieldData,
-                    createBoothCategoryFieldData);
+                    createBoothTypeFieldData);
 
             if (!successfulBoothCreationLOCAL)
                 Log.e("Add Local Booth: ", "CREATE BOOTH W ID: " + newBooth.getId() + " , <<FAILED>>");

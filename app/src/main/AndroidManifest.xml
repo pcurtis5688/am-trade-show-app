@@ -81,42 +81,6 @@
                 android:value="com.ashtonmansion.tradeshowmanagement.HomeActivity" />
         </activity>
         <activity
-            android:name="com.ashtonmansion.tradeshowmanagement.activity.AdvertisingSales"
-            android:label="@string/nav_drawer_advertising_sales_text"
-            android:parentActivityName="com.ashtonmansion.tradeshowmanagement.HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ashtonmansion.tradeshowmanagement.HomeActivity" />
-        </activity>
-        <activity
-            android:name="com.ashtonmansion.tradeshowmanagement.activity.GeneralTicketSales"
-            android:label="@string/nav_drawer_general_tix_sales_text"
-            android:parentActivityName="com.ashtonmansion.tradeshowmanagement.HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ashtonmansion.tradeshowmanagement.HomeActivity" />
-        </activity>
-        <activity
-            android:name="com.ashtonmansion.tradeshowmanagement.activity.SpecialEventSales"
-            android:label="@string/nav_drawer_special_events_sales_text"
-            android:parentActivityName="com.ashtonmansion.tradeshowmanagement.HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ashtonmansion.tradeshowmanagement.HomeActivity" />
-        </activity>
-        <activity
-            android:name="com.ashtonmansion.tradeshowmanagement.activity.MerchandiseSales"
-            android:label="@string/nav_drawer_merchandise_sales_text"
-            android:parentActivityName="com.ashtonmansion.tradeshowmanagement.HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ashtonmansion.tradeshowmanagement.HomeActivity" />
-        </activity>
-        <activity
             android:name="com.ashtonmansion.tradeshowmanagement.activity.ViewBoothDetail"
             android:parentActivityName="com.ashtonmansion.tradeshowmanagement.activity.BoothReservationShowSelection" />
         <activity

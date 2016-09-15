@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
 import com.ashtonmansion.tradeshowmanagement.util.GlobalUtils;
@@ -30,6 +31,7 @@ import com.clover.sdk.v3.inventory.Item;
 import com.clover.sdk.v3.inventory.Tag;
 import com.clover.sdk.v3.order.Order;
 import com.clover.sdk.v3.order.OrderConnector;
+import com.clover.sdk.v3.order.PayType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -108,7 +110,7 @@ public class BoothReservation extends AppCompatActivity {
                 merchantAccount = CloverAccount.getAccount(boothReservationActivityContext);
                 inventoryConnector = new InventoryConnector(boothReservationActivityContext, merchantAccount, null);
                 inventoryConnector.connect();
-                //orderConnector = new OrderConnector(boothReservationActivityContext, merchantAccount, null);
+                orderConnector = new OrderConnector(boothReservationActivityContext, merchantAccount, null);
 
                 ////////FIND CATEGORY IN CLOVER, POPULATE BOOTH REFERENCE LIST
                 List<Category> categoryList = inventoryConnector.getCategories();
@@ -124,10 +126,11 @@ public class BoothReservation extends AppCompatActivity {
                 for (Reference boothRef : boothReferenceList) {
                     Item currentBooth = inventoryConnector.getItem(boothRef.getId());
                     currentBooth.setTags(inventoryConnector.getTagsForItem(currentBooth.getId()));
-                    if (currentBooth.hasItemStock() && currentBooth.getItemStock().getQuantity() > 0) {
-                        boothList.add(currentBooth);
-                    }
+                    //  if (currentBooth.getItemStock().getQuantity() > 0) {
+                    boothList.add(currentBooth);
+                    //}
                 }
+
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
             } finally {

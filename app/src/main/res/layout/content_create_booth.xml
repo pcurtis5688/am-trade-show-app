@@ -14,101 +14,84 @@
 
     <TextView
         android:id="@+id/create_booth_activity_header_w_showname"
-        android:textAlignment="center"
-        style="@style/activity_header_style" />
+        style="@style/activity_header_style"
+        android:textAlignment="center" />
 
     <TableRow>
 
         <TextView
-            android:text="@string/create_booth_number_prompt"
-            android:textAlignment="center"
-            android:textSize="@dimen/dimen_24sp"
-            android:textStyle="bold" />
+            style="@style/prompt_text_font_style"
+            android:text="@string/create_booth_number_prompt" />
 
         <EditText
             android:id="@+id/create_booth_number_field"
-            android:hint="@string/create_booth_number_hint"
-            android:textAlignment="center"
-            android:textSize="@dimen/dimen_24sp" />
+            style="@style/prompt_text_font_style"
+            android:hint="@string/create_booth_number_hint" />
     </TableRow>
 
     <TableRow>
 
         <TextView
-            android:text="@string/create_booth_price_prompt"
-            android:textAlignment="center"
-            android:textSize="@dimen/dimen_24sp"
-            android:textStyle="bold" />
+            style="@style/prompt_text_font_style"
+            android:text="@string/create_booth_price_prompt" />
 
         <EditText
             android:id="@+id/create_booth_price_field"
+            style="@style/prompt_text_font_style"
             android:hint="@string/create_booth_price_hint"
-            android:inputType="numberDecimal"
-            android:textAlignment="center"
-            android:textSize="@dimen/dimen_24sp" />
+            android:inputType="numberDecimal" />
     </TableRow>
 
     <TableRow>
 
         <TextView
-            android:text="@string/create_booth_size_prompt"
-            android:textAlignment="center"
-            android:textSize="@dimen/dimen_24sp"
-            android:textStyle="bold" />
+            style="@style/prompt_text_font_style"
+            android:text="@string/create_booth_size_prompt" />
 
         <EditText
             android:id="@+id/create_booth_size_field"
-            android:hint="@string/create_booth_size_hint"
-            android:textAlignment="center"
-            android:textSize="@dimen/dimen_24sp" />
+            style="@style/prompt_text_font_style"
+            android:hint="@string/create_booth_size_hint" />
     </TableRow>
 
     <TableRow>
 
         <TextView
-            android:text="@string/create_booth_area_prompt"
-            android:textAlignment="center"
-            android:textSize="@dimen/dimen_24sp"
-            android:textStyle="bold" />
+            style="@style/prompt_text_font_style"
+            android:text="@string/create_booth_area_prompt" />
 
         <EditText
             android:id="@+id/create_booth_area_field"
-            android:hint="@string/create_booth_area_hint"
-            android:textAlignment="center"
-            android:textSize="@dimen/dimen_24sp" />
+            style="@style/prompt_text_font_style"
+            android:hint="@string/create_booth_area_hint" />
     </TableRow>
 
     <TableRow>
 
         <TextView
-            android:text="@string/create_booth_category_prompt"
-            android:textAlignment="center"
-            android:textSize="@dimen/dimen_24sp"
-            android:textStyle="bold" />
+            style="@style/prompt_text_font_style"
+            android:text="@string/create_booth_type_prompt" />
 
         <EditText
-            android:id="@+id/create_booth_category_field"
-            android:hint="@string/create_booth_category_hint"
-            android:textAlignment="center"
-            android:textSize="@dimen/dimen_24sp" />
+            android:id="@+id/create_booth_type_field"
+            style="@style/prompt_text_font_style"
+            android:hint="@string/create_booth_type_hint" />
     </TableRow>
 
     <TableRow>
 
         <Button
             android:id="@+id/create_booth_cancel_btn"
+            style="@style/prompt_text_font_style"
             android:layout_marginTop="@dimen/dimen_25dp"
             android:onClick="cancelCreateBooth"
-            android:text="@string/create_booth_cancel_btn_text"
-            android:textAlignment="center"
-            android:textSize="@dimen/dimen_24sp" />
+            android:text="@string/create_booth_cancel_btn_text" />
 
         <Button
             android:id="@+id/finalize_booth_creation_btn"
+            style="@style/prompt_text_font_style"
             android:layout_marginTop="@dimen/dimen_25dp"
             android:onClick="finalizeBoothCreation"
-            android:text="@string/create_booth_finish_booth_creation_str"
-            android:textAlignment="center"
-            android:textSize="@dimen/dimen_24sp" />
+            android:text="@string/create_booth_finish_booth_creation_str" />
     </TableRow>
 </TableLayout>

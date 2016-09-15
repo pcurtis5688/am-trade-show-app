@@ -88,26 +88,9 @@ public class EmailConfirmation extends AppCompatActivity
         } else if (id == R.id.nav_config_booths_btn) {
             Intent configureBoothsIntent = new Intent(emailConfirmationActivityContext, ConfigureBoothsShowSelection.class);
             startActivity(configureBoothsIntent);
-        } else if (id == R.id.nav_reports_queries_btn) {
-            Intent reportsIntent = new Intent(emailConfirmationActivityContext, Reports.class);
-            startActivity(reportsIntent);
         } else if (id == R.id.nav_make_reservation_btn) {
             Intent makeReservationIntent = new Intent(emailConfirmationActivityContext, BoothReservationShowSelection.class);
             startActivity(makeReservationIntent);
-        } else if (id == R.id.nav_email_reservation_confirmation_btn) {
-            // nothing ; already in activity
-        } else if (id == R.id.nav_advertising_sales_btn) {
-            Intent advertisingSalesIntent = new Intent(emailConfirmationActivityContext, AdvertisingSales.class);
-            startActivity(advertisingSalesIntent);
-        } else if (id == R.id.nav_general_tix_sales_btn) {
-            Intent generalTicketSalesIntent = new Intent(emailConfirmationActivityContext, GeneralTicketSales.class);
-            startActivity(generalTicketSalesIntent);
-        } else if (id == R.id.nav_special_events_sales_btn) {
-            Intent specialEventSalesIntent = new Intent(emailConfirmationActivityContext, SpecialEventSales.class);
-            startActivity(specialEventSalesIntent);
-        } else if (id == R.id.nav_merchandise_sales_btn) {
-            Intent merchandiseSalesIntent = new Intent(emailConfirmationActivityContext, MerchandiseSales.class);
-            startActivity(merchandiseSalesIntent);
         } else if (id == R.id.nav_app_settings_btn){
             Intent applicationSettingsIntent = new Intent(emailConfirmationActivityContext, ApplicationSettings.class);
             startActivity(applicationSettingsIntent);

@@ -58,11 +58,11 @@
                     android:textSize="@dimen/dimen_24sp" />
 
                 <TextView
-                    android:text="@string/booth_reservation_category_label"
+                    android:text="@string/booth_reservation_type_label"
                     android:textSize="@dimen/dimen_24sp" />
 
                 <TextView
-                    android:id="@+id/booth_reservation_details_category"
+                    android:id="@+id/booth_reservation_details_type"
                     android:textSize="@dimen/dimen_24sp" />
             </TableRow>
 

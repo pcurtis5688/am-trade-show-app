@@ -61,7 +61,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
     private List<Tag> boothTags;
     private Tag sizeTag;
     private Tag areaTag;
-    private Tag categoryTag;
+    private Tag typeTag;
     /////// CUSTOMER DATA
     private List<Customer> existingCustomers;
     private Customer customerForOrder;
@@ -167,7 +167,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
                 boothOrder = orderConnector.createOrder(new Order());
                 String newOrderID = boothOrder.getId();
                 ///////////////////////
-                ///// GET BOOTH FROM INVENTORY CONNECTOR.
+                ///// GET BOOTH FROM INVENTORY CONNECTOR
                 boothItem = inventoryConnector.getItem(boothId);
                 if (boothItem.getPriceType() == PriceType.FIXED) {
                     orderConnector.addFixedPriceLineItem(newOrderID, boothId, null, null);
@@ -176,7 +176,6 @@ public class ReserveBoothDetails extends AppCompatActivity {
                 //// TODO: 9/14/2016 other price types
                 boothOrder.setCustomers(customerInListForOrder);
                 orderConnector.updateOrder(boothOrder);
-
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
             } finally {
@@ -405,8 +404,8 @@ public class ReserveBoothDetails extends AppCompatActivity {
                 sizeTag = currentTag;
             } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("area")) {
                 areaTag = currentTag;
-            } else if (currentTag.getName().substring(0, 8).equalsIgnoreCase("category")) {
-                categoryTag = currentTag;
+            } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("type")) {
+                typeTag = currentTag;
             }
         }
     }
@@ -414,7 +413,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
     private void populateTagFields() {
         TextView boothReservationSizeTV = (TextView) findViewById(R.id.booth_reservation_details_size);
         TextView boothReservationAreaTV = (TextView) findViewById(R.id.booth_reservation_details_area);
-        TextView boothReservationCategoryTV = (TextView) findViewById(R.id.booth_reservation_details_category);
+        TextView boothReservationTypeTV = (TextView) findViewById(R.id.booth_reservation_details_type);
 
         if (sizeTag != null) {
             String unformattedSizeTagName = GlobalUtils.getUnformattedTagName(sizeTag.getName(), "Size");
@@ -436,15 +435,15 @@ public class ReserveBoothDetails extends AppCompatActivity {
         } else {
             boothReservationAreaTV.setText(getResources().getString(R.string.booth_reservation_no_area_data));
         }
-        if (categoryTag != null) {
-            String unformattedCategoryTagName = GlobalUtils.getUnformattedTagName(categoryTag.getName(), "Category");
-            if (unformattedCategoryTagName.length() > 0) {
-                boothReservationCategoryTV.setText(unformattedCategoryTagName);
+        if (typeTag != null) {
+            String unformattedTypeTagName = GlobalUtils.getUnformattedTagName(typeTag.getName(), "Type");
+            if (unformattedTypeTagName.length() > 0) {
+                boothReservationTypeTV.setText(unformattedTypeTagName);
             } else {
-                boothReservationCategoryTV.setText(getResources().getString(R.string.booth_reservation_no_category_data));
+                boothReservationTypeTV.setText(getResources().getString(R.string.booth_reservation_no_type_data));
             }
         } else {
-            boothReservationCategoryTV.setText(getResources().getString(R.string.booth_reservation_no_category_data));
+            boothReservationTypeTV.setText(getResources().getString(R.string.booth_reservation_no_type_data));
         }
     }
 

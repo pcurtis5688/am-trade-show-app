@@ -41,16 +41,13 @@ public class EditBooth extends AppCompatActivity {
     private List<Tag> boothTags;
     private Tag sizeTag;
     private Tag areaTag;
-    private Tag categoryTag;
-    private int sizeTagInx;
-    private int areaTagInx;
-    private int categoryTagInx;
+    private Tag typeTag;
     //////UI VARS
     private EditText editBoothNumberField;
     private EditText editBoothPriceField;
     private EditText editBoothSizeField;
     private EditText editBoothAreaField;
-    private EditText editBoothCategoryField;
+    private EditText editBoothTypeField;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +93,7 @@ public class EditBooth extends AppCompatActivity {
         });
         editBoothSizeField = (EditText) findViewById(R.id.edit_booth_size_field);
         editBoothAreaField = (EditText) findViewById(R.id.edit_booth_area_field);
-        editBoothCategoryField = (EditText) findViewById(R.id.edit_booth_category_field);
+        editBoothTypeField = (EditText) findViewById(R.id.edit_booth_type_field);
 
         //////////////////DATA WORK///////////////////////////
         Bundle extrasBundle = getIntent().getExtras();
@@ -112,23 +109,18 @@ public class EditBooth extends AppCompatActivity {
     }
 
     private void populateTagFields() {
-        int tagInx = 0;
         for (Tag currentTag : boothTags) {
             if (currentTag.getName().substring(0, 4).equalsIgnoreCase("size")) {
                 editBoothSizeField.setText(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Size"));
                 sizeTag = currentTag;
-                sizeTagInx = tagInx;
             } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("area")) {
                 editBoothAreaField.setText(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Area"));
                 areaTag = currentTag;
-                areaTagInx = tagInx;
-            } else if (currentTag.getName().substring(0, 8).equalsIgnoreCase("category")) {
-                editBoothCategoryField.setText(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Category"));
-                categoryTag = currentTag;
-                categoryTagInx = tagInx;
+            } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("type")) {
+                editBoothTypeField.setText(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Type"));
+                typeTag = currentTag;
             }
         }
-        tagInx++;
     }
 
     private class UpdateBoothTask extends AsyncTask<Void, Void, Void> {
@@ -143,7 +135,7 @@ public class EditBooth extends AppCompatActivity {
         private String editBoothPriceFieldData;
         private String editBoothSizeFieldData;
         private String editBoothAreaFieldData;
-        private String editBoothCategoryFieldData;
+        private String editBoothTypeFieldData;
 
         @Override
         protected void onPreExecute() {
@@ -161,19 +153,19 @@ public class EditBooth extends AppCompatActivity {
             editBoothPriceFieldData = editBoothPriceField.getText().toString();
             editBoothSizeFieldData = editBoothSizeField.getText().toString();
             editBoothAreaFieldData = editBoothAreaField.getText().toString();
-            editBoothCategoryFieldData = editBoothCategoryField.getText().toString();
+            editBoothTypeFieldData = editBoothTypeField.getText().toString();
             if (null == sizeTag) {
                 sizeTag = new Tag();
             }
             if (null == areaTag) {
                 areaTag = new Tag();
             }
-            if (null == categoryTag) {
-                categoryTag = new Tag();
+            if (null == typeTag) {
+                typeTag = new Tag();
             }
             sizeTag.setName(GlobalUtils.getFormattedTagName(editBoothSizeFieldData, "Size"));
             areaTag.setName(GlobalUtils.getFormattedTagName(editBoothAreaFieldData, "Area"));
-            categoryTag.setName(GlobalUtils.getFormattedTagName(editBoothCategoryFieldData, "Category"));
+            typeTag.setName(GlobalUtils.getFormattedTagName(editBoothTypeFieldData, "Type"));
         }
 
         @Override
@@ -195,19 +187,19 @@ public class EditBooth extends AppCompatActivity {
                     inventoryConnector.updateTag(sizeTag);
                 } else {
                     inventoryConnector.createTag(sizeTag);
-                    inventoryConnector.assignItemsToTag(categoryTag.getId(), boothIdInStringList);
+                    inventoryConnector.assignItemsToTag(sizeTag.getId(), boothIdInStringList);
                 }
                 if (areaTag.hasId()) {
                     inventoryConnector.updateTag(areaTag);
                 } else {
                     inventoryConnector.createTag(areaTag);
-                    inventoryConnector.assignItemsToTag(categoryTag.getId(), boothIdInStringList);
+                    inventoryConnector.assignItemsToTag(areaTag.getId(), boothIdInStringList);
                 }
-                if (categoryTag.hasId()) {
-                    inventoryConnector.updateTag(categoryTag);
+                if (typeTag.hasId()) {
+                    inventoryConnector.updateTag(typeTag);
                 } else {
-                    inventoryConnector.createTag(categoryTag);
-                    inventoryConnector.assignItemsToTag(categoryTag.getId(), boothIdInStringList);
+                    inventoryConnector.createTag(typeTag);
+                    inventoryConnector.assignItemsToTag(typeTag.getId(), boothIdInStringList);
                 }
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
@@ -227,10 +219,9 @@ public class EditBooth extends AppCompatActivity {
                     boothToUpdate.getPrice(),
                     editBoothSizeFieldData,
                     editBoothAreaFieldData,
-                    editBoothCategoryFieldData);
+                    editBoothTypeFieldData);
             if (!sqliteUpdateBoothSuccess)
                 Log.e("Err Edit Booth: ", "Booth w/ ID: " + boothToUpdate.getId());
-            tradeShowDatabase = null;
             return null;
         }
 

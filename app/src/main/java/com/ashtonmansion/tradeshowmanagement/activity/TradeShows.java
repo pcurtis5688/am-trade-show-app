@@ -30,6 +30,7 @@ import com.clover.sdk.v1.ServiceException;
 import com.clover.sdk.v3.inventory.Category;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -82,31 +83,43 @@ public class TradeShows extends AppCompatActivity
 
     private void populateTable() {
         showSelectionTable.removeAllViews();
-        for (Category show : showList) {
-            /////////////
-            final Category finalizedShow = show;
-            String showID = show.getId();
-            List<String> decoupledShowArray = Arrays.asList(show.getName().split(","));
-            String showName = decoupledShowArray.get(0);
-            String showDate = decoupledShowArray.get(1);
-            String showLocation = decoupledShowArray.get(2);
-            String showNotes = decoupledShowArray.get(3);
-            String showNameAndIDString = showName + " (" + showDate + " - " + showLocation + ")";
+        if (showList != null && showList.size() > 0) {
+            for (Category show : showList) {
+                /////////////
+                final Category finalizedShow = show;
+                String showID = show.getId();
+                List<String> decoupledShowArray = Arrays.asList(show.getName().split(","));
+                String showName = decoupledShowArray.get(0);
+                String showDate = decoupledShowArray.get(1);
+                String showLocation = decoupledShowArray.get(2);
+                String showNotes = decoupledShowArray.get(3);
+                String showNameAndIDString = showName + " (" + showDate + " - " + showLocation + ")";
 
-            TableRow newShowRow = new TableRow(tradeShowsActivityContext);
-            TextView newShowTV = new TextView(tradeShowsActivityContext);
-            newShowTV.setText(showNameAndIDString);
-            Button editShowButton = new Button(tradeShowsActivityContext);
-            editShowButton.setText(getResources().getString(R.string.trade_shows_edit_btn_string));
-            editShowButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    editShowAction(finalizedShow);
-                }
-            });
-            newShowRow.addView(newShowTV);
-            newShowRow.addView(editShowButton);
-            showSelectionTable.addView(newShowRow);
+                TableRow newShowRow = new TableRow(tradeShowsActivityContext);
+                TextView newShowTV = new TextView(tradeShowsActivityContext);
+                newShowTV.setText(showNameAndIDString);
+                Button editShowButton = new Button(tradeShowsActivityContext);
+                editShowButton.setText(getResources().getString(R.string.trade_shows_edit_btn_string));
+                editShowButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        editShowAction(finalizedShow);
+                    }
+                });
+                newShowRow.addView(newShowTV);
+                newShowRow.addView(editShowButton);
+                showSelectionTable.addView(newShowRow);
+            }
+        } else {
+            TextView noShowsCreatedTV = new TextView(tradeShowsActivityContext);
+            noShowsCreatedTV.setText(getResources().getString(R.string.no_trade_shows_available_string));
+            noShowsCreatedTV.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            TableRow noShowsCreatedRow = new TableRow(tradeShowsActivityContext);
+            TableRow.LayoutParams params = new TableRow.LayoutParams();
+            params.span = 4;
+            params.topMargin = 50;
+            noShowsCreatedRow.addView(noShowsCreatedTV, params);
+            showSelectionTable.addView(noShowsCreatedRow);
         }
         ////PUT THE LAST ROW (ADD SHOW BUTTON) IN
         Button addShowButton = new Button(tradeShowsActivityContext);
@@ -178,27 +191,9 @@ public class TradeShows extends AppCompatActivity
         } else if (id == R.id.nav_config_booths_btn) {
             Intent configureBoothsIntent = new Intent(tradeShowsActivityContext, ConfigureBoothsShowSelection.class);
             startActivity(configureBoothsIntent);
-        } else if (id == R.id.nav_reports_queries_btn) {
-            Intent reportsIntent = new Intent(tradeShowsActivityContext, Reports.class);
-            startActivity(reportsIntent);
         } else if (id == R.id.nav_make_reservation_btn) {
             Intent makeReservationIntent = new Intent(tradeShowsActivityContext, BoothReservationShowSelection.class);
             startActivity(makeReservationIntent);
-        } else if (id == R.id.nav_email_reservation_confirmation_btn) {
-            Intent emailConfirmationIntent = new Intent(tradeShowsActivityContext, EmailConfirmation.class);
-            startActivity(emailConfirmationIntent);
-        } else if (id == R.id.nav_advertising_sales_btn) {
-            Intent advertisingSalesIntent = new Intent(tradeShowsActivityContext, AdvertisingSales.class);
-            startActivity(advertisingSalesIntent);
-        } else if (id == R.id.nav_general_tix_sales_btn) {
-            Intent generalTicketSalesIntent = new Intent(tradeShowsActivityContext, GeneralTicketSales.class);
-            startActivity(generalTicketSalesIntent);
-        } else if (id == R.id.nav_special_events_sales_btn) {
-            Intent specialEventSalesIntent = new Intent(tradeShowsActivityContext, SpecialEventSales.class);
-            startActivity(specialEventSalesIntent);
-        } else if (id == R.id.nav_merchandise_sales_btn) {
-            Intent merchandiseSalesIntent = new Intent(tradeShowsActivityContext, MerchandiseSales.class);
-            startActivity(merchandiseSalesIntent);
         } else if (id == R.id.nav_app_settings_btn) {
             Intent applicationSettingsIntent = new Intent(tradeShowsActivityContext, ApplicationSettings.class);
             startActivity(applicationSettingsIntent);
@@ -213,6 +208,7 @@ public class TradeShows extends AppCompatActivity
         @Override
         protected Void doInBackground(Void... params) {
             try {
+                showList = new ArrayList<>();
                 showList = inventoryConnector.getCategories();
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
