@@ -41,17 +41,13 @@ import java.util.List;
 
 public class ConfigureBooths extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    //CONTEXT AND UI FIELDS
+    /////CONTEXT AND UI FIELDS
     private Context configureBoothsActivityContext;
     private TableLayout showTable;
-    //CLOVER VARS
-    private Account merchantAccount;
-    private InventoryConnector inventoryConnector;
-    private List<Item> boothList;
-    //DATA VARS
+    /////DATA VARS
     private Category show;
-    private String showID;
     private String formattedShowName;
+    private List<Item> boothList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +74,6 @@ public class ConfigureBooths extends AppCompatActivity
             Category passedCategoryObject = (Category) extrasBundle.get("showcat");
             if (null != passedCategoryObject) {
                 show = passedCategoryObject;
-                showID = show.getId();
                 List<String> decoupledShowArray = Arrays.asList(show.getName().split(","));
                 String showName = decoupledShowArray.get(0);
                 String showDate = decoupledShowArray.get(1);
@@ -98,8 +93,41 @@ public class ConfigureBooths extends AppCompatActivity
         getShowBoothsTask.execute();
     }
 
-    private void populateBoothsForShowTable() {
+    private void populateBoothHeaderRow() {
+        TableRow boothsForShowTableHeaderRow = new TableRow(configureBoothsActivityContext);
+        TextView boothNumberHeaderTv = new TextView(configureBoothsActivityContext);
+        TextView boothPriceHeaderTv = new TextView(configureBoothsActivityContext);
+        TextView boothSizeHeaderTv = new TextView(configureBoothsActivityContext);
+        TextView boothAreaHeaderTv = new TextView(configureBoothsActivityContext);
+        TextView boothTypeHeaderTv = new TextView(configureBoothsActivityContext);
+        TextView boothCustomerHeaderTv = new TextView(configureBoothsActivityContext);
 
+        boothNumberHeaderTv.setText(getResources().getString(R.string.configure_show_booths_number_header));
+        boothPriceHeaderTv.setText(getResources().getString(R.string.configure_show_booths_price_header));
+        boothSizeHeaderTv.setText(getResources().getString(R.string.configure_show_booths_size_header));
+        boothAreaHeaderTv.setText(getResources().getString(R.string.configure_show_booths_area_header));
+        boothTypeHeaderTv.setText(getResources().getString(R.string.configure_show_booths_type_header));
+        boothCustomerHeaderTv.setText(getResources().getString(R.string.configure_show_booths_customer_header));
+
+        Button boothFilterButton = new Button(configureBoothsActivityContext);
+        boothFilterButton.setText(getResources().getString(R.string.configure_show_booths_filter_btn_text));
+        boothFilterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                filterBoothsAction();
+            }
+        });
+
+        boothsForShowTableHeaderRow.addView(boothNumberHeaderTv);
+        boothsForShowTableHeaderRow.addView(boothPriceHeaderTv);
+        boothsForShowTableHeaderRow.addView(boothSizeHeaderTv);
+        boothsForShowTableHeaderRow.addView(boothAreaHeaderTv);
+        boothsForShowTableHeaderRow.addView(boothTypeHeaderTv);
+        boothsForShowTableHeaderRow.addView(boothCustomerHeaderTv);
+        showTable.addView(boothsForShowTableHeaderRow);
+    }
+
+    private void populateBoothsForShowTable() {
         showTable.removeAllViews();
         populateBoothHeaderRow();
 
@@ -113,10 +141,10 @@ public class ConfigureBooths extends AppCompatActivity
                 TextView boothTypeTv = new TextView(configureBoothsActivityContext);
                 TextView boothCustomerTv = new TextView(configureBoothsActivityContext);
                 Button editBoothButton = new Button(configureBoothsActivityContext);
-                Tag sizeTag = null;
-                Tag areaTag = null;
-                Tag typeTag = null;
-                /////////////////////
+
+                Tag sizeTag;
+                Tag areaTag;
+                Tag typeTag;
                 for (Tag currentTag : booth.getTags()) {
                     if (currentTag.getName().substring(0, 4).equalsIgnoreCase("size")) {
                         sizeTag = currentTag;
@@ -174,40 +202,6 @@ public class ConfigureBooths extends AppCompatActivity
         showTable.addView(addBoothButtonRow);
     }
 
-    private void populateBoothHeaderRow() {
-        TableRow boothsForShowTableHeaderRow = new TableRow(configureBoothsActivityContext);
-        TextView boothNumberHeaderTv = new TextView(configureBoothsActivityContext);
-        TextView boothPriceHeaderTv = new TextView(configureBoothsActivityContext);
-        TextView boothSizeHeaderTv = new TextView(configureBoothsActivityContext);
-        TextView boothAreaHeaderTv = new TextView(configureBoothsActivityContext);
-        TextView boothTypeHeaderTv = new TextView(configureBoothsActivityContext);
-        TextView boothCustomerHeaderTv = new TextView(configureBoothsActivityContext);
-
-        boothNumberHeaderTv.setText(getResources().getString(R.string.configure_show_booths_number_header));
-        boothPriceHeaderTv.setText(getResources().getString(R.string.configure_show_booths_price_header));
-        boothSizeHeaderTv.setText(getResources().getString(R.string.configure_show_booths_size_header));
-        boothAreaHeaderTv.setText(getResources().getString(R.string.configure_show_booths_area_header));
-        boothTypeHeaderTv.setText(getResources().getString(R.string.configure_show_booths_type_header));
-        boothCustomerHeaderTv.setText(getResources().getString(R.string.configure_show_booths_customer_header));
-
-        Button boothFilterButton = new Button(configureBoothsActivityContext);
-        boothFilterButton.setText(getResources().getString(R.string.configure_show_booths_filter_btn_text));
-        boothFilterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                filterBoothsAction();
-            }
-        });
-
-        boothsForShowTableHeaderRow.addView(boothNumberHeaderTv);
-        boothsForShowTableHeaderRow.addView(boothPriceHeaderTv);
-        boothsForShowTableHeaderRow.addView(boothSizeHeaderTv);
-        boothsForShowTableHeaderRow.addView(boothAreaHeaderTv);
-        boothsForShowTableHeaderRow.addView(boothTypeHeaderTv);
-        boothsForShowTableHeaderRow.addView(boothCustomerHeaderTv);
-        showTable.addView(boothsForShowTableHeaderRow);
-    }
-
     private void editBoothAction(Item booth) {
         Intent editBoothIntent = new Intent(configureBoothsActivityContext, EditBooth.class);
         editBoothIntent.putExtra("booth", booth);
@@ -216,15 +210,16 @@ public class ConfigureBooths extends AppCompatActivity
 
     private void filterBoothsAction() {
         Intent filterBoothsIntent = new Intent(configureBoothsActivityContext, FilterBooths.class);
-        filterBoothsIntent.putExtra("showid", showID);
+        filterBoothsIntent.putExtra("show", show);
         startActivity(filterBoothsIntent);
     }
-
-
 
     private class GetShowBoothsTask extends AsyncTask<Void, Void, Void> {
         //////////PRIVATELY NECESSARY OBJECTS & UTILITY LISTS ONLY
         private ProgressDialog progressDialog = new ProgressDialog(configureBoothsActivityContext);
+        private Account merchantAccount;
+        private InventoryConnector inventoryConnector;
+        private List<Reference> boothReferenceList;
 
         @Override
         protected void onPreExecute() {
@@ -232,7 +227,6 @@ public class ConfigureBooths extends AppCompatActivity
             progressDialog.setMessage("Loading Booths...");
             progressDialog.show();
             boothList = new ArrayList<>();
-            show = null;
         }
 
         @Override
@@ -242,22 +236,14 @@ public class ConfigureBooths extends AppCompatActivity
                 inventoryConnector = new InventoryConnector(configureBoothsActivityContext, merchantAccount, null);
                 inventoryConnector.connect();
 
-                //// TODO: 9/15/2016 this definitely isn't necessary; todo show can be passed from previous page
-                //////////////FIND CATEGORY IN CLOVER & POPULATE BOOTH REFERENCE LIST
-                List<Category> categoryList = inventoryConnector.getCategories();
-                List<Reference> boothReferenceList = new ArrayList<>();
-                for (Category category : categoryList) {
-                    if (category.getId().equalsIgnoreCase(showID)) {
-                        show = category;
-                        if (show.hasItems()) boothReferenceList = show.getItems();
+                //////////////POPULATE BOOTH REFERENCE LIST ONLY IF SHOW HAS BOOTHS
+                if (show.hasItems()) {
+                    boothReferenceList = show.getItems();
+                    for (Reference boothRef : boothReferenceList) {
+                        Item currentBooth = inventoryConnector.getItem(boothRef.getId());
+                        currentBooth.setTags(inventoryConnector.getTagsForItem(currentBooth.getId()));
+                        boothList.add(currentBooth);
                     }
-                }
-
-                //////////////FIND CATEGORY IN CLOVER & POPULATE BOOTH REFERENCE LIST
-                for (Reference boothRef : boothReferenceList) {
-                    Item currentBooth = inventoryConnector.getItem(boothRef.getId());
-                    currentBooth.setTags(inventoryConnector.getTagsForItem(currentBooth.getId()));
-                    boothList.add(currentBooth);
                 }
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());

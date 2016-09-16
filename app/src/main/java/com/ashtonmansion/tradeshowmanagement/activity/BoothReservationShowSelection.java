@@ -14,12 +14,10 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -30,10 +28,8 @@ import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.ServiceException;
-import com.clover.sdk.v3.base.Reference;
 import com.clover.sdk.v3.inventory.Category;
 import com.clover.sdk.v3.inventory.InventoryConnector;
-import com.clover.sdk.v3.inventory.Item;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,23 +37,11 @@ import java.util.List;
 
 public class BoothReservationShowSelection extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    /////////////ACTIVITY AND UI VARS
-    private Context boothReservationActivityContext;
-    private TableRow rowContainerForTables;
+    /////ACTIVITY AND UI VARS
+    private Context boothReservationShowSelectionActivityContext;
     private TableLayout showSelectionTable;
-    private TableLayout boothAvailabilityTable;
-    /////////////DATA VARS
+    /////DATA VARS
     private List<Category> showList;
-    private List<String> referenceIdStringList;
-    private String chosenShowId;
-    private String chosenShowName;
-    private Category chosenShowCategoryObj;
-    private List<Item> boothListWithCategories;
-    private List<Item> filteredBoothList;
-    private Item selectedBooth;
-    /////////////CLOVER VARS
-    private Account merchantAccount;
-    private InventoryConnector inventoryConnector;
 
     ////////////////////////////UI/INITIATION WORK////////////////////////////////
     @Override
@@ -78,7 +62,7 @@ public class BoothReservationShowSelection extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         ///////////DATA WORK////////////////////////////////////
-        boothReservationActivityContext = this;
+        boothReservationShowSelectionActivityContext = this;
         showSelectionTable = (TableLayout) findViewById(R.id.booth_reservation_show_select_table);
 
         GetShowsForBoothSelection getShowsForBoothSelection = new GetShowsForBoothSelection();
@@ -87,25 +71,30 @@ public class BoothReservationShowSelection extends AppCompatActivity
 
     private class GetShowsForBoothSelection extends AsyncTask<Void, Void, Void> {
         private ProgressDialog progressDialog;
+        /////////////CLOVER CONNECTIONS
+        private Account merchantAccount;
+        private InventoryConnector inventoryConnector;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = new ProgressDialog(boothReservationActivityContext);
+            progressDialog = new ProgressDialog(boothReservationShowSelectionActivityContext);
             progressDialog.setMessage("Loading Shows...");
             progressDialog.show();
+            showList = new ArrayList<>();
         }
 
         @Override
         protected Void doInBackground(Void... params) {
             try {
                 ///////////CLOVER CONNECT
-                merchantAccount = CloverAccount.getAccount(boothReservationActivityContext);
-                inventoryConnector = new InventoryConnector(boothReservationActivityContext, merchantAccount, null);
+                merchantAccount = CloverAccount.getAccount(boothReservationShowSelectionActivityContext);
+                inventoryConnector = new InventoryConnector(boothReservationShowSelectionActivityContext, merchantAccount, null);
                 inventoryConnector.connect();
                 ///////////GET SHOW LIST (CATEGORY LIST) FOR BOOTH SELECTION
-                showList = inventoryConnector.getCategories();
-
+                if (inventoryConnector.getCategories().size() > 0) {
+                    showList = inventoryConnector.getCategories();
+                }
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
             } finally {
@@ -124,7 +113,6 @@ public class BoothReservationShowSelection extends AppCompatActivity
 
     private void populateShowSelectionTable() {
         for (Category show : showList) {
-            final String finalizedShowID = show.getId();
             final Category finalizedShowObject = show;
             List<String> decoupledShowNameArr = Arrays.asList(show.getName().split(","));
             String showName = decoupledShowNameArr.get(0);
@@ -132,13 +120,13 @@ public class BoothReservationShowSelection extends AppCompatActivity
             String showLocation = decoupledShowNameArr.get(2);
             String showNameForUser = showName + " (" + showDate + " - " + showLocation + ")";
 
-            TableRow newShowSelectionRow = new TableRow(boothReservationActivityContext);
+            TableRow newShowSelectionRow = new TableRow(boothReservationShowSelectionActivityContext);
 
-            TextView showSelectionNameTv = new TextView(boothReservationActivityContext);
+            TextView showSelectionNameTv = new TextView(boothReservationShowSelectionActivityContext);
             showSelectionNameTv.setText(showNameForUser);
-            showSelectionNameTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
+            showSelectionNameTv.setTextAppearance(boothReservationShowSelectionActivityContext, R.style.prompt_text_font_style);
 
-            Button showSelectButton = new Button(boothReservationActivityContext);
+            Button showSelectButton = new Button(boothReservationShowSelectionActivityContext);
             showSelectButton.setText(getResources().getString(R.string.select_show_button_text));
             showSelectButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -155,7 +143,7 @@ public class BoothReservationShowSelection extends AppCompatActivity
     }
 
     private void selectShowForReservation(Category showObj) {
-        Intent boothSelectionIntent = new Intent(boothReservationActivityContext, BoothReservation.class);
+        Intent boothSelectionIntent = new Intent(boothReservationShowSelectionActivityContext, BoothReservation.class);
         boothSelectionIntent.putExtra("show", showObj);
         startActivity(boothSelectionIntent);
     }
@@ -200,18 +188,18 @@ public class BoothReservationShowSelection extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home_btn) {
-            Intent homeIntent = new Intent(boothReservationActivityContext, HomeActivity.class);
+            Intent homeIntent = new Intent(boothReservationShowSelectionActivityContext, HomeActivity.class);
             startActivity(homeIntent);
         } else if (id == R.id.nav_show_setup_btn) {
-            Intent showSetupIntent = new Intent(boothReservationActivityContext, TradeShows.class);
+            Intent showSetupIntent = new Intent(boothReservationShowSelectionActivityContext, TradeShows.class);
             startActivity(showSetupIntent);
         } else if (id == R.id.nav_config_booths_btn) {
-            Intent configureBoothsIntent = new Intent(boothReservationActivityContext, ConfigureBoothsShowSelection.class);
+            Intent configureBoothsIntent = new Intent(boothReservationShowSelectionActivityContext, ConfigureBoothsShowSelection.class);
             startActivity(configureBoothsIntent);
         } else if (id == R.id.nav_make_reservation_btn) {
             //// nothing; already in activity
-        } else if (id == R.id.nav_app_settings_btn){
-            Intent applicationSettingsIntent = new Intent(boothReservationActivityContext, ApplicationSettings.class);
+        } else if (id == R.id.nav_app_settings_btn) {
+            Intent applicationSettingsIntent = new Intent(boothReservationShowSelectionActivityContext, ApplicationSettings.class);
             startActivity(applicationSettingsIntent);
         }
 

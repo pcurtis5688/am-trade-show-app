@@ -72,18 +72,6 @@
                 android:value="com.ashtonmansion.tradeshowmanagement.HomeActivity" />
         </activity>
         <activity
-            android:name="com.ashtonmansion.tradeshowmanagement.activity.EmailConfirmation"
-            android:label="@string/nav_drawer_email_confirmations_text"
-            android:parentActivityName="com.ashtonmansion.tradeshowmanagement.HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ashtonmansion.tradeshowmanagement.HomeActivity" />
-        </activity>
-        <activity
-            android:name="com.ashtonmansion.tradeshowmanagement.activity.ViewBoothDetail"
-            android:parentActivityName="com.ashtonmansion.tradeshowmanagement.activity.BoothReservationShowSelection" />
-        <activity
             android:name="com.ashtonmansion.tradeshowmanagement.activity.AddShow"
             android:label="@string/title_activity_add_show"
             android:parentActivityName="com.ashtonmansion.tradeshowmanagement.activity.TradeShows"

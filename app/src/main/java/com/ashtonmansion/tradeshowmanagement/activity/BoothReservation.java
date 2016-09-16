@@ -27,22 +27,19 @@ import com.clover.sdk.v3.inventory.Category;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
 import com.clover.sdk.v3.inventory.Tag;
-import com.clover.sdk.v3.order.OrderConnector;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class BoothReservation extends AppCompatActivity {
+    ////////CONTEXT AND UI OBJECTS
     private Context boothReservationActivityContext;
-    ////////UI OBJECTS
     private TableLayout boothListTable;
-    ////////CLOVER DATA
-    private List<Item> boothList;
-    ////////SHOW VARS
+    ////////DATA VARS
     private Category show;
-    private String showID;
     private String formattedShowName;
+    private List<Item> boothList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +58,6 @@ public class BoothReservation extends AppCompatActivity {
             Category passedCategoryObject = (Category) extrasBundle.get("show");
             if (null != passedCategoryObject) {
                 show = passedCategoryObject;
-                showID = show.getId();
                 List<String> decoupledShowArray = Arrays.asList(show.getName().split(","));
                 String showName = decoupledShowArray.get(0);
                 String showDate = decoupledShowArray.get(1);
@@ -83,11 +79,11 @@ public class BoothReservation extends AppCompatActivity {
 
     private class GetShowBoothsTask extends AsyncTask<Void, Void, Void> {
         private ProgressDialog progressDialog;
+        /////UTILITY LISTS
+        private List<Reference> boothReferenceList = new ArrayList<>();
         /////CLOVER CONNECTIONS
         private Account merchantAccount;
         private InventoryConnector inventoryConnector;
-        /////UTILITY LISTS
-        private List<Reference> boothReferenceList = new ArrayList<>();
 
         @Override
         protected void onPreExecute() {
@@ -105,10 +101,9 @@ public class BoothReservation extends AppCompatActivity {
                 inventoryConnector = new InventoryConnector(boothReservationActivityContext, merchantAccount, null);
                 inventoryConnector.connect();
 
-                ////////FIND CATEGORY IN CLOVER, POPULATE BOOTH REFERENCE LIST
+                //////////////ITERATE CATEGORY AND ADD BOOTHS TO LIST, IF ANY
                 if (show.getItems().size() > 0) {
                     boothReferenceList = show.getItems();
-                    //////////////ITERATE REF LIST AND ADD BOOTHS TO LIST
                     for (Reference boothRef : boothReferenceList) {
                         Item currentBooth = inventoryConnector.getItem(boothRef.getId());
                         currentBooth.setTags(inventoryConnector.getTagsForItem(currentBooth.getId()));
@@ -156,9 +151,9 @@ public class BoothReservation extends AppCompatActivity {
                 boothPriceTv.setText(formattedPrice);
                 boothCustomerTv.setText("customerhere");
 
-                Tag sizeTag = null;
-                Tag areaTag = null;
-                Tag typeTag = null;
+                Tag sizeTag;
+                Tag areaTag;
+                Tag typeTag;
                 for (Tag currentTag : booth.getTags()) {
                     if (currentTag.getName().substring(0, 4).equalsIgnoreCase("size")) {
                         sizeTag = currentTag;
@@ -195,6 +190,7 @@ public class BoothReservation extends AppCompatActivity {
                     }
                 });
                 reserveBoothButton.setText(getResources().getString(R.string.reserve_booth_button_text));
+
                 ///////////POPULATE THE NEW ROW AND ADD TO TABLE
                 newBoothRow.addView(boothNumberTv);
                 newBoothRow.addView(boothPriceTv);
