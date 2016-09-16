@@ -20,6 +20,7 @@ import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.ServiceException;
 import com.clover.sdk.v3.inventory.Category;
 import com.clover.sdk.v3.inventory.InventoryConnector;
+import com.clover.sdk.v3.inventory.Tag;
 
 import java.util.Arrays;
 import java.util.List;
@@ -46,7 +47,6 @@ public class EditShow extends AppCompatActivity {
         setContentView(R.layout.activity_edit_show);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         editShowActivityContext = this;
@@ -55,12 +55,13 @@ public class EditShow extends AppCompatActivity {
         showDateEditText = (EditText) findViewById(R.id.edit_show_date_field);
         showLocationEditText = (EditText) findViewById(R.id.edit_show_location_field);
         showNotesEditText = (EditText) findViewById(R.id.edit_show_notes_field);
+
         ////////////DATA HANDLING/////////////////
         Bundle extrasBundle = getIntent().getExtras();
         if (extrasBundle != null) {
-            Category show = (Category) extrasBundle.get("show");
-            showID = show.getId();
-            formattedFullShowName = show.getName();
+            Tag showTag = (Tag) extrasBundle.get("show");
+            showID = showTag.getId();
+            formattedFullShowName = showTag.getName();
             decoupleShowName();
             populateFields();
             String editShowHeader = getResources().getString(R.string.edit_show_header_string, showName, showDate, showLocation);
@@ -70,10 +71,10 @@ public class EditShow extends AppCompatActivity {
 
     private void decoupleShowName() {
         List<String> splitShowNameArray = Arrays.asList(formattedFullShowName.split(","));
-        showName = splitShowNameArray.get(0);
-        showDate = splitShowNameArray.get(1);
-        showLocation = splitShowNameArray.get(2);
-        showNotes = splitShowNameArray.get(3);
+        showName = splitShowNameArray.get(1);
+        showDate = splitShowNameArray.get(2);
+        showLocation = splitShowNameArray.get(3);
+        showNotes = splitShowNameArray.get(4);
     }
 
     private void populateFields() {
@@ -88,7 +89,7 @@ public class EditShow extends AppCompatActivity {
         String editedShowDate = showDateEditText.getText().toString();
         String editedShowLocation = showLocationEditText.getText().toString();
         String editedShowNotes = showNotesEditText.getText().toString();
-        formattedFullShowName = editedShowName + "," + editedShowDate + "," + editedShowLocation + "," + editedShowNotes;
+        formattedFullShowName = "show," + editedShowName + "," + editedShowDate + "," + editedShowLocation + "," + editedShowNotes;
 
         UpdateShowTask updateShowTask = new UpdateShowTask();
         updateShowTask.execute();
@@ -122,11 +123,10 @@ public class EditShow extends AppCompatActivity {
                 merchantAccount = CloverAccount.getAccount(editShowActivityContext);
                 inventoryConnector = new InventoryConnector(editShowActivityContext, merchantAccount, null);
                 inventoryConnector.connect();
-                Category updatedShowCategory = new Category();
+                Tag updatedShowCategory = new Tag();
                 updatedShowCategory.setId(showID);
-                updatedShowCategory.setSortOrder(1);
                 updatedShowCategory.setName(formattedFullShowName);
-                inventoryConnector.updateCategory(updatedShowCategory);
+                inventoryConnector.updateTag(updatedShowCategory);
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
                 e1.printStackTrace();
@@ -163,7 +163,7 @@ public class EditShow extends AppCompatActivity {
                 merchantAccount = CloverAccount.getAccount(editShowActivityContext);
                 inventoryConnector = new InventoryConnector(editShowActivityContext, merchantAccount, null);
                 inventoryConnector.connect();
-                inventoryConnector.deleteCategory(showID);
+                inventoryConnector.deleteTag(showID);
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
                 e1.printStackTrace();

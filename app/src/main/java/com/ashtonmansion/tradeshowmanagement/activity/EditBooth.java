@@ -54,7 +54,6 @@ public class EditBooth extends AppCompatActivity {
         //////////////////NAVIGATION AND UI WORK//////////////
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_booth);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.edit_booth_toolbar);
         setSupportActionBar(toolbar);
 
@@ -62,7 +61,6 @@ public class EditBooth extends AppCompatActivity {
         editBoothNumberField = (EditText) findViewById(R.id.edit_booth_number_field);
         editBoothPriceField = (EditText) findViewById(R.id.edit_booth_price_field);
         editBoothPriceField.addTextChangedListener(new TextWatcher() {
-
             private String current = "";
 
             @Override
@@ -102,6 +100,7 @@ public class EditBooth extends AppCompatActivity {
             editBoothNumberField.setText(booth.getSku());
             editBoothPriceField.setText(GlobalUtils.getFormattedPriceStringFromLong(booth.getPrice()));
             boothTags = new ArrayList<>();
+            /////SHOW TAGS ARE FILTERED IN POPULATE TAG FIELDS METHOD
             boothTags = booth.getTags();
             populateTagFields();
         }

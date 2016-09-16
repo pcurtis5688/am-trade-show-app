@@ -21,4 +21,6 @@
     <dimen name="dimen_36sp">36sp</dimen>
     <dimen name="dimen_48sp">48sp</dimen>
 
+    <dimen name="line_item_text_size">18sp</dimen>
+
 </resources>

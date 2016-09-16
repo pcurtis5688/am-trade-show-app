@@ -30,7 +30,6 @@ import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.ServiceException;
 import com.clover.sdk.v3.base.Reference;
-import com.clover.sdk.v3.inventory.Category;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
 import com.clover.sdk.v3.inventory.Tag;
@@ -45,8 +44,8 @@ public class ConfigureBooths extends AppCompatActivity
     private Context configureBoothsActivityContext;
     private TableLayout showTable;
     /////DATA VARS
-    private Category show;
-    private String formattedShowName;
+    private Tag show;
+    private String showNameForUser;
     private List<Item> boothList;
 
     @Override
@@ -71,18 +70,17 @@ public class ConfigureBooths extends AppCompatActivity
 
         Bundle extrasBundle = getIntent().getExtras();
         if (extrasBundle != null) {
-            Category passedCategoryObject = (Category) extrasBundle.get("showcat");
-            if (null != passedCategoryObject) {
-                show = passedCategoryObject;
+            Tag passedTagObject = (Tag) extrasBundle.get("show");
+            if (null != passedTagObject) {
+                show = passedTagObject;
                 List<String> decoupledShowArray = Arrays.asList(show.getName().split(","));
-                String showName = decoupledShowArray.get(0);
-                String showDate = decoupledShowArray.get(1);
-                String showLocation = decoupledShowArray.get(2);
-                String showNotes = decoupledShowArray.get(3);
-                formattedShowName = showName + " (" + showDate + " - " + showLocation + ")";
+                String showName = decoupledShowArray.get(1);
+                String showDate = decoupledShowArray.get(2);
+                String showLocation = decoupledShowArray.get(3);
+                showNameForUser = getResources().getString(R.string.show_name_for_user_string, showName, showDate, showLocation);
             }
             TextView showNameHeaderTV = (TextView) findViewById(R.id.show_booths_header);
-            showNameHeaderTV.setText(formattedShowName);
+            showNameHeaderTV.setText(showNameForUser);
         }
     }
 
@@ -159,12 +157,14 @@ public class ConfigureBooths extends AppCompatActivity
                 boothPriceTv.setText(GlobalUtils.getFormattedPriceStringFromLong(booth.getPrice()));
 
                 for (Tag currentTag : booth.getTags()) {
-                    if (currentTag.getName().substring(0, 4).equalsIgnoreCase("size")) {
-                        boothSizeTv.setText(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Size"));
-                    } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("area")) {
-                        boothAreaTv.setText(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Area"));
-                    } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("type")) {
-                        boothTypeTv.setText(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Type"));
+                    if (!currentTag.getName().startsWith("show,")) {
+                        if (currentTag.getName().substring(0, 4).equalsIgnoreCase("size")) {
+                            boothSizeTv.setText(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Size"));
+                        } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("area")) {
+                            boothAreaTv.setText(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Area"));
+                        } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("type")) {
+                            boothTypeTv.setText(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Type"));
+                        }
                     }
                 }
                 //// TODO: 9/5/2016 fix custmoer

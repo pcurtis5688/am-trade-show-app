@@ -1,6 +1,7 @@
 package com.ashtonmansion.tradeshowmanagement.activity;
 
 import android.accounts.Account;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -27,8 +28,8 @@ import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.ServiceException;
-import com.clover.sdk.v3.inventory.Category;
 import com.clover.sdk.v3.inventory.InventoryConnector;
+import com.clover.sdk.v3.inventory.Tag;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,9 +41,7 @@ public class TradeShows extends AppCompatActivity
     private Context tradeShowsActivityContext;
     private TableLayout showSelectionTable;
     // DATA HANDLING
-    private Account merchantAccount;
-    private InventoryConnector inventoryConnector;
-    private List<Category> showList;
+    private List<Tag> showList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +62,6 @@ public class TradeShows extends AppCompatActivity
 
         ///////////DATA WORK////////////////////////////////////
         tradeShowsActivityContext = this;
-        merchantAccount = CloverAccount.getAccount(tradeShowsActivityContext);
-        inventoryConnector = new InventoryConnector(tradeShowsActivityContext, merchantAccount, null);
         showSelectionTable = (TableLayout) findViewById(R.id.trade_show_selection_table);
     }
 
@@ -84,20 +81,18 @@ public class TradeShows extends AppCompatActivity
     private void populateTable() {
         showSelectionTable.removeAllViews();
         if (showList != null && showList.size() > 0) {
-            for (Category show : showList) {
+            for (Tag show : showList) {
                 /////////////
-                final Category finalizedShow = show;
-                String showID = show.getId();
+                final Tag finalizedShow = show;
                 List<String> decoupledShowArray = Arrays.asList(show.getName().split(","));
-                String showName = decoupledShowArray.get(0);
-                String showDate = decoupledShowArray.get(1);
-                String showLocation = decoupledShowArray.get(2);
-                String showNotes = decoupledShowArray.get(3);
-                String showNameAndIDString = showName + " (" + showDate + " - " + showLocation + ")";
+                String showName = decoupledShowArray.get(1);
+                String showDate = decoupledShowArray.get(2);
+                String showLocation = decoupledShowArray.get(3);
+                String showNameForUser = getResources().getString(R.string.show_name_for_user_string, showName, showDate, showLocation);
 
                 TableRow newShowRow = new TableRow(tradeShowsActivityContext);
                 TextView newShowTV = new TextView(tradeShowsActivityContext);
-                newShowTV.setText(showNameAndIDString);
+                newShowTV.setText(showNameForUser);
                 Button editShowButton = new Button(tradeShowsActivityContext);
                 editShowButton.setText(getResources().getString(R.string.trade_shows_edit_btn_string));
                 editShowButton.setTextAppearance(tradeShowsActivityContext, R.style.button_font_style);
@@ -140,10 +135,51 @@ public class TradeShows extends AppCompatActivity
         startActivity(addShowIntent);
     }
 
-    private void editShowAction(Category showToPass) {
+    private void editShowAction(Tag showToPass) {
         Intent editShowIntent = new Intent(tradeShowsActivityContext, EditShow.class);
         editShowIntent.putExtra("show", showToPass);
         startActivity(editShowIntent);
+    }
+
+    private class GetShowListTask extends AsyncTask<Void, Void, Void> {
+        private ProgressDialog progressDialog;
+        /////ACCESS CLOVER
+        private Account merchantAccount;
+        private InventoryConnector inventoryConnector;
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog = new ProgressDialog(tradeShowsActivityContext);
+            progressDialog.setMessage(getResources().getString(R.string.loading_trade_shows_text));
+            progressDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            merchantAccount = CloverAccount.getAccount(tradeShowsActivityContext);
+            inventoryConnector = new InventoryConnector(tradeShowsActivityContext, merchantAccount, null);
+            try {
+                showList = new ArrayList<>();
+                /////ONLY RETURN SHOW TAGS.
+                for (Tag currentTag : inventoryConnector.getTags()) {
+                    if (currentTag.getName().startsWith("show,")) {
+                        showList.add(currentTag);
+                    }
+                }
+            } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
+                Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
+            } finally {
+                inventoryConnector.disconnect();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            populateTable();
+            progressDialog.dismiss();
+        }
     }
 
     ////////////NAVIGATION HANDLING METHODS ////////////////////
@@ -206,24 +242,4 @@ public class TradeShows extends AppCompatActivity
         return true;
     }
 
-    private class GetShowListTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                showList = new ArrayList<>();
-                showList = inventoryConnector.getCategories();
-            } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
-                Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
-            } finally {
-                inventoryConnector.disconnect();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            populateTable();
-        }
-    }
 }

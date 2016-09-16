@@ -23,7 +23,6 @@ import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.ServiceException;
 import com.clover.sdk.v3.base.Reference;
-import com.clover.sdk.v3.inventory.Category;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
 import com.clover.sdk.v3.inventory.Tag;
@@ -37,8 +36,8 @@ public class BoothReservation extends AppCompatActivity {
     private Context boothReservationActivityContext;
     private TableLayout boothListTable;
     ////////DATA VARS
-    private Category show;
-    private String formattedShowName;
+    private Tag show;
+    private String showNameForUser;
     private List<Item> boothList;
 
     @Override
@@ -55,18 +54,17 @@ public class BoothReservation extends AppCompatActivity {
 
         Bundle extrasBundle = getIntent().getExtras();
         if (extrasBundle != null) {
-            Category passedCategoryObject = (Category) extrasBundle.get("show");
-            if (null != passedCategoryObject) {
-                show = passedCategoryObject;
+            Tag passedShowTag = (Tag) extrasBundle.get("show");
+            if (null != passedShowTag) {
+                show = passedShowTag;
                 List<String> decoupledShowArray = Arrays.asList(show.getName().split(","));
-                String showName = decoupledShowArray.get(0);
-                String showDate = decoupledShowArray.get(1);
-                String showLocation = decoupledShowArray.get(2);
-                String showNotes = decoupledShowArray.get(3);
-                formattedShowName = showName + " (" + showDate + " - " + showLocation + ")";
+                String showName = decoupledShowArray.get(1);
+                String showDate = decoupledShowArray.get(2);
+                String showLocation = decoupledShowArray.get(3);
+                showNameForUser = getResources().getString(R.string.show_name_for_user_string, showName, showDate, showLocation);
             }
             TextView boothSelectionHeaderTV = (TextView) findViewById(R.id.booth_selection_header);
-            boothSelectionHeaderTV.setText(formattedShowName);
+            boothSelectionHeaderTV.setText(showNameForUser);
         }
     }
 
@@ -79,11 +77,10 @@ public class BoothReservation extends AppCompatActivity {
 
     private class GetShowBoothsTask extends AsyncTask<Void, Void, Void> {
         private ProgressDialog progressDialog;
-        /////UTILITY LISTS
-        private List<Reference> boothReferenceList = new ArrayList<>();
-        /////CLOVER CONNECTIONS
         private Account merchantAccount;
         private InventoryConnector inventoryConnector;
+        /////UTILITY LISTS
+        private List<Reference> boothReferenceList = new ArrayList<>();
 
         @Override
         protected void onPreExecute() {
@@ -101,8 +98,8 @@ public class BoothReservation extends AppCompatActivity {
                 inventoryConnector = new InventoryConnector(boothReservationActivityContext, merchantAccount, null);
                 inventoryConnector.connect();
 
-                //////////////ITERATE CATEGORY AND ADD BOOTHS TO LIST, IF ANY
-                if (show.getItems().size() > 0) {
+                //////////////ITERATE TAG AND ADD BOOTHS TO LIST, IF ANY
+                if (show.getItems().size() > 0 && show.getName().startsWith("show,")) {
                     boothReferenceList = show.getItems();
                     for (Reference boothRef : boothReferenceList) {
                         Item currentBooth = inventoryConnector.getItem(boothRef.getId());
@@ -111,6 +108,8 @@ public class BoothReservation extends AppCompatActivity {
                         boothList.add(currentBooth);
                         //}
                     }
+                } else {
+                    GlobalUtils.valuesTester("showtaginboothres", show.getId());
                 }
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
@@ -150,7 +149,7 @@ public class BoothReservation extends AppCompatActivity {
                 String formattedPrice = GlobalUtils.getFormattedPriceStringFromLong(booth.getPrice());
                 boothPriceTv.setText(formattedPrice);
                 boothCustomerTv.setText("customerhere");
-
+                ///// WILL FILTER OUT SHOW TAG FROM BOOTH
                 Tag sizeTag;
                 Tag areaTag;
                 Tag typeTag;
@@ -173,9 +172,9 @@ public class BoothReservation extends AppCompatActivity {
                         }
                     } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("type")) {
                         typeTag = currentTag;
-                        String unformattedCategoryTagName = GlobalUtils.getUnformattedTagName(typeTag.getName(), "Type");
-                        if (unformattedCategoryTagName.length() > 0) {
-                            boothTypeTv.setText(unformattedCategoryTagName);
+                        String unformattedTypeTagName = GlobalUtils.getUnformattedTagName(typeTag.getName(), "Type");
+                        if (unformattedTypeTagName.length() > 0) {
+                            boothTypeTv.setText(unformattedTypeTagName);
                         } else {
                             boothTypeTv.setText(getResources().getString(R.string.booth_tag_not_available));
                         }
@@ -235,7 +234,7 @@ public class BoothReservation extends AppCompatActivity {
         boothAreaHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_area_header));
         boothAreaHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
 
-        boothTypeHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_category_header));
+        boothTypeHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_type_header));
         boothTypeHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
 
         boothCustomerHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_customer_header));
@@ -250,7 +249,7 @@ public class BoothReservation extends AppCompatActivity {
         boothListTable.addView(boothSelectionTableHeaderRow);
     }
 
-    private void reserveBoothAction(Category show, Item boothToReserve) {
+    private void reserveBoothAction(Tag show, Item boothToReserve) {
         Intent reserveBoothIntent = new Intent(boothReservationActivityContext, ReserveBoothDetails.class);
         reserveBoothIntent.putExtra("show", show);
         reserveBoothIntent.putExtra("booth", boothToReserve);

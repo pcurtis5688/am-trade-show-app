@@ -41,4 +41,9 @@
         <item name="android:textStyle">italic</item>
     </style>
 
+    <style name="table_line_item_font_shows">
+        <item name="android:textAlignment">center</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/line_item_text_size</item>
+    </style>
 </resources>

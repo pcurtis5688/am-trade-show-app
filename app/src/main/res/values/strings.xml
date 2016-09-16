@@ -16,7 +16,7 @@
     <string name="title_activity_edit_booth">Edit Single Booth</string>
     <string name="title_activity_filter_booths">Filter Booth List</string>
     <string name="title_activity_make_reservation">Make A Reservation</string>
-    <string name="title_activity_create_booth">Create Booth</string>
+    <string name="title_activity_create_booth">Create Booth in %1$s</string>
     <string name="title_activity_booth_reservation">Booth Reservation</string>
 
     <!-- NAV DRAWER STRINGS -->
@@ -43,6 +43,8 @@
 
     <!-- TRADE SHOWS / SHOW SETUP STRINGS -->
     <string name="trade_shows_string">Trade Shows</string>
+    <string name="show_name_for_user_string">%1$s (%2$s - %3$s)</string>
+    <string name="loading_trade_shows_text">Loading Trade Shows. . .</string>
     <string name="booth_config_show_selection_string">Booth Configuration - Show Selection</string>
     <string name="trade_shows_edit_btn_string">Edit Show</string>
     <string name="edit_show_header_string">%1$s (%2$s - %3$s)</string>
@@ -72,7 +74,7 @@
 
 
     <!-- CONFIGURE BOOTHS STRINGS //////////////////////////////-->
-    <string name="configure_booth_show_selection_string">Configure Booths - Select Show</string>
+    <string name="configure_booth_show_selection_string">Select Show for Booth Configuration</string>
     <string name="show_selection_button_text">Select Show</string>
     <string name="configure_booths_string">Configure Booths</string>
 
@@ -219,7 +221,7 @@
     <string name="booth_selection_booth_number_header">Booth No.</string>
     <string name="booth_selection_booth_size_header">Size</string>
     <string name="booth_selection_booth_area_header">Area</string>
-    <string name="booth_selection_booth_category_header">Category</string>
+    <string name="booth_selection_booth_type_header">Type</string>
     <string name="booth_selection_booth_customer_header">Customer</string>
     <string name="booth_selection_booth_price_header">Price</string>
 

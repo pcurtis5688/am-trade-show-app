@@ -22,7 +22,6 @@ import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.ServiceException;
-import com.clover.sdk.v3.inventory.Category;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
 import com.clover.sdk.v3.inventory.Tag;
@@ -43,7 +42,7 @@ public class CreateBooth extends AppCompatActivity {
     private EditText createBoothTypeField;
     ///////CLOVER VARS
     private Item newBooth;
-    private Category show;
+    private Tag show;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,9 +91,9 @@ public class CreateBooth extends AppCompatActivity {
         ///////GET CURRENT SHOWID & SHOWNAME from CONFIGURE BOOTHS ACTIVITY
         Bundle extrasBundle = getIntent().getExtras();
         if (extrasBundle != null) {
-            show = (Category) extrasBundle.get("show");
+            show = (Tag) extrasBundle.get("show");
             TextView createBoothActivityHeader = (TextView) findViewById(R.id.create_booth_activity_header_w_showname);
-            createBoothActivityHeader.setText(String.valueOf(getResources().getString(R.string.title_activity_create_booth) + " - " + show.getName()));
+            createBoothActivityHeader.setText(String.valueOf(getResources().getString(R.string.title_activity_create_booth, show.getName())));
         }
     }
 
@@ -113,7 +112,7 @@ public class CreateBooth extends AppCompatActivity {
         private String formattedBoothSizeTagName;
         private String formattedBoothAreaTagName;
         private String formattedBoothTypeTagName;
-        private List<Category> showObjectInListForBooth;
+        private List<Tag> showObjectInListForBooth;
         private Tag boothSizeTagWithID;
         private Tag boothAreaTagWithID;
         private Tag boothTypeTagWithID;
@@ -152,23 +151,27 @@ public class CreateBooth extends AppCompatActivity {
                 /////CREATE BOOTH AND AND ASSIGN RETURN BOOTH TO THE SAME (W ID)
                 newBooth = inventoryConnector.createItem(newBooth);
 
-                /////LOCATE THE SHOW OBJECT (CATEGORY), ADD REF TO NEW BOOTH, UPDATE
-                for (Category currentShow : inventoryConnector.getCategories()) {
+                /////LOCATE THE SHOW OBJECT (TAG), ADD REF TO NEW BOOTH, UPDATE
+                for (Tag currentShow : inventoryConnector.getTags()) {
                     if (currentShow.getId().equalsIgnoreCase(show.getId())) {
-                        inventoryConnector.addItemToCategory(newBooth.getId(), currentShow.getId());
+                        List<String> showTagIDinStringList = new ArrayList<>();
+                        showTagIDinStringList.add(currentShow.getId());
+                        inventoryConnector.assignTagsToItem(newBooth.getId(), showTagIDinStringList);
                         showObjectInListForBooth.add(currentShow);
-                        newBooth.setCategories(showObjectInListForBooth);
+                        newBooth.setTags(showObjectInListForBooth);
                         inventoryConnector.updateItem(newBooth);
                         inventoryConnector.updateItemStock(newBooth.getId(), 1);
                     }
                 }
                 List<String> boothIdInStringList = new ArrayList<>();
                 boothIdInStringList.add(newBooth.getId());
-
+                ///// ASSIGN BOOTH TO SHOW TAG
+                inventoryConnector.assignItemsToTag(show.getId(), boothIdInStringList);
+                ///// CREATE BOOTH TAGS FOR OTHER FIELDS
                 boothSizeTagWithID = inventoryConnector.createTag(new Tag().setName(formattedBoothSizeTagName));
                 boothAreaTagWithID = inventoryConnector.createTag(new Tag().setName(formattedBoothAreaTagName));
                 boothTypeTagWithID = inventoryConnector.createTag(new Tag().setName(formattedBoothTypeTagName));
-
+                ///// ASSIGN THEM.
                 inventoryConnector.assignItemsToTag(boothSizeTagWithID.getId(), boothIdInStringList);
                 inventoryConnector.assignItemsToTag(boothAreaTagWithID.getId(), boothIdInStringList);
                 inventoryConnector.assignItemsToTag(boothTypeTagWithID.getId(), boothIdInStringList);

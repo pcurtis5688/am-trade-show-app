@@ -28,8 +28,8 @@ import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.ServiceException;
-import com.clover.sdk.v3.inventory.Category;
 import com.clover.sdk.v3.inventory.InventoryConnector;
+import com.clover.sdk.v3.inventory.Tag;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,7 +41,7 @@ public class BoothReservationShowSelection extends AppCompatActivity
     private Context boothReservationShowSelectionActivityContext;
     private TableLayout showSelectionTable;
     /////DATA VARS
-    private List<Category> showList;
+    private List<Tag> showList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,13 +50,11 @@ public class BoothReservationShowSelection extends AppCompatActivity
         setContentView(R.layout.activity_booth_reservation_show_selection);
         Toolbar toolbar = (Toolbar) findViewById(R.id.booth_selection_show_selection_toolbar);
         setSupportActionBar(toolbar);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.make_reservation_drawerlayout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_make_reservation);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -90,9 +88,13 @@ public class BoothReservationShowSelection extends AppCompatActivity
                 merchantAccount = CloverAccount.getAccount(boothReservationShowSelectionActivityContext);
                 inventoryConnector = new InventoryConnector(boothReservationShowSelectionActivityContext, merchantAccount, null);
                 inventoryConnector.connect();
-                ///////////GET SHOW LIST (CATEGORY LIST) FOR BOOTH SELECTION
-                if (inventoryConnector.getCategories().size() > 0) {
-                    showList = inventoryConnector.getCategories();
+                ///////////GET SHOW LIST (TAG LIST) FOR BOOTH SELECTION
+                if (inventoryConnector.getTags().size() > 0) {
+                    for (Tag currentTag : inventoryConnector.getTags()){
+                        if(currentTag.getName().startsWith("show,")){
+                            showList.add(currentTag);
+                        }
+                    }
                 }
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
@@ -111,12 +113,13 @@ public class BoothReservationShowSelection extends AppCompatActivity
     }
 
     private void populateShowSelectionTable() {
-        for (Category show : showList) {
-            final Category finalizedShowObject = show;
+        ///// NON-SHOW TAGS HAVE ALREADY BEEN FILTERED
+        for (Tag show : showList) {
+            final Tag finalizedShowObject = show;
             List<String> decoupledShowNameArr = Arrays.asList(show.getName().split(","));
-            String showName = decoupledShowNameArr.get(0);
-            String showDate = decoupledShowNameArr.get(1);
-            String showLocation = decoupledShowNameArr.get(2);
+            String showName = decoupledShowNameArr.get(1);
+            String showDate = decoupledShowNameArr.get(2);
+            String showLocation = decoupledShowNameArr.get(3);
             String showNameForUser = showName + " (" + showDate + " - " + showLocation + ")";
 
             TableRow newShowSelectionRow = new TableRow(boothReservationShowSelectionActivityContext);
@@ -142,9 +145,9 @@ public class BoothReservationShowSelection extends AppCompatActivity
         }
     }
 
-    private void selectShowForReservation(Category showObj) {
+    private void selectShowForReservation(Tag showTag) {
         Intent boothSelectionIntent = new Intent(boothReservationShowSelectionActivityContext, BoothReservation.class);
-        boothSelectionIntent.putExtra("show", showObj);
+        boothSelectionIntent.putExtra("show", showTag);
         startActivity(boothSelectionIntent);
     }
 

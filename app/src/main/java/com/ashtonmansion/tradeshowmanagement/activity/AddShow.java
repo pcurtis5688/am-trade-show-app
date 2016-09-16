@@ -18,12 +18,8 @@ import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.ServiceException;
-import com.clover.sdk.v3.base.Reference;
-import com.clover.sdk.v3.inventory.Category;
 import com.clover.sdk.v3.inventory.InventoryConnector;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.clover.sdk.v3.inventory.Tag;
 
 public class AddShow extends AppCompatActivity {
     /////CONTEXT AND SHOW NAME
@@ -59,12 +55,12 @@ public class AddShow extends AppCompatActivity {
         String newShowDateString = newShowDateField.getText().toString();
         String newShowLocationString = newShowLocationField.getText().toString();
         String newShowNotesString = newShowNotesField.getText().toString();
-        formattedFullShowName = newShowNameString + "," + newShowDateString + "," + newShowLocationString + "," + newShowNotesString;
-        AddShowCategoryTask addShowTask = new AddShowCategoryTask();
+        formattedFullShowName = "show," + newShowNameString + "," + newShowDateString + "," + newShowLocationString + "," + newShowNotesString;
+        AddShowLabelTask addShowTask = new AddShowLabelTask();
         addShowTask.execute();
     }
 
-    private class AddShowCategoryTask extends AsyncTask<Void, Void, Void> {
+    private class AddShowLabelTask extends AsyncTask<Void, Void, Void> {
         private ProgressDialog progressDialog;
         //CLOVER ACCESS VARS
         private Account merchantAccount;
@@ -85,13 +81,10 @@ public class AddShow extends AppCompatActivity {
                 inventoryConnector = new InventoryConnector(addShowActivityContext, merchantAccount, null);
                 inventoryConnector.connect();
 
-                //CREATE NEW CATEGORY AND SET DATA, ADD TO CLOVER
-                Category newShowCategory = new Category();
-                newShowCategory.setSortOrder(1);
-                newShowCategory.setName(formattedFullShowName);
-                List<Reference> itemRefList = new ArrayList<>();
-                newShowCategory.setItems(itemRefList);
-                inventoryConnector.createCategory(newShowCategory);
+                //CREATE NEW LABEL AND SET DATA, ADD TO CLOVER
+                Tag newShowTag = new Tag();
+                newShowTag.setName(formattedFullShowName);
+                inventoryConnector.createTag(newShowTag);
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
                 e1.printStackTrace();
