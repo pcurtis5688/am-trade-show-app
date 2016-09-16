@@ -43,7 +43,6 @@ public class BoothReservationShowSelection extends AppCompatActivity
     /////DATA VARS
     private List<Category> showList;
 
-    ////////////////////////////UI/INITIATION WORK////////////////////////////////
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ///////////UI WORK/////////////////////////////////////
@@ -124,10 +123,11 @@ public class BoothReservationShowSelection extends AppCompatActivity
 
             TextView showSelectionNameTv = new TextView(boothReservationShowSelectionActivityContext);
             showSelectionNameTv.setText(showNameForUser);
-            showSelectionNameTv.setTextAppearance(boothReservationShowSelectionActivityContext, R.style.prompt_text_font_style);
+            showSelectionNameTv.setTextAppearance(boothReservationShowSelectionActivityContext, R.style.table_header_text_style);
 
             Button showSelectButton = new Button(boothReservationShowSelectionActivityContext);
             showSelectButton.setText(getResources().getString(R.string.select_show_button_text));
+            showSelectButton.setTextAppearance(boothReservationShowSelectionActivityContext, R.style.button_font_style);
             showSelectButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

@@ -17,104 +17,96 @@
 
         <TextView
             android:id="@+id/edit_booth_header"
+            style="@style/activity_header_style"
+            android:layout_marginBottom="@dimen/dimen_25dp"
             android:layout_span="3"
-            android:textAlignment="center"
-            style="@style/activity_header_style" />
+            android:textAlignment="center" />
     </TableRow>
 
     <TableRow>
 
         <TextView
-            android:text="@string/edit_booth_number_prompt"
-            android:textAlignment="center"
-            android:textStyle="bold" />
+            style="@style/prompt_text_font_style"
+            android:text="@string/edit_booth_number_prompt" />
 
         <EditText
             android:id="@+id/edit_booth_number_field"
-            android:hint="@string/edit_booth_number_hint"
+            style="@style/prompt_text_font_style"
             android:layout_span="2"
-            android:textAlignment="center" />
+            android:hint="@string/edit_booth_number_hint" />
     </TableRow>
 
     <TableRow>
 
         <TextView
-            android:text="@string/edit_booth_price_prompt"
-            android:textAlignment="center"
-            android:textStyle="bold" />
+            style="@style/prompt_text_font_style"
+            android:text="@string/edit_booth_price_prompt" />
 
         <EditText
             android:id="@+id/edit_booth_price_field"
-            android:hint="@string/edit_booth_price_hint"
+            style="@style/prompt_text_font_style"
             android:layout_span="2"
-            android:inputType="numberDecimal"
-            android:textAlignment="center" />
+            android:hint="@string/edit_booth_price_hint"
+            android:inputType="numberDecimal" />
     </TableRow>
 
     <TableRow>
 
         <TextView
-            android:text="@string/edit_booth_size_prompt"
-            android:textAlignment="center"
-            android:textStyle="bold" />
+            style="@style/prompt_text_font_style"
+            android:text="@string/edit_booth_size_prompt" />
 
         <EditText
             android:id="@+id/edit_booth_size_field"
-            android:hint="@string/edit_booth_size_hint"
+            style="@style/prompt_text_font_style"
             android:layout_span="2"
-            android:textAlignment="center" />
+            android:hint="@string/edit_booth_size_hint" />
     </TableRow>
 
     <TableRow>
 
         <TextView
-            android:text="@string/edit_booth_area_prompt"
-            android:textAlignment="center"
-            android:textStyle="bold" />
+            style="@style/prompt_text_font_style"
+            android:text="@string/edit_booth_area_prompt" />
 
         <EditText
             android:id="@+id/edit_booth_area_field"
-            android:hint="@string/edit_booth_area_hint"
+            style="@style/prompt_text_font_style"
             android:layout_span="2"
-            android:textAlignment="center" />
+            android:hint="@string/edit_booth_area_hint" />
     </TableRow>
 
     <TableRow>
 
         <TextView
-            android:text="@string/edit_booth_type_prompt"
-            android:textAlignment="center"
-            android:textStyle="bold" />
+            style="@style/prompt_text_font_style"
+            android:text="@string/edit_booth_type_prompt" />
 
         <EditText
             android:id="@+id/edit_booth_type_field"
-            android:hint="@string/edit_booth_type_hint"
+            style="@style/prompt_text_font_style"
             android:layout_span="2"
-            android:textAlignment="center" />
+            android:hint="@string/edit_booth_type_hint" />
     </TableRow>
 
-    <TableRow>
+    <TableRow android:layout_marginTop="@dimen/dimen_25dp">
 
         <Button
             android:id="@+id/delete_booth_btn"
-            android:layout_marginTop="@dimen/dimen_50dp"
+            style="@style/button_font_style"
             android:onClick="deleteBoothAction"
-            android:text="@string/delete_booth_btn_text"
-            android:textAlignment="center" />
+            android:text="@string/delete_booth_btn_text" />
 
         <Button
             android:id="@+id/edit_booth_cancel_btn"
-            android:layout_marginTop="@dimen/dimen_50dp"
+            style="@style/button_font_style"
             android:onClick="cancelEditBooth"
-            android:text="@string/edit_booth_cancel_btn_text"
-            android:textAlignment="center" />
+            android:text="@string/edit_booth_cancel_btn_text" />
 
         <Button
             android:id="@+id/edit_booth_save_changes_btn"
-            android:layout_marginTop="@dimen/dimen_50dp"
-            android:layout_span="2"
+            style="@style/button_font_style"
             android:onClick="saveBoothChangesAction"
-            android:text="@string/edit_booth_save_changes_text"
-            android:textAlignment="center" />
+            android:text="@string/edit_booth_save_changes_text" />
     </TableRow>
 </TableLayout>

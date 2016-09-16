@@ -30,58 +30,50 @@
 
             <TextView
                 android:text="@string/edit_show_name_string"
-                android:textSize="@dimen/dimen_24sp"
-                android:textStyle="bold" />
+                style="@style/prompt_text_font_style" />
 
             <EditText
                 android:id="@+id/edit_show_name_field"
                 android:hint="@string/edit_show_name_hint"
                 android:maxLength="50"
-                android:textAlignment="center"
-                android:textSize="@dimen/dimen_24sp" />
+                style="@style/prompt_text_font_style" />
         </TableRow>
 
         <TableRow>
 
             <TextView
                 android:text="@string/edit_show_date_string"
-                android:textSize="@dimen/dimen_24sp"
-                android:textStyle="bold" />
+                style="@style/prompt_text_font_style" />
 
             <EditText
                 android:id="@+id/edit_show_date_field"
                 android:hint="@string/edit_show_date_hint"
                 android:inputType="date"
-                android:textAlignment="center"
-                android:textSize="@dimen/dimen_24sp" />
+                style="@style/prompt_text_font_style" />
         </TableRow>
 
         <TableRow>
 
             <TextView
                 android:text="@string/edit_show_location_string"
-                android:textSize="@dimen/dimen_24sp"
-                android:textStyle="bold" />
+                style="@style/prompt_text_font_style" />
 
             <EditText
                 android:id="@+id/edit_show_location_field"
                 android:hint="@string/edit_show_location_hint"
-                android:textAlignment="center"
-                android:textSize="@dimen/dimen_24sp" />
+                style="@style/prompt_text_font_style" />
         </TableRow>
 
         <TableRow>
 
             <TextView
                 android:text="@string/edit_show_notes_string"
-                android:textSize="@dimen/dimen_24sp"
-                android:textStyle="bold" />
+                style="@style/prompt_text_font_style" />
 
             <EditText
                 android:id="@+id/edit_show_notes_field"
                 android:hint="@string/edit_show_notes_hint"
-                android:textAlignment="center"
-                android:textSize="@dimen/dimen_24sp" />
+                style="@style/prompt_text_font_style" />
         </TableRow>
     </TableLayout>
 
@@ -97,19 +89,19 @@
                 android:id="@+id/delete_show_btn"
                 android:onClick="deleteShowAction"
                 android:text="@string/delete_show_btn_string"
-                android:textAlignment="center" />
+                style="@style/button_font_style" />
 
             <Button
                 android:id="@+id/cancel_edit_show_activity_btn"
                 android:onClick="cancelEditShow"
                 android:text="@string/cancel_show_edit_string"
-                android:textAlignment="center" />
+                style="@style/button_font_style" />
 
             <Button
                 android:id="@+id/save_show_edits_btn"
                 android:onClick="saveShowChangesAction"
                 android:text="@string/save_show_changes_btn_string"
-                android:textAlignment="center" />
+                style="@style/button_font_style" />
         </TableRow>
     </TableLayout>
 </LinearLayout>

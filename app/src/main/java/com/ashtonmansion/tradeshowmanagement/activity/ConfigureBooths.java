@@ -103,14 +103,26 @@ public class ConfigureBooths extends AppCompatActivity
         TextView boothCustomerHeaderTv = new TextView(configureBoothsActivityContext);
 
         boothNumberHeaderTv.setText(getResources().getString(R.string.configure_show_booths_number_header));
+        boothNumberHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style);
+
         boothPriceHeaderTv.setText(getResources().getString(R.string.configure_show_booths_price_header));
+        boothPriceHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style);
+
         boothSizeHeaderTv.setText(getResources().getString(R.string.configure_show_booths_size_header));
+        boothSizeHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style);
+
         boothAreaHeaderTv.setText(getResources().getString(R.string.configure_show_booths_area_header));
+        boothAreaHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style);
+
         boothTypeHeaderTv.setText(getResources().getString(R.string.configure_show_booths_type_header));
+        boothTypeHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style);
+
         boothCustomerHeaderTv.setText(getResources().getString(R.string.configure_show_booths_customer_header));
+        boothCustomerHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style);
 
         Button boothFilterButton = new Button(configureBoothsActivityContext);
         boothFilterButton.setText(getResources().getString(R.string.configure_show_booths_filter_btn_text));
+        boothFilterButton.setTextAppearance(configureBoothsActivityContext, R.style.button_font_style);
         boothFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -133,6 +145,8 @@ public class ConfigureBooths extends AppCompatActivity
 
         if (boothList != null && boothList.size() > 0) {
             for (Item booth : boothList) {
+                final Item finalizedBoothItem = booth;
+
                 TableRow newBoothRow = new TableRow(configureBoothsActivityContext);
                 TextView boothNumberTv = new TextView(configureBoothsActivityContext);
                 TextView boothPriceTv = new TextView(configureBoothsActivityContext);
@@ -140,39 +154,32 @@ public class ConfigureBooths extends AppCompatActivity
                 TextView boothAreaTv = new TextView(configureBoothsActivityContext);
                 TextView boothTypeTv = new TextView(configureBoothsActivityContext);
                 TextView boothCustomerTv = new TextView(configureBoothsActivityContext);
-                Button editBoothButton = new Button(configureBoothsActivityContext);
 
-                Tag sizeTag;
-                Tag areaTag;
-                Tag typeTag;
+                boothNumberTv.setText(booth.getSku());
+                boothPriceTv.setText(GlobalUtils.getFormattedPriceStringFromLong(booth.getPrice()));
+
                 for (Tag currentTag : booth.getTags()) {
                     if (currentTag.getName().substring(0, 4).equalsIgnoreCase("size")) {
-                        sizeTag = currentTag;
-                        boothSizeTv.setText(GlobalUtils.getUnformattedTagName(sizeTag.getName(), "Size"));
+                        boothSizeTv.setText(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Size"));
                     } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("area")) {
-                        areaTag = currentTag;
-                        boothAreaTv.setText(GlobalUtils.getUnformattedTagName(areaTag.getName(), "Area"));
+                        boothAreaTv.setText(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Area"));
                     } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("type")) {
-                        typeTag = currentTag;
-                        boothTypeTv.setText(GlobalUtils.getUnformattedTagName(typeTag.getName(), "Type"));
+                        boothTypeTv.setText(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Type"));
                     }
                 }
-                //////////////////////
-                boothNumberTv.setText(booth.getSku());
                 //// TODO: 9/5/2016 fix custmoer
                 boothCustomerTv.setText("customerhere");
-                ////////////////////PRICE BELOW
-                String formattedPrice = GlobalUtils.getFormattedPriceStringFromLong(booth.getPrice());
-                boothPriceTv.setText(formattedPrice);
-                /////////SET UP EDIT BOOTH BUTTON ON END OF TABLE
-                final Item finalizedBoothItem = booth;
+
+                Button editBoothButton = new Button(configureBoothsActivityContext);
                 editBoothButton.setText(getResources().getString(R.string.configure_show_booths_edit_booth_btn_text));
+                editBoothButton.setTextAppearance(configureBoothsActivityContext, R.style.button_font_style);
                 editBoothButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         editBoothAction(finalizedBoothItem);
                     }
                 });
+
                 ////////ADD NEW TEXTVIEW TO ROW AND ROW TO TABLE
                 newBoothRow.addView(boothNumberTv);
                 newBoothRow.addView(boothPriceTv);
@@ -187,6 +194,7 @@ public class ConfigureBooths extends AppCompatActivity
         TableRow addBoothButtonRow = new TableRow(configureBoothsActivityContext);
         Button addBoothButton = new Button(configureBoothsActivityContext);
         addBoothButton.setText(getResources().getString(R.string.action_create_new_booth_string));
+        addBoothButton.setTextAppearance(configureBoothsActivityContext, R.style.button_font_style);
         addBoothButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

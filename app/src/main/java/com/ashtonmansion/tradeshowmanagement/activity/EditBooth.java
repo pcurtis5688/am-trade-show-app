@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
 
-import com.ashtonmansion.tradeshowmanagement.db.TradeShowDB;
 import com.ashtonmansion.tradeshowmanagement.util.GlobalUtils;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
@@ -101,8 +100,8 @@ public class EditBooth extends AppCompatActivity {
             booth = (Item) extrasBundle.get("booth");
             editBoothHeaderTv.setText(getApplicationContext().getString(R.string.edit_booth_header_string, booth.getName()));
             editBoothNumberField.setText(booth.getSku());
-            editBoothPriceField.setText(booth.getPrice().toString());
-
+            editBoothPriceField.setText(GlobalUtils.getFormattedPriceStringFromLong(booth.getPrice()));
+            boothTags = new ArrayList<>();
             boothTags = booth.getTags();
             populateTagFields();
         }
@@ -177,7 +176,7 @@ public class EditBooth extends AppCompatActivity {
 
                 //////////BOOTH UPDATE PROCESS
                 boothToUpdate = inventoryConnector.getItem(booth.getId());
-                boothToUpdate.setName(editBoothNumberFieldData);
+                boothToUpdate.setName(getResources().getString(R.string.booth_name_string, editBoothNumberFieldData, editBoothSizeFieldData, editBoothAreaFieldData, editBoothTypeFieldData));
                 boothToUpdate.setSku(editBoothNumberFieldData);
                 boothToUpdate.setPrice(GlobalUtils.getLongFromFormattedPriceString(editBoothPriceFieldData));
                 inventoryConnector.updateItem(boothToUpdate);
@@ -208,20 +207,6 @@ public class EditBooth extends AppCompatActivity {
             } finally {
                 inventoryConnector.disconnect();
             }
-
-            //////////LOCAL UPDATES
-            // TODO: 9/10/2016 finish all local stuff later
-            TradeShowDB tradeShowDatabase = new TradeShowDB(editBoothActivityContext);
-            boolean sqliteUpdateBoothSuccess = tradeShowDatabase.updateSingleBoothByCloverId(
-                    boothToUpdate.getId(),
-                    boothToUpdate.getName(),
-                    boothToUpdate.getSku(),
-                    boothToUpdate.getPrice(),
-                    editBoothSizeFieldData,
-                    editBoothAreaFieldData,
-                    editBoothTypeFieldData);
-            if (!sqliteUpdateBoothSuccess)
-                Log.e("Err Edit Booth: ", "Booth w/ ID: " + boothToUpdate.getId());
             return null;
         }
 
@@ -254,9 +239,6 @@ public class EditBooth extends AppCompatActivity {
                 inventoryConnector = new InventoryConnector(editBoothActivityContext, merchantAccount, null);
                 inventoryConnector.connect();
                 inventoryConnector.deleteItem(booth.getId());
-                TradeShowDB tradeShowDatabase = new TradeShowDB(editBoothActivityContext);
-                if (!tradeShowDatabase.deleteSingleBoothByBoothID(booth.getId()))
-                    Log.e("Deletion Error: ", "Local Booth Deletion, ID: " + booth.getId());
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
             } catch (SQLiteException e2) {

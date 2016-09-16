@@ -136,7 +136,7 @@ public class CreateBooth extends AppCompatActivity {
             formattedBoothTypeTagName = GlobalUtils.getFormattedTagName(createBoothTypeFieldData, "Type");
             //////////////CREATE A NEW ITEM OBJECT AND POPULATE DATA
             newBooth = new Item();
-            newBooth.setName(createBoothNumberFieldData);
+            newBooth.setName(getResources().getString(R.string.booth_name_string, createBoothNumberFieldData, createBoothSizeFieldData, createBoothAreaFieldData, createBoothTypeFieldData));
             newBooth.setSku(createBoothNumberFieldData);
             newBooth.setPrice(GlobalUtils.getLongFromFormattedPriceString(createBoothPriceFieldData));
             //////////////INITIALIZE ADDITIONAL ITEMS
@@ -177,21 +177,6 @@ public class CreateBooth extends AppCompatActivity {
             } finally {
                 inventoryConnector.disconnect();
             }
-
-            /////DO LOCAL DATABASE INSERTS USING THE COMPLETE CLOVER OBJECT
-            TradeShowDB tradeShowDB = new TradeShowDB(createBoothActivityContext);
-            boolean successfulBoothCreationLOCAL = tradeShowDB.createBoothItem(
-                    newBooth.getId(),
-                    newBooth.getId(),
-                    newBooth.getSku(),
-                    newBooth.getPrice(),
-                    createBoothSizeFieldData,
-                    createBoothAreaFieldData,
-                    createBoothTypeFieldData);
-
-            if (!successfulBoothCreationLOCAL)
-                Log.e("Add Local Booth: ", "CREATE BOOTH W ID: " + newBooth.getId() + " , <<FAILED>>");
-            tradeShowDB = null;
             return null;
         }
 

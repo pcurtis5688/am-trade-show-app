@@ -86,6 +86,7 @@
     <string name="configure_show_booths_edit_booth_btn_text">Edit Booth</string>
 
     <!-- CREATE BOOTH STRINGS////////////////////////////////////-->
+    <string name="booth_name_string">Booth #%1$s (%2$s, %3$s, %4$s)</string>
     <string name="create_booth_name_prompt">Booth Name:</string>
     <string name="create_booth_number_prompt">Booth No.:</string>
     <string name="create_booth_price_prompt">Price:</string>
@@ -103,7 +104,7 @@
     <string name="create_booth_progress_dialog_text">Creating Booth. . . </string>
 
     <!-- EDIT BOOTH STRINGS /////////////////////////////////////-->
-    <string name="edit_booth_header_string">Edit Booth - %1$s</string>
+    <string name="edit_booth_header_string">%1$s</string>
     <string name="edit_booth_number_prompt">Booth No.:</string>
     <string name="edit_booth_price_prompt">Price:</string>
     <string name="edit_booth_size_prompt">Size:</string>

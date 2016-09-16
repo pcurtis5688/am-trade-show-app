@@ -100,6 +100,7 @@ public class TradeShows extends AppCompatActivity
                 newShowTV.setText(showNameAndIDString);
                 Button editShowButton = new Button(tradeShowsActivityContext);
                 editShowButton.setText(getResources().getString(R.string.trade_shows_edit_btn_string));
+                editShowButton.setTextAppearance(tradeShowsActivityContext, R.style.button_font_style);
                 editShowButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -124,6 +125,7 @@ public class TradeShows extends AppCompatActivity
         ////PUT THE LAST ROW (ADD SHOW BUTTON) IN
         Button addShowButton = new Button(tradeShowsActivityContext);
         addShowButton.setText(getResources().getString(R.string.add_show_string));
+        addShowButton.setTextAppearance(tradeShowsActivityContext, R.style.button_font_style);
         addShowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -84,6 +84,7 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
                 newShowSelectionTitleTV.setText(showNameForUser);
                 Button showSelectionButton = new Button(configureBoothsShowSelectionActivityContext);
                 showSelectionButton.setText(getResources().getString(R.string.show_selection_button_text));
+                showSelectionButton.setTextAppearance(configureBoothsShowSelectionActivityContext, R.style.button_font_style);
                 showSelectionButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
