@@ -222,19 +222,14 @@ public class BoothReservation extends AppCompatActivity {
 
         boothNumberHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_number_header));
         boothNumberHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
-
         boothPriceHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_price_header));
         boothPriceHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
-
         boothSizeHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_size_header));
         boothSizeHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
-
         boothAreaHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_area_header));
         boothAreaHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
-
         boothTypeHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_type_header));
         boothTypeHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
-
         boothCustomerHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_customer_header));
         boothCustomerHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
 

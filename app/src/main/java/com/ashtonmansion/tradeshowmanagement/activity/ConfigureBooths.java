@@ -102,19 +102,14 @@ public class ConfigureBooths extends AppCompatActivity
 
         boothNumberHeaderTv.setText(getResources().getString(R.string.configure_show_booths_number_header));
         boothNumberHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style);
-
         boothPriceHeaderTv.setText(getResources().getString(R.string.configure_show_booths_price_header));
         boothPriceHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style);
-
         boothSizeHeaderTv.setText(getResources().getString(R.string.configure_show_booths_size_header));
         boothSizeHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style);
-
         boothAreaHeaderTv.setText(getResources().getString(R.string.configure_show_booths_area_header));
         boothAreaHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style);
-
         boothTypeHeaderTv.setText(getResources().getString(R.string.configure_show_booths_type_header));
         boothTypeHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style);
-
         boothCustomerHeaderTv.setText(getResources().getString(R.string.configure_show_booths_customer_header));
         boothCustomerHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style);
 

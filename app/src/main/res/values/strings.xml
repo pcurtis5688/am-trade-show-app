@@ -322,4 +322,9 @@
     <string name="title_activity_reserve_booth_details">Reserve Booth</string>
     <string name="title_activity_application_settings">ApplicationSettings</string>
 
+    <string name="quick_ops_button_delete_all">Delete All Items</string>
+    <string name="quick_ops_delete_all_progress_message">Deleting All Items. . .</string>
+    <string name="quick_ops_button_delete_all_tags">Delete All Tags</string>
+    <string name="quick_ops_delete_all_tags_progress_message">Deleting All Tags. . .</string>
+
 </resources>

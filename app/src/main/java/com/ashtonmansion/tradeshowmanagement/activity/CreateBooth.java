@@ -138,6 +138,7 @@ public class CreateBooth extends AppCompatActivity {
             newBooth.setName(getResources().getString(R.string.booth_name_string, createBoothNumberFieldData, createBoothSizeFieldData, createBoothAreaFieldData, createBoothTypeFieldData));
             newBooth.setSku(createBoothNumberFieldData);
             newBooth.setPrice(GlobalUtils.getLongFromFormattedPriceString(createBoothPriceFieldData));
+            newBooth.setCode("AVAILABLE");
             //////////////INITIALIZE ADDITIONAL ITEMS
             showObjectInListForBooth = new ArrayList<>();
             showObjectInListForBooth.add(show);

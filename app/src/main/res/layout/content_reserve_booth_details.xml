@@ -29,7 +29,8 @@
                     style="@style/activity_header_style"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dimen_25dp" />
+                    android:layout_marginBottom="@dimen/dimen_25dp"
+                    android:layout_span="4" />
             </TableRow>
 
             <TableRow>
@@ -70,20 +71,20 @@
                     android:textSize="@dimen/dimen_24sp" />
             </TableRow>
 
-            <TableRow>
+            <!--<TableRow>-->
 
-                <TextView
-                    android:text="@string/booth_reservation_electricity_prompt"
-                    android:textSize="@dimen/dimen_24sp" />
+            <!--<TextView-->
+            <!--android:text="@string/booth_reservation_electricity_prompt"-->
+            <!--android:textSize="@dimen/dimen_24sp" />-->
 
-                <CheckBox android:id="@+id/br_include_electricity_chkbox" />
+            <!--<CheckBox android:id="@+id/br_include_electricity_chkbox" />-->
 
-                <TextView
-                    android:text="@string/booth_reservation_internet_speed_prompt"
-                    android:textSize="@dimen/dimen_24sp" />
+            <!--<TextView-->
+            <!--android:text="@string/booth_reservation_internet_speed_prompt"-->
+            <!--android:textSize="@dimen/dimen_24sp" />-->
 
-                <Spinner android:id="@+id/br_internet_speed_spinner" />
-            </TableRow>
+            <!--<Spinner android:id="@+id/br_internet_speed_spinner" />-->
+            <!--</TableRow>-->
 
             <TableRow android:layout_marginTop="@dimen/dimen_12dp">
 
