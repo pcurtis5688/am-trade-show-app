@@ -21,6 +21,7 @@ import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.ServiceException;
+import com.clover.sdk.v3.base.Reference;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
 import com.clover.sdk.v3.inventory.Tag;
@@ -139,6 +140,7 @@ public class CreateBooth extends AppCompatActivity {
             newBooth.setPrice(GlobalUtils.getLongFromFormattedPriceString(createBoothPriceFieldData));
             //////////////INITIALIZE ADDITIONAL ITEMS
             showObjectInListForBooth = new ArrayList<>();
+            showObjectInListForBooth.add(show);
         }
 
         @Override
@@ -151,14 +153,9 @@ public class CreateBooth extends AppCompatActivity {
                 newBooth = inventoryConnector.createItem(newBooth);
 
                 /////LOCATE THE SHOW OBJECT (TAG), ADD REF TO NEW BOOTH, UPDATE
-                for (Tag currentShow : inventoryConnector.getTags()) {
-                    if (currentShow.getId().equalsIgnoreCase(show.getId())) {
-                          showObjectInListForBooth.add(currentShow);
-                        newBooth.setTags(showObjectInListForBooth);
-                        inventoryConnector.updateItem(newBooth);
-                        inventoryConnector.updateItemStock(newBooth.getId(), 1);
-                    }
-                }
+                newBooth.setTags(showObjectInListForBooth);
+                inventoryConnector.updateItem(newBooth);
+                inventoryConnector.updateItemStock(newBooth.getId(), 1);
                 List<String> showTagIDinStringList = new ArrayList<>();
                 showTagIDinStringList.add(show.getId());
                 inventoryConnector.assignTagsToItem(newBooth.getId(), showTagIDinStringList);
@@ -167,7 +164,6 @@ public class CreateBooth extends AppCompatActivity {
                 boothIdInStringList.add(newBooth.getId());
                 ///// ASSIGN BOOTH TO SHOW TAG
                 inventoryConnector.assignItemsToTag(show.getId(), boothIdInStringList);
-
                 ///// CREATE BOOTH TAGS FOR OTHER FIELDS
                 boothSizeTagWithID = inventoryConnector.createTag(new Tag().setName(formattedBoothSizeTagName));
                 boothAreaTagWithID = inventoryConnector.createTag(new Tag().setName(formattedBoothAreaTagName));

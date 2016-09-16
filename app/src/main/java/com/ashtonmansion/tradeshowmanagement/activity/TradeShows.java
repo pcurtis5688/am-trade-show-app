@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
 import com.ashtonmansion.tradeshowmanagement.HomeActivity;
+import com.ashtonmansion.tradeshowmanagement.util.GlobalUtils;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
@@ -84,10 +85,10 @@ public class TradeShows extends AppCompatActivity
             for (Tag show : showList) {
                 /////////////
                 final Tag finalizedShow = show;
-                List<String> decoupledShowArray = Arrays.asList(show.getName().split(","));
-                String showName = decoupledShowArray.get(1);
-                String showDate = decoupledShowArray.get(2);
-                String showLocation = decoupledShowArray.get(3);
+                List<String> decoupledShowArray = GlobalUtils.decoupleShowName(show.getName());
+                String showName = decoupledShowArray.get(0);
+                String showDate = decoupledShowArray.get(1);
+                String showLocation = decoupledShowArray.get(2);
                 String showNameForUser = getResources().getString(R.string.show_name_for_user_string, showName, showDate, showLocation);
 
                 TableRow newShowRow = new TableRow(tradeShowsActivityContext);
@@ -162,7 +163,7 @@ public class TradeShows extends AppCompatActivity
                 showList = new ArrayList<>();
                 /////ONLY RETURN SHOW TAGS.
                 for (Tag currentTag : inventoryConnector.getTags()) {
-                    if (currentTag.getName().startsWith("show,")) {
+                    if (currentTag.getName().contains(" [Show]")) {
                         showList.add(currentTag);
                     }
                 }

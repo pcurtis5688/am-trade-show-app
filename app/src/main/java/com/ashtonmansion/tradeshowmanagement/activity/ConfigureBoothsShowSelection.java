@@ -72,9 +72,9 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
             for (Tag showTag : showList) {
                 final Tag finalizedShowTag = showTag;
                 List<String> decoupledShowNameArr = Arrays.asList(showTag.getName().split(","));
-                String showName = decoupledShowNameArr.get(1);
-                String showDate = decoupledShowNameArr.get(2);
-                String showLocation = decoupledShowNameArr.get(3);
+                String showName = decoupledShowNameArr.get(0);
+                String showDate = decoupledShowNameArr.get(1);
+                String showLocation = decoupledShowNameArr.get(2);
                 String showNameForUser = getResources().getString(R.string.show_name_for_user_string, showName, showDate, showLocation);
 
                 TableRow newShowSelectionRow = new TableRow(configureBoothsShowSelectionActivityContext);
@@ -125,7 +125,7 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
                 inventoryConnector = new InventoryConnector(configureBoothsShowSelectionActivityContext, merchantAccount, null);
                 inventoryConnector.connect();
                 for (Tag currentTag : inventoryConnector.getTags()) {
-                    if (currentTag.getName().startsWith("show,")) {
+                    if (currentTag.getName().contains(" [Show]")) {
                         showList.add(currentTag);
                     }
                 }

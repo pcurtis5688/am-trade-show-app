@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
 import com.ashtonmansion.tradeshowmanagement.HomeActivity;
+import com.ashtonmansion.tradeshowmanagement.util.GlobalUtils;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
@@ -91,7 +92,7 @@ public class BoothReservationShowSelection extends AppCompatActivity
                 ///////////GET SHOW LIST (TAG LIST) FOR BOOTH SELECTION
                 if (inventoryConnector.getTags().size() > 0) {
                     for (Tag currentTag : inventoryConnector.getTags()){
-                        if(currentTag.getName().startsWith("show,")){
+                        if (currentTag.getName().contains(" [Show]")) {
                             showList.add(currentTag);
                         }
                     }
@@ -116,10 +117,10 @@ public class BoothReservationShowSelection extends AppCompatActivity
         ///// NON-SHOW TAGS HAVE ALREADY BEEN FILTERED
         for (Tag show : showList) {
             final Tag finalizedShowObject = show;
-            List<String> decoupledShowNameArr = Arrays.asList(show.getName().split(","));
-            String showName = decoupledShowNameArr.get(1);
-            String showDate = decoupledShowNameArr.get(2);
-            String showLocation = decoupledShowNameArr.get(3);
+            List<String> decoupledShowNameArr = GlobalUtils.decoupleShowName(show.getName());
+            String showName = decoupledShowNameArr.get(0);
+            String showDate = decoupledShowNameArr.get(1);
+            String showLocation = decoupledShowNameArr.get(2);
             String showNameForUser = getResources().getString(R.string.show_name_for_user_string, showName, showDate, showLocation);
 
             TableRow newShowSelectionRow = new TableRow(boothReservationShowSelectionActivityContext);

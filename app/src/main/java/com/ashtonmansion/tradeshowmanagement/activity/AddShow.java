@@ -55,7 +55,7 @@ public class AddShow extends AppCompatActivity {
         String newShowDateString = newShowDateField.getText().toString();
         String newShowLocationString = newShowLocationField.getText().toString();
         String newShowNotesString = newShowNotesField.getText().toString();
-        formattedFullShowName = "show," + newShowNameString + "," + newShowDateString + "," + newShowLocationString + "," + newShowNotesString;
+        formattedFullShowName = newShowNameString + "," + newShowDateString + "," + newShowLocationString + "," + newShowNotesString + " [Show]";
         AddShowLabelTask addShowTask = new AddShowLabelTask();
         addShowTask.execute();
     }

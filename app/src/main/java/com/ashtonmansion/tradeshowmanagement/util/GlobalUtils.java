@@ -11,6 +11,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -133,5 +134,14 @@ public class GlobalUtils {
             v3Addresses.add(v3Address);
         }
         return v3Addresses;
+    }
+
+    public static List<String> decoupleShowName(String formattedShowName) {
+        List<String> result = Arrays.asList(formattedShowName.split(","));
+        String notesPart = result.get(3);
+        int indexOfShow = notesPart.indexOf("[Show]");
+        String desiredNotesPart = notesPart.substring(0, indexOfShow);
+        result.set(3, desiredNotesPart);
+        return result;
     }
 }

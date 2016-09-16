@@ -30,6 +30,7 @@ import com.clover.sdk.v3.inventory.Tag;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ListIterator;
 
 public class BoothReservation extends AppCompatActivity {
     ////////CONTEXT AND UI OBJECTS
@@ -98,19 +99,15 @@ public class BoothReservation extends AppCompatActivity {
                 inventoryConnector = new InventoryConnector(boothReservationActivityContext, merchantAccount, null);
                 inventoryConnector.connect();
 
-                //////////////ITERATE TAG AND ADD BOOTHS TO LIST, IF ANY
-                if (show.getItems().size() > 0 && show.getName().startsWith("show,")) {
-                    boothReferenceList = show.getItems();
-                    for (Reference boothRef : boothReferenceList) {
-                        Item currentBooth = inventoryConnector.getItem(boothRef.getId());
-                        currentBooth.setTags(inventoryConnector.getTagsForItem(currentBooth.getId()));
-                        //  if (currentBooth.getItemStock().getQuantity() > 0) {
-                        boothList.add(currentBooth);
-                        //}
+                ///// FETCH BOOTHS FOR SHOW
+                ListIterator<Item> iterator = inventoryConnector.getItems().listIterator();
+                do {
+                    Item boothTest = iterator.next();
+                    for (Tag boothTestTag : boothTest.getTags()) {
+                        if (boothTestTag.getId().equalsIgnoreCase(show.getId()))
+                            boothList.add(boothTest);
                     }
-                } else {
-                    GlobalUtils.valuesTester("showtaginboothres", show.getId());
-                }
+                } while (iterator.hasNext());
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
             } finally {

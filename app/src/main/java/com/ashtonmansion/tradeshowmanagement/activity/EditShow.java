@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
+import com.ashtonmansion.tradeshowmanagement.util.GlobalUtils;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
@@ -70,11 +71,11 @@ public class EditShow extends AppCompatActivity {
     }
 
     private void decoupleShowName() {
-        List<String> splitShowNameArray = Arrays.asList(formattedFullShowName.split(","));
-        showName = splitShowNameArray.get(1);
-        showDate = splitShowNameArray.get(2);
-        showLocation = splitShowNameArray.get(3);
-        showNotes = splitShowNameArray.get(4);
+        List<String> splitShowNameArray = GlobalUtils.decoupleShowName(formattedFullShowName);
+        showName = splitShowNameArray.get(0);
+        showDate = splitShowNameArray.get(1);
+        showLocation = splitShowNameArray.get(2);
+        showNotes = splitShowNameArray.get(3);
     }
 
     private void populateFields() {
@@ -89,7 +90,7 @@ public class EditShow extends AppCompatActivity {
         String editedShowDate = showDateEditText.getText().toString();
         String editedShowLocation = showLocationEditText.getText().toString();
         String editedShowNotes = showNotesEditText.getText().toString();
-        formattedFullShowName = "show," + editedShowName + "," + editedShowDate + "," + editedShowLocation + "," + editedShowNotes;
+        formattedFullShowName = editedShowName + "," + editedShowDate + "," + editedShowLocation + "," + editedShowNotes + " [Show]";
 
         UpdateShowTask updateShowTask = new UpdateShowTask();
         updateShowTask.execute();

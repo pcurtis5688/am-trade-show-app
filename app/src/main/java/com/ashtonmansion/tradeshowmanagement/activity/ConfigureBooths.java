@@ -37,6 +37,7 @@ import com.clover.sdk.v3.inventory.Tag;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ListIterator;
 
 public class ConfigureBooths extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -70,13 +71,12 @@ public class ConfigureBooths extends AppCompatActivity
 
         Bundle extrasBundle = getIntent().getExtras();
         if (extrasBundle != null) {
-            Tag passedTagObject = (Tag) extrasBundle.get("show");
-            if (null != passedTagObject) {
-                show = passedTagObject;
-                List<String> decoupledShowArray = Arrays.asList(show.getName().split(","));
-                String showName = decoupledShowArray.get(1);
-                String showDate = decoupledShowArray.get(2);
-                String showLocation = decoupledShowArray.get(3);
+            if (null != extrasBundle.get("show")) {
+                show = (Tag) extrasBundle.get("show");
+                List<String> decoupledShowArray = GlobalUtils.decoupleShowName(show.getName());
+                String showName = decoupledShowArray.get(0);
+                String showDate = decoupledShowArray.get(1);
+                String showLocation = decoupledShowArray.get(2);
                 showNameForUser = getResources().getString(R.string.show_name_for_user_string, showName, showDate, showLocation);
             }
             TextView showNameHeaderTV = (TextView) findViewById(R.id.show_booths_header);
@@ -157,7 +157,7 @@ public class ConfigureBooths extends AppCompatActivity
                 boothPriceTv.setText(GlobalUtils.getFormattedPriceStringFromLong(booth.getPrice()));
 
                 for (Tag currentTag : booth.getTags()) {
-                    if (!currentTag.getName().startsWith("show,")) {
+                    if (!currentTag.getName().contains(" [Show]")) {
                         if (currentTag.getName().substring(0, 4).equalsIgnoreCase("size")) {
                             boothSizeTv.setText(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Size"));
                         } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("area")) {
@@ -227,8 +227,6 @@ public class ConfigureBooths extends AppCompatActivity
         private ProgressDialog progressDialog;
         private Account merchantAccount;
         private InventoryConnector inventoryConnector;
-        private List<Tag> tempShowList;
-        private List<Item> tempBoothList;
 
         @Override
         protected void onPreExecute() {
@@ -236,8 +234,7 @@ public class ConfigureBooths extends AppCompatActivity
             progressDialog = new ProgressDialog(configureBoothsActivityContext);
             progressDialog.setMessage("Loading Booths...");
             progressDialog.show();
-            tempShowList = new ArrayList<>();
-            tempBoothList = new ArrayList<>();
+            boothList = new ArrayList<>();
         }
 
         @Override
@@ -247,20 +244,19 @@ public class ConfigureBooths extends AppCompatActivity
                 inventoryConnector = new InventoryConnector(configureBoothsActivityContext, merchantAccount, null);
                 inventoryConnector.connect();
 
-                //////////////POPULATE BOOTH REFERENCE LIST ONLY IF SHOW HAS BOOTHS
-                List<Tag> allTags = inventoryConnector.getTags();
-                for (Tag currentTag : allTags) {
-                    if (currentTag.getName().startsWith("show,")) {
-                        tempShowList.add(currentTag);
-                        if (currentTag.getItems().size() > 0) {
-                            for (Reference itemRefs : currentTag.getItems()) {
-                                tempBoothList.add(inventoryConnector.getItem(itemRefs.getId()));
-                            }
-                        }
-
+                ///// FETCH BOOTHS FOR SHOW
+                ListIterator<Item> iterator = inventoryConnector.getItems().listIterator();
+                do {
+                    Item boothTest = iterator.next();
+                    for (Tag boothTestTag : boothTest.getTags()) {
+                        if (boothTestTag.getId().equalsIgnoreCase(show.getId()))
+                            boothList.add(boothTest);
                     }
-                }
-            } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
+                } while (iterator.hasNext());
+            } catch (RemoteException |
+                    BindingException |
+                    ServiceException |
+                    ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
             } finally {
                 inventoryConnector.disconnect();
@@ -274,6 +270,7 @@ public class ConfigureBooths extends AppCompatActivity
             populateBoothsForShowTable();
             progressDialog.dismiss();
         }
+
     }
 
     ////////////////NAVIGATION METHODS//////////////////////////
