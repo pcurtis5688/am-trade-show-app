@@ -78,7 +78,7 @@
     <string name="show_selection_button_text">Select Show</string>
     <string name="configure_booths_string">Configure Booths</string>
 
-    <string name="configure_show_booths_number_header">Booth No.</string>
+    <string name="configure_show_booths_number_header">No.</string>
     <string name="configure_show_booths_size_header">Size</string>
     <string name="configure_show_booths_area_header">Area</string>
     <string name="configure_show_booths_type_header">Type</string>
@@ -218,7 +218,7 @@
     <string name="customer_phone_label">Customer Phone</string>
     <string name="customer_phone_hint">[Phone]</string>
 
-    <string name="booth_selection_booth_number_header">Booth No.</string>
+    <string name="booth_selection_booth_number_header">No.</string>
     <string name="booth_selection_booth_size_header">Size</string>
     <string name="booth_selection_booth_area_header">Area</string>
     <string name="booth_selection_booth_type_header">Type</string>

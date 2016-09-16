@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -58,10 +59,10 @@ public class BoothReservation extends AppCompatActivity {
             Tag passedShowTag = (Tag) extrasBundle.get("show");
             if (null != passedShowTag) {
                 show = passedShowTag;
-                List<String> decoupledShowArray = Arrays.asList(show.getName().split(","));
-                String showName = decoupledShowArray.get(1);
-                String showDate = decoupledShowArray.get(2);
-                String showLocation = decoupledShowArray.get(3);
+                List<String> decoupledShowArray = GlobalUtils.decoupleShowName(show.getName());
+                String showName = decoupledShowArray.get(0);
+                String showDate = decoupledShowArray.get(1);
+                String showLocation = decoupledShowArray.get(2);
                 showNameForUser = getResources().getString(R.string.show_name_for_user_string, showName, showDate, showLocation);
             }
             TextView boothSelectionHeaderTV = (TextView) findViewById(R.id.booth_selection_header);

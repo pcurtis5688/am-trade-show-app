@@ -36,9 +36,6 @@
                     android:id="@+id/booth_reservation_show_select_table"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingEnd="@dimen/dimen_75dp"
-                    android:paddingStart="@dimen/dimen_75dp"
-                    android:paddingTop="@dimen/dimen_25dp"
                     android:stretchColumns="*" />
             </TableRow>
         </TableLayout>

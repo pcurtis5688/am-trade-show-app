@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -54,7 +55,6 @@ public class ReserveBoothDetails extends AppCompatActivity {
     private OrderConnector orderConnector;
     private InventoryConnector inventoryConnector;
     ///////SHOW DATA
-    private Category show;
     private String showName;
     ///////BOOTH DATA
     private Item booth;
@@ -205,7 +205,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
         reserveBoothDetailsActivityContext = this;
         Bundle extrasBundle = getIntent().getExtras();
         if (extrasBundle != null) {
-            show = (Category) extrasBundle.get("show");
+            Tag show = (Tag) extrasBundle.get("show");
             booth = (Item) extrasBundle.get("booth");
             boothTags = booth.getTags();
             decoupleShowName(show);
@@ -388,8 +388,8 @@ public class ReserveBoothDetails extends AppCompatActivity {
         });
     }
 
-    private void decoupleShowName(Category show) {
-        List<String> splitShowNameArray = Arrays.asList(show.getName().split(","));
+    private void decoupleShowName(Tag show) {
+        List<String> splitShowNameArray = GlobalUtils.decoupleShowName(show.getName());
         showName = splitShowNameArray.get(0);
         String showDate = splitShowNameArray.get(1);
         String showLocation = splitShowNameArray.get(2);
@@ -398,12 +398,14 @@ public class ReserveBoothDetails extends AppCompatActivity {
 
     private void populateTagObjects() {
         for (Tag currentTag : boothTags) {
-            if (currentTag.getName().substring(0, 4).equalsIgnoreCase("size")) {
-                sizeTag = currentTag;
-            } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("area")) {
-                areaTag = currentTag;
-            } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("type")) {
-                typeTag = currentTag;
+            if (!currentTag.getName().contains(" [Show]")) {
+                if (currentTag.getName().substring(0, 4).equalsIgnoreCase("size")) {
+                    sizeTag = currentTag;
+                } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("area")) {
+                    areaTag = currentTag;
+                } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("type")) {
+                    typeTag = currentTag;
+                }
             }
         }
     }
