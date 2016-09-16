@@ -120,7 +120,7 @@ public class BoothReservationShowSelection extends AppCompatActivity
             String showName = decoupledShowNameArr.get(1);
             String showDate = decoupledShowNameArr.get(2);
             String showLocation = decoupledShowNameArr.get(3);
-            String showNameForUser = showName + " (" + showDate + " - " + showLocation + ")";
+            String showNameForUser = getResources().getString(R.string.show_name_for_user_string, showName, showDate, showLocation);
 
             TableRow newShowSelectionRow = new TableRow(boothReservationShowSelectionActivityContext);
 

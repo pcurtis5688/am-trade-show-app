@@ -58,7 +58,7 @@ public class GlobalUtils {
         } else if (tagType.equalsIgnoreCase("Type")) {
             formattedTagName = "Type - " + tagFieldData;
         } else {
-            Log.e("UnknownTagType: ", " passed to GlobalUtils");
+            Log.d("UnknownTagType: ", " passed to GlobalUtils");
         }
         return formattedTagName;
     }

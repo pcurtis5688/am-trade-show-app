@@ -224,17 +224,20 @@ public class ConfigureBooths extends AppCompatActivity
 
     private class GetShowBoothsTask extends AsyncTask<Void, Void, Void> {
         //////////PRIVATELY NECESSARY OBJECTS & UTILITY LISTS ONLY
-        private ProgressDialog progressDialog = new ProgressDialog(configureBoothsActivityContext);
+        private ProgressDialog progressDialog;
         private Account merchantAccount;
         private InventoryConnector inventoryConnector;
-        private List<Reference> boothReferenceList;
+        private List<Tag> tempShowList;
+        private List<Item> tempBoothList;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            progressDialog = new ProgressDialog(configureBoothsActivityContext);
             progressDialog.setMessage("Loading Booths...");
             progressDialog.show();
-            boothList = new ArrayList<>();
+            tempShowList = new ArrayList<>();
+            tempBoothList = new ArrayList<>();
         }
 
         @Override
@@ -245,12 +248,16 @@ public class ConfigureBooths extends AppCompatActivity
                 inventoryConnector.connect();
 
                 //////////////POPULATE BOOTH REFERENCE LIST ONLY IF SHOW HAS BOOTHS
-                if (show.hasItems()) {
-                    boothReferenceList = show.getItems();
-                    for (Reference boothRef : boothReferenceList) {
-                        Item currentBooth = inventoryConnector.getItem(boothRef.getId());
-                        currentBooth.setTags(inventoryConnector.getTagsForItem(currentBooth.getId()));
-                        boothList.add(currentBooth);
+                List<Tag> allTags = inventoryConnector.getTags();
+                for (Tag currentTag : allTags) {
+                    if (currentTag.getName().startsWith("show,")) {
+                        tempShowList.add(currentTag);
+                        if (currentTag.getItems().size() > 0) {
+                            for (Reference itemRefs : currentTag.getItems()) {
+                                tempBoothList.add(inventoryConnector.getItem(itemRefs.getId()));
+                            }
+                        }
+
                     }
                 }
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
