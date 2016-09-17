@@ -325,10 +325,21 @@
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_reserve_booth_details">Reserve Booth</string>
     <string name="title_activity_application_settings">ApplicationSettings</string>
-
+    <!-- App Settings / Special case strings -->
     <string name="quick_ops_button_delete_all">Delete All Items</string>
     <string name="quick_ops_delete_all_progress_message">Deleting All Items. . .</string>
     <string name="quick_ops_button_delete_all_tags">Delete All Tags</string>
     <string name="quick_ops_delete_all_tags_progress_message">Deleting All Tags. . .</string>
+    <string name="create_custom_tender_button_text">Create Custom Tender</string>
+    <string name="delete_custom_tender_button_text">Delete Custom Tender</string>
+    <string name="custom_tender_name">Select/Reserve Booth</string>
+
+    <!-- SELECT BOOTH ACTIVITY BEGUN FROM CLOVER STRINGS -->
+    <string name="title_activity_select_booth">Select A Booth</string>
+
+    <string name="select_booth_custom_btn_text">Select A Booth</string>
+    <string name="decline_select_booth_custom_btn_text">Cancel Booth Select</string>
+
+    <string name="swap_generic_for_reserved_btn_text">Swap Generic For Selected</string>
 
 </resources>

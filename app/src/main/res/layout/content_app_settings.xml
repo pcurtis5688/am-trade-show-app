@@ -17,7 +17,8 @@
 
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
 
             <TableRow>
 
@@ -30,8 +31,9 @@
 
                 <Button
                     android:id="@+id/quick_ops_delete_all"
-                    android:background="@color/colorAccent"
                     style="@style/button_font_style"
+                    android:layout_marginBottom="@dimen/dimen_25dp"
+                    android:background="@color/colorAccent"
                     android:text="@string/quick_ops_button_delete_all" />
             </TableRow>
 
@@ -39,11 +41,39 @@
 
                 <Button
                     android:id="@+id/quick_ops_delete_all_tags"
-                    android:background="@color/colorAccent"
                     style="@style/button_font_style"
+                    android:layout_marginBottom="@dimen/dimen_25dp"
+                    android:background="@color/colorAccent"
                     android:text="@string/quick_ops_button_delete_all_tags" />
             </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/create_custom_tender_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimen_25dp"
+                    android:background="@color/lv_pressed"
+                    android:text="@string/create_custom_tender_button_text" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/delete_custom_tender_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimen_25dp"
+                    android:background="@color/lv_pressed"
+                    android:text="@string/delete_custom_tender_button_text" />
+            </TableRow>
         </TableLayout>
+
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

@@ -42,22 +42,8 @@ public class HomeActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         //////////DATA WORK
         homeActivityContext = this;
-        runDatabaseCheck();
-        TradeShowDB db = new TradeShowDB(homeActivityContext);
         //  db.getDbHelper().recreateBoothsTable();
         // db.getDbHelper().recreateShowsTable();
-    }
-
-    private void runDatabaseCheck() {
-        TradeShowDB tradeShowDatabase = new TradeShowDB(homeActivityContext);
-        Log.i("Shows table present: ", "" + tradeShowDatabase.isTablePresent("Shows"));
-        Log.i("Booths table present: ", "" + tradeShowDatabase.isTablePresent("Booths"));
-        if (!tradeShowDatabase.isTablePresent("Shows")) {
-            tradeShowDatabase.getDbHelper().recreateShowsTable();
-        }
-        if (!tradeShowDatabase.isTablePresent("Booths")) {
-            tradeShowDatabase.getDbHelper().recreateBoothsTable();
-        }
     }
 
     ////////////////NAVIGATION METHODS

@@ -19,11 +19,15 @@ import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.ServiceException;
+import com.clover.sdk.v1.tender.TenderConnector;
+import com.clover.sdk.v3.base.Tender;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
 import com.clover.sdk.v3.inventory.Tag;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class ApplicationSettings extends AppCompatActivity {
     private Context applicationSettingsActivityContext;
@@ -38,7 +42,7 @@ public class ApplicationSettings extends AppCompatActivity {
 
         applicationSettingsActivityContext = this;
 
-        final Button deleteAllItemsBtn = (Button) findViewById(R.id.quick_ops_delete_all);
+        Button deleteAllItemsBtn = (Button) findViewById(R.id.quick_ops_delete_all);
         deleteAllItemsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,14 +58,89 @@ public class ApplicationSettings extends AppCompatActivity {
             }
         });
 
+        Button createCustomTenderBtn = (Button) findViewById(R.id.create_custom_tender_btn);
+        createCustomTenderBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createCustomTender(view.getContext());
+            }
+        });
+
+        Button deleteCustomTenderBtn = (Button) findViewById(R.id.delete_custom_tender_btn);
+        deleteCustomTenderBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteCustomTender(view.getContext());
+            }
+        });
     }
 
-    public void deleteAllItems() {
+    private void createCustomTender(final Context context) {
+        new AsyncTask<Void, Void, Exception>() {
+            private TenderConnector tenderConnector;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                tenderConnector = new TenderConnector(context, CloverAccount.getAccount(context), null);
+                tenderConnector.connect();
+            }
+
+            @Override
+            protected Exception doInBackground(Void... params) {
+                try {
+                    tenderConnector.checkAndCreateTender(getString(R.string.custom_tender_name), getPackageName(), true, false);
+                } catch (Exception e) {
+                    Log.e("Clover excpt:", e.getMessage(), e.getCause());
+                    return e;
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Exception e) {
+                tenderConnector.disconnect();
+                tenderConnector = null;
+            }
+        }.execute();
+    }
+
+    private void deleteCustomTender(final Context context) {
+        new AsyncTask<Void, Void, Exception>() {
+            private TenderConnector tenderConnector;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                tenderConnector = new TenderConnector(context, CloverAccount.getAccount(context), null);
+                tenderConnector.connect();
+            }
+
+            @Override
+            protected Exception doInBackground(Void... params) {
+                try {
+                    tenderConnector.deleteTender("GZ4WX32MMBY9G");
+                } catch (Exception e) {
+                    Log.e("Clover excpt:", e.getMessage(), e.getCause());
+                    return e;
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Exception e) {
+                tenderConnector.disconnect();
+                tenderConnector = null;
+            }
+        }.execute();
+    }
+
+    private void deleteAllItems() {
         DeleteAllItemsTask deleteAllItemsTask = new DeleteAllItemsTask();
         deleteAllItemsTask.execute();
     }
 
-    public void deleteAllTags() {
+    private void deleteAllTags() {
         DeleteAllTagsTask deleteAllTagsTask = new DeleteAllTagsTask();
         deleteAllTagsTask.execute();
     }
@@ -108,7 +187,6 @@ public class ApplicationSettings extends AppCompatActivity {
         }
     }
 
-
     private class DeleteAllTagsTask extends AsyncTask<Void, Void, Void> {
         private ProgressDialog progressDialog;
         /////// CLOVER CONNECTION
@@ -154,4 +232,6 @@ public class ApplicationSettings extends AppCompatActivity {
             toast.show();
         }
     }
+
+
 }

@@ -129,6 +129,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ashtonmansion.tradeshowmanagement.HomeActivity" />
         </activity>
+        <activity
+            android:name="com.ashtonmansion.tradeshowmanagement.activity.SelectBoothActivity"
+            android:exported="true"
+            android:label="@string/title_activity_select_booth">
+            <intent-filter>
+                <action android:name="clover.intent.action.MERCHANT_TENDER" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
