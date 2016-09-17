@@ -63,8 +63,8 @@
                 android:value="com.ashtonmansion.tradeshowmanagement.HomeActivity" />
         </activity>
         <activity
-            android:name="com.ashtonmansion.tradeshowmanagement.activity.AddShow"
-            android:label="@string/title_activity_add_show"
+            android:name="com.ashtonmansion.tradeshowmanagement.activity.CreateShow"
+            android:label="@string/title_activity_create_show"
             android:parentActivityName="com.ashtonmansion.tradeshowmanagement.activity.TradeShows"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

@@ -132,7 +132,7 @@ public class TradeShows extends AppCompatActivity
     }
 
     private void addNewShowAction() {
-        Intent addShowIntent = new Intent(tradeShowsActivityContext, AddShow.class);
+        Intent addShowIntent = new Intent(tradeShowsActivityContext, CreateShow.class);
         startActivity(addShowIntent);
     }
 

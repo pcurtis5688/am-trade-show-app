@@ -169,6 +169,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
                 boothItem = inventoryConnector.getItem(boothId);
                 if (boothItem.getPriceType() == PriceType.FIXED) {
                     orderConnector.addFixedPriceLineItem(newOrderID, boothId, null, null);
+                    boothItem.setCode("RESERVED");
                 }
 
                 //// TODO: 9/14/2016 other price types
@@ -449,6 +450,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
 
     private void closeOutBoothReservationActivity() {
         finish();
+        Toast.makeText(reserveBoothDetailsActivityContext, getResources().getString(R.string.booth_reservation_booth_reserved_notification), Toast.LENGTH_SHORT).show();
     }
 
 }

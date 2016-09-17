@@ -21,7 +21,7 @@ import com.clover.sdk.v1.ServiceException;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Tag;
 
-public class AddShow extends AppCompatActivity {
+public class CreateShow extends AppCompatActivity {
     /////CONTEXT AND SHOW NAME
     private Context addShowActivityContext;
     private String formattedFullShowName;

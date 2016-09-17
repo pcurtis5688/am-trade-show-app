@@ -11,7 +11,7 @@
 
     <!--ACTIVITY TITLE STRINGS //////////////////////////////////-->
     <string name="application_settings_string">Application Settings</string>
-    <string name="title_activity_add_show">Add New Trade Show</string>
+    <string name="title_activity_create_show">Create New Trade Show</string>
     <string name="title_activity_edit_show">Edit Trade Show</string>
     <string name="title_activity_edit_booth">Edit Single Booth</string>
     <string name="title_activity_filter_booths">Filter Booth List</string>
@@ -139,6 +139,7 @@
     <string name="select_show_button_text">Select Show</string>
     <string name="select_booth_action_button_text">Select Booth</string>
     <string name="booth_reservation_no_booths_for_show_text">No Available Booths assigned to Show</string>
+    <string name="booth_configuration_no_booths_message">No Booths Have Been Assigned To Show</string>
     <string name="available_booths_header_text">Available Booths</string>
     <string name="customer_search_prompt">Search Existing Customers:</string>
     <string name="manual_customer_entry_prompt">-OR- Enter a customer manually below</string>
@@ -222,7 +223,7 @@
     <string name="booth_selection_booth_size_header">Size</string>
     <string name="booth_selection_booth_area_header">Area</string>
     <string name="booth_selection_booth_type_header">Type</string>
-    <string name="booth_selection_booth_customer_header">Customer</string>
+    <string name="booth_selection_booth_availability_header">Availability</string>
     <string name="booth_selection_booth_price_header">Price</string>
 
     <string name="finalize_reservation_btn_text">Finalize Reservation</string>
@@ -252,6 +253,9 @@
     <string name="booth_reservation_electricity_prompt">Include Electricity?</string>
     <string name="booth_reservation_internet_speed_prompt">Internet Speed?</string>
     <string name="booth_reservation_select_customer_warning">Please Select a Customer. . .</string>
+    <string name="booth_reservation_available_string">Available</string>
+    <string name="booth_reservation_unavailable_string">Reserved</string>
+    <string name="booth_reservation_booth_reserved_notification">Booth Reserved!</string>
     <!-- BOOTH RESERVATION - new customer strings///////////-->
     <string name="br_new_customer_first_name_hint">[First Name]</string>
     <string name="br_new_customer_last_name_hint">[Last Name]</string>

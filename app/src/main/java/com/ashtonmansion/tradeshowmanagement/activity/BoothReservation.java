@@ -82,7 +82,6 @@ public class BoothReservation extends AppCompatActivity {
         private Account merchantAccount;
         private InventoryConnector inventoryConnector;
         /////UTILITY LISTS
-        private List<Reference> boothReferenceList = new ArrayList<>();
 
         @Override
         protected void onPreExecute() {
@@ -139,14 +138,21 @@ public class BoothReservation extends AppCompatActivity {
                 TextView boothSizeTv = new TextView(boothReservationActivityContext);
                 TextView boothAreaTv = new TextView(boothReservationActivityContext);
                 TextView boothTypeTv = new TextView(boothReservationActivityContext);
-                TextView boothCustomerTv = new TextView(boothReservationActivityContext);
+                TextView boothAvailabilityTv = new TextView(boothReservationActivityContext);
 
                 /////////POPULATE TVS / HANDLE ANY PROCESSING
                 boothNumberTv.setText(booth.getSku());
                 /////////HANDLE PRICE
                 String formattedPrice = GlobalUtils.getFormattedPriceStringFromLong(booth.getPrice());
                 boothPriceTv.setText(formattedPrice);
-                boothCustomerTv.setText("customerhere");
+                if (booth.getCode().equalsIgnoreCase("AVAILABLE")) {
+                    boothAvailabilityTv.setText(getResources().getString(R.string.booth_reservation_available_string));
+                } else {
+                    if (booth.getCode().equalsIgnoreCase("RESERVED"))
+                        boothAvailabilityTv.setText(getResources().getString(R.string.booth_reservation_unavailable_string));
+                    else boothAvailabilityTv.setText(booth.getCode());
+                }
+
                 ///// WILL FILTER OUT SHOW TAG FROM BOOTH
                 Tag sizeTag;
                 Tag areaTag;
@@ -194,7 +200,7 @@ public class BoothReservation extends AppCompatActivity {
                 newBoothRow.addView(boothSizeTv);
                 newBoothRow.addView(boothAreaTv);
                 newBoothRow.addView(boothTypeTv);
-                newBoothRow.addView(boothCustomerTv);
+                newBoothRow.addView(boothAvailabilityTv);
                 newBoothRow.addView(reserveBoothButton);
                 boothListTable.addView(newBoothRow);
             }
@@ -218,7 +224,7 @@ public class BoothReservation extends AppCompatActivity {
         TextView boothSizeHeaderTv = new TextView(boothReservationActivityContext);
         TextView boothAreaHeaderTv = new TextView(boothReservationActivityContext);
         TextView boothTypeHeaderTv = new TextView(boothReservationActivityContext);
-        TextView boothCustomerHeaderTv = new TextView(boothReservationActivityContext);
+        TextView boothAvailabilityTv = new TextView(boothReservationActivityContext);
 
         boothNumberHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_number_header));
         boothNumberHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
@@ -230,15 +236,15 @@ public class BoothReservation extends AppCompatActivity {
         boothAreaHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
         boothTypeHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_type_header));
         boothTypeHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
-        boothCustomerHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_customer_header));
-        boothCustomerHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
+        boothAvailabilityTv.setText(getResources().getString(R.string.booth_selection_booth_availability_header));
+        boothAvailabilityTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
 
         boothSelectionTableHeaderRow.addView(boothNumberHeaderTv);
         boothSelectionTableHeaderRow.addView(boothPriceHeaderTv);
         boothSelectionTableHeaderRow.addView(boothSizeHeaderTv);
         boothSelectionTableHeaderRow.addView(boothAreaHeaderTv);
         boothSelectionTableHeaderRow.addView(boothTypeHeaderTv);
-        boothSelectionTableHeaderRow.addView(boothCustomerHeaderTv);
+        boothSelectionTableHeaderRow.addView(boothAvailabilityTv);
         boothListTable.addView(boothSelectionTableHeaderRow);
     }
 

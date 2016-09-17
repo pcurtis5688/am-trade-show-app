@@ -185,6 +185,16 @@ public class ConfigureBooths extends AppCompatActivity
                 newBoothRow.addView(editBoothButton);
                 showTable.addView(newBoothRow);
             }
+        } else {
+            TextView noBoothsForShowTV = new TextView(configureBoothsActivityContext);
+            noBoothsForShowTV.setText(getResources().getString(R.string.booth_configuration_no_booths_message));
+            noBoothsForShowTV.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            TableRow noBoothsForShowRow = new TableRow(configureBoothsActivityContext);
+            TableRow.LayoutParams params = new TableRow.LayoutParams();
+            params.span = 6;
+            params.topMargin = 50;
+            noBoothsForShowRow.addView(noBoothsForShowTV, params);
+            showTable.addView(noBoothsForShowRow);
         }
         TableRow addBoothButtonRow = new TableRow(configureBoothsActivityContext);
         Button addBoothButton = new Button(configureBoothsActivityContext);
@@ -240,14 +250,16 @@ public class ConfigureBooths extends AppCompatActivity
                 inventoryConnector.connect();
 
                 ///// FETCH BOOTHS FOR SHOW
-                ListIterator<Item> iterator = inventoryConnector.getItems().listIterator();
-                do {
-                    Item boothTest = iterator.next();
-                    for (Tag boothTestTag : boothTest.getTags()) {
-                        if (boothTestTag.getId().equalsIgnoreCase(show.getId()))
-                            boothList.add(boothTest);
-                    }
-                } while (iterator.hasNext());
+                if (inventoryConnector.getItems().size() > 0) {
+                    ListIterator<Item> iterator = inventoryConnector.getItems().listIterator();
+                    do {
+                        Item boothTest = iterator.next();
+                        for (Tag boothTestTag : boothTest.getTags()) {
+                            if (boothTestTag.getId().equalsIgnoreCase(show.getId()))
+                                boothList.add(boothTest);
+                        }
+                    } while (iterator.hasNext());
+                }
             } catch (RemoteException |
                     BindingException |
                     ServiceException |

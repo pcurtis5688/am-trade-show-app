@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
 import com.ashtonmansion.tradeshowmanagement.util.GlobalUtils;
@@ -186,6 +187,7 @@ public class CreateBooth extends AppCompatActivity {
             super.onPostExecute(result);
             progressDialog.dismiss();
             finish();
+            Toast.makeText(createBoothActivityContext, "Booth Created", Toast.LENGTH_SHORT).show();
         }
     }
 
