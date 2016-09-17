@@ -147,10 +147,12 @@ public class BoothReservation extends AppCompatActivity {
                 boothPriceTv.setText(formattedPrice);
                 if (booth.getCode().equalsIgnoreCase("AVAILABLE")) {
                     boothAvailabilityTv.setText(getResources().getString(R.string.booth_reservation_available_string));
+                    boothAvailabilityTv.setTextAppearance(boothReservationActivityContext, R.style.available_booth_style);
                 } else {
-                    if (booth.getCode().equalsIgnoreCase("RESERVED"))
+                    if (booth.getCode().equalsIgnoreCase("RESERVED")) {
                         boothAvailabilityTv.setText(getResources().getString(R.string.booth_reservation_unavailable_string));
-                    else boothAvailabilityTv.setText(booth.getCode());
+                        boothAvailabilityTv.setTextAppearance(boothReservationActivityContext, R.style.reserved_booth_style);
+                    } else boothAvailabilityTv.setText(booth.getCode());
                 }
 
                 ///// WILL FILTER OUT SHOW TAG FROM BOOTH
@@ -193,6 +195,9 @@ public class BoothReservation extends AppCompatActivity {
                     }
                 });
                 reserveBoothButton.setText(getResources().getString(R.string.reserve_booth_button_text));
+                if (finalizedBooth.getCode().equalsIgnoreCase("RESERVED")) {
+                    reserveBoothButton.setEnabled(false);
+                }
 
                 ///////////POPULATE THE NEW ROW AND ADD TO TABLE
                 newBoothRow.addView(boothNumberTv);

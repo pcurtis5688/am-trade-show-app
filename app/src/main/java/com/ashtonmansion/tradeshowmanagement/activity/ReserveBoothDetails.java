@@ -170,6 +170,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
                 if (boothItem.getPriceType() == PriceType.FIXED) {
                     orderConnector.addFixedPriceLineItem(newOrderID, boothId, null, null);
                     boothItem.setCode("RESERVED");
+                    inventoryConnector.updateItem(boothItem);
                 }
 
                 //// TODO: 9/14/2016 other price types

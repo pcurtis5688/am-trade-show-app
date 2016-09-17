@@ -46,4 +46,14 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/line_item_text_size</item>
     </style>
+
+    <style name="available_booth_style">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/available_booth_color</item>
+    </style>
+
+    <style name="reserved_booth_style">
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:textColor">@color/reserved_booth_color</item>
+    </style>
 </resources>

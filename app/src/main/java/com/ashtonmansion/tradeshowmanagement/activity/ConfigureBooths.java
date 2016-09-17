@@ -146,7 +146,7 @@ public class ConfigureBooths extends AppCompatActivity
                 TextView boothSizeTv = new TextView(configureBoothsActivityContext);
                 TextView boothAreaTv = new TextView(configureBoothsActivityContext);
                 TextView boothTypeTv = new TextView(configureBoothsActivityContext);
-                TextView boothCustomerTv = new TextView(configureBoothsActivityContext);
+                TextView boothAvailabilityTv = new TextView(configureBoothsActivityContext);
 
                 boothNumberTv.setText(booth.getSku());
                 boothPriceTv.setText(GlobalUtils.getFormattedPriceStringFromLong(booth.getPrice()));
@@ -162,9 +162,14 @@ public class ConfigureBooths extends AppCompatActivity
                         }
                     }
                 }
-                //// TODO: 9/5/2016 fix custmoer
-                boothCustomerTv.setText("customerhere");
 
+                if (booth.getCode().equalsIgnoreCase("AVAILABLE")) {
+                    boothAvailabilityTv.setText(getResources().getString(R.string.booth_reservation_available_string));
+                    boothAvailabilityTv.setTextAppearance(configureBoothsActivityContext, R.style.available_booth_style);
+                } else if (booth.getCode().equalsIgnoreCase("RESERVED")) {
+                    boothAvailabilityTv.setText(getResources().getString(R.string.booth_reservation_unavailable_string));
+                    boothAvailabilityTv.setTextAppearance(configureBoothsActivityContext, R.style.reserved_booth_style);
+                }
                 Button editBoothButton = new Button(configureBoothsActivityContext);
                 editBoothButton.setText(getResources().getString(R.string.configure_show_booths_edit_booth_btn_text));
                 editBoothButton.setTextAppearance(configureBoothsActivityContext, R.style.button_font_style);
@@ -181,11 +186,13 @@ public class ConfigureBooths extends AppCompatActivity
                 newBoothRow.addView(boothSizeTv);
                 newBoothRow.addView(boothAreaTv);
                 newBoothRow.addView(boothTypeTv);
-                newBoothRow.addView(boothCustomerTv);
+                newBoothRow.addView(boothAvailabilityTv);
                 newBoothRow.addView(editBoothButton);
                 showTable.addView(newBoothRow);
             }
-        } else {
+        } else
+
+        {
             TextView noBoothsForShowTV = new TextView(configureBoothsActivityContext);
             noBoothsForShowTV.setText(getResources().getString(R.string.booth_configuration_no_booths_message));
             noBoothsForShowTV.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -196,18 +203,31 @@ public class ConfigureBooths extends AppCompatActivity
             noBoothsForShowRow.addView(noBoothsForShowTV, params);
             showTable.addView(noBoothsForShowRow);
         }
+
         TableRow addBoothButtonRow = new TableRow(configureBoothsActivityContext);
         Button addBoothButton = new Button(configureBoothsActivityContext);
-        addBoothButton.setText(getResources().getString(R.string.action_create_new_booth_string));
+        addBoothButton.setText(
+
+                getResources()
+
+                        .
+
+                                getString(R.string.action_create_new_booth_string)
+
+        );
         addBoothButton.setTextAppearance(configureBoothsActivityContext, R.style.button_font_style);
-        addBoothButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent createBoothIntent = new Intent(configureBoothsActivityContext, CreateBooth.class);
-                createBoothIntent.putExtra("show", show);
-                startActivity(createBoothIntent);
-            }
-        });
+        addBoothButton.setOnClickListener(new View.OnClickListener()
+
+                                          {
+                                              @Override
+                                              public void onClick(View view) {
+                                                  Intent createBoothIntent = new Intent(configureBoothsActivityContext, CreateBooth.class);
+                                                  createBoothIntent.putExtra("show", show);
+                                                  startActivity(createBoothIntent);
+                                              }
+                                          }
+
+        );
         TableRow.LayoutParams params = new TableRow.LayoutParams();
         params.span = 7;
         addBoothButton.setLayoutParams(params);
@@ -280,7 +300,7 @@ public class ConfigureBooths extends AppCompatActivity
 
     }
 
-    ////////////////NAVIGATION METHODS//////////////////////////
+    ///// NAVIGATION METHODS
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.configure_booths_drawerlayout);
