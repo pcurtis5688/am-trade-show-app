@@ -93,7 +93,7 @@ public class BoothReservationShowSelection extends Activity
                 inventoryConnector.connect();
                 ///////////GET SHOW LIST (TAG LIST) FOR BOOTH SELECTION
                 if (inventoryConnector.getTags().size() > 0) {
-                    for (Tag currentTag : inventoryConnector.getTags()){
+                    for (Tag currentTag : inventoryConnector.getTags()) {
                         if (currentTag.getName().contains(" [Show]")) {
                             showList.add(currentTag);
                         }
@@ -117,34 +117,43 @@ public class BoothReservationShowSelection extends Activity
 
     private void populateShowSelectionTable() {
         ///// NON-SHOW TAGS HAVE ALREADY BEEN FILTERED
-        for (Tag show : showList) {
-            final Tag finalizedShowObject = show;
-            List<String> decoupledShowNameArr = GlobalUtils.decoupleShowName(show.getName());
-            String showName = decoupledShowNameArr.get(0);
-            String showDate = decoupledShowNameArr.get(1);
-            String showLocation = decoupledShowNameArr.get(2);
-            String showNameForUser = getResources().getString(R.string.show_name_for_user_string, showName, showDate, showLocation);
+        if (showList.size() > 0) {
+            for (Tag show : showList) {
+                final Tag finalizedShowObject = show;
+                List<String> decoupledShowNameArr = GlobalUtils.decoupleShowName(show.getName());
+                String showName = decoupledShowNameArr.get(0);
+                String showDate = decoupledShowNameArr.get(1);
+                String showLocation = decoupledShowNameArr.get(2);
+                String showNameForUser = getResources().getString(R.string.show_name_for_user_string, showName, showDate, showLocation);
 
-            TableRow newShowSelectionRow = new TableRow(boothReservationShowSelectionActivityContext);
+                TableRow newShowSelectionRow = new TableRow(boothReservationShowSelectionActivityContext);
 
-            TextView showSelectionNameTv = new TextView(boothReservationShowSelectionActivityContext);
-            showSelectionNameTv.setText(showNameForUser);
-            showSelectionNameTv.setTextAppearance(boothReservationShowSelectionActivityContext, R.style.table_header_text_style);
+                TextView showSelectionNameTv = new TextView(boothReservationShowSelectionActivityContext);
+                showSelectionNameTv.setText(showNameForUser);
+                showSelectionNameTv.setTextAppearance(boothReservationShowSelectionActivityContext, R.style.large_table_row_font_station);
 
-            Button showSelectButton = new Button(boothReservationShowSelectionActivityContext);
-            showSelectButton.setText(getResources().getString(R.string.select_show_button_text));
-            showSelectButton.setTextAppearance(boothReservationShowSelectionActivityContext, R.style.button_font_style);
-            showSelectButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    selectShowForReservation(finalizedShowObject);
-                }
-            });
+                Button showSelectButton = new Button(boothReservationShowSelectionActivityContext);
+                showSelectButton.setText(getResources().getString(R.string.select_show_button_text));
+                showSelectButton.setTextAppearance(boothReservationShowSelectionActivityContext, R.style.button_font_style);
+                showSelectButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        selectShowForReservation(finalizedShowObject);
+                    }
+                });
 
-            newShowSelectionRow.addView(showSelectionNameTv);
-            newShowSelectionRow.addView(showSelectButton);
+                newShowSelectionRow.addView(showSelectionNameTv);
+                newShowSelectionRow.addView(showSelectButton);
 
-            showSelectionTable.addView(newShowSelectionRow);
+                showSelectionTable.addView(newShowSelectionRow);
+            }
+        } else {
+            TableRow noShowsPleaseCreateRow = new TableRow(boothReservationShowSelectionActivityContext);
+            TextView noShowsPleaseCreateTv = new TextView(boothReservationShowSelectionActivityContext);
+            noShowsPleaseCreateTv.setText(getResources().getString(R.string.no_trade_shows_available_string));
+            noShowsPleaseCreateTv.setTextAppearance(boothReservationShowSelectionActivityContext, R.style.prompt_text_font_style);
+            noShowsPleaseCreateRow.addView(noShowsPleaseCreateTv);
+            showSelectionTable.addView(noShowsPleaseCreateRow);
         }
     }
 

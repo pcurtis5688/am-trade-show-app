@@ -143,6 +143,13 @@ public class BoothReservation extends AppCompatActivity {
                 TextView boothTypeTv = new TextView(boothReservationActivityContext);
                 TextView boothAvailabilityTv = new TextView(boothReservationActivityContext);
 
+                ///// FONT HANDLING
+                boothNumberTv.setTextAppearance(boothReservationActivityContext, R.style.large_table_row_font_station);
+                boothPriceTv.setTextAppearance(boothReservationActivityContext, R.style.large_table_row_font_station);
+                boothSizeTv.setTextAppearance(boothReservationActivityContext, R.style.large_table_row_font_station);
+                boothAreaTv.setTextAppearance(boothReservationActivityContext, R.style.large_table_row_font_station);
+                boothTypeTv.setTextAppearance(boothReservationActivityContext, R.style.large_table_row_font_station);
+
                 /////////POPULATE TVS / HANDLE ANY PROCESSING
                 boothNumberTv.setText(booth.getSku());
                 /////////HANDLE PRICE

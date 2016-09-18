@@ -25,9 +25,15 @@
     </style>
 
     <style name="table_header_text_style">
-        <item name="android:textSize">@dimen/dimen_20sp</item>
+        <item name="android:textSize">@dimen/dimen_36sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="large_table_row_font_station">
+        <item name="android:textSize">@dimen/dimen_30sp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_gravity">center_horizontal</item>
     </style>
 
     <style name="prompt_text_font_style">
@@ -49,11 +55,17 @@
 
     <style name="available_booth_style">
         <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/dimen_30sp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:textColor">@color/available_booth_color</item>
     </style>
 
     <style name="reserved_booth_style">
         <item name="android:textStyle">bold|italic</item>
+        <item name="android:textSize">@dimen/dimen_30sp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:textColor">@color/reserved_booth_color</item>
     </style>
 </resources>
