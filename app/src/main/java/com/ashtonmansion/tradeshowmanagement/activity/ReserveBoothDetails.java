@@ -35,7 +35,6 @@ import com.clover.sdk.v3.base.Reference;
 import com.clover.sdk.v3.customers.Customer;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
-import com.clover.sdk.v3.inventory.PriceType;
 import com.clover.sdk.v3.inventory.Tag;
 import com.clover.sdk.v3.order.LineItem;
 import com.clover.sdk.v3.order.Order;
@@ -263,8 +262,8 @@ public class ReserveBoothDetails extends AppCompatActivity {
                         for (Item item : inventoryConnector.getItems()) {
                             if (item.getId().equalsIgnoreCase(booth.getId())) {
                                 orderConnector.addFixedPriceLineItem(orderID, item.getId(), null, null);
-                                item.setCode(getString(R.string.reserved_keyword));
-                                inventoryConnector.updateItem(item);
+
+                                setAvailability(item.getId());
                             }
                         }
                         ///// SET CUSTOMER TO EITHER THE NEW OR SELECTED ONE (ONLY IF SWAPPED)
@@ -277,6 +276,14 @@ public class ReserveBoothDetails extends AppCompatActivity {
                     Log.d("Exception: ", e.getMessage(), e.getCause());
                 }
                 return null;
+            }
+
+            protected void setAvailability(String itemID) {
+                try {
+                    inventoryConnector.updateItem(inventoryConnector.getItem(itemID).setCode(getResources().getString(R.string.reserved_keyword)));
+                } catch (Exception e) {
+                    Log.d("Exception: ", e.getMessage(), e.getCause());
+                }
             }
 
             @Override
