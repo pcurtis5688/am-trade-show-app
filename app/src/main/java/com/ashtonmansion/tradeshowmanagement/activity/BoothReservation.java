@@ -34,13 +34,15 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class BoothReservation extends AppCompatActivity {
-    ////////CONTEXT AND UI OBJECTS
+    ///// CONTEXT AND UI OBJECTS
     private Context boothReservationActivityContext;
     private TableLayout boothListTable;
-    ////////DATA VARS
+    ///// DATA VARS
     private Tag show;
     private String showNameForUser;
     private List<Item> boothList;
+    ///// ORDER DATA BEING PASSED FROM CLOVER CUSTOM TENDER
+    private String orderID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,7 @@ public class BoothReservation extends AppCompatActivity {
 
         Bundle extrasBundle = getIntent().getExtras();
         if (extrasBundle != null) {
+            orderID = (String) extrasBundle.get("orderid");
             Tag passedShowTag = (Tag) extrasBundle.get("show");
             if (null != passedShowTag) {
                 show = passedShowTag;
@@ -257,6 +260,7 @@ public class BoothReservation extends AppCompatActivity {
         Intent reserveBoothIntent = new Intent(boothReservationActivityContext, ReserveBoothDetails.class);
         reserveBoothIntent.putExtra("show", show);
         reserveBoothIntent.putExtra("booth", boothToReserve);
+        reserveBoothIntent.putExtra("orderid", orderID);
         startActivity(reserveBoothIntent);
     }
 }

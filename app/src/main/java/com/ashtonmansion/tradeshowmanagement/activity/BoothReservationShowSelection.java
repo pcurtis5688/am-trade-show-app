@@ -29,6 +29,7 @@ import com.ashtonmansion.tradeshowmanagement.util.GlobalUtils;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
+import com.clover.sdk.v1.Intents;
 import com.clover.sdk.v1.ServiceException;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Tag;
@@ -44,6 +45,8 @@ public class BoothReservationShowSelection extends Activity
     private TableLayout showSelectionTable;
     /////DATA VARS
     private List<Tag> showList;
+    ///// ORDER INFO BEING PASSED TO BOOTH RESERVATION
+    private String orderID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,10 @@ public class BoothReservationShowSelection extends Activity
         navigationView.setNavigationItemSelectedListener(this);
 
         ///////////DATA WORK////////////////////////////////////
+        Intent intent = getIntent();
+        Bundle extrasBundle = intent.getExtras();
+        orderID = getIntent().getStringExtra(Intents.EXTRA_ORDER_ID);
+
         boothReservationShowSelectionActivityContext = this;
         showSelectionTable = (TableLayout) findViewById(R.id.booth_reservation_show_select_table);
 
@@ -144,6 +151,7 @@ public class BoothReservationShowSelection extends Activity
     private void selectShowForReservation(Tag showTag) {
         Intent boothSelectionIntent = new Intent(boothReservationShowSelectionActivityContext, BoothReservation.class);
         boothSelectionIntent.putExtra("show", showTag);
+        boothSelectionIntent.putExtra("orderid", orderID);
         startActivity(boothSelectionIntent);
     }
 

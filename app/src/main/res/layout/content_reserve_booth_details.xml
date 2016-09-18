@@ -239,14 +239,12 @@
                     android:id="@+id/cancel_reserve_booth_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:onClick="cancelBoothReservation"
                     android:text="@string/booth_reservation_cancel_booth_reservation_btn_text" />
 
                 <Button
                     android:id="@+id/finalize_booth_reservation_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:onClick="finalizeBoothReservation"
                     android:text="@string/reserve_booth_button_text" />
             </TableRow>
         </TableLayout>

@@ -46,11 +46,12 @@ public class SelectBooth extends Activity {
         setContentView(R.layout.activity_select_booth);
         setResult(RESULT_CANCELED);
         // REMEMBER THERE ARE SOME FURTHER EXAMPLES OF CODE I REMOVED
-        selectBoothActivityContext = this;
+
         Intent intent = getIntent();
         Bundle extrasBundle = intent.getExtras();
-
         orderID = getIntent().getStringExtra(Intents.EXTRA_ORDER_ID);
+
+        selectBoothActivityContext = this;
         selectShowActivity();
     }
 
