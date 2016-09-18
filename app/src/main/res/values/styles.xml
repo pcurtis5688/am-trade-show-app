@@ -20,7 +20,7 @@
     <style name="activity_header_style">
         <item name="android:layout_marginBottom">25dp</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textSize">@dimen/dimen_28sp</item>
+        <item name="android:textSize">@dimen/dimen_36sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
@@ -45,6 +45,8 @@
     <style name="button_font_style">
         <item name="android:textAlignment">center</item>
         <item name="android:textStyle">italic</item>
+        <item name="android:layout_marginTop">@dimen/dimen_20dp</item>
+        <item name="android:textSize">@dimen/button_text_size_32sp</item>
     </style>
 
     <style name="table_line_item_font_shows">

@@ -1,6 +1,5 @@
 package com.ashtonmansion.tradeshowmanagement.activity;
 
-import android.accounts.Account;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -33,7 +32,6 @@ import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Tag;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class TradeShows extends AppCompatActivity
@@ -72,7 +70,7 @@ public class TradeShows extends AppCompatActivity
         getShowListTask.execute();
     }
 
-    private void populateTable() {
+    private void populateShowTable() {
         showSelectionTable.removeAllViews();
         if (showList != null && showList.size() > 0) {
             for (Tag show : showList) {
@@ -91,6 +89,7 @@ public class TradeShows extends AppCompatActivity
 
                 ///// HANDLE FONTS
                 newShowTV.setTextAppearance(tradeShowsActivityContext, R.style.large_table_row_font_station);
+                newShowTV.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
                 ///// SHOW NAME- BUTTON TXT- BUTTON ACTION
                 newShowTV.setText(showNameForUser);
@@ -239,7 +238,7 @@ public class TradeShows extends AppCompatActivity
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
             inventoryConnector.disconnect();
-            populateTable();
+            populateShowTable();
             progressDialog.dismiss();
         }
     }

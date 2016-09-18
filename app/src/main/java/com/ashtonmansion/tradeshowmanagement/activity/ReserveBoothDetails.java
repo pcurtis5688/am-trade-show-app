@@ -110,49 +110,6 @@ public class ReserveBoothDetails extends AppCompatActivity {
         setupCustomerFields();
     }
 
-    private class GetCustomerListTask extends AsyncTask<Void, Void, Void> {
-        //////////PRIVATELY NECESSARY OBJECTS & UTILITY LISTS ONLY
-        private ProgressDialog progressDialog;
-        private List<com.clover.sdk.v1.customer.Customer> existingv1Customers;
-        private List<Customer> v3CustomerList;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(reserveBoothDetailsActivityContext);
-            progressDialog.setMessage(getResources().getString(R.string.booth_reservation_loading_existing_customers_text));
-            progressDialog.show();
-            existingCustomers = new ArrayList<>();
-            existingv1Customers = new ArrayList<>();
-            v3CustomerList = new ArrayList<>();
-            ///// PREP CLOVER CONNECTIONS FIRST
-            customerConnector = new CustomerConnector(reserveBoothDetailsActivityContext, CloverAccount.getAccount(reserveBoothDetailsActivityContext), null);
-            customerConnector.connect();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                existingv1Customers = customerConnector.getCustomers();
-            } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
-                Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            customerConnector.disconnect();
-            for (com.clover.sdk.v1.customer.Customer v1Customer : existingv1Customers) {
-                v3CustomerList.add(GlobalUtils.getv3CustomerFromv1Customer(v1Customer, v1Customer.getPhoneNumbers(), v1Customer.getEmailAddresses(), v1Customer.getAddresses()));
-            }
-            existingCustomers = v3CustomerList;
-            populateExistingCustomersListview();
-            progressDialog.dismiss();
-        }
-    }
-
     private void populateExistingCustomersListview() {
         ////////UTILIZE CUSTOM ADAPTER
         final CustomersAdapter customersAdapter = new CustomersAdapter(reserveBoothDetailsActivityContext, existingCustomers);
@@ -297,6 +254,131 @@ public class ReserveBoothDetails extends AppCompatActivity {
         }.execute();
     }
 
+    private void setupCustomerFields() {
+        final TableLayout newCustomerTableLayout = (TableLayout) findViewById(R.id.newCustomerTableLayout);
+        final TableLayout existingCustomerTableLayout = (TableLayout) findViewById(R.id.existingCustomerTableLayout);
+
+        RadioGroup newOrExistingRadioGrp = (RadioGroup) findViewById(R.id.booth_reservation_new_or_existing_radiogrp);
+        newOrExistingRadioGrp.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                if (checkedId == R.id.booth_reservation_new_customer_btn) {
+                    existingCustomerTableLayout.setVisibility(View.GONE);
+                    newCustomerTableLayout.setVisibility(View.VISIBLE);
+                } else if (checkedId == R.id.booth_reservation_existing_customer_btn) {
+                    newCustomerTableLayout.setVisibility(View.GONE);
+                    existingCustomerTableLayout.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
+
+    private void decoupleShowName(Tag show) {
+        List<String> splitShowNameArray = GlobalUtils.decoupleShowName(show.getName());
+        showName = splitShowNameArray.get(0);
+        String showDate = splitShowNameArray.get(1);
+        String showLocation = splitShowNameArray.get(2);
+        String showNotes = splitShowNameArray.get(3);
+    }
+
+    private void populateTagObjects() {
+        for (Tag currentTag : boothTags) {
+            if (!currentTag.getName().contains(" [Show]")) {
+                if (currentTag.getName().substring(0, 4).equalsIgnoreCase("size")) {
+                    sizeTag = currentTag;
+                } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("area")) {
+                    areaTag = currentTag;
+                } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("type")) {
+                    typeTag = currentTag;
+                }
+            }
+        }
+    }
+
+    private void populateTagFields() {
+        TextView boothReservationSizeTV = (TextView) findViewById(R.id.booth_reservation_details_size);
+        TextView boothReservationAreaTV = (TextView) findViewById(R.id.booth_reservation_details_area);
+        TextView boothReservationTypeTV = (TextView) findViewById(R.id.booth_reservation_details_type);
+
+        if (sizeTag != null) {
+            String unformattedSizeTagName = GlobalUtils.getUnformattedTagName(sizeTag.getName(), "Size");
+            if (unformattedSizeTagName.length() > 0) {
+                boothReservationSizeTV.setText(unformattedSizeTagName);
+            } else {
+                boothReservationSizeTV.setText(getResources().getString(R.string.booth_reservation_no_size_data));
+            }
+        } else {
+            boothReservationSizeTV.setText(getResources().getString(R.string.booth_reservation_no_size_data));
+        }
+        if (areaTag != null) {
+            String unformattedAreaTagName = GlobalUtils.getUnformattedTagName(areaTag.getName(), "Area");
+            if (unformattedAreaTagName.length() > 0) {
+                boothReservationAreaTV.setText(unformattedAreaTagName);
+            } else {
+                boothReservationAreaTV.setText(getResources().getString(R.string.booth_reservation_no_area_data));
+            }
+        } else {
+            boothReservationAreaTV.setText(getResources().getString(R.string.booth_reservation_no_area_data));
+        }
+        if (typeTag != null) {
+            String unformattedTypeTagName = GlobalUtils.getUnformattedTagName(typeTag.getName(), "Type");
+            if (unformattedTypeTagName.length() > 0) {
+                boothReservationTypeTV.setText(unformattedTypeTagName);
+            } else {
+                boothReservationTypeTV.setText(getResources().getString(R.string.booth_reservation_no_type_data));
+            }
+        } else {
+            boothReservationTypeTV.setText(getResources().getString(R.string.booth_reservation_no_type_data));
+        }
+    }
+
+    private void closeOutBoothReservationActivity() {
+        startActivity(getIntent());
+    }
+
+    private class GetCustomerListTask extends AsyncTask<Void, Void, Void> {
+        //////////PRIVATELY NECESSARY OBJECTS & UTILITY LISTS ONLY
+        private ProgressDialog progressDialog;
+        private List<com.clover.sdk.v1.customer.Customer> existingv1Customers;
+        private List<Customer> v3CustomerList;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(reserveBoothDetailsActivityContext);
+            progressDialog.setMessage(getResources().getString(R.string.booth_reservation_loading_existing_customers_text));
+            progressDialog.show();
+            existingCustomers = new ArrayList<>();
+            existingv1Customers = new ArrayList<>();
+            v3CustomerList = new ArrayList<>();
+            ///// PREP CLOVER CONNECTIONS FIRST
+            customerConnector = new CustomerConnector(reserveBoothDetailsActivityContext, CloverAccount.getAccount(reserveBoothDetailsActivityContext), null);
+            customerConnector.connect();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                existingv1Customers = customerConnector.getCustomers();
+            } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
+                Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            customerConnector.disconnect();
+            for (com.clover.sdk.v1.customer.Customer v1Customer : existingv1Customers) {
+                v3CustomerList.add(GlobalUtils.getv3CustomerFromv1Customer(v1Customer, v1Customer.getPhoneNumbers(), v1Customer.getEmailAddresses(), v1Customer.getAddresses()));
+            }
+            existingCustomers = v3CustomerList;
+            populateExistingCustomersListview();
+            progressDialog.dismiss();
+        }
+    }
+
     /////////////////////////ignore below for now
     private class CreateNewOrderTask extends AsyncTask<Void, Void, Void> {
         private ProgressDialog progressDialog;
@@ -439,87 +521,5 @@ public class ReserveBoothDetails extends AppCompatActivity {
             setNewCustomerObject(v1CustomerCreated);
             progressDialog.dismiss();
         }
-    }
-
-    private void setupCustomerFields() {
-        final TableLayout newCustomerTableLayout = (TableLayout) findViewById(R.id.newCustomerTableLayout);
-        final TableLayout existingCustomerTableLayout = (TableLayout) findViewById(R.id.existingCustomerTableLayout);
-
-        RadioGroup newOrExistingRadioGrp = (RadioGroup) findViewById(R.id.booth_reservation_new_or_existing_radiogrp);
-        newOrExistingRadioGrp.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
-                if (checkedId == R.id.booth_reservation_new_customer_btn) {
-                    existingCustomerTableLayout.setVisibility(View.GONE);
-                    newCustomerTableLayout.setVisibility(View.VISIBLE);
-                } else if (checkedId == R.id.booth_reservation_existing_customer_btn) {
-                    newCustomerTableLayout.setVisibility(View.GONE);
-                    existingCustomerTableLayout.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-    }
-
-    private void decoupleShowName(Tag show) {
-        List<String> splitShowNameArray = GlobalUtils.decoupleShowName(show.getName());
-        showName = splitShowNameArray.get(0);
-        String showDate = splitShowNameArray.get(1);
-        String showLocation = splitShowNameArray.get(2);
-        String showNotes = splitShowNameArray.get(3);
-    }
-
-    private void populateTagObjects() {
-        for (Tag currentTag : boothTags) {
-            if (!currentTag.getName().contains(" [Show]")) {
-                if (currentTag.getName().substring(0, 4).equalsIgnoreCase("size")) {
-                    sizeTag = currentTag;
-                } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("area")) {
-                    areaTag = currentTag;
-                } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("type")) {
-                    typeTag = currentTag;
-                }
-            }
-        }
-    }
-
-    private void populateTagFields() {
-        TextView boothReservationSizeTV = (TextView) findViewById(R.id.booth_reservation_details_size);
-        TextView boothReservationAreaTV = (TextView) findViewById(R.id.booth_reservation_details_area);
-        TextView boothReservationTypeTV = (TextView) findViewById(R.id.booth_reservation_details_type);
-
-        if (sizeTag != null) {
-            String unformattedSizeTagName = GlobalUtils.getUnformattedTagName(sizeTag.getName(), "Size");
-            if (unformattedSizeTagName.length() > 0) {
-                boothReservationSizeTV.setText(unformattedSizeTagName);
-            } else {
-                boothReservationSizeTV.setText(getResources().getString(R.string.booth_reservation_no_size_data));
-            }
-        } else {
-            boothReservationSizeTV.setText(getResources().getString(R.string.booth_reservation_no_size_data));
-        }
-        if (areaTag != null) {
-            String unformattedAreaTagName = GlobalUtils.getUnformattedTagName(areaTag.getName(), "Area");
-            if (unformattedAreaTagName.length() > 0) {
-                boothReservationAreaTV.setText(unformattedAreaTagName);
-            } else {
-                boothReservationAreaTV.setText(getResources().getString(R.string.booth_reservation_no_area_data));
-            }
-        } else {
-            boothReservationAreaTV.setText(getResources().getString(R.string.booth_reservation_no_area_data));
-        }
-        if (typeTag != null) {
-            String unformattedTypeTagName = GlobalUtils.getUnformattedTagName(typeTag.getName(), "Type");
-            if (unformattedTypeTagName.length() > 0) {
-                boothReservationTypeTV.setText(unformattedTypeTagName);
-            } else {
-                boothReservationTypeTV.setText(getResources().getString(R.string.booth_reservation_no_type_data));
-            }
-        } else {
-            boothReservationTypeTV.setText(getResources().getString(R.string.booth_reservation_no_type_data));
-        }
-    }
-
-    private void closeOutBoothReservationActivity() {
-        finish();
     }
 }

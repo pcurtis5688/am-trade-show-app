@@ -200,10 +200,15 @@ public class ConfigureBooths extends AppCompatActivity
                 showTable.addView(newBoothRow);
             }
         } else {
+            ///// HANDLE CASE - NO BOOTHS TO CONFIGURE
+            TableRow noBoothsForShowRow = new TableRow(configureBoothsActivityContext);
+            noBoothsForShowRow.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
             TextView noBoothsForShowTV = new TextView(configureBoothsActivityContext);
             noBoothsForShowTV.setText(getResources().getString(R.string.booth_configuration_no_booths_message));
+            noBoothsForShowTV.setTextAppearance(configureBoothsActivityContext, R.style.large_table_row_font_station);
             noBoothsForShowTV.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            TableRow noBoothsForShowRow = new TableRow(configureBoothsActivityContext);
+
             TableRow.LayoutParams params = new TableRow.LayoutParams();
             params.span = 6;
             params.topMargin = 50;
@@ -213,28 +218,20 @@ public class ConfigureBooths extends AppCompatActivity
 
         TableRow addBoothButtonRow = new TableRow(configureBoothsActivityContext);
         Button addBoothButton = new Button(configureBoothsActivityContext);
-        addBoothButton.setText(
+        addBoothButton.setText(getResources()
 
-                getResources()
+                .
 
-                        .
-
-                                getString(R.string.action_create_new_booth_string)
-
-        );
+                        getString(R.string.action_create_new_booth_string));
         addBoothButton.setTextAppearance(configureBoothsActivityContext, R.style.button_font_style);
-        addBoothButton.setOnClickListener(new View.OnClickListener()
-
-                                          {
-                                              @Override
-                                              public void onClick(View view) {
-                                                  Intent createBoothIntent = new Intent(configureBoothsActivityContext, CreateBooth.class);
-                                                  createBoothIntent.putExtra("show", show);
-                                                  startActivity(createBoothIntent);
-                                              }
-                                          }
-
-        );
+        addBoothButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent createBoothIntent = new Intent(configureBoothsActivityContext, CreateBooth.class);
+                createBoothIntent.putExtra("show", show);
+                startActivity(createBoothIntent);
+            }
+        });
         TableRow.LayoutParams params = new TableRow.LayoutParams();
         params.span = 7;
         addBoothButton.setLayoutParams(params);
@@ -319,7 +316,6 @@ public class ConfigureBooths extends AppCompatActivity
     private class GetShowBoothsTask extends AsyncTask<Void, Void, Void> {
         //////////PRIVATELY NECESSARY OBJECTS & UTILITY LISTS ONLY
         private ProgressDialog progressDialog;
-        private Account merchantAccount;
         private InventoryConnector inventoryConnector;
 
         @Override
@@ -328,16 +324,15 @@ public class ConfigureBooths extends AppCompatActivity
             progressDialog = new ProgressDialog(configureBoothsActivityContext);
             progressDialog.setMessage("Loading Booths...");
             progressDialog.show();
+            ///// CLOVER CONNECTIONS and LIST INIT
             boothList = new ArrayList<>();
+            inventoryConnector = new InventoryConnector(configureBoothsActivityContext, CloverAccount.getAccount(configureBoothsActivityContext), null);
+            inventoryConnector.connect();
         }
 
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                merchantAccount = CloverAccount.getAccount(configureBoothsActivityContext);
-                inventoryConnector = new InventoryConnector(configureBoothsActivityContext, merchantAccount, null);
-                inventoryConnector.connect();
-
                 ///// FETCH BOOTHS FOR SHOW
                 if (inventoryConnector.getItems().size() > 0) {
                     ListIterator<Item> iterator = inventoryConnector.getItems().listIterator();
@@ -354,8 +349,6 @@ public class ConfigureBooths extends AppCompatActivity
                     ServiceException |
                     ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
-            } finally {
-                inventoryConnector.disconnect();
             }
             return null;
         }
@@ -363,9 +356,9 @@ public class ConfigureBooths extends AppCompatActivity
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
+            inventoryConnector.disconnect();
             populateBoothsForShowTable();
             progressDialog.dismiss();
         }
-
     }
 }

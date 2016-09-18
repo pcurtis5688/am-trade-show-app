@@ -13,8 +13,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
 
@@ -104,6 +106,36 @@ public class EditBooth extends AppCompatActivity {
             boothTags = booth.getTags();
             populateTagFields();
         }
+
+        ///// ATTACH BUTTON LISTENERS
+        Button deleteBoothBtn = (Button) findViewById(R.id.edit_booth_delete_booth_btn);
+        Button cancelEditBoothBtn = (Button) findViewById(R.id.edit_booth_cancel_btn);
+        Button saveBoothChangesBtn = (Button) findViewById(R.id.edit_booth_save_changes_btn);
+        Button setBoothAvailableBtn = (Button) findViewById(R.id.set_booth_available_action_btn);
+        deleteBoothBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteBoothAction();
+            }
+        });
+        cancelEditBoothBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cancelEditBooth();
+            }
+        });
+        saveBoothChangesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveBoothChangesAction();
+            }
+        });
+        setBoothAvailableBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setBoothAvailableAction();
+            }
+        });
     }
 
     private void populateTagFields() {
@@ -119,6 +151,24 @@ public class EditBooth extends AppCompatActivity {
                 typeTag = currentTag;
             }
         }
+    }
+
+    public void cancelEditBooth() {
+        finish();
+    }
+
+    public void deleteBoothAction() {
+        DeleteBoothTask deleteBoothTask = new DeleteBoothTask();
+        deleteBoothTask.execute();
+    }
+
+    public void saveBoothChangesAction() {
+        UpdateBoothTask updateBoothTask = new UpdateBoothTask();
+        updateBoothTask.execute();
+    }
+
+    public void setBoothAvailableAction() {
+
     }
 
     private class UpdateBoothTask extends AsyncTask<Void, Void, Void> {
@@ -214,6 +264,7 @@ public class EditBooth extends AppCompatActivity {
             super.onPostExecute(result);
             progressDialog.dismiss();
             finish();
+            Toast.makeText(editBoothActivityContext, "Booth Updated!", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -254,19 +305,5 @@ public class EditBooth extends AppCompatActivity {
             progressDialog.dismiss();
             finish();
         }
-    }
-
-    public void cancelEditBooth(View view) {
-        finish();
-    }
-
-    public void deleteBoothAction(View view) {
-        DeleteBoothTask deleteBoothTask = new DeleteBoothTask();
-        deleteBoothTask.execute();
-    }
-
-    public void saveBoothChangesAction(View view) {
-        UpdateBoothTask updateBoothTask = new UpdateBoothTask();
-        updateBoothTask.execute();
     }
 }
