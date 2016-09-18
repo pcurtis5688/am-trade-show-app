@@ -51,17 +51,15 @@ public class TradeShows extends AppCompatActivity
         setContentView(R.layout.activity_trade_shows);
         Toolbar showSetupToolbar = (Toolbar) findViewById(R.id.show_setup_toolbar);
         setSupportActionBar(showSetupToolbar);
-
         DrawerLayout navDrawer = (DrawerLayout) findViewById(R.id.show_setup_drawerlayout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, navDrawer, showSetupToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         navDrawer.setDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_show_setup);
         navigationView.setNavigationItemSelectedListener(this);
 
-        ///////////DATA WORK////////////////////////////////////
+        ///// DATA WORK
         tradeShowsActivityContext = this;
         showSelectionTable = (TableLayout) findViewById(R.id.trade_show_selection_table);
     }
@@ -69,12 +67,7 @@ public class TradeShows extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-
-        fetchData();
-    }
-
-    ////////////DATA HANDLING METHODS///////////////////////////
-    private void fetchData() {
+        ///// REFRESH PAGE
         GetShowListTask getShowListTask = new GetShowListTask();
         getShowListTask.execute();
     }
@@ -83,18 +76,24 @@ public class TradeShows extends AppCompatActivity
         showSelectionTable.removeAllViews();
         if (showList != null && showList.size() > 0) {
             for (Tag show : showList) {
-                /////////////
                 final Tag finalizedShow = show;
+                ///// HANDLE SHOW NAME
                 List<String> decoupledShowArray = GlobalUtils.decoupleShowName(show.getName());
                 String showName = decoupledShowArray.get(0);
                 String showDate = decoupledShowArray.get(1);
                 String showLocation = decoupledShowArray.get(2);
                 String showNameForUser = getResources().getString(R.string.show_name_for_user_string, showName, showDate, showLocation);
 
+                ///// CREATE TEXT VIEWS AND BUTTONS
                 TableRow newShowRow = new TableRow(tradeShowsActivityContext);
                 TextView newShowTV = new TextView(tradeShowsActivityContext);
-                newShowTV.setText(showNameForUser);
                 Button editShowButton = new Button(tradeShowsActivityContext);
+
+                ///// HANDLE FONTS
+                newShowTV.setTextAppearance(tradeShowsActivityContext, R.style.large_table_row_font_station);
+
+                ///// SHOW NAME- BUTTON TXT- BUTTON ACTION
+                newShowTV.setText(showNameForUser);
                 editShowButton.setText(getResources().getString(R.string.trade_shows_edit_btn_string));
                 editShowButton.setTextAppearance(tradeShowsActivityContext, R.style.button_font_style);
                 editShowButton.setOnClickListener(new View.OnClickListener() {
@@ -103,11 +102,14 @@ public class TradeShows extends AppCompatActivity
                         editShowAction(finalizedShow);
                     }
                 });
+
+                ///// ADD NEW ROW
                 newShowRow.addView(newShowTV);
                 newShowRow.addView(editShowButton);
                 showSelectionTable.addView(newShowRow);
             }
         } else {
+            ///// HANDLE CASE - NO SHOWS CREATED
             TextView noShowsCreatedTV = new TextView(tradeShowsActivityContext);
             noShowsCreatedTV.setText(getResources().getString(R.string.no_trade_shows_available_string));
             noShowsCreatedTV.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -118,7 +120,8 @@ public class TradeShows extends AppCompatActivity
             noShowsCreatedRow.addView(noShowsCreatedTV, params);
             showSelectionTable.addView(noShowsCreatedRow);
         }
-        ////PUT THE LAST ROW (ADD SHOW BUTTON) IN
+
+        //// ADD SHOW BUTTON TO TABLE
         Button addShowButton = new Button(tradeShowsActivityContext);
         addShowButton.setText(getResources().getString(R.string.add_show_string));
         addShowButton.setTextAppearance(tradeShowsActivityContext, R.style.button_font_style);
@@ -140,47 +143,6 @@ public class TradeShows extends AppCompatActivity
         Intent editShowIntent = new Intent(tradeShowsActivityContext, EditShow.class);
         editShowIntent.putExtra("show", showToPass);
         startActivity(editShowIntent);
-    }
-
-    private class GetShowListTask extends AsyncTask<Void, Void, Void> {
-        private ProgressDialog progressDialog;
-        /////ACCESS CLOVER
-        private Account merchantAccount;
-        private InventoryConnector inventoryConnector;
-
-        @Override
-        protected void onPreExecute() {
-            progressDialog = new ProgressDialog(tradeShowsActivityContext);
-            progressDialog.setMessage(getResources().getString(R.string.loading_trade_shows_text));
-            progressDialog.show();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            merchantAccount = CloverAccount.getAccount(tradeShowsActivityContext);
-            inventoryConnector = new InventoryConnector(tradeShowsActivityContext, merchantAccount, null);
-            try {
-                showList = new ArrayList<>();
-                /////ONLY RETURN SHOW TAGS.
-                for (Tag currentTag : inventoryConnector.getTags()) {
-                    if (currentTag.getName().contains(" [Show]")) {
-                        showList.add(currentTag);
-                    }
-                }
-            } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
-                Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
-            } finally {
-                inventoryConnector.disconnect();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            populateTable();
-            progressDialog.dismiss();
-        }
     }
 
     ////////////NAVIGATION HANDLING METHODS ////////////////////
@@ -243,4 +205,42 @@ public class TradeShows extends AppCompatActivity
         return true;
     }
 
+    private class GetShowListTask extends AsyncTask<Void, Void, Void> {
+        private ProgressDialog progressDialog;
+        private InventoryConnector inventoryConnector;
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog = new ProgressDialog(tradeShowsActivityContext);
+            progressDialog.setMessage(getResources().getString(R.string.loading_trade_shows_text));
+            progressDialog.show();
+            ///// INITIALIZE CLOVER CONNECTIONS AND LIST                showList = new ArrayList<>();
+            showList = new ArrayList<>();
+            inventoryConnector = new InventoryConnector(tradeShowsActivityContext, CloverAccount.getAccount(tradeShowsActivityContext), null);
+            inventoryConnector.connect();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                /////ONLY RETURN SHOW TAGS.
+                for (Tag currentTag : inventoryConnector.getTags()) {
+                    if (currentTag.getName().contains(" [Show]")) {
+                        showList.add(currentTag);
+                    }
+                }
+            } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
+                Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            inventoryConnector.disconnect();
+            populateTable();
+            progressDialog.dismiss();
+        }
+    }
 }

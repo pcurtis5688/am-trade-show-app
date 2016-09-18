@@ -97,6 +97,8 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
                         configureBoothsSelectShowAction(finalizedShowTag);
                     }
                 });
+
+                ///// ADD NEW SHOW ROW TO SHOW TABLE
                 newShowSelectionRow.addView(newShowSelectionTitleTV);
                 newShowSelectionRow.addView(showSelectionButton);
                 configureBoothsShowSelectionTable.addView(newShowSelectionRow);
