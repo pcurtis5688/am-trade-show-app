@@ -69,72 +69,31 @@ public class BoothReservationShowSelection extends Activity
         getShowsForBoothSelection.execute();
     }
 
-    private class GetShowsForBoothSelection extends AsyncTask<Void, Void, Void> {
-        private ProgressDialog progressDialog;
-        /////////////CLOVER CONNECTIONS
-        private Account merchantAccount;
-        private InventoryConnector inventoryConnector;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(boothReservationShowSelectionActivityContext);
-            progressDialog.setMessage("Loading Shows...");
-            progressDialog.show();
-            showList = new ArrayList<>();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                ///////////CLOVER CONNECT
-                merchantAccount = CloverAccount.getAccount(boothReservationShowSelectionActivityContext);
-                inventoryConnector = new InventoryConnector(boothReservationShowSelectionActivityContext, merchantAccount, null);
-                inventoryConnector.connect();
-                ///////////GET SHOW LIST (TAG LIST) FOR BOOTH SELECTION
-                if (inventoryConnector.getTags().size() > 0) {
-                    for (Tag currentTag : inventoryConnector.getTags()) {
-                        if (currentTag.getName().contains(" [Show]")) {
-                            showList.add(currentTag);
-                        }
-                    }
-                }
-            } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
-                Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
-            } finally {
-                inventoryConnector.disconnect();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            populateShowSelectionTable();
-            progressDialog.dismiss();
-        }
-    }
-
     private void populateShowSelectionTable() {
         ///// NON-SHOW TAGS HAVE ALREADY BEEN FILTERED
         if (showList.size() > 0) {
             for (Tag show : showList) {
                 final Tag finalizedShowObject = show;
+
+                ///// HANDLE THE SHOW NAME
                 List<String> decoupledShowNameArr = GlobalUtils.decoupleShowName(show.getName());
                 String showName = decoupledShowNameArr.get(0);
                 String showDate = decoupledShowNameArr.get(1);
                 String showLocation = decoupledShowNameArr.get(2);
                 String showNameForUser = getResources().getString(R.string.show_name_for_user_string, showName, showDate, showLocation);
 
+                ///// TEXT VIEW AND BUTTON CREATION
                 TableRow newShowSelectionRow = new TableRow(boothReservationShowSelectionActivityContext);
-
                 TextView showSelectionNameTv = new TextView(boothReservationShowSelectionActivityContext);
-                showSelectionNameTv.setText(showNameForUser);
-                showSelectionNameTv.setTextAppearance(boothReservationShowSelectionActivityContext, R.style.large_table_row_font_station);
-
                 Button showSelectButton = new Button(boothReservationShowSelectionActivityContext);
-                showSelectButton.setText(getResources().getString(R.string.select_show_button_text));
+
+                ///// HANDLE FONTS
+                showSelectionNameTv.setTextAppearance(boothReservationShowSelectionActivityContext, R.style.large_table_row_font_station);
                 showSelectButton.setTextAppearance(boothReservationShowSelectionActivityContext, R.style.button_font_style);
+
+                ///// SHOW NAME BUTTON TEXT AND ACTION
+                showSelectionNameTv.setText(showNameForUser);
+                showSelectButton.setText(getResources().getString(R.string.select_show_button_text));
                 showSelectButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -142,12 +101,13 @@ public class BoothReservationShowSelection extends Activity
                     }
                 });
 
+                ///// ADD TO TABLE
                 newShowSelectionRow.addView(showSelectionNameTv);
                 newShowSelectionRow.addView(showSelectButton);
-
                 showSelectionTable.addView(newShowSelectionRow);
             }
         } else {
+            ///// HANDLE CASE - NO SHOWS CREATED
             TableRow noShowsPleaseCreateRow = new TableRow(boothReservationShowSelectionActivityContext);
             TextView noShowsPleaseCreateTv = new TextView(boothReservationShowSelectionActivityContext);
             noShowsPleaseCreateTv.setText(getResources().getString(R.string.no_trade_shows_available_string));
@@ -222,6 +182,52 @@ public class BoothReservationShowSelection extends Activity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.make_reservation_drawerlayout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private class GetShowsForBoothSelection extends AsyncTask<Void, Void, Void> {
+        private ProgressDialog progressDialog;
+        /////////////CLOVER CONNECTIONS
+        private Account merchantAccount;
+        private InventoryConnector inventoryConnector;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(boothReservationShowSelectionActivityContext);
+            progressDialog.setMessage("Loading Shows...");
+            progressDialog.show();
+            showList = new ArrayList<>();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                ///////////CLOVER CONNECT
+                merchantAccount = CloverAccount.getAccount(boothReservationShowSelectionActivityContext);
+                inventoryConnector = new InventoryConnector(boothReservationShowSelectionActivityContext, merchantAccount, null);
+                inventoryConnector.connect();
+                ///////////GET SHOW LIST (TAG LIST) FOR BOOTH SELECTION
+                if (inventoryConnector.getTags().size() > 0) {
+                    for (Tag currentTag : inventoryConnector.getTags()) {
+                        if (currentTag.getName().contains(" [Show]")) {
+                            showList.add(currentTag);
+                        }
+                    }
+                }
+            } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
+                Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
+            } finally {
+                inventoryConnector.disconnect();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            populateShowSelectionTable();
+            progressDialog.dismiss();
+        }
     }
 }
 

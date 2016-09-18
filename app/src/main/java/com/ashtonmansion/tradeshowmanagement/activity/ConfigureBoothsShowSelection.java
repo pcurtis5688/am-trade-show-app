@@ -71,19 +71,26 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
         if (showList.size() > 0) {
             for (Tag showTag : showList) {
                 final Tag finalizedShowTag = showTag;
+
+                ///// HANDLE THE SHOW NAME
                 List<String> decoupledShowNameArr = Arrays.asList(showTag.getName().split(","));
                 String showName = decoupledShowNameArr.get(0);
                 String showDate = decoupledShowNameArr.get(1);
                 String showLocation = decoupledShowNameArr.get(2);
                 String showNameForUser = getResources().getString(R.string.show_name_for_user_string, showName, showDate, showLocation);
 
+                ///// TEXT VIEW AND BUTTON CONFIGURATION
                 TableRow newShowSelectionRow = new TableRow(configureBoothsShowSelectionActivityContext);
                 TextView newShowSelectionTitleTV = new TextView(configureBoothsShowSelectionActivityContext);
-                newShowSelectionTitleTV.setText(showNameForUser);
-                newShowSelectionTitleTV.setTextAppearance(configureBoothsShowSelectionActivityContext, R.style.table_line_item_font_shows);
                 Button showSelectionButton = new Button(configureBoothsShowSelectionActivityContext);
-                showSelectionButton.setText(getResources().getString(R.string.show_selection_button_text));
+
+                ///// HANDLE FONTS
+                newShowSelectionTitleTV.setTextAppearance(configureBoothsShowSelectionActivityContext, R.style.large_table_row_font_station);
                 showSelectionButton.setTextAppearance(configureBoothsShowSelectionActivityContext, R.style.button_font_style);
+
+                ///// SET SHOW NAME AND BUTTON TEXT
+                newShowSelectionTitleTV.setText(showNameForUser);
+                showSelectionButton.setText(getResources().getString(R.string.show_selection_button_text));
                 showSelectionButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -101,48 +108,6 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
         Intent configureBoothsForShowIntent = new Intent(configureBoothsShowSelectionActivityContext, ConfigureBooths.class);
         configureBoothsForShowIntent.putExtra("show", showTag);
         startActivity(configureBoothsForShowIntent);
-    }
-
-    private class GetShowListTask extends AsyncTask<Void, Void, Void> {
-        private ProgressDialog progressDialog;
-        /////CLOVER CONNECT
-        private Account merchantAccount;
-        private InventoryConnector inventoryConnector;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(configureBoothsShowSelectionActivityContext);
-            progressDialog.setMessage("Loading Shows...");
-            progressDialog.show();
-            showList = new ArrayList<>();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                merchantAccount = CloverAccount.getAccount(configureBoothsShowSelectionActivityContext);
-                inventoryConnector = new InventoryConnector(configureBoothsShowSelectionActivityContext, merchantAccount, null);
-                inventoryConnector.connect();
-                for (Tag currentTag : inventoryConnector.getTags()) {
-                    if (currentTag.getName().contains(" [Show]")) {
-                        showList.add(currentTag);
-                    }
-                }
-            } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
-                Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
-            } finally {
-                inventoryConnector.disconnect();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            populateShowSelectionTable();
-            progressDialog.dismiss();
-        }
     }
 
     ////////////////NAVIGATION METHODS//////////////////////////
@@ -203,5 +168,47 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.configure_booths_show_selection_drawerlayout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private class GetShowListTask extends AsyncTask<Void, Void, Void> {
+        private ProgressDialog progressDialog;
+        /////CLOVER CONNECT
+        private Account merchantAccount;
+        private InventoryConnector inventoryConnector;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(configureBoothsShowSelectionActivityContext);
+            progressDialog.setMessage("Loading Shows...");
+            progressDialog.show();
+            showList = new ArrayList<>();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                merchantAccount = CloverAccount.getAccount(configureBoothsShowSelectionActivityContext);
+                inventoryConnector = new InventoryConnector(configureBoothsShowSelectionActivityContext, merchantAccount, null);
+                inventoryConnector.connect();
+                for (Tag currentTag : inventoryConnector.getTags()) {
+                    if (currentTag.getName().contains(" [Show]")) {
+                        showList.add(currentTag);
+                    }
+                }
+            } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
+                Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
+            } finally {
+                inventoryConnector.disconnect();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            populateShowSelectionTable();
+            progressDialog.dismiss();
+        }
     }
 }

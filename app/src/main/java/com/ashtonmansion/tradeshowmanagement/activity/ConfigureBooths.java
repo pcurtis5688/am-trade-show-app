@@ -140,6 +140,7 @@ public class ConfigureBooths extends AppCompatActivity
             for (Item booth : boothList) {
                 final Item finalizedBoothItem = booth;
 
+                ///// CREATE TEXT VIEWS
                 TableRow newBoothRow = new TableRow(configureBoothsActivityContext);
                 TextView boothNumberTv = new TextView(configureBoothsActivityContext);
                 TextView boothPriceTv = new TextView(configureBoothsActivityContext);
@@ -148,6 +149,14 @@ public class ConfigureBooths extends AppCompatActivity
                 TextView boothTypeTv = new TextView(configureBoothsActivityContext);
                 TextView boothAvailabilityTv = new TextView(configureBoothsActivityContext);
 
+                ///// SET FONTS
+                boothNumberTv.setTextAppearance(configureBoothsActivityContext, R.style.large_table_row_font_station);
+                boothPriceTv.setTextAppearance(configureBoothsActivityContext, R.style.large_table_row_font_station);
+                boothSizeTv.setTextAppearance(configureBoothsActivityContext, R.style.large_table_row_font_station);
+                boothAreaTv.setTextAppearance(configureBoothsActivityContext, R.style.large_table_row_font_station);
+                boothTypeTv.setTextAppearance(configureBoothsActivityContext, R.style.large_table_row_font_station);
+
+                ///// SET ROW DATA
                 boothNumberTv.setText(booth.getSku());
                 boothPriceTv.setText(GlobalUtils.getFormattedPriceStringFromLong(booth.getPrice()));
 
@@ -180,7 +189,7 @@ public class ConfigureBooths extends AppCompatActivity
                     }
                 });
 
-                ////////ADD NEW TEXTVIEW TO ROW AND ROW TO TABLE
+                ///// ADD NEW ROW TO BOOTH CONFIG TABLE
                 newBoothRow.addView(boothNumberTv);
                 newBoothRow.addView(boothPriceTv);
                 newBoothRow.addView(boothSizeTv);
@@ -190,9 +199,7 @@ public class ConfigureBooths extends AppCompatActivity
                 newBoothRow.addView(editBoothButton);
                 showTable.addView(newBoothRow);
             }
-        } else
-
-        {
+        } else {
             TextView noBoothsForShowTV = new TextView(configureBoothsActivityContext);
             noBoothsForShowTV.setText(getResources().getString(R.string.booth_configuration_no_booths_message));
             noBoothsForShowTV.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -245,59 +252,6 @@ public class ConfigureBooths extends AppCompatActivity
         Intent filterBoothsIntent = new Intent(configureBoothsActivityContext, FilterBooths.class);
         filterBoothsIntent.putExtra("show", show);
         startActivity(filterBoothsIntent);
-    }
-
-    private class GetShowBoothsTask extends AsyncTask<Void, Void, Void> {
-        //////////PRIVATELY NECESSARY OBJECTS & UTILITY LISTS ONLY
-        private ProgressDialog progressDialog;
-        private Account merchantAccount;
-        private InventoryConnector inventoryConnector;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(configureBoothsActivityContext);
-            progressDialog.setMessage("Loading Booths...");
-            progressDialog.show();
-            boothList = new ArrayList<>();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                merchantAccount = CloverAccount.getAccount(configureBoothsActivityContext);
-                inventoryConnector = new InventoryConnector(configureBoothsActivityContext, merchantAccount, null);
-                inventoryConnector.connect();
-
-                ///// FETCH BOOTHS FOR SHOW
-                if (inventoryConnector.getItems().size() > 0) {
-                    ListIterator<Item> iterator = inventoryConnector.getItems().listIterator();
-                    do {
-                        Item boothTest = iterator.next();
-                        for (Tag boothTestTag : boothTest.getTags()) {
-                            if (boothTestTag.getId().equalsIgnoreCase(show.getId()))
-                                boothList.add(boothTest);
-                        }
-                    } while (iterator.hasNext());
-                }
-            } catch (RemoteException |
-                    BindingException |
-                    ServiceException |
-                    ClientException e1) {
-                Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
-            } finally {
-                inventoryConnector.disconnect();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            populateBoothsForShowTable();
-            progressDialog.dismiss();
-        }
-
     }
 
     ///// NAVIGATION METHODS
@@ -360,5 +314,58 @@ public class ConfigureBooths extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.configure_booths_drawerlayout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private class GetShowBoothsTask extends AsyncTask<Void, Void, Void> {
+        //////////PRIVATELY NECESSARY OBJECTS & UTILITY LISTS ONLY
+        private ProgressDialog progressDialog;
+        private Account merchantAccount;
+        private InventoryConnector inventoryConnector;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(configureBoothsActivityContext);
+            progressDialog.setMessage("Loading Booths...");
+            progressDialog.show();
+            boothList = new ArrayList<>();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                merchantAccount = CloverAccount.getAccount(configureBoothsActivityContext);
+                inventoryConnector = new InventoryConnector(configureBoothsActivityContext, merchantAccount, null);
+                inventoryConnector.connect();
+
+                ///// FETCH BOOTHS FOR SHOW
+                if (inventoryConnector.getItems().size() > 0) {
+                    ListIterator<Item> iterator = inventoryConnector.getItems().listIterator();
+                    do {
+                        Item boothTest = iterator.next();
+                        for (Tag boothTestTag : boothTest.getTags()) {
+                            if (boothTestTag.getId().equalsIgnoreCase(show.getId()))
+                                boothList.add(boothTest);
+                        }
+                    } while (iterator.hasNext());
+                }
+            } catch (RemoteException |
+                    BindingException |
+                    ServiceException |
+                    ClientException e1) {
+                Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
+            } finally {
+                inventoryConnector.disconnect();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            populateBoothsForShowTable();
+            progressDialog.dismiss();
+        }
+
     }
 }
