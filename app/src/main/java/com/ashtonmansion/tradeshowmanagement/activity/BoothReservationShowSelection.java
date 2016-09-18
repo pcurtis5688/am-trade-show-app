@@ -1,6 +1,7 @@
 package com.ashtonmansion.tradeshowmanagement.activity;
 
 import android.accounts.Account;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -36,7 +37,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class BoothReservationShowSelection extends AppCompatActivity
+public class BoothReservationShowSelection extends Activity
         implements NavigationView.OnNavigationItemSelectedListener {
     /////ACTIVITY AND UI VARS
     private Context boothReservationShowSelectionActivityContext;
@@ -49,13 +50,7 @@ public class BoothReservationShowSelection extends AppCompatActivity
         ///////////UI WORK/////////////////////////////////////
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_booth_reservation_show_selection);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.booth_selection_show_selection_toolbar);
-        setSupportActionBar(toolbar);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.make_reservation_drawerlayout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_make_reservation);
         navigationView.setNavigationItemSelectedListener(this);
 

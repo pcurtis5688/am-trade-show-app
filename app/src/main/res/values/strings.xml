@@ -342,4 +342,6 @@
 
     <string name="swap_generic_for_reserved_btn_text">Swap Generic For Selected</string>
 
+    <string name="show_selection_popup_menu_header_text">Select a Show for the Reservation</string>
+
 </resources>
