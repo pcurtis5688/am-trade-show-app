@@ -261,8 +261,11 @@ public class ReserveBoothDetails extends AppCompatActivity {
                         orderConnector.deleteLineItems(orderID, itemsToRemoveIncludingGenericBooth);
 
                         for (Item item : inventoryConnector.getItems()) {
-                            if (item.getId().equalsIgnoreCase(booth.getId()))
+                            if (item.getId().equalsIgnoreCase(booth.getId())) {
                                 orderConnector.addFixedPriceLineItem(orderID, item.getId(), null, null);
+                                item.setCode(getString(R.string.reserved_keyword));
+                                inventoryConnector.updateItem(item);
+                            }
                         }
                         ///// SET CUSTOMER TO EITHER THE NEW OR SELECTED ONE (ONLY IF SWAPPED)
                         List<Customer> customerInListForOrder = new ArrayList<Customer>();
@@ -330,19 +333,14 @@ public class ReserveBoothDetails extends AppCompatActivity {
             try {
                 ///// CREATE A NEW ORDER AND FETCH ID
                 boothOrder = orderConnector.createOrder(new Order());
-                String newOrderID = boothOrder.getId();
-                ///////////////////////
-                ///// GET BOOTH FROM INVENTORY CONNECTOR
-                boothItem = inventoryConnector.getItem(booth.getId());
-                if (boothItem.getPriceType() == PriceType.FIXED) {
-                    orderConnector.addFixedPriceLineItem(newOrderID, booth.getId(), null, null);
-                    boothItem.setCode("RESERVED");
-                    inventoryConnector.updateItem(boothItem);
-                }
-
-                //// TODO: 9/14/2016 other price types
                 boothOrder.setCustomers(customerInListForOrder);
+                orderConnector.addFixedPriceLineItem(boothOrder.getId(), booth.getId(), null, null);
                 orderConnector.updateOrder(boothOrder);
+
+                ///// GET BOOTH FROM INVENTORY CONNECTOR AND SET TO RESERVED
+                boothItem = inventoryConnector.getItem(booth.getId());
+                boothItem.setCode("RESERVED");
+                inventoryConnector.updateItem(boothItem);
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
             } finally {
@@ -513,7 +511,8 @@ public class ReserveBoothDetails extends AppCompatActivity {
     }
 
     private void closeOutBoothReservationActivity() {
-        finish();
         Toast.makeText(reserveBoothDetailsActivityContext, getResources().getString(R.string.booth_reservation_booth_reserved_notification), Toast.LENGTH_SHORT).show();
+        finish();
+        return;
     }
 }

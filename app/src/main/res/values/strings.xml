@@ -333,6 +333,8 @@
     <string name="create_custom_tender_button_text">Create Custom Tender</string>
     <string name="delete_custom_tender_button_text">Delete Custom Tender</string>
     <string name="custom_tender_name">Select/Reserve Booth</string>
+    <string name="available_keyword">AVAILABLE</string>
+    <string name="reserved_keyword">RESERVED</string>
 
     <!-- SELECT BOOTH ACTIVITY BEGUN FROM CLOVER STRINGS -->
     <string name="title_activity_select_booth">Select A Booth</string>
