@@ -250,7 +250,9 @@ public class ReserveBoothDetails extends AppCompatActivity {
                     List<LineItem> lineItemList = utilityOrder.getLineItems();
                     List<LineItem> swappedLineItemList = new ArrayList<>();
                     for (LineItem lineItem : lineItemList) {
-                        if (lineItem.getName().contains("Booth (Generic)"))
+                        if (lineItem.getName().contains("Booth L")
+                                || lineItem.getName().contains("Booth M")
+                                || lineItem.getName().contains("Booth S"))
                             genericBoothID = lineItem.getId();
                         else swappedLineItemList.add(lineItem);
                     }
@@ -262,7 +264,6 @@ public class ReserveBoothDetails extends AppCompatActivity {
                         for (Item item : inventoryConnector.getItems()) {
                             if (item.getId().equalsIgnoreCase(booth.getId())) {
                                 orderConnector.addFixedPriceLineItem(orderID, item.getId(), null, null);
-
                                 setAvailability(item.getId());
                             }
                         }
@@ -361,6 +362,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
             progressDialog.dismiss();
+            Toast.makeText(reserveBoothDetailsActivityContext, getResources().getString(R.string.booth_reservation_booth_reserved_notification), Toast.LENGTH_LONG).show();
             closeOutBoothReservationActivity();
         }
     }
@@ -518,8 +520,6 @@ public class ReserveBoothDetails extends AppCompatActivity {
     }
 
     private void closeOutBoothReservationActivity() {
-        Toast.makeText(reserveBoothDetailsActivityContext, getResources().getString(R.string.booth_reservation_booth_reserved_notification), Toast.LENGTH_SHORT).show();
         finish();
-        return;
     }
 }
