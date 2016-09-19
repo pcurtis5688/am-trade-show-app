@@ -339,6 +339,7 @@ public class EditBooth extends AppCompatActivity {
             super.onPostExecute(result);
             progressDialog.dismiss();
             finish();
+            Toast.makeText(editBoothActivityContext, getResources().getString(R.string.booth_deleted_successfully_msg), Toast.LENGTH_LONG).show();
         }
     }
 }
