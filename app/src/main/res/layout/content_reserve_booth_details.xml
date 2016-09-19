@@ -239,6 +239,17 @@
                     android:layout_height="wrap_content"
                     android:text="@string/reserve_booth_button_text" />
             </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/booth_reserved_confirmation_textview"
+                    style="@style/large_table_row_font_station"
+                    android:layout_span="2"
+                    android:text="@string/booth_reservation_booth_reserved_notification"
+                    android:textStyle="bold|italic"
+                    android:visibility="gone"/>
+            </TableRow>
         </TableLayout>
 
     </LinearLayout>

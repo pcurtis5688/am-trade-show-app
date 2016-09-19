@@ -110,8 +110,8 @@ public class ConfigureBooths extends AppCompatActivity
         boothAreaHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style);
         boothTypeHeaderTv.setText(getResources().getString(R.string.configure_show_booths_type_header));
         boothTypeHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style);
-        boothCustomerHeaderTv.setText(getResources().getString(R.string.configure_show_booths_customer_header));
-        boothCustomerHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style);
+        boothCustomerHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_availability_header));
+        boothCustomerHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.span_2_and_table_header_style);
 
         Button boothFilterButton = new Button(configureBoothsActivityContext);
         boothFilterButton.setText(getResources().getString(R.string.configure_show_booths_filter_btn_text));
@@ -175,10 +175,12 @@ public class ConfigureBooths extends AppCompatActivity
                 if (booth.getCode().equalsIgnoreCase("AVAILABLE")) {
                     boothAvailabilityTv.setText(getResources().getString(R.string.booth_reservation_available_string));
                     boothAvailabilityTv.setTextAppearance(configureBoothsActivityContext, R.style.available_booth_style);
-                } else if (booth.getCode().equalsIgnoreCase("RESERVED")) {
-                    boothAvailabilityTv.setText(getResources().getString(R.string.booth_reservation_unavailable_string));
+                } else {
+                    boothAvailabilityTv.setText(booth.getCode());
                     boothAvailabilityTv.setTextAppearance(configureBoothsActivityContext, R.style.reserved_booth_style);
                 }
+                boothAvailabilityTv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
                 Button editBoothButton = new Button(configureBoothsActivityContext);
                 editBoothButton.setText(getResources().getString(R.string.configure_show_booths_edit_booth_btn_text));
                 editBoothButton.setTextAppearance(configureBoothsActivityContext, R.style.button_font_style);

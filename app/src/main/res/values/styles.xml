@@ -30,6 +30,13 @@
         <item name="android:textAlignment">center</item>
     </style>
 
+    <style name="span_2_and_table_header_style">
+        <item name="android:layout_span">2</item>
+        <item name="android:textSize">@dimen/dimen_36sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
     <style name="large_table_row_font_station">
         <item name="android:textSize">@dimen/dimen_30sp</item>
         <item name="android:textAlignment">center</item>

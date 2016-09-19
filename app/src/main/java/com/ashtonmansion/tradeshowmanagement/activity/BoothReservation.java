@@ -49,9 +49,6 @@ public class BoothReservation extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_booth_reservation);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.booth_reservation_toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //////////////FIELD DEFINITIONS & DATA HANDLING
         boothReservationActivityContext = this;
@@ -116,6 +113,7 @@ public class BoothReservation extends AppCompatActivity {
                     boothAvailabilityTv.setText(booth.getCode());
                     boothAvailabilityTv.setTextAppearance(boothReservationActivityContext, R.style.reserved_booth_style);
                 }
+                boothAvailabilityTv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
                 ///// WILL FILTER OUT SHOW TAG FROM BOOTH
                 Tag sizeTag;
@@ -208,7 +206,7 @@ public class BoothReservation extends AppCompatActivity {
         boothTypeHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_type_header));
         boothTypeHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
         boothAvailabilityTv.setText(getResources().getString(R.string.booth_selection_booth_availability_header));
-        boothAvailabilityTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
+        boothAvailabilityTv.setTextAppearance(boothReservationActivityContext, R.style.span_2_and_table_header_style);
 
         boothSelectionTableHeaderRow.addView(boothNumberHeaderTv);
         boothSelectionTableHeaderRow.addView(boothPriceHeaderTv);

@@ -273,6 +273,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
 
     private void finalizeBoothReservation() {
         swapGenericForSelectedTask();
+        Toast.makeText(reserveBoothDetailsActivityContext, getResources().getString(R.string.booth_reservation_booth_reserved_notification), Toast.LENGTH_LONG).show();
     }
 
     private void swapGenericForSelectedTask() {
@@ -327,6 +328,10 @@ public class ReserveBoothDetails extends AppCompatActivity {
                 inventoryConnector.disconnect();
                 orderConnector = null;
                 inventoryConnector = null;
+                findViewById(R.id.finalize_booth_reservation_btn).setEnabled(false);
+                findViewById(R.id.cancel_reserve_booth_btn).setEnabled(false);
+                findViewById(R.id.booth_reserved_confirmation_textview).setVisibility(View.VISIBLE);
+                //closeOutBoothReservationActivity();
             }
         }.execute();
     }
@@ -389,6 +394,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
 
     private void closeOutBoothReservationActivity() {
         // TODO: 9/19/2016 figure out how to toast/close
+        startActivity(getParentActivityIntent());
     }
 
     /////////////////////////ignore below for now
