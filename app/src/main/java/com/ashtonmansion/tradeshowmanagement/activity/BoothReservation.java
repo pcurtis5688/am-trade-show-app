@@ -113,10 +113,8 @@ public class BoothReservation extends AppCompatActivity {
                     boothAvailabilityTv.setText(getResources().getString(R.string.booth_reservation_available_string));
                     boothAvailabilityTv.setTextAppearance(boothReservationActivityContext, R.style.available_booth_style);
                 } else {
-                    if (booth.getCode().equalsIgnoreCase("RESERVED")) {
-                        boothAvailabilityTv.setText(getResources().getString(R.string.booth_reservation_unavailable_string));
-                        boothAvailabilityTv.setTextAppearance(boothReservationActivityContext, R.style.reserved_booth_style);
-                    } else boothAvailabilityTv.setText(booth.getCode());
+                    boothAvailabilityTv.setText(booth.getCode());
+                    boothAvailabilityTv.setTextAppearance(boothReservationActivityContext, R.style.reserved_booth_style);
                 }
 
                 ///// WILL FILTER OUT SHOW TAG FROM BOOTH
@@ -159,7 +157,7 @@ public class BoothReservation extends AppCompatActivity {
                     }
                 });
                 reserveBoothButton.setText(getResources().getString(R.string.reserve_booth_button_text));
-                if (finalizedBooth.getCode().equalsIgnoreCase("RESERVED")) {
+                if (!finalizedBooth.getCode().equalsIgnoreCase("AVAILABLE")) {
                     reserveBoothButton.setEnabled(false);
                 }
 

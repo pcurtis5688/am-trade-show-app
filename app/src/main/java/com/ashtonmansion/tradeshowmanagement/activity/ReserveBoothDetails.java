@@ -4,17 +4,25 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
 import com.ashtonmansion.tradeshowmanagement.util.GlobalUtils;
 import com.clover.sdk.util.CloverAccount;
+import com.clover.sdk.v1.BindingException;
+import com.clover.sdk.v1.ClientException;
+import com.clover.sdk.v1.ServiceException;
 import com.clover.sdk.v1.customer.CustomerConnector;
 import com.clover.sdk.v3.customers.Customer;
 import com.clover.sdk.v3.inventory.InventoryConnector;
@@ -30,7 +38,6 @@ import java.util.List;
 public class ReserveBoothDetails extends AppCompatActivity {
     private Context reserveBoothDetailsActivityContext;
     ///////CLOVER DATA
-    private CustomerConnector customerConnector;
     private OrderConnector orderConnector;
     private InventoryConnector inventoryConnector;
     ///////SHOW DATA
@@ -72,6 +79,10 @@ public class ReserveBoothDetails extends AppCompatActivity {
         /////POPULATE BOOTH DATA IN UI
         TextView boothReservationHeader = (TextView) findViewById(R.id.booth_reservation_header);
         TextView boothReservationPriceTV = (TextView) findViewById(R.id.booth_reservation_details_price);
+        ///// SET FONTS
+        boothReservationHeader.setTextAppearance(reserveBoothDetailsActivityContext, R.style.large_table_row_font_station);
+        boothReservationPriceTV.setTextAppearance(reserveBoothDetailsActivityContext, R.style.large_table_row_font_station);
+        ///// POPULATE FIELDS
         boothReservationHeader.setText(getResources().getString(R.string.booth_reservation_details_header_text, showName, booth.getSku()));
         boothReservationPriceTV.setText(GlobalUtils.getFormattedPriceStringFromLong(booth.getPrice()));
         populateTagFields();
@@ -130,22 +141,130 @@ public class ReserveBoothDetails extends AppCompatActivity {
     }
 
     private void populateExistingCustomer() {
-        ///// TEXTVIEWS FOR SELECTED CUSTOMER
+        ///// GET TV FOR SELECTED CUSTOMER AND POPULATE
         TextView selectedCustomerFirstAndLastTv = (TextView) findViewById(R.id.selected_customer_first_and_last);
-        TextView selectedCustomerPhoneNumberTv = (TextView) findViewById(R.id.selected_customer_phone_number);
-        TextView selectedCustomerEmailAddressTv = (TextView) findViewById(R.id.selected_customer_email_address);
-        ///// HANDLE FONTS
-        selectedCustomerFirstAndLastTv.setTextAppearance(reserveBoothDetailsActivityContext, R.style.large_table_row_font_station);
-        selectedCustomerPhoneNumberTv.setTextAppearance(reserveBoothDetailsActivityContext, R.style.large_table_row_font_station);
-        selectedCustomerEmailAddressTv.setTextAppearance(reserveBoothDetailsActivityContext, R.style.large_table_row_font_station);
-        ///// SET SELECTED CUSTOMER DATA
-        selectedCustomerFirstAndLastTv.setText(getResources().getString(R.string.customer_selected_first_and_last_string, customerAttachedToOrder.getLastName(), customerAttachedToOrder.getFirstName()));
-        selectedCustomerPhoneNumberTv.setText(customerAttachedToOrder.getPhoneNumbers().get(0).getPhoneNumber());
-        selectedCustomerEmailAddressTv.setText(customerAttachedToOrder.getEmailAddresses().get(0).getEmailAddress());
+        TextView selectedCustomerPhoneTv = (TextView) findViewById(R.id.selected_customer_phone_number);
+        TextView selectedCustomerEmailTv = (TextView) findViewById(R.id.selected_customer_email_address);
+        selectedCustomerFirstAndLastTv.setText(getResources().getString(R.string.selected_customer_first_and_last_text, customerAttachedToOrder.getLastName(), customerAttachedToOrder.getFirstName()));
+        selectedCustomerPhoneTv.setText(getResources().getString(R.string.selected_customer_phone_number_text, customerAttachedToOrder.getPhoneNumbers().get(0).getPhoneNumber()));
+        selectedCustomerEmailTv.setText(getResources().getString(R.string.selected_customer_email_address_text, customerAttachedToOrder.getEmailAddresses().get(0).getEmailAddress()));
     }
 
     private void promptForCustomer() {
+        findViewById(R.id.finalize_booth_reservation_btn).setEnabled(false);
+        findViewById(R.id.selected_customer_header_tv).setVisibility(View.GONE);
+        findViewById(R.id.selected_customer_first_and_last).setVisibility(View.GONE);
+        findViewById(R.id.selected_customer_phone_number).setVisibility(View.GONE);
+        findViewById(R.id.selected_customer_email_address).setVisibility(View.GONE);
+        TableLayout newCustomerEntryTable = (TableLayout) findViewById(R.id.br_new_customer_table_layout);
+        newCustomerEntryTable.setVisibility(View.VISIBLE);
+        Button saveCustomerInformationBtn = (Button) findViewById(R.id.save_customer_to_order_btn);
+        saveCustomerInformationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveNewCustomerInfo();
+            }
+        });
+    }
 
+    private void saveNewCustomerInfo() {
+        new AsyncTask<Void, Void, Void>() {
+            private ProgressDialog progressDialog;
+            private CustomerConnector customerConnector;
+            private OrderConnector orderConnector;
+            private com.clover.sdk.v1.customer.Customer v1CustomerCreated;
+            private String newCustomerID;
+            private String newCustomerFirstName;
+            private String newCustomerLastName;
+            private String newCustomerPhoneNumber;
+            private String newCustomerEmailAddress;
+            private String newCustomerAddressLine1;
+            private String newCustomerAddressLine2;
+            private String newCustomerAddressLine3;
+            private String newCustomerCity;
+            private String newCustomerState;
+            private String newCustomerZipCode;
+            private boolean newCustomerIsMarketingAllowed;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                progressDialog = new ProgressDialog(reserveBoothDetailsActivityContext);
+                progressDialog.setMessage(getResources().getString(R.string.br_new_customer_creating_new_customer_text));
+                progressDialog.show();
+                EditText newCustomerFirstNameField = (EditText) findViewById(R.id.br_new_customer_first_name_field);
+                EditText newCustomerLastNameField = (EditText) findViewById(R.id.br_new_customer_last_name_field);
+                EditText newCustomerPhoneNumberField = (EditText) findViewById(R.id.br_new_customer_phone_field);
+                EditText newCustomerEmailAddressField = (EditText) findViewById(R.id.br_new_customer_email_field);
+                EditText newCustomerAddressLine1Field = (EditText) findViewById(R.id.br_new_customer_address_line_1_field);
+                EditText newCustomerAddressLine2Field = (EditText) findViewById(R.id.br_new_customer_address_line_2_field);
+                EditText newCustomerAddressLine3Field = (EditText) findViewById(R.id.br_new_customer_address_line_3_field);
+                EditText newCustomerCityField = (EditText) findViewById(R.id.br_new_customer_city_field);
+                Spinner newCustomerStateSpinner = (Spinner) findViewById(R.id.br_new_customer_state_spinner);
+                EditText newCustomerZipCodeField = (EditText) findViewById(R.id.br_new_customer_zip_code_field);
+                CheckBox newCustomerIsMarketingAllowedChkbox = (CheckBox) findViewById(R.id.br_new_customer_is_marketing_allowed_chkbox);
+                newCustomerFirstName = newCustomerFirstNameField.getText().toString();
+                newCustomerLastName = newCustomerLastNameField.getText().toString();
+                newCustomerPhoneNumber = newCustomerPhoneNumberField.getText().toString();
+                newCustomerEmailAddress = newCustomerEmailAddressField.getText().toString();
+                newCustomerAddressLine1 = newCustomerAddressLine1Field.getText().toString();
+                newCustomerAddressLine2 = newCustomerAddressLine2Field.getText().toString();
+                newCustomerAddressLine3 = newCustomerAddressLine3Field.getText().toString();
+                newCustomerCity = newCustomerCityField.getText().toString();
+                newCustomerState = newCustomerStateSpinner.getSelectedItem().toString();
+                newCustomerZipCode = newCustomerZipCodeField.getText().toString();
+                newCustomerIsMarketingAllowed = newCustomerIsMarketingAllowedChkbox.isChecked();
+                ///// PREPARE CLOVER CONNECTIONS 1ST
+                customerConnector = new CustomerConnector(reserveBoothDetailsActivityContext, CloverAccount.getAccount(reserveBoothDetailsActivityContext), null);
+                orderConnector = new OrderConnector(reserveBoothDetailsActivityContext, CloverAccount.getAccount(reserveBoothDetailsActivityContext), null);
+                customerConnector.connect();
+                orderConnector.connect();
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    v1CustomerCreated = customerConnector.createCustomer(newCustomerFirstName, newCustomerLastName, newCustomerIsMarketingAllowed);
+                    Customer v3Customer = GlobalUtils.getv3CustomerFromv1Customer(v1CustomerCreated, v1CustomerCreated.getPhoneNumbers(), v1CustomerCreated.getEmailAddresses(), v1CustomerCreated.getAddresses());
+                    newCustomerID = v1CustomerCreated.getId();
+                    customerConnector.addPhoneNumber(newCustomerID, newCustomerPhoneNumber);
+                    customerConnector.addEmailAddress(newCustomerID, newCustomerEmailAddress);
+                    customerConnector.addAddress(newCustomerID, newCustomerAddressLine1, newCustomerAddressLine2, newCustomerAddressLine3, newCustomerCity, newCustomerState, newCustomerZipCode);
+                    List<Customer> customerInListForOrder = new ArrayList<Customer>();
+                    customerInListForOrder.add(v3Customer);
+                    orderConnector.updateOrder(orderConnector.getOrder(orderID).setCustomers(customerInListForOrder));
+                } catch (RemoteException
+                        | BindingException
+                        | ServiceException
+                        | ClientException e1) {
+                    Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                super.onPostExecute(result);
+                customerConnector.disconnect();
+                customerConnector = null;
+                ///// DISABLE ALL EDITABLE CUSTOMER FIELDS
+                findViewById(R.id.br_new_customer_first_name_field).setEnabled(false);
+                findViewById(R.id.br_new_customer_last_name_field).setEnabled(false);
+                findViewById(R.id.br_new_customer_phone_field).setEnabled(false);
+                findViewById(R.id.br_new_customer_email_field).setEnabled(false);
+                findViewById(R.id.br_new_customer_address_line_1_field).setEnabled(false);
+                findViewById(R.id.br_new_customer_address_line_2_field).setEnabled(false);
+                findViewById(R.id.br_new_customer_address_line_3_field).setEnabled(false);
+                findViewById(R.id.br_new_customer_city_field).setEnabled(false);
+                findViewById(R.id.br_new_customer_state_spinner).setEnabled(false);
+                findViewById(R.id.br_new_customer_zip_code_field).setEnabled(false);
+                findViewById(R.id.save_customer_to_order_btn).setEnabled(false);
+                ///// ENABLE FINALIZATION OF RESERVATION
+                findViewById(R.id.finalize_booth_reservation_btn).setEnabled(true);
+                progressDialog.dismiss();
+                Toast.makeText(reserveBoothDetailsActivityContext, getResources().getString(R.string.customer_created_message_text), Toast.LENGTH_LONG).show();
+            }
+        }.execute();
     }
 
     private void cancelBoothReservation() {
@@ -153,7 +272,6 @@ public class ReserveBoothDetails extends AppCompatActivity {
     }
 
     private void finalizeBoothReservation() {
-        // TODO AFTER HEAR BACK ABOUT WHETHER SHOW CUSTOMER ATTACHED
         swapGenericForSelectedTask();
     }
 
@@ -193,7 +311,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
                         for (Item item : inventoryConnector.getItems()) {
                             if (item.getId().equalsIgnoreCase(booth.getId())) {
                                 orderConnector.addFixedPriceLineItem(orderID, item.getId(), null, null);
-                                inventoryConnector.updateItem(inventoryConnector.getItem(item.getId()).setCode(getResources().getString(R.string.reserved_keyword)));
+                                inventoryConnector.updateItem(inventoryConnector.getItem(item.getId()).setCode(orderID));
                             }
                         }
                     }
@@ -213,17 +331,9 @@ public class ReserveBoothDetails extends AppCompatActivity {
         }.execute();
     }
 
-    private void setupCustomerFields() {
-        final TableLayout newCustomerTableLayout = (TableLayout) findViewById(R.id.newCustomerTableLayout);
-        final TableLayout selectedCustomerInfoTable = (TableLayout) findViewById(R.id.selected_customer_info_table);
-    }
-
     private void decoupleShowName(Tag show) {
         List<String> splitShowNameArray = GlobalUtils.decoupleShowName(show.getName());
         showName = splitShowNameArray.get(0);
-        //String showDate = splitShowNameArray.get(1);
-        //String showLocation = splitShowNameArray.get(2);
-        //String showNotes = splitShowNameArray.get(3);
     }
 
     private void populateTagObjects() {
@@ -389,80 +499,6 @@ public class ReserveBoothDetails extends AppCompatActivity {
     //                v3CustomerList.add(GlobalUtils.getv3CustomerFromv1Customer(v1Customer, v1Customer.getPhoneNumbers(), v1Customer.getEmailAddresses(), v1Customer.getAddresses()));
     //            }
     //            existingCustomers = v3CustomerList;
-    //            progressDialog.dismiss();
-    //        }
-    //    }
-
-    //    private class CreateNewCustomerTask extends AsyncTask<Void, Void, Void> {
-    //        private ProgressDialog progressDialog;
-    //        private com.clover.sdk.v1.customer.Customer v1CustomerCreated;
-    //        private Customer newV3Customer;
-    //        private String newCustomerID;
-    //        private String newCustomerFirstName;
-    //        private String newCustomerLastName;
-    //        private String newCustomerPhoneNumber;
-    //        private String newCustomerEmailAddress;
-    //        private String newCustomerAddressLine1;
-    //        private String newCustomerAddressLine2;
-    //        private String newCustomerAddressLine3;
-    //        private String newCustomerCity;
-    //        private String newCustomerState;
-    //        private String newCustomerZipCode;
-    //        private boolean newCustomerIsMarketingAllowed;
-    //
-    //        @Override
-    //        protected void onPreExecute() {
-    //            super.onPreExecute();
-    //            progressDialog = new ProgressDialog(reserveBoothDetailsActivityContext);
-    //            progressDialog.setMessage(getResources().getString(R.string.br_new_customer_creating_new_customer_text));
-    //            progressDialog.show();
-    //            EditText newCustomerFirstNameField = (EditText) findViewById(R.id.br_new_customer_first_name_field);
-    //            EditText newCustomerLastNameField = (EditText) findViewById(R.id.br_new_customer_last_name_field);
-    //            EditText newCustomerPhoneNumberField = (EditText) findViewById(R.id.br_new_customer_phone_field);
-    //            EditText newCustomerEmailAddressField = (EditText) findViewById(R.id.br_new_customer_email_field);
-    //            EditText newCustomerAddressLine1Field = (EditText) findViewById(R.id.br_new_customer_address_line_1_field);
-    //            EditText newCustomerAddressLine2Field = (EditText) findViewById(R.id.br_new_customer_address_line_2_field);
-    //            EditText newCustomerAddressLine3Field = (EditText) findViewById(R.id.br_new_customer_address_line_3_field);
-    //            EditText newCustomerCityField = (EditText) findViewById(R.id.br_new_customer_city_field);
-    //            Spinner newCustomerStateSpinner = (Spinner) findViewById(R.id.br_new_customer_state_spinner);
-    //            EditText newCustomerZipCodeField = (EditText) findViewById(R.id.br_new_customer_zip_code_field);
-    //            CheckBox newCustomerIsMarketingAllowedChkbox = (CheckBox) findViewById(R.id.br_new_customer_is_marketing_allowed_chkbox);
-    //            newCustomerFirstName = newCustomerFirstNameField.getText().toString();
-    //            newCustomerLastName = newCustomerLastNameField.getText().toString();
-    //            newCustomerPhoneNumber = newCustomerPhoneNumberField.getText().toString();
-    //            newCustomerEmailAddress = newCustomerEmailAddressField.getText().toString();
-    //            newCustomerAddressLine1 = newCustomerAddressLine1Field.getText().toString();
-    //            newCustomerAddressLine2 = newCustomerAddressLine2Field.getText().toString();
-    //            newCustomerAddressLine3 = newCustomerAddressLine3Field.getText().toString();
-    //            newCustomerCity = newCustomerCityField.getText().toString();
-    //            newCustomerState = newCustomerStateSpinner.getSelectedItem().toString();
-    //            newCustomerZipCode = newCustomerZipCodeField.getText().toString();
-    //            newCustomerIsMarketingAllowed = newCustomerIsMarketingAllowedChkbox.isChecked();
-    //            ///// PREPARE CLOVER CONNECTIONS 1ST
-    //            customerConnector = new CustomerConnector(reserveBoothDetailsActivityContext, CloverAccount.getAccount(reserveBoothDetailsActivityContext), null);
-    //            customerConnector.connect();
-    //        }
-    //
-    //        @Override
-    //        protected Void doInBackground(Void... params) {
-    //            try {
-    //                v1CustomerCreated = customerConnector.createCustomer(newCustomerFirstName, newCustomerLastName, newCustomerIsMarketingAllowed);
-    //                newCustomerID = v1CustomerCreated.getId();
-    //                customerConnector.addPhoneNumber(newCustomerID, newCustomerPhoneNumber);
-    //                customerConnector.addEmailAddress(newCustomerID, newCustomerEmailAddress);
-    //                customerConnector.addAddress(newCustomerID, newCustomerAddressLine1, newCustomerAddressLine2, newCustomerAddressLine3, newCustomerCity, newCustomerState, newCustomerZipCode);
-    //            } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
-    //                Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
-    //            } finally {
-    //                customerConnector.disconnect();
-    //            }
-    //            return null;
-    //        }
-    //
-    //        @Override
-    //        protected void onPostExecute(Void result) {
-    //            super.onPostExecute(result);
-    //            setNewCustomerObject(v1CustomerCreated);
     //            progressDialog.dismiss();
     //        }
     //    }

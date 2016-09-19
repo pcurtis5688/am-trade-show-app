@@ -333,7 +333,6 @@
     <string name="delete_custom_tender_button_text">Delete Custom Tender</string>
     <string name="custom_tender_name">Select/Reserve Booth</string>
     <string name="available_keyword">AVAILABLE</string>
-    <string name="reserved_keyword">RESERVED</string>
 
     <!-- SELECT BOOTH ACTIVITY BEGUN FROM CLOVER STRINGS -->
     <string name="title_activity_select_booth">Select A Booth</string>
@@ -341,5 +340,13 @@
     <string name="decline_select_booth_custom_btn_text">Cancel Booth Select</string>
     <string name="swap_generic_for_reserved_btn_text">Swap Generic For Selected</string>
     <string name="show_selection_popup_menu_header_text">Select a Show for the Reservation</string>
-    <string name="customer_selected_first_and_last_string">%1$s, %2$s</string>
+    <string name="customer_selected_full_info_string">Selected Customer: %1$s, %2$s - Phone: %3$s - Email: %4$s</string>
+    <string name="selected_customer_header">Selected Customer:</string>
+    <string name="selected_customer_first_and_last_text">%1$s, %2$s</string>
+    <string name="selected_customer_phone_number_text">Phone No.: %1$s</string>
+    <string name="selected_customer_email_address_text">Email Address: %1$s</string>
+    <string name="no_customer_was_selected_string">No Customer has been selected for the order; please add information and click save now</string>
+    <string name="save_customer_information_btn_text">Save Customer Information</string>
+    <string name="customer_created_message_text">Customer Created! You can now finalize the reservation</string>
+
 </resources>

@@ -36,72 +36,96 @@
             <TableRow>
 
                 <TextView
+                    style="@style/selected_booth_label_style"
                     android:text="@string/booth_reservation_price_label"
-                    android:textSize="@dimen/dimen_24sp" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/booth_reservation_details_price"
-                    android:textSize="@dimen/dimen_24sp" />
+                    style="@style/selected_booth_label_style" />
 
                 <TextView
+                    style="@style/selected_booth_label_style"
                     android:text="@string/booth_reservation_size_label"
-                    android:textSize="@dimen/dimen_24sp" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/booth_reservation_details_size"
-                    android:textSize="@dimen/dimen_24sp" />
+                    style="@style/selected_booth_label_style" />
             </TableRow>
 
             <TableRow>
 
                 <TextView
+                    style="@style/selected_booth_label_style"
                     android:text="@string/booth_reservation_area_label"
-                    android:textSize="@dimen/dimen_24sp" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/booth_reservation_details_area"
-                    android:textSize="@dimen/dimen_24sp" />
+                    style="@style/selected_booth_label_style" />
 
                 <TextView
+                    style="@style/selected_booth_label_style"
                     android:text="@string/booth_reservation_type_label"
-                    android:textSize="@dimen/dimen_24sp" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/booth_reservation_details_type"
-                    android:textSize="@dimen/dimen_24sp" />
+                    style="@style/selected_booth_label_style" />
+            </TableRow>
+
+            <TableRow android:layout_marginTop="@dimen/dimen_25dp">
+
+                <TextView
+                    android:id="@+id/selected_customer_header_tv"
+                    style="@style/selected_booth_label_style"
+                    android:layout_column="0"
+                    android:layout_span="1"
+                    android:text="@string/selected_customer_header"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/selected_customer_first_and_last"
+                    style="@style/selected_customer_style"
+                    android:layout_column="1"
+                    android:layout_span="3" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/selected_customer_phone_number"
+                    style="@style/selected_customer_style"
+                    android:layout_column="1"
+                    android:layout_span="3" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/selected_customer_email_address"
+                    style="@style/selected_customer_style"
+                    android:layout_column="1"
+                    android:layout_span="3" />
             </TableRow>
         </TableLayout>
 
         <TableLayout
-            android:id="@+id/selected_customer_info_table"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:stretchColumns="*">
-
-            <TableRow>
-
-                <TextView android:id="@+id/selected_customer_first_and_last" />
-            </TableRow>
-
-            <TableRow>
-
-                <TextView android:id="@+id/selected_customer_phone_number" />
-            </TableRow>
-
-            <TableRow>
-
-                <TextView android:id="@+id/selected_customer_email_address" />
-            </TableRow>
-        </TableLayout>
-
-
-        <TableLayout
-            android:id="@+id/newCustomerTableLayout"
+            android:id="@+id/br_new_customer_table_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimen_12dp"
             android:stretchColumns="*"
             android:visibility="gone">
+
+            <TableRow>
+
+                <TextView
+                    style="@style/selected_booth_label_style"
+                    android:layout_span="2"
+                    android:text="@string/no_customer_was_selected_string" />
+            </TableRow>
 
             <TableRow>
 
@@ -187,18 +211,36 @@
             <TableRow>
 
                 <Button
+                    android:id="@+id/save_customer_to_order_btn"
+                    android:layout_span="2"
+                    android:text="@string/save_customer_information_btn_text" />
+            </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_100dp"
+            android:stretchColumns="*">
+
+            <TableRow>
+
+                <Button
                     android:id="@+id/cancel_reserve_booth_btn"
+                    style="@style/button_font_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/booth_reservation_cancel_booth_reservation_btn_text" />
 
                 <Button
                     android:id="@+id/finalize_booth_reservation_btn"
+                    style="@style/button_font_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/reserve_booth_button_text" />
             </TableRow>
         </TableLayout>
+
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>
 
