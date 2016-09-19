@@ -31,6 +31,7 @@ import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.Intents;
 import com.clover.sdk.v1.ServiceException;
+import com.clover.sdk.v3.customers.Customer;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Tag;
 
@@ -45,7 +46,7 @@ public class BoothReservationShowSelection extends Activity
     private TableLayout showSelectionTable;
     /////DATA VARS
     private List<Tag> showList;
-    ///// ORDER INFO BEING PASSED TO BOOTH RESERVATION
+    ///// ORDER INFO BEING PASSED TO BOOTH RESERVATION, WILL GRAB CUSTOMER
     private String orderID;
 
     @Override
@@ -62,9 +63,9 @@ public class BoothReservationShowSelection extends Activity
         Bundle extrasBundle = intent.getExtras();
         orderID = getIntent().getStringExtra(Intents.EXTRA_ORDER_ID);
 
+        ///// SET CONTEXT, ATTACH TO SHOW TABLE, AND POPULATE
         boothReservationShowSelectionActivityContext = this;
         showSelectionTable = (TableLayout) findViewById(R.id.booth_reservation_show_select_table);
-
         GetShowsForBoothSelection getShowsForBoothSelection = new GetShowsForBoothSelection();
         getShowsForBoothSelection.execute();
     }

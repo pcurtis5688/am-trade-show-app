@@ -323,6 +323,7 @@
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_reserve_booth_details">Reserve Booth</string>
     <string name="title_activity_application_settings">Application Settings</string>
+
     <!-- App Settings / Special case strings -->
     <string name="quick_ops_button_delete_all">Delete All Items</string>
     <string name="quick_ops_delete_all_progress_message">Deleting All Items. . .</string>
@@ -336,12 +337,9 @@
 
     <!-- SELECT BOOTH ACTIVITY BEGUN FROM CLOVER STRINGS -->
     <string name="title_activity_select_booth">Select A Booth</string>
-
     <string name="select_booth_custom_btn_text">Select A Booth</string>
     <string name="decline_select_booth_custom_btn_text">Cancel Booth Select</string>
-
     <string name="swap_generic_for_reserved_btn_text">Swap Generic For Selected</string>
-
     <string name="show_selection_popup_menu_header_text">Select a Show for the Reservation</string>
-
+    <string name="customer_selected_first_and_last_string">%1$s, %2$s</string>
 </resources>

@@ -70,54 +70,38 @@
                     android:id="@+id/booth_reservation_details_type"
                     android:textSize="@dimen/dimen_24sp" />
             </TableRow>
+        </TableLayout>
 
-            <!--<TableRow>-->
+        <TableLayout
+            android:id="@+id/selected_customer_info_table"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
 
-            <!--<TextView-->
-            <!--android:text="@string/booth_reservation_electricity_prompt"-->
-            <!--android:textSize="@dimen/dimen_24sp" />-->
+            <TableRow>
 
-            <!--<CheckBox android:id="@+id/br_include_electricity_chkbox" />-->
+                <TextView android:id="@+id/selected_customer_first_and_last" />
+            </TableRow>
 
-            <!--<TextView-->
-            <!--android:text="@string/booth_reservation_internet_speed_prompt"-->
-            <!--android:textSize="@dimen/dimen_24sp" />-->
+            <TableRow>
 
-            <!--<Spinner android:id="@+id/br_internet_speed_spinner" />-->
-            <!--</TableRow>-->
+                <TextView android:id="@+id/selected_customer_phone_number" />
+            </TableRow>
 
-            <TableRow android:layout_marginTop="@dimen/dimen_12dp">
+            <TableRow>
 
-                <RadioGroup
-                    android:id="@+id/booth_reservation_new_or_existing_radiogrp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_span="4"
-                    android:orientation="horizontal">
-
-                    <RadioButton
-                        android:id="@+id/booth_reservation_new_customer_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="@string/booth_reservation_new_customer_text" />
-
-                    <RadioButton
-                        android:id="@+id/booth_reservation_existing_customer_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/booth_reservation_existing_customer_text" />
-
-                </RadioGroup>
+                <TextView android:id="@+id/selected_customer_email_address" />
             </TableRow>
         </TableLayout>
+
 
         <TableLayout
             android:id="@+id/newCustomerTableLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimen_12dp"
-            android:stretchColumns="*">
+            android:stretchColumns="*"
+            android:visibility="gone">
 
             <TableRow>
 
@@ -199,39 +183,6 @@
 
                 <CheckBox android:id="@+id/br_new_customer_is_marketing_allowed_chkbox" />
             </TableRow>
-        </TableLayout>
-
-        <TableLayout
-            android:id="@+id/existingCustomerTableLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_12dp"
-            android:stretchColumns="*"
-            android:visibility="gone">
-
-            <TableRow>
-
-                <EditText
-                    android:id="@+id/booth_reservation_search_existing_customers_field"
-                    android:layout_width="match_parent"
-                    android:hint="@string/booth_reservation_search_customer_hint" />
-            </TableRow>
-
-            <TableRow>
-
-                <ListView
-                    android:id="@+id/existing_customers_lv"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimen_200dp"
-                    android:choiceMode="singleChoice"
-                    android:listSelector="@color/lv_pressed" />
-            </TableRow>
-        </TableLayout>
-
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:stretchColumns="*">
 
             <TableRow>
 
@@ -250,3 +201,36 @@
         </TableLayout>
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>
+
+    <!--<TableRow android:layout_marginTop="@dimen/dimen_12dp">--><!--<RadioGroup--><!--android:id="@+id/booth_reservation_new_or_existing_radiogrp"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:layout_span="4"--><!--android:orientation="horizontal">-->
+
+    <!--<RadioButton--><!--android:id="@+id/booth_reservation_new_customer_btn"--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:checked="true"--><!--android:text="@string/booth_reservation_new_customer_text" />-->
+
+    <!--<RadioButton--><!--android:id="@+id/booth_reservation_existing_customer_btn"--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:text="@string/booth_reservation_existing_customer_text" />-->
+
+    <!--</RadioGroup>--><!--</TableRow>-->
+
+
+    <!--<TableRow>-->
+
+    <!--<TextView--><!--android:text="@string/booth_reservation_electricity_prompt"--><!--android:textSize="@dimen/dimen_24sp" />-->
+
+    <!--<CheckBox android:id="@+id/br_include_electricity_chkbox" />-->
+
+    <!--<TextView--><!--android:text="@string/booth_reservation_internet_speed_prompt"--><!--android:textSize="@dimen/dimen_24sp" />-->
+
+    <!--<Spinner android:id="@+id/br_internet_speed_spinner" />--><!--</TableRow>-->
+
+    <!--<TableLayout--><!--android:id="@+id/existingCustomerTableLayout"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:layout_marginTop="@dimen/dimen_12dp"--><!--android:stretchColumns="*"--><!--android:visibility="gone">-->
+
+    <!--<TableRow>-->
+
+    <!--<EditText--><!--android:id="@+id/booth_reservation_search_existing_customers_field"--><!--android:layout_width="match_parent"--><!--android:hint="@string/booth_reservation_search_customer_hint" />--><!--</TableRow>-->
+
+    <!--<TableRow>-->
+
+    <!--<ListView--><!--android:id="@+id/existing_customers_lv"--><!--android:layout_width="match_parent"--><!--android:layout_height="@dimen/dimen_200dp"--><!--android:choiceMode="singleChoice"--><!--android:listSelector="@color/lv_pressed" />--><!--</TableRow>--><!--</TableLayout>-->
+
+    <!--<TableLayout--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:stretchColumns="*">-->
+
+    <!--<TableRow>-->
