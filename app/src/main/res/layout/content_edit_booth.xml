@@ -30,7 +30,7 @@
             android:text="@string/edit_booth_number_prompt" />
 
         <EditText
-            android:id="@+id/edit_booth_number_field"
+            android:id="@+id/edit_booth_no_field"
             style="@style/prompt_text_font_style"
             android:layout_span="2"
             android:hint="@string/edit_booth_number_hint" />
@@ -57,7 +57,7 @@
             android:text="@string/edit_booth_size_prompt" />
 
         <EditText
-            android:id="@+id/edit_booth_size_field"
+            android:id="@+id/edit_boothsize_field"
             style="@style/prompt_text_font_style"
             android:layout_span="2"
             android:hint="@string/edit_booth_size_hint" />
@@ -107,10 +107,11 @@
             android:text="@string/edit_booth_save_changes_text" />
     </TableRow>
 
-    <TableRow android:layout_marginTop="@dimen/dimen_25dp">
+    <TableRow android:layout_marginTop="@dimen/dimen_50dp">
 
         <Button
             android:id="@+id/set_booth_available_action_btn"
+            style="@style/button_font_style"
             android:layout_span="3"
             android:text="@string/edit_booth_set_available_btn_text" />
     </TableRow>

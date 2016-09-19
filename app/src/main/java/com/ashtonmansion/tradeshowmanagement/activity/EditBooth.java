@@ -60,7 +60,7 @@ public class EditBooth extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         TextView editBoothHeaderTv = (TextView) findViewById(R.id.edit_booth_header);
-        editBoothNumberField = (EditText) findViewById(R.id.edit_booth_number_field);
+        editBoothNumberField = (EditText) findViewById(R.id.edit_booth_no_field);
         editBoothPriceField = (EditText) findViewById(R.id.edit_booth_price_field);
         editBoothPriceField.addTextChangedListener(new TextWatcher() {
             private String current = "";
@@ -90,7 +90,7 @@ public class EditBooth extends AppCompatActivity {
 
             }
         });
-        editBoothSizeField = (EditText) findViewById(R.id.edit_booth_size_field);
+        editBoothSizeField = (EditText) findViewById(R.id.edit_boothsize_field);
         editBoothAreaField = (EditText) findViewById(R.id.edit_booth_area_field);
         editBoothTypeField = (EditText) findViewById(R.id.edit_booth_type_field);
 
@@ -168,7 +168,42 @@ public class EditBooth extends AppCompatActivity {
     }
 
     public void setBoothAvailableAction() {
+        new AsyncTask<Void, Void, Void>() {
+            private ProgressDialog progressDialog;
+            private InventoryConnector inventoryConnector;
+            private String boothIdToMakeAvailable;
 
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                progressDialog = new ProgressDialog(editBoothActivityContext);
+                progressDialog.setMessage(getResources().getString(R.string.edit_booth_updating_booth_msg));
+                progressDialog.show();
+                ///// CLOVER CONNECTION INIT AND DATA
+                boothIdToMakeAvailable = booth.getId();
+                inventoryConnector = new InventoryConnector(editBoothActivityContext, CloverAccount.getAccount(editBoothActivityContext), null);
+                inventoryConnector.connect();
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                   inventoryConnector.updateItem(inventoryConnector.getItem(boothIdToMakeAvailable).setCode(getResources().getString(R.string.available_keyword)));
+                } catch (Exception e){
+                    Log.d("Clover excptn:", e.getMessage(), e.getCause());
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                super.onPostExecute(result);
+                inventoryConnector.disconnect();
+                progressDialog.dismiss();
+                finish();
+                Toast.makeText(editBoothActivityContext, getResources().getString(R.string.booth_successfully_made_available_msg), Toast.LENGTH_LONG).show();
+            }
+        }.execute();
     }
 
     private class UpdateBoothTask extends AsyncTask<Void, Void, Void> {
