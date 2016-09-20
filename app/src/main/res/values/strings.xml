@@ -121,6 +121,9 @@
     <string name="edit_booth_set_available_btn_text">Set Booth to Available</string>
     <string name="edit_booth_updating_booth_msg">Updating Booth. . .</string>
     <string name="booth_successfully_made_available_msg">Booth is now set to available. . .</string>
+    <string name="booth_available_refund_entire_order_opt">Refund entire order</string>
+    <string name="booth_available_swap_to_generic_and_reopen">Remove Booth, Add Generic, Re-open Order</string>
+    <string name="booth_available_delete_order_and_make_available">Delete Order and Make Available</string>
     <string name="booth_deleted_successfully_msg">Booth Deleted. . .</string>
 
     <!-- BOOTH FILTER STRINGS /////////////////////////////////-->

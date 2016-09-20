@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/booth_available_menu_refund_entire_btn"
+        android:title="@string/booth_available_refund_entire_order_opt" />
+
+    <item
+        android:id="@+id/booth_available_menu_swap_generic_btn"
+        android:title="@string/booth_available_swap_to_generic_and_reopen" />
+
+    <item
+        android:id="@+id/booth_available_menu_delete_order_btn"
+        android:title="@string/booth_available_delete_order_and_make_available" />
+
+</menu>

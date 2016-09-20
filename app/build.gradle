@@ -8,8 +8,8 @@ android {
         applicationId "com.ashtonmansion.tsmanagement1"
         minSdkVersion 17
         targetSdkVersion 17
-        versionCode 8
-        versionName "0.83"
+        versionCode 9
+        versionName "0.84"
     }
     buildTypes {
         release {

@@ -8,10 +8,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,18 +39,20 @@ import java.util.Locale;
 public class EditBooth extends AppCompatActivity {
     //////ACTIVITY VARS
     private Context editBoothActivityContext;
-    //////CLOVER VARS
+    ////// CLOVER VARS
     private Item booth;
     private List<Tag> boothTags;
     private Tag sizeTag;
     private Tag areaTag;
     private Tag typeTag;
-    //////UI VARS
+    ////// UI VARS
     private EditText editBoothNumberField;
     private EditText editBoothPriceField;
     private EditText editBoothSizeField;
     private EditText editBoothAreaField;
     private EditText editBoothTypeField;
+    ////// FLAG FOR SETTING AVAILABLE OPTION
+    private String SET_AVAILABLE_ACTION;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,7 +137,27 @@ public class EditBooth extends AppCompatActivity {
         setBoothAvailableBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setBoothAvailableAction();
+                //setBoothAvailableAction();
+                PopupMenu popupMenu = new PopupMenu(editBoothActivityContext, findViewById(R.id.set_booth_available_action_btn));
+                popupMenu.getMenuInflater().inflate(R.menu.popup_menu_booth_availability, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        if (menuItem.getTitle() == "Refund entire order") {
+                            SET_AVAILABLE_ACTION = "REFUNDORDER";
+
+                        } else if (menuItem.getTitle() == "Remove Booth, Add Generic, Re-open Order") {
+                            SET_AVAILABLE_ACTION = "SWAPANDREOPEN";
+
+                        } else if (menuItem.getTitle() == "Delete Order and Make Available") {
+                            SET_AVAILABLE_ACTION = "DELETEORDER";
+
+
+                        }
+                        return true;
+                    }
+                });
+                popupMenu.show();
             }
         });
     }
@@ -188,8 +212,15 @@ public class EditBooth extends AppCompatActivity {
             @Override
             protected Void doInBackground(Void... params) {
                 try {
-                   inventoryConnector.updateItem(inventoryConnector.getItem(boothIdToMakeAvailable).setCode(getResources().getString(R.string.available_keyword)));
-                } catch (Exception e){
+                    if (SET_AVAILABLE_ACTION.equalsIgnoreCase("REFUNDORDER")) {
+                        
+                    } else if (SET_AVAILABLE_ACTION.equalsIgnoreCase("SWAPANDREOPEN")) {
+
+                    } else if (SET_AVAILABLE_ACTION.equalsIgnoreCase("DELETEORDER")) {
+
+                    }
+                    inventoryConnector.updateItem(inventoryConnector.getItem(boothIdToMakeAvailable).setCode(getResources().getString(R.string.available_keyword)));
+                } catch (Exception e) {
                     Log.d("Clover excptn:", e.getMessage(), e.getCause());
                 }
                 return null;
