@@ -27,9 +27,15 @@ import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.ServiceException;
+import com.clover.sdk.v3.base.Reference;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
+import com.clover.sdk.v3.inventory.PriceType;
 import com.clover.sdk.v3.inventory.Tag;
+import com.clover.sdk.v3.order.LineItem;
+import com.clover.sdk.v3.order.Order;
+import com.clover.sdk.v3.order.OrderConnector;
+import com.clover.sdk.v3.payments.Refund;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -115,7 +121,7 @@ public class EditBooth extends AppCompatActivity {
         Button deleteBoothBtn = (Button) findViewById(R.id.edit_booth_delete_booth_btn);
         Button cancelEditBoothBtn = (Button) findViewById(R.id.edit_booth_cancel_btn);
         Button saveBoothChangesBtn = (Button) findViewById(R.id.edit_booth_save_changes_btn);
-        Button setBoothAvailableBtn = (Button) findViewById(R.id.set_booth_available_action_btn);
+        final Button setBoothAvailableBtn = (Button) findViewById(R.id.set_booth_available_action_btn);
         deleteBoothBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -143,16 +149,15 @@ public class EditBooth extends AppCompatActivity {
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        if (menuItem.getTitle() == "Refund entire order") {
+                        if (menuItem.getTitle().toString().equalsIgnoreCase("Refund entire order")) {
                             SET_AVAILABLE_ACTION = "REFUNDORDER";
-
-                        } else if (menuItem.getTitle() == "Remove Booth, Add Generic, Re-open Order") {
+                            setBoothAvailableAction();
+                        } else if (menuItem.getTitle().toString().equalsIgnoreCase("Remove Booth, Add Generic, Re-open Order")) {
                             SET_AVAILABLE_ACTION = "SWAPANDREOPEN";
-
-                        } else if (menuItem.getTitle() == "Delete Order and Make Available") {
+                            setBoothAvailableAction();
+                        } else if (menuItem.getTitle().toString().equalsIgnoreCase("Delete Order and Make Available")) {
                             SET_AVAILABLE_ACTION = "DELETEORDER";
-
-
+                            setBoothAvailableAction();
                         }
                         return true;
                     }
@@ -195,6 +200,7 @@ public class EditBooth extends AppCompatActivity {
         new AsyncTask<Void, Void, Void>() {
             private ProgressDialog progressDialog;
             private InventoryConnector inventoryConnector;
+            private OrderConnector orderConnector;
             private String boothIdToMakeAvailable;
 
             @Override
@@ -206,20 +212,48 @@ public class EditBooth extends AppCompatActivity {
                 ///// CLOVER CONNECTION INIT AND DATA
                 boothIdToMakeAvailable = booth.getId();
                 inventoryConnector = new InventoryConnector(editBoothActivityContext, CloverAccount.getAccount(editBoothActivityContext), null);
+                orderConnector = new OrderConnector(editBoothActivityContext, CloverAccount.getAccount(editBoothActivityContext), null);
                 inventoryConnector.connect();
+                orderConnector.connect();
             }
 
             @Override
             protected Void doInBackground(Void... params) {
                 try {
                     if (SET_AVAILABLE_ACTION.equalsIgnoreCase("REFUNDORDER")) {
-                        
-                    } else if (SET_AVAILABLE_ACTION.equalsIgnoreCase("SWAPANDREOPEN")) {
+                        List<Refund> refunds = new ArrayList<>();
 
+                        Order orderToRefund = orderConnector.getOrder(booth.getCode());
+
+
+                        // TODO: 9/20/2016 ask if this is needed
+
+                        orderConnector.getOrder(booth.getCode()).setRefunds(refunds);
+                    } else if (SET_AVAILABLE_ACTION.equalsIgnoreCase("SWAPANDREOPEN")) {
+                        ////// FETCH ORDER, SWAP BOOTHS, AND UPDATE THE ORDER
+                        Order orderToRefund = orderConnector.getOrder(booth.getCode());
+                        List<LineItem> lineItems = orderToRefund.getLineItems();
+                        List<LineItem> newLineItems = new ArrayList<>();
+                        for (LineItem lineItem : lineItems) {
+                            if (lineItem.getItem().getId().equalsIgnoreCase(boothIdToMakeAvailable)) {
+
+                                ////// CREATE A NEW LINE ITEM FOR GENERIC BOOTH
+                                LineItem newGenericBoothLineItem = new LineItem();
+                                newGenericBoothLineItem.setName("GENERIC BOOTH");
+
+                                ////// ADD GENERIC
+                                lineItems.add(newGenericBoothLineItem);
+                            } else {
+                                newLineItems.add(lineItem);
+                            }
+                        }
+                        orderToRefund.clearLineItems();
+                        orderConnector.updateOrder(orderConnector.getOrder(booth.getCode()).setLineItems(newLineItems));
                     } else if (SET_AVAILABLE_ACTION.equalsIgnoreCase("DELETEORDER")) {
+                        Toast.makeText(editBoothActivityContext, booth.getCode(), Toast.LENGTH_LONG).show();
 
                     }
-                    inventoryConnector.updateItem(inventoryConnector.getItem(boothIdToMakeAvailable).setCode(getResources().getString(R.string.available_keyword)));
+                    //inventoryConnector.updateItem(inventoryConnector.getItem(boothIdToMakeAvailable).setCode(getResources().getString(R.string.available_keyword)));
                 } catch (Exception e) {
                     Log.d("Clover excptn:", e.getMessage(), e.getCause());
                 }
@@ -230,6 +264,9 @@ public class EditBooth extends AppCompatActivity {
             protected void onPostExecute(Void result) {
                 super.onPostExecute(result);
                 inventoryConnector.disconnect();
+                orderConnector.disconnect();
+                inventoryConnector = null;
+                orderConnector = null;
                 progressDialog.dismiss();
                 finish();
                 Toast.makeText(editBoothActivityContext, getResources().getString(R.string.booth_successfully_made_available_msg), Toast.LENGTH_LONG).show();
