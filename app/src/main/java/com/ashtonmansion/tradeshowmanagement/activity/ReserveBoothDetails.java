@@ -471,6 +471,9 @@ public class ReserveBoothDetails extends AppCompatActivity {
             protected Void doInBackground(Void... params) {
                 try {
                     existingv1Customers = customerConnector.getCustomers();
+                    for (com.clover.sdk.v1.customer.Customer v1Customer : existingv1Customers) {
+                        v3CustomerList.add(GlobalUtils.getv3CustomerFromv1Customer(v1Customer, customerConnector.getCustomer(v1Customer.getId()).getPhoneNumbers(), customerConnector.getCustomer(v1Customer.getId()).getEmailAddresses(), customerConnector.getCustomer(v1Customer.getId()).getAddresses()));
+                    }
                 } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                     Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
                 }
@@ -481,9 +484,6 @@ public class ReserveBoothDetails extends AppCompatActivity {
             protected void onPostExecute(Void result) {
                 super.onPostExecute(result);
                 customerConnector.disconnect();
-                for (com.clover.sdk.v1.customer.Customer v1Customer : existingv1Customers) {
-                    v3CustomerList.add(GlobalUtils.getv3CustomerFromv1Customer(v1Customer, v1Customer.getPhoneNumbers(), v1Customer.getEmailAddresses(), v1Customer.getAddresses()));
-                }
                 existingCustomers = v3CustomerList;
                 populateExistingCustomersListview();
                 progressDialog.dismiss();
@@ -492,6 +492,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
     }
 
     private void populateExistingCustomersListview() {
+        ////// SORT THE LIST FOR ACCESSIBILITY
         ////// UTILIZE CUSTOM ADAPTER
         final CustomersAdapter customersAdapter = new CustomersAdapter(reserveBoothDetailsActivityContext, existingCustomers);
 

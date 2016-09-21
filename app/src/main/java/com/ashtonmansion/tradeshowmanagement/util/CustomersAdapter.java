@@ -1,10 +1,10 @@
 package com.ashtonmansion.tradeshowmanagement.util;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -14,6 +14,8 @@ import com.ashtonmansion.amtradeshowmanagement.R;
 import com.clover.sdk.v3.customers.Customer;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -24,8 +26,15 @@ public class CustomersAdapter extends BaseAdapter implements Filterable {
     private List<Customer> filteredCustomerList;
     private Filter customerFilter;
     private LayoutInflater layoutInflater;
+    private Context adapterContext;
 
     public CustomersAdapter(Context context, List<Customer> customers) {
+        adapterContext = context;
+        Collections.sort(customers, new Comparator<Customer>() {
+            public int compare(Customer customer1, Customer customer2) {
+                return customer1.getLastName().compareTo(customer2.getLastName());
+            }
+        });
         this.originalCustomerList = customers;
         this.filteredCustomerList = customers;
         layoutInflater = LayoutInflater.from(context);
@@ -58,23 +67,26 @@ public class CustomersAdapter extends BaseAdapter implements Filterable {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+        Customer customer = filteredCustomerList.get(position);
 
         String phoneNumberIfExists;
         String emailAddressIfExists;
         if (null != filteredCustomerList.get(position).getPhoneNumbers() && filteredCustomerList.get(position).getPhoneNumbers().size() > 0) {
-            phoneNumberIfExists = "Phone Number: " + filteredCustomerList.get(position).getPhoneNumbers().get(0).getPhoneNumber();
+            phoneNumberIfExists = " - Phone: " + filteredCustomerList.get(position).getPhoneNumbers().get(0).getPhoneNumber();
         } else {
-            phoneNumberIfExists = "Phone Number: N/A";
+            phoneNumberIfExists = "";
         }
         if (null != filteredCustomerList.get(position).getEmailAddresses() && filteredCustomerList.get(position).getEmailAddresses().size() > 0) {
-            emailAddressIfExists = "Email Address: " + filteredCustomerList.get(position).getEmailAddresses().get(0).getEmailAddress();
+            emailAddressIfExists = " - Email: " + filteredCustomerList.get(position).getEmailAddresses().get(0).getEmailAddress();
         } else {
-            emailAddressIfExists = "Email Address: N/A";
+            emailAddressIfExists = "";
         }
         String existingCustomerTextviewString =
                 parent.getContext().getResources().getString(R.string.existing_customer_textview_string,
                         filteredCustomerList.get(position).getLastName(),
-                        filteredCustomerList.get(position).getFirstName());
+                        filteredCustomerList.get(position).getFirstName(),
+                        phoneNumberIfExists,
+                        emailAddressIfExists);
         holder.textView.setText(existingCustomerTextviewString);
         return convertView;
     }
@@ -117,6 +129,25 @@ public class CustomersAdapter extends BaseAdapter implements Filterable {
         protected void publishResults(CharSequence constraint, FilterResults results) {
             filteredCustomerList = (ArrayList<Customer>) results.values;
             notifyDataSetChanged();
+        }
+    }
+
+    private class fetchPhoneNosAndEmailsTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+
         }
     }
 }

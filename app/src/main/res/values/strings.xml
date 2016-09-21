@@ -262,7 +262,7 @@
     <string name="booth_reservation_unavailable_string">Reserved</string>
     <string name="booth_reservation_booth_reserved_notification">Booth Reserved! Please return to register using the back button</string>
     <string name="booth_product_code_with_prefix">Order #%1$s</string>
-    <string name="existing_customer_textview_string">%1$s, %2$s</string>
+    <string name="existing_customer_textview_string">%1$s, %2$s %3$s %4$s</string>
     <string name="reserve_through_register_warning_msg">Please Reserve Booths via Customers App</string>
 
     <!-- BOOTH RESERVATION - new customer strings///////////-->
