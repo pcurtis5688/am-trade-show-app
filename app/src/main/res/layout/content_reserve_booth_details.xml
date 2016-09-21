@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:isScrollContainer="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.ashtonmansion.tradeshowmanagement.activity.ReserveBoothDetails"
     tools:showIn="@layout/activity_reserve_booth_details">
@@ -12,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:paddingBottom="@dimen/dimen_5dp"
         android:paddingEnd="@dimen/dimen_25dp"
         android:paddingStart="@dimen/dimen_25dp"
         android:paddingTop="@dimen/dimen_25dp">
@@ -29,7 +31,7 @@
                     style="@style/activity_header_style"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dimen_25dp"
+                    android:layout_marginBottom="@dimen/dimen_12dp"
                     android:layout_span="4" />
             </TableRow>
 
@@ -80,7 +82,7 @@
             android:id="@+id/selected_customer_table"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_20dp"
+            android:layout_marginTop="@dimen/dimen_8dp"
             android:stretchColumns="*">
 
             <TableRow>
@@ -118,8 +120,9 @@
             android:id="@+id/no_customer_selected_warning"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_10dp"
             android:layout_marginBottom="@dimen/dimen_10dp"
+            android:layout_marginTop="@dimen/dimen_8dp"
+            android:textAlignment="center"
             android:visibility="gone">
 
             <TableRow>
@@ -129,7 +132,9 @@
                     android:text="@string/no_customer_was_selected_string" />
             </TableRow>
 
-            <TableRow>
+            <TableRow
+                android:layout_gravity="center"
+                android:textAlignment="center">
 
                 <RadioGroup
                     android:id="@+id/booth_reservation_new_or_existing_radiogrp"
@@ -154,103 +159,110 @@
             </TableRow>
         </TableLayout>
 
-        <TableLayout
-            android:id="@+id/br_new_customer_table_layout"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_12dp"
-            android:stretchColumns="*"
-            android:visibility="gone">
+            android:layout_height="match_parent">
 
-            <TableRow>
+            <TableLayout
+                android:id="@+id/br_new_customer_table_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_8dp"
+                android:isScrollContainer="true"
+                android:stretchColumns="*"
+                android:visibility="gone">
 
-                <EditText
-                    android:id="@+id/br_new_customer_first_name_field"
-                    android:hint="@string/br_new_customer_first_name_hint" />
+                <TableRow>
 
-                <EditText
-                    android:id="@+id/br_new_customer_last_name_field"
-                    android:hint="@string/br_new_customer_last_name_hint" />
+                    <EditText
+                        android:id="@+id/br_new_customer_first_name_field"
+                        android:hint="@string/br_new_customer_first_name_hint" />
 
-            </TableRow>
+                    <EditText
+                        android:id="@+id/br_new_customer_last_name_field"
+                        android:hint="@string/br_new_customer_last_name_hint" />
 
-            <TableRow>
+                </TableRow>
 
-                <TextView android:text="@string/br_new_customer_phone_field_label" />
+                <TableRow>
 
-                <EditText
-                    android:id="@+id/br_new_customer_phone_field"
-                    android:hint="@string/br_new_customer_phone_field_hint" />
-            </TableRow>
+                    <TextView android:text="@string/br_new_customer_phone_field_label" />
 
-            <TableRow>
+                    <EditText
+                        android:id="@+id/br_new_customer_phone_field"
+                        android:hint="@string/br_new_customer_phone_field_hint" />
+                </TableRow>
 
-                <TextView android:text="@string/br_new_customer_email_field_label" />
+                <TableRow>
 
-                <EditText
-                    android:id="@+id/br_new_customer_email_field"
-                    android:hint="@string/br_new_customer_email_field_hint" />
-            </TableRow>
+                    <TextView android:text="@string/br_new_customer_email_field_label" />
 
-            <TableRow>
+                    <EditText
+                        android:id="@+id/br_new_customer_email_field"
+                        android:hint="@string/br_new_customer_email_field_hint" />
+                </TableRow>
 
-                <TextView android:text="@string/br_new_customer_address_field_label" />
+                <TableRow>
 
-                <EditText
-                    android:id="@+id/br_new_customer_address_line_1_field"
-                    android:hint="@string/br_new_customer_address_field1_hint" />
-            </TableRow>
+                    <TextView android:text="@string/br_new_customer_address_field_label" />
 
-            <TableRow>
+                    <EditText
+                        android:id="@+id/br_new_customer_address_line_1_field"
+                        android:hint="@string/br_new_customer_address_field1_hint" />
+                </TableRow>
 
-                <EditText
-                    android:id="@+id/br_new_customer_address_line_2_field"
-                    android:layout_column="1"
-                    android:hint="@string/br_new_customer_address_field2_hint" />
-            </TableRow>
+                <TableRow>
 
-            <TableRow>
+                    <EditText
+                        android:id="@+id/br_new_customer_address_line_2_field"
+                        android:layout_column="1"
+                        android:hint="@string/br_new_customer_address_field2_hint" />
+                </TableRow>
 
-                <EditText
-                    android:id="@+id/br_new_customer_address_line_3_field"
-                    android:layout_column="1"
-                    android:hint="@string/br_new_customer_address_field3_hint" />
-            </TableRow>
+                <TableRow>
 
-            <TableRow>
+                    <EditText
+                        android:id="@+id/br_new_customer_address_line_3_field"
+                        android:layout_column="1"
+                        android:hint="@string/br_new_customer_address_field3_hint" />
+                </TableRow>
 
-                <EditText
-                    android:id="@+id/br_new_customer_city_field"
-                    android:hint="@string/br_new_customer_city_field_hint" />
+                <TableRow>
 
-                <Spinner
-                    android:id="@+id/br_new_customer_state_spinner"
-                    android:entries="@array/state_array_entries" />
-            </TableRow>
+                    <EditText
+                        android:id="@+id/br_new_customer_city_field"
+                        android:hint="@string/br_new_customer_city_field_hint" />
 
-            <TableRow>
+                    <Spinner
+                        android:id="@+id/br_new_customer_state_spinner"
+                        android:entries="@array/state_array_entries" />
+                </TableRow>
 
-                <EditText
-                    android:id="@+id/br_new_customer_zip_code_field"
-                    android:layout_column="1"
-                    android:hint="@string/br_new_customer_zip_field_hint" />
-            </TableRow>
+                <TableRow>
 
-            <TableRow>
+                    <EditText
+                        android:id="@+id/br_new_customer_zip_code_field"
+                        android:layout_column="1"
+                        android:hint="@string/br_new_customer_zip_field_hint" />
+                </TableRow>
 
-                <TextView android:text="@string/br_new_customer_is_marketing_allowed_label" />
+                <TableRow>
 
-                <CheckBox android:id="@+id/br_new_customer_is_marketing_allowed_chkbox" />
-            </TableRow>
+                    <TextView android:text="@string/br_new_customer_is_marketing_allowed_label" />
 
-            <TableRow>
+                    <CheckBox android:id="@+id/br_new_customer_is_marketing_allowed_chkbox" />
+                </TableRow>
 
-                <Button
-                    android:id="@+id/save_customer_to_order_btn"
-                    android:layout_span="2"
-                    android:text="@string/save_customer_information_btn_text" />
-            </TableRow>
-        </TableLayout>
+                <TableRow>
+
+                    <Button
+                        android:id="@+id/save_customer_to_order_btn"
+                        style="@style/button_font_style"
+                        android:layout_span="2"
+                        android:text="@string/save_customer_information_btn_text" />
+                </TableRow>
+            </TableLayout>
+        </ScrollView>
 
         <TableLayout
             android:id="@+id/existing_customer_selection_table"
@@ -273,8 +285,8 @@
                 <ListView
                     android:id="@+id/existing_customers_lv"
                     android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_200dp"
                     android:choiceMode="singleChoice"
-                    android:layout_height="@dimen/dimen_150dp"
                     android:fadeScrollbars="false"
                     android:listSelector="@color/lv_pressed" />
             </TableRow>
@@ -283,7 +295,11 @@
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_12dp"
             android:stretchColumns="*">
+
+            <TableRow android:id="@+id/make_reservation_through_register_warning_row"
+                android:visibility="gone" />
 
             <TableRow>
 
@@ -304,4 +320,4 @@
         </TableLayout>
 
     </LinearLayout>
-</android.support.v4.widget.NestedScrollView>
+</LinearLayout>

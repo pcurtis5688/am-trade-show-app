@@ -14,10 +14,12 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -86,21 +88,34 @@ public class ReserveBoothDetails extends AppCompatActivity {
 
         ///// SET UP CANCEL AND FINALIZE BUTTONS
         Button cancelBoothReservationBtn = (Button) findViewById(R.id.cancel_reserve_booth_btn);
-        Button finalizeBoothReservationBtn = (Button) findViewById(R.id.finalize_booth_reservation_btn);
         cancelBoothReservationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 cancelBoothReservation();
             }
         });
-        finalizeBoothReservationBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finalizeBoothReservation();
-            }
-        });
-        ///// ATTEMPT TO GET CUSTOMER SELECTED OR HANDLE
-        getOrderCustomer();
+        Button finalizeBoothReservationBtn = (Button) findViewById(R.id.finalize_booth_reservation_btn);
+        if (orderID != null) {
+            finalizeBoothReservationBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finalizeBoothReservation();
+                }
+            });
+            ///// ATTEMPT TO GET CUSTOMER SELECTED OR HANDLE
+            getOrderCustomer();
+        } else {
+            finalizeBoothReservationBtn.setEnabled(false);
+            TableRow reserveThroughRegisterWarningRow = (TableRow) findViewById(R.id.make_reservation_through_register_warning_row);
+            TextView reserveThroughRegisterTv = new TextView(reserveBoothDetailsActivityContext);
+            reserveThroughRegisterTv.setText(getResources().getString(R.string.reserve_through_register_warning_msg));
+            reserveThroughRegisterTv.setTextAppearance(reserveBoothDetailsActivityContext, R.style.reserve_through_register_style);
+            ////// SPAN NONSENSE
+            TableRow.LayoutParams params = new TableRow.LayoutParams();
+            params.span = 2;
+            reserveThroughRegisterWarningRow.addView(reserveThroughRegisterTv, params);
+            reserveThroughRegisterWarningRow.setVisibility(View.VISIBLE);
+        }
     }
 
     private void getOrderCustomer() {
@@ -155,7 +170,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
 
         ////// GET TABLE HANDLERS AND SET NEW CUSTOMER TABLE VISIBLE
         final TableLayout no_customer_warnAndRadio_table = (TableLayout) findViewById(R.id.no_customer_selected_warning);
-        final TableLayout newCustomerEntryTable = (TableLayout) findViewById(R.id.br_new_customer_table_layout);
+        final LinearLayout newCustomerEntryTable = (LinearLayout) findViewById(R.id.br_new_customer_table_layout);
         final TableLayout existingCustomerSelectionTable = (TableLayout) findViewById(R.id.existing_customer_selection_table);
         no_customer_warnAndRadio_table.setVisibility(View.VISIBLE);
         newCustomerEntryTable.setVisibility(View.VISIBLE);
@@ -290,7 +305,9 @@ public class ReserveBoothDetails extends AppCompatActivity {
                 findViewById(R.id.br_new_customer_is_marketing_allowed_chkbox).setEnabled(false);
                 findViewById(R.id.save_customer_to_order_btn).setEnabled(false);
                 ///// ENABLE FINALIZATION OF RESERVATION
-                findViewById(R.id.finalize_booth_reservation_btn).setEnabled(true);
+                if (orderID != null) {
+                    findViewById(R.id.finalize_booth_reservation_btn).setEnabled(true);
+                }
                 progressDialog.dismiss();
                 Toast.makeText(reserveBoothDetailsActivityContext, getResources().getString(R.string.customer_created_message_text), Toast.LENGTH_LONG).show();
             }
@@ -490,6 +507,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
                 // setExistingCustomerInformation(clickedCustomer);
             }
         });
+
         ///////ATTACH TO SEARCH FIELD AND ADD LISTENER
         // TODO: 9/13/2016 fix this filter
         EditText searchExistingCustomersField = (EditText) findViewById(R.id.booth_reservation_search_existing_customers_field);

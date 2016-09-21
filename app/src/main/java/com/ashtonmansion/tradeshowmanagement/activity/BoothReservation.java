@@ -113,7 +113,6 @@ public class BoothReservation extends AppCompatActivity {
                     boothAvailabilityTv.setText(booth.getCode());
                     boothAvailabilityTv.setTextAppearance(boothReservationActivityContext, R.style.reserved_booth_style);
                 }
-                boothAvailabilityTv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
                 ///// WILL FILTER OUT SHOW TAG FROM BOOTH
                 Tag sizeTag;

@@ -88,8 +88,7 @@ public class TradeShows extends AppCompatActivity
                 Button editShowButton = new Button(tradeShowsActivityContext);
 
                 ///// HANDLE FONTS
-                newShowTV.setTextAppearance(tradeShowsActivityContext, R.style.large_table_row_font_station);
-                newShowTV.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                newShowTV.setTextAppearance(tradeShowsActivityContext, R.style.trade_show_row_style);
 
                 ///// SHOW NAME- BUTTON TXT- BUTTON ACTION
                 newShowTV.setText(showNameForUser);

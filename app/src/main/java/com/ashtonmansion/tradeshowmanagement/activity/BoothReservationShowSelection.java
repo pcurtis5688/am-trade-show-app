@@ -89,7 +89,7 @@ public class BoothReservationShowSelection extends Activity
                 Button showSelectButton = new Button(boothReservationShowSelectionActivityContext);
 
                 ///// HANDLE FONTS
-                showSelectionNameTv.setTextAppearance(boothReservationShowSelectionActivityContext, R.style.large_table_row_font_station);
+                showSelectionNameTv.setTextAppearance(boothReservationShowSelectionActivityContext, R.style.trade_show_row_style);
                 showSelectButton.setTextAppearance(boothReservationShowSelectionActivityContext, R.style.button_font_style);
 
                 ///// SHOW NAME BUTTON TEXT AND ACTION

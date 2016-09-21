@@ -179,7 +179,6 @@ public class ConfigureBooths extends AppCompatActivity
                     boothAvailabilityTv.setText(booth.getCode());
                     boothAvailabilityTv.setTextAppearance(configureBoothsActivityContext, R.style.reserved_booth_style);
                 }
-                boothAvailabilityTv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
                 Button editBoothButton = new Button(configureBoothsActivityContext);
                 editBoothButton.setText(getResources().getString(R.string.configure_show_booths_edit_booth_btn_text));
@@ -204,16 +203,15 @@ public class ConfigureBooths extends AppCompatActivity
         } else {
             ///// HANDLE CASE - NO BOOTHS TO CONFIGURE
             TableRow noBoothsForShowRow = new TableRow(configureBoothsActivityContext);
-            noBoothsForShowRow.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-
             TextView noBoothsForShowTV = new TextView(configureBoothsActivityContext);
             noBoothsForShowTV.setText(getResources().getString(R.string.booth_configuration_no_booths_message));
-            noBoothsForShowTV.setTextAppearance(configureBoothsActivityContext, R.style.large_table_row_font_station);
+            noBoothsForShowTV.setTextAppearance(configureBoothsActivityContext, R.style.no_rows_style);
             noBoothsForShowTV.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
             TableRow.LayoutParams params = new TableRow.LayoutParams();
             params.span = 6;
-            params.topMargin = 50;
+            params.topMargin = 25;
+            params.bottomMargin = 25;
             noBoothsForShowRow.addView(noBoothsForShowTV, params);
             showTable.addView(noBoothsForShowRow);
         }
