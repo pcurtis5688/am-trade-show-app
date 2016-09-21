@@ -140,29 +140,35 @@ public class EditBooth extends AppCompatActivity {
                 saveBoothChangesAction();
             }
         });
+//        setBoothAvailableBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                //setBoothAvailableAction();
+//                PopupMenu popupMenu = new PopupMenu(editBoothActivityContext, findViewById(R.id.set_booth_available_action_btn));
+//                popupMenu.getMenuInflater().inflate(R.menu.popup_menu_booth_availability, popupMenu.getMenu());
+//                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//                    @Override
+//                    public boolean onMenuItemClick(MenuItem menuItem) {
+//                        if (menuItem.getTitle().toString().equalsIgnoreCase("Refund entire order")) {
+//                            SET_AVAILABLE_ACTION = "REFUNDORDER";
+//                            setBoothAvailableAction();
+//                        } else if (menuItem.getTitle().toString().equalsIgnoreCase("Remove Booth, Add Generic, Re-open Order")) {
+//                            SET_AVAILABLE_ACTION = "SWAPANDREOPEN";
+//                            setBoothAvailableAction();
+//                        } else if (menuItem.getTitle().toString().equalsIgnoreCase("Delete Order and Make Available")) {
+//                            SET_AVAILABLE_ACTION = "DELETEORDER";
+//                            setBoothAvailableAction();
+//                        }
+//                        return true;
+//                    }
+//                });
+//                popupMenu.show();
+//            }
+//        });
         setBoothAvailableBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                //setBoothAvailableAction();
-                PopupMenu popupMenu = new PopupMenu(editBoothActivityContext, findViewById(R.id.set_booth_available_action_btn));
-                popupMenu.getMenuInflater().inflate(R.menu.popup_menu_booth_availability, popupMenu.getMenu());
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-                        if (menuItem.getTitle().toString().equalsIgnoreCase("Refund entire order")) {
-                            SET_AVAILABLE_ACTION = "REFUNDORDER";
-                            setBoothAvailableAction();
-                        } else if (menuItem.getTitle().toString().equalsIgnoreCase("Remove Booth, Add Generic, Re-open Order")) {
-                            SET_AVAILABLE_ACTION = "SWAPANDREOPEN";
-                            setBoothAvailableAction();
-                        } else if (menuItem.getTitle().toString().equalsIgnoreCase("Delete Order and Make Available")) {
-                            SET_AVAILABLE_ACTION = "DELETEORDER";
-                            setBoothAvailableAction();
-                        }
-                        return true;
-                    }
-                });
-                popupMenu.show();
+            public void onClick(View v) {
+                setBoothAvailableAction();
             }
         });
     }
@@ -220,40 +226,37 @@ public class EditBooth extends AppCompatActivity {
             @Override
             protected Void doInBackground(Void... params) {
                 try {
-                    if (SET_AVAILABLE_ACTION.equalsIgnoreCase("REFUNDORDER")) {
-                        List<Refund> refunds = new ArrayList<>();
+                    inventoryConnector.updateItem(inventoryConnector.getItem(boothIdToMakeAvailable).setCode(getResources().getString(R.string.available_keyword)));
 
-                        Order orderToRefund = orderConnector.getOrder(booth.getCode());
-
-
-                        // TODO: 9/20/2016 ask if this is needed
-
-                        orderConnector.getOrder(booth.getCode()).setRefunds(refunds);
-                    } else if (SET_AVAILABLE_ACTION.equalsIgnoreCase("SWAPANDREOPEN")) {
-                        ////// FETCH ORDER, SWAP BOOTHS, AND UPDATE THE ORDER
-                        Order orderToRefund = orderConnector.getOrder(booth.getCode());
-                        List<LineItem> lineItems = orderToRefund.getLineItems();
-                        List<LineItem> newLineItems = new ArrayList<>();
-                        for (LineItem lineItem : lineItems) {
-                            if (lineItem.getItem().getId().equalsIgnoreCase(boothIdToMakeAvailable)) {
-
-                                ////// CREATE A NEW LINE ITEM FOR GENERIC BOOTH
-                                LineItem newGenericBoothLineItem = new LineItem();
-                                newGenericBoothLineItem.setName("GENERIC BOOTH");
-
-                                ////// ADD GENERIC
-                                lineItems.add(newGenericBoothLineItem);
-                            } else {
-                                newLineItems.add(lineItem);
-                            }
-                        }
-                        orderToRefund.clearLineItems();
-                        orderConnector.updateOrder(orderConnector.getOrder(booth.getCode()).setLineItems(newLineItems));
-                    } else if (SET_AVAILABLE_ACTION.equalsIgnoreCase("DELETEORDER")) {
-                        Toast.makeText(editBoothActivityContext, booth.getCode(), Toast.LENGTH_LONG).show();
-
-                    }
-                    //inventoryConnector.updateItem(inventoryConnector.getItem(boothIdToMakeAvailable).setCode(getResources().getString(R.string.available_keyword)));
+//                    if (SET_AVAILABLE_ACTION.equalsIgnoreCase("REFUNDORDER")) {
+//                        List<Refund> refunds = new ArrayList<>();
+//                        Order orderToRefund = orderConnector.getOrder(booth.getCode());
+//                        // TODO: 9/20/2016 ask if this is needed
+//                        orderConnector.getOrder(booth.getCode()).setRefunds(refunds);
+//                    } else if (SET_AVAILABLE_ACTION.equalsIgnoreCase("SWAPANDREOPEN")) {
+//                        ////// FETCH ORDER, SWAP BOOTHS, AND UPDATE THE ORDER
+//                        Order orderToRefund = orderConnector.getOrder(booth.getCode());
+//                        List<LineItem> lineItems = orderToRefund.getLineItems();
+//                        List<LineItem> newLineItems = new ArrayList<>();
+//                        for (LineItem lineItem : lineItems) {
+//                            if (lineItem.getItem().getId().equalsIgnoreCase(boothIdToMakeAvailable)) {
+//
+//                                ////// CREATE A NEW LINE ITEM FOR GENERIC BOOTH
+//                                LineItem newGenericBoothLineItem = new LineItem();
+//                                newGenericBoothLineItem.setName("GENERIC BOOTH");
+//
+//                                ////// ADD GENERIC
+//                                lineItems.add(newGenericBoothLineItem);
+//                            } else {
+//                                newLineItems.add(lineItem);
+//                            }
+//                        }
+//                        orderToRefund.clearLineItems();
+//                        orderConnector.updateOrder(orderConnector.getOrder(booth.getCode()).setLineItems(newLineItems));
+//                    } else if (SET_AVAILABLE_ACTION.equalsIgnoreCase("DELETEORDER")) {
+//                        Toast.makeText(editBoothActivityContext, booth.getCode(), Toast.LENGTH_LONG).show();
+//
+//                    }
                 } catch (Exception e) {
                     Log.d("Clover excptn:", e.getMessage(), e.getCause());
                 }
