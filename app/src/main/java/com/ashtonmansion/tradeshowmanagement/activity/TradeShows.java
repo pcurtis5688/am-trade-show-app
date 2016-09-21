@@ -147,12 +147,12 @@ public class TradeShows extends AppCompatActivity
     ////////////NAVIGATION HANDLING METHODS ////////////////////
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.app_settings_drawerlayout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.app_settings_drawerlayout);
+//        if (drawer.isDrawerOpen(GravityCompat.START)) {
+//            drawer.closeDrawer(GravityCompat.START);
+//        } else {
+        super.onBackPressed();
+        //}
     }
 
     @Override

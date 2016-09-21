@@ -87,4 +87,10 @@
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:textColor">@color/reserved_booth_color</item>
     </style>
+
+    <style name="existing_customer_lv_style">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/dimen_36sp</item>
+        <item name="android:layout_marginStart">@dimen/dimen_25dp</item>
+    </style>
 </resources>

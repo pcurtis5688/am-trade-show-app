@@ -5,14 +5,8 @@
 
     <TextView
         android:id="@+id/tvCustomerName"
+        style="@style/existing_customer_lv_style"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Name" />
-
-    <TextView
-        android:id="@+id/tvCustomerPhone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Phone No." />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

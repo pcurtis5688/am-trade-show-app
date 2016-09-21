@@ -19,7 +19,7 @@
 
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:stretchColumns="*">
 
             <TableRow>
@@ -74,22 +74,26 @@
                     android:id="@+id/booth_reservation_details_type"
                     style="@style/selected_booth_label_style" />
             </TableRow>
+        </TableLayout>
 
-            <TableRow android:layout_marginTop="@dimen/dimen_25dp">
+        <TableLayout
+            android:id="@+id/selected_customer_table"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:stretchColumns="*">
+
+            <TableRow>
 
                 <TextView
                     android:id="@+id/selected_customer_header_tv"
                     style="@style/selected_booth_label_style"
-                    android:layout_column="0"
-                    android:layout_span="1"
                     android:text="@string/selected_customer_header"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/selected_customer_first_and_last"
-                    style="@style/selected_customer_style"
-                    android:layout_column="1"
-                    android:layout_span="3" />
+                    style="@style/selected_customer_style" />
             </TableRow>
 
             <TableRow>
@@ -97,8 +101,7 @@
                 <TextView
                     android:id="@+id/selected_customer_phone_number"
                     style="@style/selected_customer_style"
-                    android:layout_column="1"
-                    android:layout_span="3" />
+                    android:layout_column="1" />
             </TableRow>
 
             <TableRow>
@@ -106,8 +109,48 @@
                 <TextView
                     android:id="@+id/selected_customer_email_address"
                     style="@style/selected_customer_style"
-                    android:layout_column="1"
-                    android:layout_span="3" />
+                    android:layout_column="1" />
+            </TableRow>
+
+        </TableLayout>
+
+        <TableLayout
+            android:id="@+id/no_customer_selected_warning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginBottom="@dimen/dimen_10dp"
+            android:visibility="gone">
+
+            <TableRow>
+
+                <TextView
+                    style="@style/selected_booth_label_style"
+                    android:text="@string/no_customer_was_selected_string" />
+            </TableRow>
+
+            <TableRow>
+
+                <RadioGroup
+                    android:id="@+id/booth_reservation_new_or_existing_radiogrp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/booth_reservation_new_customer_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="@string/booth_reservation_new_customer_text" />
+
+                    <RadioButton
+                        android:id="@+id/booth_reservation_existing_customer_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/booth_reservation_existing_customer_text" />
+
+                </RadioGroup>
             </TableRow>
         </TableLayout>
 
@@ -118,14 +161,6 @@
             android:layout_marginTop="@dimen/dimen_12dp"
             android:stretchColumns="*"
             android:visibility="gone">
-
-            <TableRow>
-
-                <TextView
-                    style="@style/selected_booth_label_style"
-                    android:layout_span="2"
-                    android:text="@string/no_customer_was_selected_string" />
-            </TableRow>
 
             <TableRow>
 
@@ -218,9 +253,36 @@
         </TableLayout>
 
         <TableLayout
+            android:id="@+id/existing_customer_selection_table"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_100dp"
+            android:layout_marginTop="@dimen/dimen_12dp"
+            android:stretchColumns="*"
+            android:visibility="gone">
+
+            <TableRow>
+
+                <EditText
+                    android:id="@+id/booth_reservation_search_existing_customers_field"
+                    android:layout_width="match_parent"
+                    android:hint="@string/booth_reservation_search_customer_hint" />
+            </TableRow>
+
+            <TableRow>
+
+                <ListView
+                    android:id="@+id/existing_customers_lv"
+                    android:layout_width="match_parent"
+                    android:choiceMode="singleChoice"
+                    android:layout_height="@dimen/dimen_150dp"
+                    android:fadeScrollbars="false"
+                    android:listSelector="@color/lv_pressed" />
+            </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:stretchColumns="*">
 
             <TableRow>
@@ -239,51 +301,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/reserve_booth_button_text" />
             </TableRow>
-
-            <TableRow>
-
-                <TextView
-                    android:id="@+id/booth_reserved_confirmation_textview"
-                    style="@style/large_table_row_font_station"
-                    android:layout_span="2"
-                    android:text="@string/booth_reservation_booth_reserved_notification"
-                    android:textStyle="bold|italic"
-                    android:visibility="gone"/>
-            </TableRow>
         </TableLayout>
 
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>
-
-    <!--<TableRow android:layout_marginTop="@dimen/dimen_12dp">--><!--<RadioGroup--><!--android:id="@+id/booth_reservation_new_or_existing_radiogrp"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:layout_span="4"--><!--android:orientation="horizontal">-->
-
-    <!--<RadioButton--><!--android:id="@+id/booth_reservation_new_customer_btn"--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:checked="true"--><!--android:text="@string/booth_reservation_new_customer_text" />-->
-
-    <!--<RadioButton--><!--android:id="@+id/booth_reservation_existing_customer_btn"--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:text="@string/booth_reservation_existing_customer_text" />-->
-
-    <!--</RadioGroup>--><!--</TableRow>-->
-
-
-    <!--<TableRow>-->
-
-    <!--<TextView--><!--android:text="@string/booth_reservation_electricity_prompt"--><!--android:textSize="@dimen/dimen_24sp" />-->
-
-    <!--<CheckBox android:id="@+id/br_include_electricity_chkbox" />-->
-
-    <!--<TextView--><!--android:text="@string/booth_reservation_internet_speed_prompt"--><!--android:textSize="@dimen/dimen_24sp" />-->
-
-    <!--<Spinner android:id="@+id/br_internet_speed_spinner" />--><!--</TableRow>-->
-
-    <!--<TableLayout--><!--android:id="@+id/existingCustomerTableLayout"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:layout_marginTop="@dimen/dimen_12dp"--><!--android:stretchColumns="*"--><!--android:visibility="gone">-->
-
-    <!--<TableRow>-->
-
-    <!--<EditText--><!--android:id="@+id/booth_reservation_search_existing_customers_field"--><!--android:layout_width="match_parent"--><!--android:hint="@string/booth_reservation_search_customer_hint" />--><!--</TableRow>-->
-
-    <!--<TableRow>-->
-
-    <!--<ListView--><!--android:id="@+id/existing_customers_lv"--><!--android:layout_width="match_parent"--><!--android:layout_height="@dimen/dimen_200dp"--><!--android:choiceMode="singleChoice"--><!--android:listSelector="@color/lv_pressed" />--><!--</TableRow>--><!--</TableLayout>-->
-
-    <!--<TableLayout--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:stretchColumns="*">-->
-
-    <!--<TableRow>-->
