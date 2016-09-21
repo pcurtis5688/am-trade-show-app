@@ -24,6 +24,7 @@ import com.clover.sdk.v3.base.Tender;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
 import com.clover.sdk.v3.inventory.Tag;
+import com.clover.sdk.v3.order.OrderConnector;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -42,35 +43,12 @@ public class ApplicationSettings extends AppCompatActivity {
 
         applicationSettingsActivityContext = this;
 
-        Button deleteAllItemsBtn = (Button) findViewById(R.id.quick_ops_delete_all);
-        deleteAllItemsBtn.setOnClickListener(new View.OnClickListener() {
+        final Button checkBoothIntegrityBtn = (Button) findViewById(R.id.check_booth_integrity_btn);
+        checkBoothIntegrityBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                deleteAllItems();
-            }
-        });
-
-        Button deleteAllTagsBtn = (Button) findViewById(R.id.quick_ops_delete_all_tags);
-        deleteAllTagsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                deleteAllTags();
-            }
-        });
-
-        Button createCustomTenderBtn = (Button) findViewById(R.id.create_custom_tender_btn);
-        createCustomTenderBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createCustomTender(view.getContext());
-            }
-        });
-
-        Button deleteCustomTenderBtn = (Button) findViewById(R.id.delete_custom_tender_btn);
-        deleteCustomTenderBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                deleteCustomTender(view.getContext());
+                checkBoothIntegrityAndCorrect();
+                checkBoothIntegrityBtn.setEnabled(false);
             }
         });
     }
@@ -135,15 +113,6 @@ public class ApplicationSettings extends AppCompatActivity {
         }.execute();
     }
 
-    private void deleteAllItems() {
-        DeleteAllItemsTask deleteAllItemsTask = new DeleteAllItemsTask();
-        deleteAllItemsTask.execute();
-    }
-
-    private void deleteAllTags() {
-        DeleteAllTagsTask deleteAllTagsTask = new DeleteAllTagsTask();
-        deleteAllTagsTask.execute();
-    }
 
     private class DeleteAllItemsTask extends AsyncTask<Void, Void, Void> {
         private ProgressDialog progressDialog;
@@ -234,4 +203,72 @@ public class ApplicationSettings extends AppCompatActivity {
     }
 
 
+    private boolean checkBoothIntegrityAndCorrect() {
+
+        new AsyncTask<Void, Void, Void>() {
+            private InventoryConnector inventoryConnector;
+            private OrderConnector orderConnector;
+            private List<Item> reservedBoothsWithInvalidatedOrders;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                ////// INITIALIZE LISTS
+                reservedBoothsWithInvalidatedOrders = new ArrayList<>();
+
+                ////// INITIALIZE CLOVER CONNECTIONS
+                inventoryConnector = new InventoryConnector(applicationSettingsActivityContext, CloverAccount.getAccount(applicationSettingsActivityContext), null);
+                orderConnector = new OrderConnector(applicationSettingsActivityContext, CloverAccount.getAccount(applicationSettingsActivityContext), null);
+                inventoryConnector.connect();
+                orderConnector.connect();
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                try {
+                    for (Item boothToCheck : inventoryConnector.getItems()) {
+                        if (boothToCheck.getCode().contains("Order #")) {
+                            String orderNumber = boothToCheck.getCode().substring(7);
+                            if (null == orderConnector.getOrder(orderNumber)) {
+                                reservedBoothsWithInvalidatedOrders.add(boothToCheck);
+                                inventoryConnector.updateItem(boothToCheck.setCode("Available"));
+                                Log.d("Invalid Booth: ", boothToCheck.getId() + "code: " + boothToCheck.getCode() + " name: " + boothToCheck.getName());
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    Log.d("Excptn: ", e.getMessage(), e.getCause());
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                super.onPostExecute(result);
+                inventoryConnector.disconnect();
+                orderConnector.disconnect();
+                inventoryConnector = null;
+                orderConnector = null;
+                if (reservedBoothsWithInvalidatedOrders.size() > 0){
+                    Toast.makeText(applicationSettingsActivityContext, getResources().getString(R.string.invalid_booths_found_and_corrected), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(applicationSettingsActivityContext, getResources().getString(R.string.no_invalid_booths_found), Toast.LENGTH_LONG).show();
+                }
+            }
+        }.execute();
+
+        return false;
+    }
+
+    ////// INACTIVE METHODS
+
+    private void deleteAllItems() {
+        DeleteAllItemsTask deleteAllItemsTask = new DeleteAllItemsTask();
+        deleteAllItemsTask.execute();
+    }
+
+    private void deleteAllTags() {
+        DeleteAllTagsTask deleteAllTagsTask = new DeleteAllTagsTask();
+        deleteAllTagsTask.execute();
+    }
 }

@@ -79,6 +79,12 @@
         <item name="android:textSize">@dimen/button_text_size_32sp</item>
     </style>
 
+    <style name="app_settings_button_style">
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
     <style name="table_line_item_font_shows">
         <item name="android:textAlignment">center</item>
         <item name="android:textStyle">bold</item>
@@ -101,7 +107,7 @@
 
     <style name="existing_customer_lv_style">
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">@dimen/dimen_36sp</item>
+        <item name="android:textSize">@dimen/dimen_30sp</item>
         <item name="android:layout_marginStart">@dimen/dimen_25dp</item>
     </style>
 
