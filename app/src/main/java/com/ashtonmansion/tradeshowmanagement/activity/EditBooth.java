@@ -272,6 +272,7 @@ public class EditBooth extends AppCompatActivity {
                 orderConnector = null;
                 progressDialog.dismiss();
                 finish();
+
                 Toast.makeText(editBoothActivityContext, getResources().getString(R.string.booth_successfully_made_available_msg), Toast.LENGTH_LONG).show();
             }
         }.execute();
