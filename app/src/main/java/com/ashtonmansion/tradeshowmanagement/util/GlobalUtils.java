@@ -20,6 +20,10 @@ import java.util.Locale;
  */
 public class GlobalUtils {
 
+    public static String getOrderIDOnlyFromCode(String boothCode) {
+        return boothCode.substring(7);
+    }
+
     public static long getLongFromFormattedPriceString(String priceString) {
         String passedString = priceString;
         Number number2 = 0;

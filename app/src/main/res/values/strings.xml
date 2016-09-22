@@ -253,7 +253,7 @@
     <string name="booth_reservation_existing_customer_text">Existing Customer</string>
     <string name="booth_reservation_search_customer_hint">Search Existing Customers...</string>
     <string name="booth_reservation_loading_existing_customers_text">Loading Existing Customers. . .</string>
-    <string name="booth_reservation_cancel_booth_reservation_btn_text">Cancel Reservation</string>
+    <string name="booth_reservation_cancel_booth_reservation_btn_text">Cancel</string>
     <string name="booth_reservation_reserve_booth_btn_text">Reserve Booth</string>
     <string name="booth_reservation_reserving_booth_pd_text">Making Booth Reservation. . .</string>
     <string name="booth_reservation_electricity_prompt">Include Electricity?</string>
@@ -361,6 +361,7 @@
     <string name="selected_customer_first_and_last_text">%1$s, %2$s</string>
     <string name="selected_customer_phone_number_text">Phone No.: %1$s</string>
     <string name="selected_customer_email_address_text">Email Address: %1$s</string>
+    <string name="associated_customer_alternate_string">Associated Customer:</string>
     <string name="no_customer_was_selected_string">No Customer has been selected for the order; please add info or select from existing</string>
     <string name="save_customer_information_btn_text">Save Customer Information</string>
     <string name="customer_created_message_text">Customer Created! You can now finalize the reservation</string>
