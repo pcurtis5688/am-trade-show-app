@@ -54,6 +54,7 @@
         <item name="android:textSize">@dimen/dimen_36sp</item>
         <item name="android:textStyle">bold|italic</item>
         <item name="android:layout_span">2</item>
+        <item name="android:layout_marginTop">@dimen/dimen_150dp</item>
     </style>
 
     <style name="selected_customer_style">

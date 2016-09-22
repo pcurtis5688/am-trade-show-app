@@ -116,7 +116,6 @@ public class ReserveBoothDetails extends AppCompatActivity {
         }
     }
 
-
     private void handleRegisterCase() {
         if (null != customerAttachedToOrder) {
             populateExistingCustomer();
@@ -163,6 +162,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
             ////// SPAN NONSENSE
             TableRow.LayoutParams params = new TableRow.LayoutParams();
             params.span = 2;
+            params.topMargin = 30;
             params.gravity = Gravity.CENTER_HORIZONTAL;
             reserveThroughRegisterWarningRow.addView(reserveThroughRegisterTv, params);
             reserveThroughRegisterWarningRow.setVisibility(View.VISIBLE);
@@ -203,7 +203,6 @@ public class ReserveBoothDetails extends AppCompatActivity {
                     handleAppCase();
                 else
                     handleRegisterCase();
-
             }
         }.execute();
     }

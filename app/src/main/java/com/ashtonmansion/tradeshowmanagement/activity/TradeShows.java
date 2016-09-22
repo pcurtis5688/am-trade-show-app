@@ -223,7 +223,7 @@ public class TradeShows extends AppCompatActivity
             try {
                 /////ONLY RETURN SHOW TAGS.
                 for (Tag currentTag : inventoryConnector.getTags()) {
-                    if (currentTag.getName().contains(" [Show]")) {
+                    if (currentTag.getName().contains("[Show]")) {
                         showList.add(currentTag);
                     }
                 }

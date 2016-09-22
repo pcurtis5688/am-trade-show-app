@@ -26,6 +26,8 @@ import com.clover.sdk.v3.inventory.Item;
 import com.clover.sdk.v3.inventory.Tag;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -34,6 +36,7 @@ public class BoothReservation extends AppCompatActivity {
     private Context boothReservationActivityContext;
     private TableLayout boothListTable;
     private boolean startedFromApp;
+    private String lastSortedBy;
     ///// DATA VARS
     private Tag show;
     private String showNameForUser;
@@ -49,6 +52,7 @@ public class BoothReservation extends AppCompatActivity {
         //////////////FIELD DEFINITIONS & DATA HANDLING
         boothReservationActivityContext = this;
         boothListTable = (TableLayout) findViewById(R.id.booth_selection_booth_table);
+        lastSortedBy = "none";
 
         Bundle extrasBundle = getIntent().getExtras();
         if (extrasBundle != null) {
@@ -213,6 +217,29 @@ public class BoothReservation extends AppCompatActivity {
         boothAvailabilityTv.setText(getResources().getString(R.string.booth_selection_booth_availability_header));
         boothAvailabilityTv.setTextAppearance(boothReservationActivityContext, R.style.span_2_and_table_header_style);
 
+        ////// ADD ACTION LISTENERS TO SORT BY THE CLICKED HEADER
+        boothNumberHeaderTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortBoothListByBoothNo();
+                lastSortedBy = "boothNumber";
+            }
+        });
+        boothPriceHeaderTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortBoothListByPrice();
+                lastSortedBy = "boothPrice";
+            }
+        });
+        boothAvailabilityTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortBoothListByAvailability();
+                lastSortedBy = "boothAvailability";
+            }
+        });
+
         boothSelectionTableHeaderRow.addView(boothNumberHeaderTv);
         boothSelectionTableHeaderRow.addView(boothPriceHeaderTv);
         boothSelectionTableHeaderRow.addView(boothSizeHeaderTv);
@@ -275,5 +302,48 @@ public class BoothReservation extends AppCompatActivity {
             createBoothSelectionTable();
             progressDialog.dismiss();
         }
+    }
+
+    private void sortBoothListByBoothNo() {
+        if (lastSortedBy.equalsIgnoreCase("boothNumber")) {
+            Collections.reverse(boothList);
+        } else {
+            lastSortedBy = "boothNumber";
+            Collections.sort(boothList, new Comparator<Item>() {
+                public int compare(Item booth1, Item booth2) {
+                    lastSortedBy = "boothNumber";
+                    return (booth1.getSku().compareTo(booth2.getSku()));
+                }
+            });
+        }
+        createBoothSelectionTable();
+    }
+
+    private void sortBoothListByPrice() {
+        if (lastSortedBy.equalsIgnoreCase("boothPrice")) {
+            Collections.reverse(boothList);
+        } else {
+            lastSortedBy = "boothPrice";
+            Collections.sort(boothList, new Comparator<Item>() {
+                public int compare(Item booth1, Item booth2) {
+                    return booth1.getPrice().compareTo(booth2.getPrice());
+                }
+            });
+        }
+        createBoothSelectionTable();
+    }
+
+    private void sortBoothListByAvailability() {
+        if (lastSortedBy.equalsIgnoreCase("boothAvailability")) {
+            Collections.reverse(boothList);
+        } else {
+            lastSortedBy = "boothAvailability";
+            Collections.sort(boothList, new Comparator<Item>() {
+                public int compare(Item booth1, Item booth2) {
+                    return booth1.getCode().compareTo(booth2.getCode());
+                }
+            });
+        }
+        createBoothSelectionTable();
     }
 }
