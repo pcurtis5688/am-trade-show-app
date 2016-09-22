@@ -28,7 +28,7 @@
     <string name="nav_drawer_show_setup_text">Show Setup</string>
     <string name="nav_drawer_config_booths_text">Configure Booths</string>
     <string name="nav_drawer_reports_queries_text">Reports / Queries</string>
-    <string name="nav_drawer_make_reservation_text">Make A Reservation</string>
+    <string name="nav_drawer_make_reservation_text">Review Booths</string>
     <string name="nav_drawer_email_confirmations_text">Email Confirmations</string>
     <string name="nav_drawer_advertising_sales_text">Advertising Sales</string>
     <string name="nav_drawer_general_tix_sales_text">General Ticket Sales</string>
@@ -140,7 +140,7 @@
     <string name="booth_filters_max_price_hint">[Max Price]</string>
 
     <!-- MAKE RESERVATION PAGES STRINGS ////////////////////////-->
-    <string name="booth_reservation_show_selection_header_text">Booth Reservation - Select Show</string>
+    <string name="booth_reservation_show_selection_header_text">Booth Overviews - Select Show</string>
     <string name="select_show_button_text">Select Show</string>
     <string name="select_booth_action_button_text">Select Booth</string>
     <string name="booth_reservation_no_booths_for_show_text">No Available Booths assigned to Show</string>
@@ -240,6 +240,7 @@
     <!-- BOOTH RESERVATION STRINGS //////////////////-->
     <string name="booth_reservation_details_header_text">%1$s - Booth No.: %2$s</string>
     <string name="reserve_booth_button_text">Reserve Booth</string>
+    <string name="view_booth_details_string">View Details</string>
     <string name="booth_reservation_price_label">Booth Price:</string>
     <string name="booth_reservation_size_label">Booth Size:</string>
     <string name="booth_reservation_area_label">Booth Area:</string>
@@ -264,6 +265,7 @@
     <string name="booth_product_code_with_prefix">Order #%1$s</string>
     <string name="existing_customer_textview_string">%1$s, %2$s %3$s %4$s</string>
     <string name="reserve_through_register_warning_msg">Please Reserve Booths via Customers App</string>
+    <string name="view_booth_order">View Booth Order</string>
 
     <!-- BOOTH RESERVATION - new customer strings///////////-->
     <string name="br_new_customer_first_name_hint">[First Name]</string>

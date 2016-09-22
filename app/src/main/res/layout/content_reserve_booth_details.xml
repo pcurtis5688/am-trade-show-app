@@ -203,8 +203,8 @@
 
                         <EditText
                             android:id="@+id/br_new_customer_email_field"
-                            android:inputType="textEmailAddress"
-                            android:hint="@string/br_new_customer_email_field_hint" />
+                            android:hint="@string/br_new_customer_email_field_hint"
+                            android:inputType="textEmailAddress" />
                     </TableRow>
 
                     <TableRow>
@@ -316,11 +316,10 @@
                             android:text="@string/booth_reservation_cancel_booth_reservation_btn_text" />
 
                         <Button
-                            android:id="@+id/finalize_booth_reservation_btn"
+                            android:id="@+id/finalize_or_order_btn"
                             style="@style/button_font_style"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/reserve_booth_button_text" />
+                            android:layout_height="wrap_content" />
                     </TableRow>
                 </TableLayout>
 

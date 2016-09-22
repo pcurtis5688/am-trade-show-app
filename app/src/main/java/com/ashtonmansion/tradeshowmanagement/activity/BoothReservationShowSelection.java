@@ -49,6 +49,7 @@ public class BoothReservationShowSelection extends Activity
     ///// ORDER INFO BEING PASSED TO BOOTH RESERVATION, WILL GRAB CUSTOMER
     private String orderID;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ///////////UI WORK/////////////////////////////////////
@@ -58,7 +59,7 @@ public class BoothReservationShowSelection extends Activity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_make_reservation);
         navigationView.setNavigationItemSelectedListener(this);
 
-        ///////////DATA WORK////////////////////////////////////
+        ////// DATA WORK
         Intent intent = getIntent();
         Bundle extrasBundle = intent.getExtras();
         orderID = getIntent().getStringExtra(Intents.EXTRA_ORDER_ID);

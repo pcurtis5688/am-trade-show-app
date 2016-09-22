@@ -44,6 +44,7 @@ import java.util.List;
 
 public class ReserveBoothDetails extends AppCompatActivity {
     private Context reserveBoothDetailsActivityContext;
+    private boolean startedFromApp;
     ///////SHOW DATA
     private String showName;
     ///// BOOTH DATA
@@ -87,6 +88,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
         populateTagFields();
 
         ///// SET UP CANCEL AND FINALIZE BUTTONS
+
         Button cancelBoothReservationBtn = (Button) findViewById(R.id.cancel_reserve_booth_btn);
         cancelBoothReservationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,9 +96,10 @@ public class ReserveBoothDetails extends AppCompatActivity {
                 cancelBoothReservation();
             }
         });
-        Button finalizeBoothReservationBtn = (Button) findViewById(R.id.finalize_booth_reservation_btn);
+        Button finalizeOrViewOrderBtn = (Button) findViewById(R.id.finalize_or_order_btn);
         if (orderID != null) {
-            finalizeBoothReservationBtn.setOnClickListener(new View.OnClickListener() {
+            finalizeOrViewOrderBtn.setText(getResources().getString(R.string.reserve_booth_button_text));
+            finalizeOrViewOrderBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     finalizeBoothReservation();
@@ -105,7 +108,14 @@ public class ReserveBoothDetails extends AppCompatActivity {
             ///// ATTEMPT TO GET CUSTOMER SELECTED OR HANDLE
             getOrderCustomer();
         } else {
-            finalizeBoothReservationBtn.setEnabled(false);
+            finalizeOrViewOrderBtn.setText(getResources().getString(R.string.view_booth_order));
+            finalizeOrViewOrderBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(reserveBoothDetailsActivityContext, "Order attached: " + booth.getCode(), Toast.LENGTH_LONG).show();
+                }
+            });
+            ////// ADD WARNING TO PAGE
             TableRow reserveThroughRegisterWarningRow = (TableRow) findViewById(R.id.make_reservation_through_register_warning_row);
             TextView reserveThroughRegisterTv = new TextView(reserveBoothDetailsActivityContext);
             reserveThroughRegisterTv.setText(getResources().getString(R.string.reserve_through_register_warning_msg));
@@ -176,7 +186,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
         newCustomerEntryTable.setVisibility(View.VISIBLE);
 
         ////// DEACTIVATE FINISH RESERVATION BUTTON AND REMOVE SELECTED CUSTOMER FIELDS
-        findViewById(R.id.finalize_booth_reservation_btn).setEnabled(false);
+        findViewById(R.id.finalize_or_order_btn).setEnabled(false);
         findViewById(R.id.selected_customer_header_tv).setVisibility(View.GONE);
         findViewById(R.id.selected_customer_first_and_last).setVisibility(View.GONE);
         findViewById(R.id.selected_customer_phone_number).setVisibility(View.GONE);
@@ -192,7 +202,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
                 if (selected == R.id.booth_reservation_new_customer_btn) {
                     existingCustomerSelectionTable.setVisibility(View.GONE);
                     newCustomerEntryTable.setVisibility(View.VISIBLE);
-                    findViewById(R.id.finalize_booth_reservation_btn).setEnabled(false);
+                    findViewById(R.id.finalize_or_order_btn).setEnabled(false);
                     clickedCustomer = null;
                 } else if (selected == R.id.booth_reservation_existing_customer_btn) {
                     newCustomerEntryTable.setVisibility(View.GONE);
@@ -306,7 +316,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
                 findViewById(R.id.save_customer_to_order_btn).setEnabled(false);
                 ///// ENABLE FINALIZATION OF RESERVATION
                 if (orderID != null) {
-                    findViewById(R.id.finalize_booth_reservation_btn).setEnabled(true);
+                    findViewById(R.id.finalize_or_order_btn).setEnabled(true);
                 }
                 progressDialog.dismiss();
                 Toast.makeText(reserveBoothDetailsActivityContext, getResources().getString(R.string.customer_created_message_text), Toast.LENGTH_LONG).show();
@@ -384,7 +394,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
                 inventoryConnector.disconnect();
                 orderConnector = null;
                 inventoryConnector = null;
-                findViewById(R.id.finalize_booth_reservation_btn).setEnabled(false);
+                findViewById(R.id.finalize_or_order_btn).setEnabled(false);
                 findViewById(R.id.cancel_reserve_booth_btn).setEnabled(false);
             }
         }.execute();
@@ -503,7 +513,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 clickedCustomer = customersAdapter.getItem(position);
-                findViewById(R.id.finalize_booth_reservation_btn).setEnabled(true);
+                findViewById(R.id.finalize_or_order_btn).setEnabled(true);
                 view.setSelected(true);
                 // setExistingCustomerInformation(clickedCustomer);
             }

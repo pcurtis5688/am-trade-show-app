@@ -8,35 +8,31 @@
     tools:context="com.ashtonmansion.tradeshowmanagement.activity.ApplicationSettings"
     tools:showIn="@layout/activity_app_settings">
 
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginEnd="@dimen/dimen_75dp"
         android:layout_marginStart="@dimen/dimen_75dp"
-        android:layout_marginTop="@dimen/dimen_25dp">
+        android:layout_marginTop="@dimen/dimen_25dp"
+        android:orientation="vertical">
 
-        <TableLayout
+        <TextView
+            style="@style/activity_header_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:stretchColumns="*">
+            android:layout_gravity="top"
+            android:layout_marginBottom="@dimen/dimen_50dp"
+            android:text="@string/application_settings_string" />
 
-            <TableRow>
-
-                <TextView
-                    style="@style/activity_header_style"
-                    android:text="@string/application_settings_string" />
-            </TableRow>
-
-            <TableRow>
-
-                <Button
-                    android:id="@+id/check_booth_integrity_btn"
-                    style="@style/app_settings_button_style"
-                    android:background="@color/admin_button_bg_color"
-                    android:text="@string/check_booth_integrity_text" />
-
-            </TableRow>
-        </TableLayout>
+        <Button
+            android:id="@+id/check_booth_integrity_btn"
+            style="@style/app_settings_button_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/admin_button_bg_color"
+            android:text="@string/check_booth_integrity_text" />
 
     </LinearLayout>
 

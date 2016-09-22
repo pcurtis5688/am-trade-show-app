@@ -18,7 +18,7 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="activity_header_style">
-        <item name="android:layout_marginBottom">25dp</item>
+        <item name="android:layout_marginBottom">15dp</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textSize">@dimen/dimen_36sp</item>
         <item name="android:textStyle">bold</item>
@@ -79,10 +79,17 @@
         <item name="android:textSize">@dimen/button_text_size_32sp</item>
     </style>
 
+    <style name="row_item_button_style">
+        <item name="android:textSize">@dimen/dimen_24sp</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
     <style name="app_settings_button_style">
         <item name="android:textStyle">bold|italic</item>
         <item name="android:textSize">22sp</item>
         <item name="android:textAlignment">center</item>
+        <item name="android:paddingStart">@dimen/dimen_25dp</item>
+        <item name="android:paddingEnd">@dimen/dimen_25dp</item>
     </style>
 
     <style name="table_line_item_font_shows">

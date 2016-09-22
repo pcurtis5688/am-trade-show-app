@@ -7,11 +7,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
-import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TableLayout;
@@ -24,13 +21,11 @@ import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.ServiceException;
-import com.clover.sdk.v3.base.Reference;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
 import com.clover.sdk.v3.inventory.Tag;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -38,6 +33,7 @@ public class BoothReservation extends AppCompatActivity {
     ///// CONTEXT AND UI OBJECTS
     private Context boothReservationActivityContext;
     private TableLayout boothListTable;
+    private boolean startedFromApp;
     ///// DATA VARS
     private Tag show;
     private String showNameForUser;
@@ -68,6 +64,10 @@ public class BoothReservation extends AppCompatActivity {
             }
             TextView boothSelectionHeaderTV = (TextView) findViewById(R.id.booth_selection_header);
             boothSelectionHeaderTV.setText(showNameForUser);
+
+            ////// TO DETERMINE BUTTON TEXT
+            if (orderID == null) startedFromApp = true;
+            else startedFromApp = false;
         }
     }
 
@@ -147,15 +147,21 @@ public class BoothReservation extends AppCompatActivity {
                 }
 
                 Button reserveBoothButton = new Button(boothReservationActivityContext);
+                if (startedFromApp)
+                    reserveBoothButton.setText(getResources().getString(R.string.view_booth_details_string));
+                else
+                    reserveBoothButton.setText(getResources().getString(R.string.reserve_booth_button_text));
                 reserveBoothButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         reserveBoothAction(show, finalizedBooth);
                     }
                 });
-                reserveBoothButton.setText(getResources().getString(R.string.reserve_booth_button_text));
-                if (!finalizedBooth.getCode().equalsIgnoreCase("AVAILABLE")) {
-                    reserveBoothButton.setEnabled(false);
+                reserveBoothButton.setTextAppearance(boothReservationActivityContext, R.style.row_item_button_style);
+                if (!startedFromApp) {
+                    if (!finalizedBooth.getCode().equalsIgnoreCase("AVAILABLE")) {
+                        reserveBoothButton.setEnabled(false);
+                    }
                 }
 
                 ///////////POPULATE THE NEW ROW AND ADD TO TABLE
