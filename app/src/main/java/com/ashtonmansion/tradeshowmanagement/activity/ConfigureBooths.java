@@ -33,6 +33,8 @@ import com.clover.sdk.v3.inventory.Item;
 import com.clover.sdk.v3.inventory.Tag;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -41,6 +43,7 @@ public class ConfigureBooths extends AppCompatActivity
     /////CONTEXT AND UI FIELDS
     private Context configureBoothsActivityContext;
     private TableLayout showTable;
+    private String lastSortedBy;
     /////DATA VARS
     private Tag show;
     private String showNameForUser;
@@ -65,6 +68,7 @@ public class ConfigureBooths extends AppCompatActivity
         //DATA AND ACTIVITY WORK
         configureBoothsActivityContext = this;
         showTable = (TableLayout) findViewById(R.id.booths_for_show_table);
+        lastSortedBy = "none";
 
         Bundle extrasBundle = getIntent().getExtras();
         if (extrasBundle != null) {
@@ -89,27 +93,50 @@ public class ConfigureBooths extends AppCompatActivity
     }
 
     private void populateBoothHeaderRow() {
+        ////// CREATE ALL ELEMENTS FOR HEADER ROW
         TableRow boothsForShowTableHeaderRow = new TableRow(configureBoothsActivityContext);
         TextView boothNumberHeaderTv = new TextView(configureBoothsActivityContext);
         TextView boothPriceHeaderTv = new TextView(configureBoothsActivityContext);
         TextView boothSizeHeaderTv = new TextView(configureBoothsActivityContext);
         TextView boothAreaHeaderTv = new TextView(configureBoothsActivityContext);
         TextView boothTypeHeaderTv = new TextView(configureBoothsActivityContext);
-        TextView boothCustomerHeaderTv = new TextView(configureBoothsActivityContext);
+        TextView boothAvailabilityTv = new TextView(configureBoothsActivityContext);
 
+        ////// SET TEXT AND APPEARANCES
         boothNumberHeaderTv.setText(getResources().getString(R.string.configure_show_booths_number_header));
-        boothNumberHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style);
+        boothNumberHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style_sortable);
         boothPriceHeaderTv.setText(getResources().getString(R.string.configure_show_booths_price_header));
-        boothPriceHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style);
+        boothPriceHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style_sortable);
         boothSizeHeaderTv.setText(getResources().getString(R.string.configure_show_booths_size_header));
         boothSizeHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style);
         boothAreaHeaderTv.setText(getResources().getString(R.string.configure_show_booths_area_header));
         boothAreaHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style);
         boothTypeHeaderTv.setText(getResources().getString(R.string.configure_show_booths_type_header));
         boothTypeHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style);
-        boothCustomerHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_availability_header));
-        boothCustomerHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.span_2_and_table_header_style);
+        boothAvailabilityTv.setText(getResources().getString(R.string.booth_selection_booth_availability_header));
+        boothAvailabilityTv.setTextAppearance(configureBoothsActivityContext, R.style.span_2_and_table_header_style);
 
+        ////// ATTACH LISTENERS FOR SORTING PURPOSES
+        boothNumberHeaderTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortBoothListByBoothNo();
+            }
+        });
+        boothPriceHeaderTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortBoothListByPrice();
+            }
+        });
+        boothAvailabilityTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortBoothListByAvailability();
+            }
+        });
+
+        ////// not really sure.
         Button boothFilterButton = new Button(configureBoothsActivityContext);
         boothFilterButton.setText(getResources().getString(R.string.configure_show_booths_filter_btn_text));
         boothFilterButton.setTextAppearance(configureBoothsActivityContext, R.style.button_font_style);
@@ -120,12 +147,13 @@ public class ConfigureBooths extends AppCompatActivity
             }
         });
 
+        ////// ADD VIEWS TO ROW AND ROW TO TABLE
         boothsForShowTableHeaderRow.addView(boothNumberHeaderTv);
         boothsForShowTableHeaderRow.addView(boothPriceHeaderTv);
         boothsForShowTableHeaderRow.addView(boothSizeHeaderTv);
         boothsForShowTableHeaderRow.addView(boothAreaHeaderTv);
         boothsForShowTableHeaderRow.addView(boothTypeHeaderTv);
-        boothsForShowTableHeaderRow.addView(boothCustomerHeaderTv);
+        boothsForShowTableHeaderRow.addView(boothAvailabilityTv);
         showTable.addView(boothsForShowTableHeaderRow);
     }
 
@@ -248,7 +276,99 @@ public class ConfigureBooths extends AppCompatActivity
         startActivity(filterBoothsIntent);
     }
 
-    ///// NAVIGATION METHODS
+    private class GetShowBoothsTask extends AsyncTask<Void, Void, Void> {
+        //////////PRIVATELY NECESSARY OBJECTS & UTILITY LISTS ONLY
+        private ProgressDialog progressDialog;
+        private InventoryConnector inventoryConnector;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(configureBoothsActivityContext);
+            progressDialog.setMessage("Loading Booths...");
+            progressDialog.show();
+            ///// CLOVER CONNECTIONS and LIST INIT
+            boothList = new ArrayList<>();
+            inventoryConnector = new InventoryConnector(configureBoothsActivityContext, CloverAccount.getAccount(configureBoothsActivityContext), null);
+            inventoryConnector.connect();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                ///// FETCH BOOTHS FOR SHOW
+                if (inventoryConnector.getItems().size() > 0) {
+                    ListIterator<Item> iterator = inventoryConnector.getItems().listIterator();
+                    do {
+                        Item boothTest = iterator.next();
+                        for (Tag boothTestTag : boothTest.getTags()) {
+                            if (boothTestTag.getId().equalsIgnoreCase(show.getId()))
+                                boothList.add(boothTest);
+                        }
+                    } while (iterator.hasNext());
+                }
+            } catch (RemoteException |
+                    BindingException |
+                    ServiceException |
+                    ClientException e1) {
+                Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            inventoryConnector.disconnect();
+            populateBoothsForShowTable();
+            progressDialog.dismiss();
+        }
+    }
+
+    private void sortBoothListByBoothNo() {
+        if (lastSortedBy.equalsIgnoreCase("boothNumber")) {
+            Collections.reverse(boothList);
+        } else {
+            lastSortedBy = "boothNumber";
+            Collections.sort(boothList, new Comparator<Item>() {
+                public int compare(Item booth1, Item booth2) {
+                    lastSortedBy = "boothNumber";
+                    return (booth1.getSku().compareTo(booth2.getSku()));
+                }
+            });
+        }
+        populateBoothsForShowTable();
+    }
+
+    private void sortBoothListByPrice() {
+        if (lastSortedBy.equalsIgnoreCase("boothPrice")) {
+            Collections.reverse(boothList);
+        } else {
+            lastSortedBy = "boothPrice";
+            Collections.sort(boothList, new Comparator<Item>() {
+                public int compare(Item booth1, Item booth2) {
+                    return booth1.getPrice().compareTo(booth2.getPrice());
+                }
+            });
+        }
+        populateBoothsForShowTable();
+    }
+
+    private void sortBoothListByAvailability() {
+        if (lastSortedBy.equalsIgnoreCase("boothAvailability")) {
+            Collections.reverse(boothList);
+        } else {
+            lastSortedBy = "boothAvailability";
+            Collections.sort(boothList, new Comparator<Item>() {
+                public int compare(Item booth1, Item booth2) {
+                    return booth1.getCode().compareTo(booth2.getCode());
+                }
+            });
+        }
+        populateBoothsForShowTable();
+    }
+
+    ////// NAVIGATION METHODS
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.configure_booths_drawerlayout);
@@ -310,52 +430,4 @@ public class ConfigureBooths extends AppCompatActivity
         return true;
     }
 
-    private class GetShowBoothsTask extends AsyncTask<Void, Void, Void> {
-        //////////PRIVATELY NECESSARY OBJECTS & UTILITY LISTS ONLY
-        private ProgressDialog progressDialog;
-        private InventoryConnector inventoryConnector;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(configureBoothsActivityContext);
-            progressDialog.setMessage("Loading Booths...");
-            progressDialog.show();
-            ///// CLOVER CONNECTIONS and LIST INIT
-            boothList = new ArrayList<>();
-            inventoryConnector = new InventoryConnector(configureBoothsActivityContext, CloverAccount.getAccount(configureBoothsActivityContext), null);
-            inventoryConnector.connect();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                ///// FETCH BOOTHS FOR SHOW
-                if (inventoryConnector.getItems().size() > 0) {
-                    ListIterator<Item> iterator = inventoryConnector.getItems().listIterator();
-                    do {
-                        Item boothTest = iterator.next();
-                        for (Tag boothTestTag : boothTest.getTags()) {
-                            if (boothTestTag.getId().equalsIgnoreCase(show.getId()))
-                                boothList.add(boothTest);
-                        }
-                    } while (iterator.hasNext());
-                }
-            } catch (RemoteException |
-                    BindingException |
-                    ServiceException |
-                    ClientException e1) {
-                Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            inventoryConnector.disconnect();
-            populateBoothsForShowTable();
-            progressDialog.dismiss();
-        }
-    }
 }

@@ -82,6 +82,60 @@ public class BoothReservation extends AppCompatActivity {
         getShowBoothsTask.execute();
     }
 
+    private void populateBoothSelectionHeaderRow() {
+        TableRow boothSelectionTableHeaderRow = new TableRow(boothReservationActivityContext);
+        TextView boothNumberHeaderTv = new TextView(boothReservationActivityContext);
+        TextView boothPriceHeaderTv = new TextView(boothReservationActivityContext);
+        TextView boothSizeHeaderTv = new TextView(boothReservationActivityContext);
+        TextView boothAreaHeaderTv = new TextView(boothReservationActivityContext);
+        TextView boothTypeHeaderTv = new TextView(boothReservationActivityContext);
+        TextView boothAvailabilityTv = new TextView(boothReservationActivityContext);
+
+        boothNumberHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_number_header));
+        boothNumberHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style_sortable);
+        boothPriceHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_price_header));
+        boothPriceHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style_sortable);
+        boothSizeHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_size_header));
+        boothSizeHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
+        boothAreaHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_area_header));
+        boothAreaHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
+        boothTypeHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_type_header));
+        boothTypeHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
+        boothAvailabilityTv.setText(getResources().getString(R.string.booth_selection_booth_availability_header));
+        boothAvailabilityTv.setTextAppearance(boothReservationActivityContext, R.style.span_2_and_table_header_style);
+
+        ////// ADD ACTION LISTENERS TO SORT BY THE CLICKED HEADER
+        boothNumberHeaderTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortBoothListByBoothNo();
+                lastSortedBy = "boothNumber";
+            }
+        });
+        boothPriceHeaderTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortBoothListByPrice();
+                lastSortedBy = "boothPrice";
+            }
+        });
+        boothAvailabilityTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortBoothListByAvailability();
+                lastSortedBy = "boothAvailability";
+            }
+        });
+
+        boothSelectionTableHeaderRow.addView(boothNumberHeaderTv);
+        boothSelectionTableHeaderRow.addView(boothPriceHeaderTv);
+        boothSelectionTableHeaderRow.addView(boothSizeHeaderTv);
+        boothSelectionTableHeaderRow.addView(boothAreaHeaderTv);
+        boothSelectionTableHeaderRow.addView(boothTypeHeaderTv);
+        boothSelectionTableHeaderRow.addView(boothAvailabilityTv);
+        boothListTable.addView(boothSelectionTableHeaderRow);
+    }
+
     private void createBoothSelectionTable() {
         boothListTable.removeAllViews();
         populateBoothSelectionHeaderRow();
@@ -193,60 +247,6 @@ public class BoothReservation extends AppCompatActivity {
             noBoothsForShowRow.addView(noBoothsForShowTV, params);
             boothListTable.addView(noBoothsForShowRow);
         }
-    }
-
-    private void populateBoothSelectionHeaderRow() {
-        TableRow boothSelectionTableHeaderRow = new TableRow(boothReservationActivityContext);
-        TextView boothNumberHeaderTv = new TextView(boothReservationActivityContext);
-        TextView boothPriceHeaderTv = new TextView(boothReservationActivityContext);
-        TextView boothSizeHeaderTv = new TextView(boothReservationActivityContext);
-        TextView boothAreaHeaderTv = new TextView(boothReservationActivityContext);
-        TextView boothTypeHeaderTv = new TextView(boothReservationActivityContext);
-        TextView boothAvailabilityTv = new TextView(boothReservationActivityContext);
-
-        boothNumberHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_number_header));
-        boothNumberHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
-        boothPriceHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_price_header));
-        boothPriceHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
-        boothSizeHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_size_header));
-        boothSizeHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
-        boothAreaHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_area_header));
-        boothAreaHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
-        boothTypeHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_type_header));
-        boothTypeHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
-        boothAvailabilityTv.setText(getResources().getString(R.string.booth_selection_booth_availability_header));
-        boothAvailabilityTv.setTextAppearance(boothReservationActivityContext, R.style.span_2_and_table_header_style);
-
-        ////// ADD ACTION LISTENERS TO SORT BY THE CLICKED HEADER
-        boothNumberHeaderTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sortBoothListByBoothNo();
-                lastSortedBy = "boothNumber";
-            }
-        });
-        boothPriceHeaderTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sortBoothListByPrice();
-                lastSortedBy = "boothPrice";
-            }
-        });
-        boothAvailabilityTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sortBoothListByAvailability();
-                lastSortedBy = "boothAvailability";
-            }
-        });
-
-        boothSelectionTableHeaderRow.addView(boothNumberHeaderTv);
-        boothSelectionTableHeaderRow.addView(boothPriceHeaderTv);
-        boothSelectionTableHeaderRow.addView(boothSizeHeaderTv);
-        boothSelectionTableHeaderRow.addView(boothAreaHeaderTv);
-        boothSelectionTableHeaderRow.addView(boothTypeHeaderTv);
-        boothSelectionTableHeaderRow.addView(boothAvailabilityTv);
-        boothListTable.addView(boothSelectionTableHeaderRow);
     }
 
     private void reserveBoothAction(Tag show, Item boothToReserve) {

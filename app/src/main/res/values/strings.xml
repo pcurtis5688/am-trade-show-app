@@ -347,9 +347,13 @@
     <string name="delete_custom_tender_button_text">Delete Custom Tender</string>
     <string name="custom_tender_name">Select/Reserve Booth</string>
     <string name="available_keyword">Available</string>
+    <!-- BOOTH INTEGRITY STRINGS -->
     <string name="check_booth_integrity_text">Check Booth Integrity - Set Reserved booths with no order to available</string>
     <string name="invalid_booths_found_and_corrected">Invalid Booths found and reverted to Available</string>
     <string name="no_invalid_booths_found">No Invalid Booths were found! Congratulations.</string>
+    <!-- BOOTH NAME VALIDATION STRINGS -->
+    <string name="set_booth_names_after_import">Correct Booth Names after Bulk Import</string>
+
 
     <!-- SELECT BOOTH ACTIVITY BEGUN FROM CLOVER STRINGS -->
     <string name="title_activity_select_booth">Select A Booth</string>
