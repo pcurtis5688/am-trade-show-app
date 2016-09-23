@@ -353,7 +353,9 @@
     <string name="no_invalid_booths_found">No Invalid Booths were found! Congratulations.</string>
     <!-- BOOTH NAME VALIDATION STRINGS -->
     <string name="set_booth_names_after_import">Correct Booth Names after Bulk Import</string>
-
+    <!-- DETECT AND DELETE BOOTHS -->
+    <string name="detect_and_delete_booths">Delete All Detected Booths</string>
+    <string name="all_detected_booths_deleted">All Detected Booths Deleted</string>
 
     <!-- SELECT BOOTH ACTIVITY BEGUN FROM CLOVER STRINGS -->
     <string name="title_activity_select_booth">Select A Booth</string>

@@ -41,8 +41,16 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@color/admin_button_bg_color"
-            android:text="@string/check_booth_integrity_text" />
+            android:text="@string/set_booth_names_after_import" />
 
+        <Button
+            android:id="@+id/delete_detected_booths_btn"
+            style="@style/app_settings_button_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/admin_button_bg_color"
+            android:text="@string/detect_and_delete_booths" />
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

@@ -94,6 +94,7 @@
     </style>
 
     <style name="app_settings_button_style">
+        <item name="android:layout_marginBottom">@dimen/dimen_50dp</item>
         <item name="android:textStyle">bold|italic</item>
         <item name="android:textSize">22sp</item>
         <item name="android:textAlignment">center</item>
