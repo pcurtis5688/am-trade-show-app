@@ -1,12 +1,13 @@
 <resources>
-    <!-- GENERAL STRINGS ////////////////////////////////////////-->
+    <!-- GENERAL MENU STRINGS ////////////////////////////////////////-->
     <string name="app_name">A &amp; M Trade Show Management</string>
     <string name="nav_drawer_header_1">Ashton &amp; Mansion</string>
     <string name="nav_drawer_header_2">Trade Show Management</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_app_settings_string">App Settings</string>
     <string name="action_create_new_booth_string">Create New Booth</string>
+    <string name="action_create_new_show_string">Create New Show</string>
 
     <!--ACTIVITY TITLE STRINGS //////////////////////////////////-->
     <string name="application_settings_string">Application Settings</string>

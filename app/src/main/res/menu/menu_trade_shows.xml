@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_create_new_booth_option"
+        android:id="@+id/action_create_new_show_option"
         android:orderInCategory="100"
-        android:title="@string/action_create_new_booth_string"
+        android:title="@string/action_create_new_show_string"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_app_settings"

@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;

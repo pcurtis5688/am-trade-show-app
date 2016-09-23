@@ -32,7 +32,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@color/admin_button_bg_color"
-            android:text="@string/check_booth_integrity_text" />
+            android:text="@string/check_booth_integrity_text"
+            android:textAllCaps="false" />
 
         <Button
             android:id="@+id/validate_booth_names_btn"
@@ -41,7 +42,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@color/admin_button_bg_color"
-            android:text="@string/set_booth_names_after_import" />
+            android:text="@string/set_booth_names_after_import"
+            android:textAllCaps="false" />
 
         <Button
             android:id="@+id/delete_detected_booths_btn"
@@ -50,7 +52,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@color/admin_button_bg_color"
-            android:text="@string/detect_and_delete_booths" />
+            android:text="@string/detect_and_delete_booths"
+            android:textAllCaps="false" />
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

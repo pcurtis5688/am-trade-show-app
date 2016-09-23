@@ -18,10 +18,6 @@
                 android:id="@+id/nav_config_booths_btn"
                 android:icon="@drawable/ic_menu_send"
                 android:title="@string/nav_drawer_config_booths_text" />
-            <!--<item-->
-                <!--android:id="@+id/nav_reports_queries_btn"-->
-                <!--android:icon="@drawable/ic_menu_send"-->
-                <!--android:title="@string/nav_drawer_reports_queries_text" />-->
         </menu>
     </item>
     <item android:title="@string/nav_drawer_reservations_header">
@@ -30,32 +26,8 @@
                 android:id="@+id/nav_make_reservation_btn"
                 android:icon="@drawable/ic_menu_send"
                 android:title="@string/nav_drawer_make_reservation_text" />
-            <!--<item-->
-                <!--android:id="@+id/nav_email_reservation_confirmation_btn"-->
-                <!--android:icon="@drawable/ic_menu_send"-->
-                <!--android:title="@string/nav_drawer_email_confirmations_text" />-->
         </menu>
     </item>
-    <!--<item android:title="@string/nav_drawer_sales_header">-->
-        <!--<menu>-->
-            <!--<item-->
-                <!--android:id="@+id/nav_advertising_sales_btn"-->
-                <!--android:icon="@drawable/ic_menu_send"-->
-                <!--android:title="@string/nav_drawer_advertising_sales_text" />-->
-            <!--<item-->
-                <!--android:id="@+id/nav_general_tix_sales_btn"-->
-                <!--android:icon="@drawable/ic_menu_send"-->
-                <!--android:title="@string/nav_drawer_general_tix_sales_text" />-->
-            <!--<item-->
-                <!--android:id="@+id/nav_special_events_sales_btn"-->
-                <!--android:icon="@drawable/ic_menu_send"-->
-                <!--android:title="@string/nav_drawer_special_events_sales_text" />-->
-            <!--<item-->
-                <!--android:id="@+id/nav_merchandise_sales_btn"-->
-                <!--android:icon="@drawable/ic_menu_send"-->
-                <!--android:title="@string/nav_drawer_merchandise_sales_text" />-->
-        <!--</menu>-->
-    <!--</item>-->
     <item android:title="@string/nav_drawer_settings_header">
         <menu>
             <item

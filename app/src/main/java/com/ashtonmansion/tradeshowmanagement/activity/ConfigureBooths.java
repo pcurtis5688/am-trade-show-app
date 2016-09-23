@@ -276,55 +276,6 @@ public class ConfigureBooths extends AppCompatActivity
         startActivity(filterBoothsIntent);
     }
 
-    private class GetShowBoothsTask extends AsyncTask<Void, Void, Void> {
-        //////////PRIVATELY NECESSARY OBJECTS & UTILITY LISTS ONLY
-        private ProgressDialog progressDialog;
-        private InventoryConnector inventoryConnector;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(configureBoothsActivityContext);
-            progressDialog.setMessage("Loading Booths...");
-            progressDialog.show();
-            ///// CLOVER CONNECTIONS and LIST INIT
-            boothList = new ArrayList<>();
-            inventoryConnector = new InventoryConnector(configureBoothsActivityContext, CloverAccount.getAccount(configureBoothsActivityContext), null);
-            inventoryConnector.connect();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                ///// FETCH BOOTHS FOR SHOW
-                if (inventoryConnector.getItems().size() > 0) {
-                    ListIterator<Item> iterator = inventoryConnector.getItems().listIterator();
-                    do {
-                        Item boothTest = iterator.next();
-                        for (Tag boothTestTag : boothTest.getTags()) {
-                            if (boothTestTag.getId().equalsIgnoreCase(show.getId()))
-                                boothList.add(boothTest);
-                        }
-                    } while (iterator.hasNext());
-                }
-            } catch (RemoteException |
-                    BindingException |
-                    ServiceException |
-                    ClientException e1) {
-                Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            inventoryConnector.disconnect();
-            populateBoothsForShowTable();
-            progressDialog.dismiss();
-        }
-    }
-
     private void sortBoothListByBoothNo() {
         if (lastSortedBy.equalsIgnoreCase("boothNumber")) {
             Collections.reverse(boothList);
@@ -398,6 +349,9 @@ public class ConfigureBooths extends AppCompatActivity
             createBoothIntent.putExtra("show", show);
             startActivity(createBoothIntent);
             return true;
+        } else if (id == R.id.action_app_settings) {
+            Intent applicationSettingsIntent = new Intent(configureBoothsActivityContext, ApplicationSettings.class);
+            startActivity(applicationSettingsIntent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -428,6 +382,55 @@ public class ConfigureBooths extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.configure_booths_drawerlayout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private class GetShowBoothsTask extends AsyncTask<Void, Void, Void> {
+        //////////PRIVATELY NECESSARY OBJECTS & UTILITY LISTS ONLY
+        private ProgressDialog progressDialog;
+        private InventoryConnector inventoryConnector;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(configureBoothsActivityContext);
+            progressDialog.setMessage("Loading Booths...");
+            progressDialog.show();
+            ///// CLOVER CONNECTIONS and LIST INIT
+            boothList = new ArrayList<>();
+            inventoryConnector = new InventoryConnector(configureBoothsActivityContext, CloverAccount.getAccount(configureBoothsActivityContext), null);
+            inventoryConnector.connect();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                ///// FETCH BOOTHS FOR SHOW
+                if (inventoryConnector.getItems().size() > 0) {
+                    ListIterator<Item> iterator = inventoryConnector.getItems().listIterator();
+                    do {
+                        Item boothTest = iterator.next();
+                        for (Tag boothTestTag : boothTest.getTags()) {
+                            if (boothTestTag.getId().equalsIgnoreCase(show.getId()))
+                                boothList.add(boothTest);
+                        }
+                    } while (iterator.hasNext());
+                }
+            } catch (RemoteException |
+                    BindingException |
+                    ServiceException |
+                    ClientException e1) {
+                Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            inventoryConnector.disconnect();
+            populateBoothsForShowTable();
+            progressDialog.dismiss();
+        }
     }
 
 }

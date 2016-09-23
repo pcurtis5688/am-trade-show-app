@@ -157,7 +157,7 @@ public class TradeShows extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_home, menu);
+        getMenuInflater().inflate(R.menu.menu_trade_shows, menu);
         return true;
     }
 
@@ -169,8 +169,12 @@ public class TradeShows extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_create_new_show_option) {
+            addNewShowAction();
             return true;
+        } else if (id == R.id.action_app_settings) {
+            Intent applicationSettingsIntent = new Intent(tradeShowsActivityContext, ApplicationSettings.class);
+            startActivity(applicationSettingsIntent);
         }
 
         return super.onOptionsItemSelected(item);
