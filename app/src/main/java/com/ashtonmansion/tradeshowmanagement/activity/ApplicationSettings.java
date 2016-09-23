@@ -144,9 +144,9 @@ public class ApplicationSettings extends AppCompatActivity {
             protected Void doInBackground(Void... voids) {
                 try {
                     for (Item boothToCheck : inventoryConnector.getItems()) {
-                        if (boothToCheck.getName().contains("booth name")) {
+                        if (boothToCheck.getName().toLowerCase().contains("booth name")) {
                             String[] tagValues = fetchTagValues(boothToCheck.getSku(), boothToCheck.getTags());
-                            String formattedBoothName = "Booth #" + boothToCheck.getSku() + "(" + tagValues[0] + ", " + tagValues[1] + ", " + tagValues[2] + ")";
+                            String formattedBoothName = "Booth #" + boothToCheck.getSku() + " (" + tagValues[0] + ", " + tagValues[1] + ", " + tagValues[2] + ")";
                             inventoryConnector.updateItem(boothToCheck.setName(formattedBoothName));
                         }
                     }
