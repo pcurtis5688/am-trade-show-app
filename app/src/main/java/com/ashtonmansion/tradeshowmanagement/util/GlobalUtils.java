@@ -1,20 +1,22 @@
 package com.ashtonmansion.tradeshowmanagement.util;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.util.Log;
 
+import com.ashtonmansion.tradeshowmanagement.activity.BoothReservationShowSelection;
+import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v3.customers.Customer;
 import com.clover.sdk.v3.customers.PhoneNumber;
 import com.clover.sdk.v3.customers.EmailAddress;
 import com.clover.sdk.v3.customers.Address;
-import com.clover.sdk.v3.inventory.Item;
+import com.clover.sdk.v3.inventory.InventoryConnector;
 
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -151,5 +153,4 @@ public class GlobalUtils {
         result.set(3, desiredNotesPart);
         return result;
     }
-
 }

@@ -62,8 +62,11 @@ public class BoothReservationShowSelection extends Activity
         ////// DATA WORK
         Intent intent = getIntent();
         Bundle extrasBundle = intent.getExtras();
-        orderID = getIntent().getStringExtra(Intents.EXTRA_ORDER_ID);
-
+        if (extrasBundle.get("orderid") != null) {
+            orderID = (String) extrasBundle.get("orderid");
+        } else {
+            orderID = getIntent().getStringExtra(Intents.EXTRA_ORDER_ID);
+        }
         ///// SET CONTEXT, ATTACH TO SHOW TABLE, AND POPULATE
         boothReservationShowSelectionActivityContext = this;
         showSelectionTable = (TableLayout) findViewById(R.id.booth_reservation_show_select_table);
@@ -188,8 +191,6 @@ public class BoothReservationShowSelection extends Activity
 
     private class GetShowsForBoothSelection extends AsyncTask<Void, Void, Void> {
         private ProgressDialog progressDialog;
-        /////////////CLOVER CONNECTIONS
-        private Account merchantAccount;
         private InventoryConnector inventoryConnector;
 
         @Override
@@ -199,15 +200,14 @@ public class BoothReservationShowSelection extends Activity
             progressDialog.setMessage("Loading Shows...");
             progressDialog.show();
             showList = new ArrayList<>();
+            ////// INIT CLOVER CONNECTIONS
+            inventoryConnector = new InventoryConnector(boothReservationShowSelectionActivityContext, CloverAccount.getAccount(boothReservationShowSelectionActivityContext), null);
+            inventoryConnector.connect();
         }
 
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                ///////////CLOVER CONNECT
-                merchantAccount = CloverAccount.getAccount(boothReservationShowSelectionActivityContext);
-                inventoryConnector = new InventoryConnector(boothReservationShowSelectionActivityContext, merchantAccount, null);
-                inventoryConnector.connect();
                 ///////////GET SHOW LIST (TAG LIST) FOR BOOTH SELECTION
                 if (inventoryConnector.getTags().size() > 0) {
                     for (Tag currentTag : inventoryConnector.getTags()) {

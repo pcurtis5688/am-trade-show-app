@@ -130,6 +130,12 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <receiver android:name="com.ashtonmansion.tradeshowmanagement.util.EventManagerReceiver">
+            <intent-filter>
+                <action android:name="com.clover.intent.action.LINE_ITEM_ADDED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
