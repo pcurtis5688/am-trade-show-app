@@ -40,7 +40,7 @@ public class BoothReservation extends AppCompatActivity {
     ///// DATA VARS
     private Tag show;
     private String showNameForUser;
-    private List<Item> boothList;
+    private List<BoothWithTags> boothWithTagsList;
     ///// ORDER DATA BEING PASSED FROM CLOVER CUSTOM TENDER
     private String orderID;
 
@@ -96,11 +96,11 @@ public class BoothReservation extends AppCompatActivity {
         boothPriceHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_price_header));
         boothPriceHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style_sortable);
         boothSizeHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_size_header));
-        boothSizeHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
+        boothSizeHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style_sortable);
         boothAreaHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_area_header));
-        boothAreaHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
+        boothAreaHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style_sortable);
         boothTypeHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_type_header));
-        boothTypeHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style);
+        boothTypeHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style_sortable);
         boothAvailabilityTv.setText(getResources().getString(R.string.booth_selection_booth_availability_header));
         boothAvailabilityTv.setTextAppearance(boothReservationActivityContext, R.style.span_2_and_table_header_style);
 
@@ -109,21 +109,36 @@ public class BoothReservation extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 sortBoothListByBoothNo();
-                lastSortedBy = "boothNumber";
             }
         });
         boothPriceHeaderTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sortBoothListByPrice();
-                lastSortedBy = "boothPrice";
+            }
+        });
+        boothSizeHeaderTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortBoothListBySizeTag();
+            }
+        });
+        boothAreaHeaderTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortBoothListByAreaTag();
+            }
+        });
+        boothTypeHeaderTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortBoothListByTypeTag();
             }
         });
         boothAvailabilityTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sortBoothListByAvailability();
-                lastSortedBy = "boothAvailability";
             }
         });
 
@@ -140,9 +155,9 @@ public class BoothReservation extends AppCompatActivity {
         boothListTable.removeAllViews();
         populateBoothSelectionHeaderRow();
 
-        if (boothList.size() > 0) {
-            for (Item booth : boothList) {
-                final Item finalizedBooth = booth;
+        if (boothWithTagsList.size() > 0) {
+            for (BoothWithTags boothWithTags : boothWithTagsList) {
+                final Item finalizedBooth = boothWithTags.booth;
                 /////////CREATE NEW ROW AND NECESSARY TEXTVIEWS
                 TableRow newBoothRow = new TableRow(boothReservationActivityContext);
                 TextView boothNumberTv = new TextView(boothReservationActivityContext);
@@ -160,48 +175,17 @@ public class BoothReservation extends AppCompatActivity {
                 boothTypeTv.setTextAppearance(boothReservationActivityContext, R.style.large_table_row_font_station);
 
                 /////////POPULATE TVS / HANDLE ANY PROCESSING
-                boothNumberTv.setText(booth.getSku());
-                /////////HANDLE PRICE
-                String formattedPrice = GlobalUtils.getFormattedPriceStringFromLong(booth.getPrice());
-                boothPriceTv.setText(formattedPrice);
-                if (booth.getCode().equalsIgnoreCase("AVAILABLE")) {
+                boothNumberTv.setText(boothWithTags.booth.getSku());
+                boothPriceTv.setText(GlobalUtils.getFormattedPriceStringFromLong(boothWithTags.booth.getPrice()));
+                boothSizeTv.setText(boothWithTags.getSizeTag());
+                boothAreaTv.setText(boothWithTags.getAreaTag());
+                boothTypeTv.setText(boothWithTags.getTypeTag());
+                if (boothWithTags.booth.getCode().equalsIgnoreCase("AVAILABLE")) {
                     boothAvailabilityTv.setText(getResources().getString(R.string.booth_reservation_available_string));
                     boothAvailabilityTv.setTextAppearance(boothReservationActivityContext, R.style.available_booth_style);
                 } else {
-                    boothAvailabilityTv.setText(booth.getCode());
+                    boothAvailabilityTv.setText(boothWithTags.booth.getCode());
                     boothAvailabilityTv.setTextAppearance(boothReservationActivityContext, R.style.reserved_booth_style);
-                }
-
-                ///// WILL FILTER OUT SHOW TAG FROM BOOTH
-                Tag sizeTag;
-                Tag areaTag;
-                Tag typeTag;
-                for (Tag currentTag : booth.getTags()) {
-                    if (currentTag.getName().substring(0, 4).equalsIgnoreCase("size")) {
-                        sizeTag = currentTag;
-                        String unformattedSizeTagName = GlobalUtils.getUnformattedTagName(sizeTag.getName(), "Size");
-                        if (unformattedSizeTagName.length() > 0) {
-                            boothSizeTv.setText(unformattedSizeTagName);
-                        } else {
-                            boothSizeTv.setText(getResources().getString(R.string.booth_tag_not_available));
-                        }
-                    } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("area")) {
-                        areaTag = currentTag;
-                        String unformattedAreaTagName = GlobalUtils.getUnformattedTagName(areaTag.getName(), "Area");
-                        if (unformattedAreaTagName.length() > 0) {
-                            boothAreaTv.setText(unformattedAreaTagName);
-                        } else {
-                            boothAreaTv.setText(getResources().getString(R.string.booth_tag_not_available));
-                        }
-                    } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("type")) {
-                        typeTag = currentTag;
-                        String unformattedTypeTagName = GlobalUtils.getUnformattedTagName(typeTag.getName(), "Type");
-                        if (unformattedTypeTagName.length() > 0) {
-                            boothTypeTv.setText(unformattedTypeTagName);
-                        } else {
-                            boothTypeTv.setText(getResources().getString(R.string.booth_tag_not_available));
-                        }
-                    }
                 }
 
                 Button reserveBoothButton = new Button(boothReservationActivityContext);
@@ -257,9 +241,108 @@ public class BoothReservation extends AppCompatActivity {
         startActivity(reserveBoothIntent);
     }
 
+    private void sortBoothListByBoothNo() {
+        if (lastSortedBy.equalsIgnoreCase("boothNumber")) {
+            Collections.reverse(boothWithTagsList);
+        } else {
+            lastSortedBy = "boothNumber";
+            Collections.sort(boothWithTagsList, new Comparator<BoothWithTags>() {
+                public int compare(BoothWithTags boothWithTags1, BoothWithTags boothWithTags2) {
+                    return (boothWithTags1.booth.getSku().compareTo(boothWithTags2.booth.getSku()));
+                }
+            });
+        }
+        createBoothSelectionTable();
+    }
+
+    private void sortBoothListByPrice() {
+        if (lastSortedBy.equalsIgnoreCase("boothPrice")) {
+            Collections.reverse(boothWithTagsList);
+        } else {
+            lastSortedBy = "boothPrice";
+            Collections.sort(boothWithTagsList, new Comparator<BoothWithTags>() {
+                public int compare(BoothWithTags boothWithTags1, BoothWithTags boothWithTags2) {
+                    return boothWithTags1.booth.getPrice().compareTo(boothWithTags2.booth.getPrice());
+                }
+            });
+        }
+        createBoothSelectionTable();
+    }
+
+    private void sortBoothListByAvailability() {
+        if (lastSortedBy.equalsIgnoreCase("boothAvailability")) {
+            Collections.reverse(boothWithTagsList);
+        } else {
+            lastSortedBy = "boothAvailability";
+            Collections.sort(boothWithTagsList, new Comparator<BoothWithTags>() {
+                public int compare(BoothWithTags boothWithTags1, BoothWithTags boothWithTags2) {
+                    return boothWithTags1.booth.getCode().compareTo(boothWithTags2.booth.getCode());
+                }
+            });
+        }
+        createBoothSelectionTable();
+    }
+
+    private void sortBoothListBySizeTag() {
+        if (lastSortedBy.equalsIgnoreCase("sizeTag")) {
+            Collections.reverse(boothWithTagsList);
+        } else {
+            lastSortedBy = "sizeTag";
+            Collections.sort(boothWithTagsList, new Comparator<BoothWithTags>() {
+                public int compare(BoothWithTags boothWithTags1, BoothWithTags boothWithTags2) {
+                    return (boothWithTags1.getSizeTag().compareTo(boothWithTags2.getSizeTag()));
+                }
+            });
+        }
+        createBoothSelectionTable();
+    }
+
+    private void sortBoothListByAreaTag() {
+        if (lastSortedBy.equalsIgnoreCase("areaTag")) {
+            Collections.reverse(boothWithTagsList);
+        } else {
+            lastSortedBy = "areaTag";
+            Collections.sort(boothWithTagsList, new Comparator<BoothWithTags>() {
+                public int compare(BoothWithTags boothWithTags1, BoothWithTags boothWithTags2) {
+                    return (boothWithTags1.getAreaTag().compareTo(boothWithTags2.getAreaTag()));
+                }
+            });
+        }
+        createBoothSelectionTable();
+    }
+
+    private void sortBoothListByTypeTag() {
+        if (lastSortedBy.equalsIgnoreCase("typeTag")) {
+            Collections.reverse(boothWithTagsList);
+        } else {
+            lastSortedBy = "typeTag";
+            Collections.sort(boothWithTagsList, new Comparator<BoothWithTags>() {
+                public int compare(BoothWithTags boothWithTags1, BoothWithTags boothWithTags2) {
+                    return (boothWithTags1.getTypeTag().compareTo(boothWithTags2.getTypeTag()));
+                }
+            });
+        }
+        createBoothSelectionTable();
+    }
+
+    private void processBoothWithTagsList() {
+        for (BoothWithTags boothWithTags : boothWithTagsList) {
+            for (Tag currentTag : boothWithTags.booth.getTags()) {
+                if (!currentTag.getName().contains(" [Show]")) {
+                    if (currentTag.getName().substring(0, 4).equalsIgnoreCase("size")) {
+                        boothWithTags.setSizeTag(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Size"));
+                    } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("area")) {
+                        boothWithTags.setAreaTag(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Area"));
+                    } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("type")) {
+                        boothWithTags.setTypeTag(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Type"));
+                    }
+                }
+            }
+        }
+    }
+
     private class GetShowBoothsTask extends AsyncTask<Void, Void, Void> {
         private ProgressDialog progressDialog;
-        private Account merchantAccount;
         private InventoryConnector inventoryConnector;
         /////UTILITY LISTS
 
@@ -269,29 +352,28 @@ public class BoothReservation extends AppCompatActivity {
             progressDialog = new ProgressDialog(boothReservationActivityContext);
             progressDialog.setMessage("Loading Booths...");
             progressDialog.show();
-            boothList = new ArrayList<>();
+            boothWithTagsList = new ArrayList<>();
+            ////// INITIALIZE CLOVER CONNECTIONS
+            inventoryConnector = new InventoryConnector(boothReservationActivityContext, CloverAccount.getAccount(boothReservationActivityContext), null);
+            inventoryConnector.connect();
         }
 
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                merchantAccount = CloverAccount.getAccount(boothReservationActivityContext);
-                inventoryConnector = new InventoryConnector(boothReservationActivityContext, merchantAccount, null);
-                inventoryConnector.connect();
-
-                ///// FETCH BOOTHS FOR SHOW
+                ////// FETCH BOOTHS FOR SHOW, CREATE BOOTH W TAGS OBJECT, ADD TO LIST
                 ListIterator<Item> iterator = inventoryConnector.getItems().listIterator();
                 do {
                     Item boothTest = iterator.next();
                     for (Tag boothTestTag : boothTest.getTags()) {
-                        if (boothTestTag.getId().equalsIgnoreCase(show.getId()))
-                            boothList.add(boothTest);
+                        if (boothTestTag.getId().equalsIgnoreCase(show.getId())) {
+                            BoothWithTags boothWithTags = new BoothWithTags(boothTest);
+                            boothWithTagsList.add(boothWithTags);
+                        }
                     }
                 } while (iterator.hasNext());
             } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
-            } finally {
-                inventoryConnector.disconnect();
             }
             return null;
         }
@@ -299,51 +381,52 @@ public class BoothReservation extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
+            inventoryConnector.disconnect();
+            processBoothWithTagsList();
             createBoothSelectionTable();
             progressDialog.dismiss();
         }
     }
 
-    private void sortBoothListByBoothNo() {
-        if (lastSortedBy.equalsIgnoreCase("boothNumber")) {
-            Collections.reverse(boothList);
-        } else {
-            lastSortedBy = "boothNumber";
-            Collections.sort(boothList, new Comparator<Item>() {
-                public int compare(Item booth1, Item booth2) {
-                    lastSortedBy = "boothNumber";
-                    return (booth1.getSku().compareTo(booth2.getSku()));
-                }
-            });
-        }
-        createBoothSelectionTable();
-    }
+    private class BoothWithTags {
+        private Item booth;
+        private String sizeTag;
+        private String areaTag;
+        private String typeTag;
 
-    private void sortBoothListByPrice() {
-        if (lastSortedBy.equalsIgnoreCase("boothPrice")) {
-            Collections.reverse(boothList);
-        } else {
-            lastSortedBy = "boothPrice";
-            Collections.sort(boothList, new Comparator<Item>() {
-                public int compare(Item booth1, Item booth2) {
-                    return booth1.getPrice().compareTo(booth2.getPrice());
-                }
-            });
+        private BoothWithTags(Item booth) {
+            this.booth = booth;
         }
-        createBoothSelectionTable();
-    }
 
-    private void sortBoothListByAvailability() {
-        if (lastSortedBy.equalsIgnoreCase("boothAvailability")) {
-            Collections.reverse(boothList);
-        } else {
-            lastSortedBy = "boothAvailability";
-            Collections.sort(boothList, new Comparator<Item>() {
-                public int compare(Item booth1, Item booth2) {
-                    return booth1.getCode().compareTo(booth2.getCode());
-                }
-            });
+        private BoothWithTags(Item booth, String sizeTag, String areaTag, String typeTag) {
+            this.booth = booth;
+            this.sizeTag = sizeTag;
+            this.areaTag = areaTag;
+            this.typeTag = typeTag;
         }
-        createBoothSelectionTable();
+
+        public String getSizeTag() {
+            return sizeTag;
+        }
+
+        public void setSizeTag(String sizeTag) {
+            this.sizeTag = sizeTag;
+        }
+
+        public String getAreaTag() {
+            return areaTag;
+        }
+
+        public void setAreaTag(String areaTag) {
+            this.areaTag = areaTag;
+        }
+
+        public String getTypeTag() {
+            return typeTag;
+        }
+
+        public void setTypeTag(String typeTag) {
+            this.typeTag = typeTag;
+        }
     }
 }

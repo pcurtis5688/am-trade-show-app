@@ -47,7 +47,8 @@ public class ConfigureBooths extends AppCompatActivity
     /////DATA VARS
     private Tag show;
     private String showNameForUser;
-    private List<Item> boothList;
+    ////// TRYING SOMETHING NEW
+    private List<BoothWithTags> boothWithTagsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,11 +109,11 @@ public class ConfigureBooths extends AppCompatActivity
         boothPriceHeaderTv.setText(getResources().getString(R.string.configure_show_booths_price_header));
         boothPriceHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style_sortable);
         boothSizeHeaderTv.setText(getResources().getString(R.string.configure_show_booths_size_header));
-        boothSizeHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style);
+        boothSizeHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style_sortable);
         boothAreaHeaderTv.setText(getResources().getString(R.string.configure_show_booths_area_header));
-        boothAreaHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style);
+        boothAreaHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style_sortable);
         boothTypeHeaderTv.setText(getResources().getString(R.string.configure_show_booths_type_header));
-        boothTypeHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style);
+        boothTypeHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style_sortable);
         boothAvailabilityTv.setText(getResources().getString(R.string.booth_selection_booth_availability_header));
         boothAvailabilityTv.setTextAppearance(configureBoothsActivityContext, R.style.span_2_and_table_header_style);
 
@@ -127,6 +128,24 @@ public class ConfigureBooths extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 sortBoothListByPrice();
+            }
+        });
+        boothSizeHeaderTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortBoothListBySizeTag();
+            }
+        });
+        boothAreaHeaderTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortBoothListByAreaTag();
+            }
+        });
+        boothTypeHeaderTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortBoothListByTypeTag();
             }
         });
         boothAvailabilityTv.setOnClickListener(new View.OnClickListener() {
@@ -161,9 +180,9 @@ public class ConfigureBooths extends AppCompatActivity
         showTable.removeAllViews();
         populateBoothHeaderRow();
 
-        if (boothList != null && boothList.size() > 0) {
-            for (Item booth : boothList) {
-                final Item finalizedBoothItem = booth;
+        if (boothWithTagsList != null && boothWithTagsList.size() > 0) {
+            for (final BoothWithTags boothWithTags : boothWithTagsList) {
+                final BoothWithTags finalizedBoothWithTagsItem = boothWithTags;
 
                 ///// CREATE TEXT VIEWS
                 TableRow newBoothRow = new TableRow(configureBoothsActivityContext);
@@ -182,26 +201,17 @@ public class ConfigureBooths extends AppCompatActivity
                 boothTypeTv.setTextAppearance(configureBoothsActivityContext, R.style.large_table_row_font_station);
 
                 ///// SET ROW DATA
-                boothNumberTv.setText(booth.getSku());
-                boothPriceTv.setText(GlobalUtils.getFormattedPriceStringFromLong(booth.getPrice()));
+                boothNumberTv.setText(boothWithTags.booth.getSku());
+                boothPriceTv.setText(GlobalUtils.getFormattedPriceStringFromLong(boothWithTags.booth.getPrice()));
+                boothSizeTv.setText(boothWithTags.getSizeTag());
+                boothAreaTv.setText(boothWithTags.getAreaTag());
+                boothTypeTv.setText(boothWithTags.getTypeTag());
 
-                for (Tag currentTag : booth.getTags()) {
-                    if (!currentTag.getName().contains(" [Show]")) {
-                        if (currentTag.getName().substring(0, 4).equalsIgnoreCase("size")) {
-                            boothSizeTv.setText(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Size"));
-                        } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("area")) {
-                            boothAreaTv.setText(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Area"));
-                        } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("type")) {
-                            boothTypeTv.setText(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Type"));
-                        }
-                    }
-                }
-
-                if (booth.getCode().equalsIgnoreCase("AVAILABLE")) {
+                if (boothWithTags.booth.getCode().equalsIgnoreCase("AVAILABLE")) {
                     boothAvailabilityTv.setText(getResources().getString(R.string.booth_reservation_available_string));
                     boothAvailabilityTv.setTextAppearance(configureBoothsActivityContext, R.style.available_booth_style);
                 } else {
-                    boothAvailabilityTv.setText(booth.getCode());
+                    boothAvailabilityTv.setText(boothWithTags.booth.getCode());
                     boothAvailabilityTv.setTextAppearance(configureBoothsActivityContext, R.style.reserved_booth_style);
                 }
 
@@ -211,7 +221,7 @@ public class ConfigureBooths extends AppCompatActivity
                 editBoothButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        editBoothAction(finalizedBoothItem);
+                        editBoothAction(boothWithTags.booth);
                     }
                 });
 
@@ -278,13 +288,12 @@ public class ConfigureBooths extends AppCompatActivity
 
     private void sortBoothListByBoothNo() {
         if (lastSortedBy.equalsIgnoreCase("boothNumber")) {
-            Collections.reverse(boothList);
+            Collections.reverse(boothWithTagsList);
         } else {
             lastSortedBy = "boothNumber";
-            Collections.sort(boothList, new Comparator<Item>() {
-                public int compare(Item booth1, Item booth2) {
-                    lastSortedBy = "boothNumber";
-                    return (booth1.getSku().compareTo(booth2.getSku()));
+            Collections.sort(boothWithTagsList, new Comparator<BoothWithTags>() {
+                public int compare(BoothWithTags boothWithTags1, BoothWithTags boothWithTags2) {
+                    return (boothWithTags1.booth.getSku().compareTo(boothWithTags2.booth.getSku()));
                 }
             });
         }
@@ -293,12 +302,12 @@ public class ConfigureBooths extends AppCompatActivity
 
     private void sortBoothListByPrice() {
         if (lastSortedBy.equalsIgnoreCase("boothPrice")) {
-            Collections.reverse(boothList);
+            Collections.reverse(boothWithTagsList);
         } else {
             lastSortedBy = "boothPrice";
-            Collections.sort(boothList, new Comparator<Item>() {
-                public int compare(Item booth1, Item booth2) {
-                    return booth1.getPrice().compareTo(booth2.getPrice());
+            Collections.sort(boothWithTagsList, new Comparator<BoothWithTags>() {
+                public int compare(BoothWithTags boothWithTags1, BoothWithTags boothWithTags2) {
+                    return (boothWithTags1.booth.getPrice().compareTo(boothWithTags2.booth.getPrice()));
                 }
             });
         }
@@ -307,16 +316,74 @@ public class ConfigureBooths extends AppCompatActivity
 
     private void sortBoothListByAvailability() {
         if (lastSortedBy.equalsIgnoreCase("boothAvailability")) {
-            Collections.reverse(boothList);
+            Collections.reverse(boothWithTagsList);
         } else {
             lastSortedBy = "boothAvailability";
-            Collections.sort(boothList, new Comparator<Item>() {
-                public int compare(Item booth1, Item booth2) {
-                    return booth1.getCode().compareTo(booth2.getCode());
+            Collections.sort(boothWithTagsList, new Comparator<BoothWithTags>() {
+                public int compare(BoothWithTags boothWithTags1, BoothWithTags boothWithTags2) {
+                    return (boothWithTags1.booth.getCode().compareTo(boothWithTags2.booth.getCode()));
                 }
             });
         }
         populateBoothsForShowTable();
+    }
+
+    private void sortBoothListBySizeTag() {
+        if (lastSortedBy.equalsIgnoreCase("sizeTag")) {
+            Collections.reverse(boothWithTagsList);
+        } else {
+            lastSortedBy = "sizeTag";
+            Collections.sort(boothWithTagsList, new Comparator<BoothWithTags>() {
+                public int compare(BoothWithTags boothWithTags1, BoothWithTags boothWithTags2) {
+                    return (boothWithTags1.getSizeTag().compareTo(boothWithTags2.getSizeTag()));
+                }
+            });
+        }
+        populateBoothsForShowTable();
+    }
+
+    private void sortBoothListByAreaTag() {
+        if (lastSortedBy.equalsIgnoreCase("areaTag")) {
+            Collections.reverse(boothWithTagsList);
+        } else {
+            lastSortedBy = "areaTag";
+            Collections.sort(boothWithTagsList, new Comparator<BoothWithTags>() {
+                public int compare(BoothWithTags boothWithTags1, BoothWithTags boothWithTags2) {
+                    return (boothWithTags1.getAreaTag().compareTo(boothWithTags2.getAreaTag()));
+                }
+            });
+        }
+        populateBoothsForShowTable();
+    }
+
+    private void sortBoothListByTypeTag() {
+        if (lastSortedBy.equalsIgnoreCase("typeTag")) {
+            Collections.reverse(boothWithTagsList);
+        } else {
+            lastSortedBy = "typeTag";
+            Collections.sort(boothWithTagsList, new Comparator<BoothWithTags>() {
+                public int compare(BoothWithTags boothWithTags1, BoothWithTags boothWithTags2) {
+                    return (boothWithTags1.getTypeTag().compareTo(boothWithTags2.getTypeTag()));
+                }
+            });
+        }
+        populateBoothsForShowTable();
+    }
+
+    private void processBoothWithTagsList() {
+        for (BoothWithTags boothWithTags : boothWithTagsList) {
+            for (Tag currentTag : boothWithTags.booth.getTags()) {
+                if (!currentTag.getName().contains(" [Show]")) {
+                    if (currentTag.getName().substring(0, 4).equalsIgnoreCase("size")) {
+                        boothWithTags.setSizeTag(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Size"));
+                    } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("area")) {
+                        boothWithTags.setAreaTag(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Area"));
+                    } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("type")) {
+                        boothWithTags.setTypeTag(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Type"));
+                    }
+                }
+            }
+        }
     }
 
     ////// NAVIGATION METHODS
@@ -396,7 +463,7 @@ public class ConfigureBooths extends AppCompatActivity
             progressDialog.setMessage("Loading Booths...");
             progressDialog.show();
             ///// CLOVER CONNECTIONS and LIST INIT
-            boothList = new ArrayList<>();
+            boothWithTagsList = new ArrayList<>();
             inventoryConnector = new InventoryConnector(configureBoothsActivityContext, CloverAccount.getAccount(configureBoothsActivityContext), null);
             inventoryConnector.connect();
         }
@@ -410,8 +477,10 @@ public class ConfigureBooths extends AppCompatActivity
                     do {
                         Item boothTest = iterator.next();
                         for (Tag boothTestTag : boothTest.getTags()) {
-                            if (boothTestTag.getId().equalsIgnoreCase(show.getId()))
-                                boothList.add(boothTest);
+                            if (boothTestTag.getId().equalsIgnoreCase(show.getId())) {
+                                BoothWithTags boothWithTags = new BoothWithTags(boothTest);
+                                boothWithTagsList.add(boothWithTags);
+                            }
                         }
                     } while (iterator.hasNext());
                 }
@@ -428,9 +497,51 @@ public class ConfigureBooths extends AppCompatActivity
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
             inventoryConnector.disconnect();
+            processBoothWithTagsList();
             populateBoothsForShowTable();
             progressDialog.dismiss();
         }
     }
 
+    private class BoothWithTags {
+        private Item booth;
+        private String sizeTag;
+        private String areaTag;
+        private String typeTag;
+
+        private BoothWithTags(Item booth) {
+            this.booth = booth;
+        }
+
+        private BoothWithTags(Item booth, String sizeTag, String areaTag, String typeTag) {
+            this.booth = booth;
+            this.sizeTag = sizeTag;
+            this.areaTag = areaTag;
+            this.typeTag = typeTag;
+        }
+
+        public String getSizeTag() {
+            return sizeTag;
+        }
+
+        public void setSizeTag(String sizeTag) {
+            this.sizeTag = sizeTag;
+        }
+
+        public String getAreaTag() {
+            return areaTag;
+        }
+
+        public void setAreaTag(String areaTag) {
+            this.areaTag = areaTag;
+        }
+
+        public String getTypeTag() {
+            return typeTag;
+        }
+
+        public void setTypeTag(String typeTag) {
+            this.typeTag = typeTag;
+        }
+    }
 }
