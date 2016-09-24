@@ -50,19 +50,18 @@ public class ConfigureBooths extends AppCompatActivity
     ////// TRYING SOMETHING NEW
     private List<BoothWithTags> boothWithTagsList;
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configure_booths);
         Toolbar toolbar = (Toolbar) findViewById(R.id.configure_booths_toolbar);
         setSupportActionBar(toolbar);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.configure_booths_drawerlayout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_configure_booths);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -383,72 +382,16 @@ public class ConfigureBooths extends AppCompatActivity
                     }
                 }
             }
+            if (null == boothWithTags.getSizeTag() || boothWithTags.getSizeTag().equalsIgnoreCase("")){
+                boothWithTags.setSizeTag("N/A");
+            }
+            if (null == boothWithTags.getAreaTag() || boothWithTags.getAreaTag().equalsIgnoreCase("")){
+                boothWithTags.setAreaTag("N/A");
+            }
+            if (null == boothWithTags.getTypeTag() || boothWithTags.getTypeTag().equalsIgnoreCase("")){
+                boothWithTags.setTypeTag("N/A");
+            }
         }
-    }
-
-    ////// NAVIGATION METHODS
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.configure_booths_drawerlayout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_configure_booths, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        if (id == R.id.action_create_new_booth_option) {
-            Intent createBoothIntent = new Intent(configureBoothsActivityContext, CreateBooth.class);
-            createBoothIntent.putExtra("show", show);
-            startActivity(createBoothIntent);
-            return true;
-        } else if (id == R.id.action_app_settings) {
-            Intent applicationSettingsIntent = new Intent(configureBoothsActivityContext, ApplicationSettings.class);
-            startActivity(applicationSettingsIntent);
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_home_btn) {
-            Intent homeActivityIntent = new Intent(configureBoothsActivityContext, HomeActivity.class);
-            startActivity(homeActivityIntent);
-        } else if (id == R.id.nav_show_setup_btn) {
-            Intent showSetupIntent = new Intent(configureBoothsActivityContext, TradeShows.class);
-            startActivity(showSetupIntent);
-        } else if (id == R.id.nav_config_booths_btn) {
-            // nothing ; already in activity
-        } else if (id == R.id.nav_make_reservation_btn) {
-            Intent makeReservationIntent = new Intent(configureBoothsActivityContext, BoothReservationShowSelection.class);
-            startActivity(makeReservationIntent);
-        } else if (id == R.id.nav_app_settings_btn) {
-            Intent applicationSettingsIntent = new Intent(configureBoothsActivityContext, ApplicationSettings.class);
-            startActivity(applicationSettingsIntent);
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.configure_booths_drawerlayout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 
     private class GetShowBoothsTask extends AsyncTask<Void, Void, Void> {
@@ -543,5 +486,70 @@ public class ConfigureBooths extends AppCompatActivity
         public void setTypeTag(String typeTag) {
             this.typeTag = typeTag;
         }
+    }
+
+    ////// NAVIGATION METHODS
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.configure_booths_drawerlayout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_configure_booths, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == R.id.action_create_new_booth_option) {
+            Intent createBoothIntent = new Intent(configureBoothsActivityContext, CreateBooth.class);
+            createBoothIntent.putExtra("show", show);
+            startActivity(createBoothIntent);
+            return true;
+        } else if (id == R.id.action_app_settings) {
+            Intent applicationSettingsIntent = new Intent(configureBoothsActivityContext, ApplicationSettings.class);
+            startActivity(applicationSettingsIntent);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_home_btn) {
+            Intent homeActivityIntent = new Intent(configureBoothsActivityContext, HomeActivity.class);
+            startActivity(homeActivityIntent);
+        } else if (id == R.id.nav_show_setup_btn) {
+            Intent showSetupIntent = new Intent(configureBoothsActivityContext, TradeShows.class);
+            startActivity(showSetupIntent);
+        } else if (id == R.id.nav_config_booths_btn) {
+            // nothing ; already in activity
+        } else if (id == R.id.nav_make_reservation_btn) {
+            Intent makeReservationIntent = new Intent(configureBoothsActivityContext, BoothReservationShowSelection.class);
+            startActivity(makeReservationIntent);
+        } else if (id == R.id.nav_app_settings_btn) {
+            Intent applicationSettingsIntent = new Intent(configureBoothsActivityContext, ApplicationSettings.class);
+            startActivity(applicationSettingsIntent);
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.configure_booths_drawerlayout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }
