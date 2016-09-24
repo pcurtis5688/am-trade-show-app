@@ -371,11 +371,11 @@ public class ReserveBoothDetails extends AppCompatActivity {
     }
 
     private void finalizeBoothReservation() {
-        swapGenericForSelectedTask();
+        injectSelectedBoothAndRemoveGeneric();
         Toast.makeText(reserveBoothDetailsActivityContext, getResources().getString(R.string.booth_reservation_booth_reserved_notification), Toast.LENGTH_LONG).show();
     }
 
-    private void swapGenericForSelectedTask() {
+    private void injectSelectedBoothAndRemoveGeneric() {
         new AsyncTask<Void, Void, Void>() {
             private InventoryConnector inventoryConnector;
             private OrderConnector orderConnector;
@@ -410,6 +410,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
                             if (item.getId().equalsIgnoreCase(booth.getId())) {
                                 orderConnector.addFixedPriceLineItem(orderID, item.getId(), null, null);
                                 inventoryConnector.updateItem(inventoryConnector.getItem(item.getId()).setCode(getResources().getString(R.string.booth_product_code_with_prefix, orderID)));
+                                inventoryConnector.updateItemStock(item.getId(), 0);
                                 orderConnector.updateOrder(orderConnector.getOrder(orderID).setNote("Booth No.: " + item.getSku()));
                             }
                         }
