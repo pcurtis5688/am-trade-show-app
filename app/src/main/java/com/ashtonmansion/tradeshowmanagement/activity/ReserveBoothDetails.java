@@ -76,8 +76,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
         Bundle extrasBundle = getIntent().getExtras();
         if (extrasBundle != null) {
             orderID = (String) extrasBundle.get("orderid");
-            if (orderID == null) startedFromApp = true;
-            else startedFromApp = false;
+            startedFromApp = orderID == null;
             Tag show = (Tag) extrasBundle.get("show");
             booth = (Item) extrasBundle.get("booth");
             boothTags = booth.getTags();
@@ -373,7 +372,6 @@ public class ReserveBoothDetails extends AppCompatActivity {
 
     private void finalizeBoothReservation() {
         swapGenericForSelectedTask();
-        finish();
         Toast.makeText(reserveBoothDetailsActivityContext, getResources().getString(R.string.booth_reservation_booth_reserved_notification), Toast.LENGTH_LONG).show();
     }
 
@@ -399,9 +397,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
                     List<LineItem> lineItemList = utilityOrder.getLineItems();
                     List<LineItem> swappedLineItemList = new ArrayList<>();
                     for (LineItem lineItem : lineItemList) {
-                        if (lineItem.getName().contains("Booth L")
-                                || lineItem.getName().contains("Booth M")
-                                || lineItem.getName().contains("Booth S"))
+                        if (lineItem.getName().equalsIgnoreCase("Select Booth"))
                             genericBoothID = lineItem.getId();
                         else swappedLineItemList.add(lineItem);
                     }
@@ -433,12 +429,13 @@ public class ReserveBoothDetails extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void result) {
+                findViewById(R.id.finalize_or_order_btn).setEnabled(false);
+                findViewById(R.id.cancel_reserve_booth_btn).setEnabled(false);
                 orderConnector.disconnect();
                 inventoryConnector.disconnect();
                 orderConnector = null;
                 inventoryConnector = null;
-                findViewById(R.id.finalize_or_order_btn).setEnabled(false);
-                findViewById(R.id.cancel_reserve_booth_btn).setEnabled(false);
+                finish();
             }
         }.execute();
     }

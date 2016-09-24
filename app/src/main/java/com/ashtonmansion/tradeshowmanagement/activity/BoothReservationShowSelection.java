@@ -1,6 +1,5 @@
 package com.ashtonmansion.tradeshowmanagement.activity;
 
-import android.accounts.Account;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -11,9 +10,6 @@ import android.os.RemoteException;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,12 +27,10 @@ import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.Intents;
 import com.clover.sdk.v1.ServiceException;
-import com.clover.sdk.v3.customers.Customer;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Tag;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class BoothReservationShowSelection extends Activity
@@ -48,7 +42,6 @@ public class BoothReservationShowSelection extends Activity
     private List<Tag> showList;
     ///// ORDER INFO BEING PASSED TO BOOTH RESERVATION, WILL GRAB CUSTOMER
     private String orderID;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

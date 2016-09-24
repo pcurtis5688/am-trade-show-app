@@ -5,29 +5,39 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
+import com.ashtonmansion.tradeshowmanagement.activity.BoothReservationShowSelection;
 import com.clover.sdk.util.CloverAccount;
+import com.clover.sdk.v1.Intents;
 import com.clover.sdk.v3.inventory.InventoryConnector;
+
+interface AsyncResponse {
+    void processFinish(String output);
+}
 
 /**
  * Created by paul on 9/23/2016.
  */
 
 public class EventManagerReceiver extends BroadcastReceiver implements AsyncResponse {
+    private String orderID = "";
+    private String itemID;
     private String itemName = "";
-    private Context eventManagerReceiverContext;
+    private Context fromContext;
+    private Intent fromIntent;
+
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        eventManagerReceiverContext = context;
+        this.fromContext = context;
+        this.fromIntent = intent;
         if (intent.getAction().equalsIgnoreCase("com.clover.intent.action.LINE_ITEM_ADDED")) {
-            String itemID = intent.getStringExtra("com.clover.intent.extra.ITEM_ID");
+            itemID = intent.getStringExtra(Intents.EXTRA_CLOVER_ITEM_ID);
+            orderID = intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID);
             GetItemNameTask getItemNameTask = new GetItemNameTask();
             getItemNameTask.delegate = this;
             getItemNameTask.setData(context, itemID);
             getItemNameTask.execute();
-            String orderID = "";
         }
     }
 
@@ -37,21 +47,21 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
         checkIfGenericBooth();
     }
 
-    private void checkIfGenericBooth(){
-        Toast.makeText(eventManagerReceiverContext, "item name:" + itemName, Toast.LENGTH_LONG).show();
-        if (itemName.toLowerCase().contains("booth")){
-            // blah
+    private void checkIfGenericBooth() {
+        if (itemName.toLowerCase().contains("booth")) {
+            Intent selectBoothForOrderIntent = new Intent(fromContext, BoothReservationShowSelection.class);
+            selectBoothForOrderIntent.putExtra("orderid", orderID);
+            selectBoothForOrderIntent.putExtra("itemid", itemID);
+            selectBoothForOrderIntent.putExtra("itemname", itemName);
+            selectBoothForOrderIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            fromContext.getApplicationContext().startActivity(selectBoothForOrderIntent);
         }
     }
 }
 
-interface AsyncResponse {
-    void processFinish(String output);
-}
-
 class GetItemNameTask extends AsyncTask<Void, Void, String> {
-    private InventoryConnector inventoryConnector;
     public AsyncResponse delegate = null;
+    private InventoryConnector inventoryConnector;
     ////// INPUTS
     private Context appContext;
     private String itemID;
