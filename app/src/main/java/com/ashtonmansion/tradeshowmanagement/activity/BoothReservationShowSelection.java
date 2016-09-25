@@ -55,11 +55,7 @@ public class BoothReservationShowSelection extends Activity
         ////// DATA WORK
         Intent intent = getIntent();
         Bundle extrasBundle = intent.getExtras();
-        if (extrasBundle.get("orderid") != null) {
-            orderID = (String) extrasBundle.get("orderid");
-        } else {
-            orderID = getIntent().getStringExtra(Intents.EXTRA_ORDER_ID);
-        }
+        orderID = getIntent().getStringExtra(Intents.EXTRA_ORDER_ID);
         ///// SET CONTEXT, ATTACH TO SHOW TABLE, AND POPULATE
         boothReservationShowSelectionActivityContext = this;
         showSelectionTable = (TableLayout) findViewById(R.id.booth_reservation_show_select_table);
@@ -105,12 +101,16 @@ public class BoothReservationShowSelection extends Activity
                 showSelectionTable.addView(newShowSelectionRow);
             }
         } else {
-            ///// HANDLE CASE - NO SHOWS CREATED
+            ///// HANDLE CASE - NO EXISTING SHOWS
             TableRow noShowsPleaseCreateRow = new TableRow(boothReservationShowSelectionActivityContext);
             TextView noShowsPleaseCreateTv = new TextView(boothReservationShowSelectionActivityContext);
             noShowsPleaseCreateTv.setText(getResources().getString(R.string.no_trade_shows_available_string));
-            noShowsPleaseCreateTv.setTextAppearance(boothReservationShowSelectionActivityContext, R.style.prompt_text_font_style);
-            noShowsPleaseCreateRow.addView(noShowsPleaseCreateTv);
+            noShowsPleaseCreateTv.setTextAppearance(boothReservationShowSelectionActivityContext, R.style.no_shows_style);
+            noShowsPleaseCreateTv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            TableRow.LayoutParams params = new TableRow.LayoutParams();
+            params.span = 4;
+            params.topMargin = 32;
+            noShowsPleaseCreateRow.addView(noShowsPleaseCreateTv, params);
             showSelectionTable.addView(noShowsPleaseCreateRow);
         }
     }

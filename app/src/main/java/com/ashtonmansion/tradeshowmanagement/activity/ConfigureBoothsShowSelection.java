@@ -103,6 +103,18 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
                 newShowSelectionRow.addView(showSelectionButton);
                 configureBoothsShowSelectionTable.addView(newShowSelectionRow);
             }
+        } else {
+            ////// HANDLE CASE - NO EXISTING SHOWS
+            TextView showSelectionNoShowsWarningTv = new TextView(configureBoothsShowSelectionActivityContext);
+            showSelectionNoShowsWarningTv.setText(getResources().getString(R.string.no_trade_shows_available_string));
+            showSelectionNoShowsWarningTv.setTextAppearance(configureBoothsShowSelectionActivityContext, R.style.no_shows_style);
+            showSelectionNoShowsWarningTv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            TableRow showSelectionNoShowsWarningRow = new TableRow(configureBoothsShowSelectionActivityContext);
+            TableRow.LayoutParams params = new TableRow.LayoutParams();
+            params.span = 4;
+            params.topMargin = 32;
+            showSelectionNoShowsWarningRow.addView(showSelectionNoShowsWarningTv, params);
+            configureBoothsShowSelectionTable.addView(showSelectionNoShowsWarningRow);
         }
     }
 
@@ -177,7 +189,6 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
     private class GetShowListTask extends AsyncTask<Void, Void, Void> {
         private ProgressDialog progressDialog;
         /////CLOVER CONNECT
-        private Account merchantAccount;
         private InventoryConnector inventoryConnector;
 
         @Override
@@ -187,14 +198,14 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
             progressDialog.setMessage("Loading Shows...");
             progressDialog.show();
             showList = new ArrayList<>();
+            ////// INIT CLOVER CONNECTIONS
+            inventoryConnector = new InventoryConnector(configureBoothsShowSelectionActivityContext, CloverAccount.getAccount(configureBoothsShowSelectionActivityContext), null);
+            inventoryConnector.connect();
         }
 
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                merchantAccount = CloverAccount.getAccount(configureBoothsShowSelectionActivityContext);
-                inventoryConnector = new InventoryConnector(configureBoothsShowSelectionActivityContext, merchantAccount, null);
-                inventoryConnector.connect();
                 for (Tag currentTag : inventoryConnector.getTags()) {
                     if (currentTag.getName().contains(" [Show]")) {
                         showList.add(currentTag);

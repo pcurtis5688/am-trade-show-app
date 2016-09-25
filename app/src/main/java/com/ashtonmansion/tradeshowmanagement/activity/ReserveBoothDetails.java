@@ -49,7 +49,6 @@ import static android.view.View.GONE;
 
 public class ReserveBoothDetails extends AppCompatActivity {
     private Context reserveBoothDetailsActivityContext;
-    private boolean startedFromApp;
     private boolean orderIDOriginBoothCode;
     ///////SHOW DATA
     private String showName;
@@ -76,7 +75,6 @@ public class ReserveBoothDetails extends AppCompatActivity {
         Bundle extrasBundle = getIntent().getExtras();
         if (extrasBundle != null) {
             orderID = (String) extrasBundle.get("orderid");
-            startedFromApp = orderID == null;
             Tag show = (Tag) extrasBundle.get("show");
             booth = (Item) extrasBundle.get("booth");
             boothTags = booth.getTags();

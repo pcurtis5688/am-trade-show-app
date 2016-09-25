@@ -18,7 +18,7 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="activity_header_style">
-        <item name="android:textColor">#000b82</item>
+        <item name="android:textColor">@color/matching_header_color</item>
         <item name="android:layout_marginBottom">15dp</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textSize">@dimen/dimen_36sp</item>
@@ -35,7 +35,7 @@
         <item name="android:textSize">@dimen/dimen_36sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textColor">#000b82</item>
+        <item name="android:textColor">@color/matching_header_color</item>
     </style>
 
     <style name="span_2_and_table_header_style">
@@ -43,7 +43,7 @@
         <item name="android:textSize">@dimen/dimen_36sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textColor">#000b82</item>
+        <item name="android:textColor">@color/matching_header_color</item>
     </style>
 
     <style name="large_table_row_font_station">
@@ -77,6 +77,15 @@
     </style>
 
     <style name="prompt_text_font_style">
+        <item name="android:textColor">@color/matching_header_color</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">@dimen/dimen_24sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="no_shows_style">
+        <item name="android:textColor">@color/matching_header_color</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textSize">@dimen/dimen_24sp</item>
         <item name="android:textStyle">bold</item>
@@ -130,6 +139,7 @@
     </style>
 
     <style name="trade_show_row_style">
+        <item name="android:textColor">@color/matching_header_color</item>
         <item name="android:textAlignment">textStart</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/dimen_30sp</item>

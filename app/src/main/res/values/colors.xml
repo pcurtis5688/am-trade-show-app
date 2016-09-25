@@ -7,4 +7,5 @@
     <color name="available_booth_color">#4cd800</color>
     <color name="reserved_booth_color">#ff0000</color>
     <color name="admin_button_bg_color">#ffe600</color>
+    <color name="matching_header_color">#000b82</color>
 </resources>
