@@ -350,13 +350,16 @@
     <string name="available_keyword">Available</string>
     <!-- BOOTH INTEGRITY STRINGS -->
     <string name="check_booth_integrity_text">Check Booth Integrity - Set Reserved booths with no order to available</string>
-    <string name="invalid_booths_found_and_corrected">Invalid Booths found and reverted to Available</string>
+    <string name="invalid_booths_found_and_corrected">Invalid Booths found and reverted to Available: %1$d booth(s)</string>
     <string name="no_invalid_booths_found">No Invalid Booths were found! Congratulations.</string>
     <!-- BOOTH NAME VALIDATION STRINGS -->
     <string name="set_booth_names_after_import">Correct Booth Names after Bulk Import</string>
+    <string name="no_unformatted_names_found">No Invalid/Unformatted Booth Names Found</string>
+    <string name="booth_names_corrected_msg">Names Generated for Imported Booths: %1$d booth(s) affected</string>
     <!-- DETECT AND DELETE BOOTHS -->
     <string name="detect_and_delete_booths">Delete All Detected Booths</string>
-    <string name="all_detected_booths_deleted">All Detected Booths Deleted</string>
+    <string name="no_booths_detected_zero_deleted_msg">No Booths Deleted; none detected</string>
+    <string name="all_detected_booths_deleted">All Detected Booths Deleted: %1$d booth(s)</string>
 
     <!-- SELECT BOOTH ACTIVITY BEGUN FROM CLOVER STRINGS -->
     <string name="title_activity_select_booth">Select A Booth</string>

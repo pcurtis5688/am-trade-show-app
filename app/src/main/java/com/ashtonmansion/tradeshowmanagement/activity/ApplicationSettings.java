@@ -1,13 +1,8 @@
 package com.ashtonmansion.tradeshowmanagement.activity;
 
-import android.accounts.Account;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.database.sqlite.SQLiteException;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -18,9 +13,6 @@ import android.widget.Toast;
 import com.ashtonmansion.amtradeshowmanagement.R;
 import com.ashtonmansion.tradeshowmanagement.util.GlobalUtils;
 import com.clover.sdk.util.CloverAccount;
-import com.clover.sdk.v1.BindingException;
-import com.clover.sdk.v1.ClientException;
-import com.clover.sdk.v1.ServiceException;
 import com.clover.sdk.v1.tender.TenderConnector;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
@@ -28,12 +20,12 @@ import com.clover.sdk.v3.inventory.Tag;
 import com.clover.sdk.v3.order.OrderConnector;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class ApplicationSettings extends AppCompatActivity {
     private Context applicationSettingsActivityContext;
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,15 +51,16 @@ public class ApplicationSettings extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 validateBoothNamesAndCorrect();
+                validateBoothNamesBtn.setEnabled(false);
             }
         });
         deleteAllDetectedBoothsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 deleteAllDetectedBooths();
+                deleteAllDetectedBoothsBtn.setEnabled(false);
             }
         });
-
     }
 
     private boolean checkBoothIntegrityAndCorrect() {
@@ -75,13 +68,14 @@ public class ApplicationSettings extends AppCompatActivity {
             private InventoryConnector inventoryConnector;
             private OrderConnector orderConnector;
             private List<Item> reservedBoothsWithInvalidatedOrders;
+            private int invalidBoothNo;
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
                 ////// INITIALIZE LISTS
                 reservedBoothsWithInvalidatedOrders = new ArrayList<>();
-
+                invalidBoothNo = 0;
                 ////// INITIALIZE CLOVER CONNECTIONS
                 inventoryConnector = new InventoryConnector(applicationSettingsActivityContext, CloverAccount.getAccount(applicationSettingsActivityContext), null);
                 orderConnector = new OrderConnector(applicationSettingsActivityContext, CloverAccount.getAccount(applicationSettingsActivityContext), null);
@@ -93,17 +87,18 @@ public class ApplicationSettings extends AppCompatActivity {
             protected Void doInBackground(Void... voids) {
                 try {
                     for (Item boothToCheck : inventoryConnector.getItems()) {
-                        if (boothToCheck.getCode().contains("Order #")) {
+                        if (null != boothToCheck.getCode() && boothToCheck.getCode().contains("Order #")) {
                             String orderNumber = boothToCheck.getCode().substring(7);
                             if (null == orderConnector.getOrder(orderNumber)) {
                                 reservedBoothsWithInvalidatedOrders.add(boothToCheck);
                                 inventoryConnector.updateItem(boothToCheck.setCode("Available"));
-                                Log.d("Invalid Booth: ", boothToCheck.getId() + "code: " + boothToCheck.getCode() + " name: " + boothToCheck.getName());
+                                invalidBoothNo++;
                             }
                         }
                     }
                 } catch (Exception e) {
                     Log.d("Excptn: ", e.getMessage(), e.getCause());
+                    e.printStackTrace();
                 }
                 return null;
             }
@@ -116,7 +111,7 @@ public class ApplicationSettings extends AppCompatActivity {
                 inventoryConnector = null;
                 orderConnector = null;
                 if (reservedBoothsWithInvalidatedOrders.size() > 0) {
-                    Toast.makeText(applicationSettingsActivityContext, getResources().getString(R.string.invalid_booths_found_and_corrected), Toast.LENGTH_LONG).show();
+                    Toast.makeText(applicationSettingsActivityContext, getResources().getString(R.string.invalid_booths_found_and_corrected, invalidBoothNo), Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(applicationSettingsActivityContext, getResources().getString(R.string.no_invalid_booths_found), Toast.LENGTH_LONG).show();
                 }
@@ -129,13 +124,13 @@ public class ApplicationSettings extends AppCompatActivity {
     private void validateBoothNamesAndCorrect() {
         new AsyncTask<Void, Void, Void>() {
             private InventoryConnector inventoryConnector;
-            private List<String> boothSkusMissingSATs;
+            private int boothNamesFormatted;
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
                 ////// INIT LISTS
-                boothSkusMissingSATs = new ArrayList<>();
+                boothNamesFormatted = 0;
                 ////// INITIALIZE CLOVER CONNECTIONS
                 inventoryConnector = new InventoryConnector(applicationSettingsActivityContext, CloverAccount.getAccount(applicationSettingsActivityContext), null);
                 inventoryConnector.connect();
@@ -149,6 +144,7 @@ public class ApplicationSettings extends AppCompatActivity {
                             String[] tagValues = fetchTagValues(boothToCheck.getSku(), boothToCheck.getTags());
                             String formattedBoothName = "Booth #" + boothToCheck.getSku() + " (" + tagValues[0] + ", " + tagValues[1] + ", " + tagValues[2] + ")";
                             inventoryConnector.updateItem(boothToCheck.setName(formattedBoothName));
+                            boothNamesFormatted++;
                         }
                     }
                 } catch (Exception e) {
@@ -162,7 +158,11 @@ public class ApplicationSettings extends AppCompatActivity {
                 super.onPostExecute(result);
                 inventoryConnector.disconnect();
                 inventoryConnector = null;
-                Toast.makeText(applicationSettingsActivityContext, getResources().getString(R.string.invalid_booths_found_and_corrected), Toast.LENGTH_LONG).show();
+                if (boothNamesFormatted == 0) {
+                    Toast.makeText(applicationSettingsActivityContext, getResources().getString(R.string.no_unformatted_names_found), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(applicationSettingsActivityContext, (getResources().getString(R.string.booth_names_corrected_msg, boothNamesFormatted)), Toast.LENGTH_LONG).show();
+                }
             }
 
             protected String[] fetchTagValues(String boothSku, List<Tag> tagList) {
@@ -178,15 +178,12 @@ public class ApplicationSettings extends AppCompatActivity {
                 }
                 if (tagValues[0] == null) {
                     tagValues[0] = "[No Size]";
-                    boothSkusMissingSATs.add(boothSku);
                 }
                 if (tagValues[1] == null) {
                     tagValues[1] = "[No Area]";
-                    boothSkusMissingSATs.add(boothSku);
                 }
                 if (tagValues[2] == null) {
                     tagValues[2] = "[No Type]";
-                    boothSkusMissingSATs.add(boothSku);
                 }
                 return tagValues;
             }
@@ -196,10 +193,13 @@ public class ApplicationSettings extends AppCompatActivity {
     private void deleteAllDetectedBooths() {
         new AsyncTask<Void, Void, Void>() {
             private InventoryConnector inventoryConnector;
+            private int boothsDeletedNo;
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
+                ////// INIT BOOTH DELETED COUNT
+                boothsDeletedNo = 0;
                 ////// INITIALIZE CLOVER CONNECTIONS
                 inventoryConnector = new InventoryConnector(applicationSettingsActivityContext, CloverAccount.getAccount(applicationSettingsActivityContext), null);
                 inventoryConnector.connect();
@@ -214,6 +214,7 @@ public class ApplicationSettings extends AppCompatActivity {
                                 boothToCheck.getName().contains("Booth #") ||
                                 boothToCheck.getName().contains("booth #")) {
                             inventoryConnector.deleteItem(boothToCheck.getId());
+                            boothsDeletedNo++;
                         }
                     }
                 } catch (Exception e) {
@@ -227,19 +228,13 @@ public class ApplicationSettings extends AppCompatActivity {
                 super.onPostExecute(result);
                 inventoryConnector.disconnect();
                 inventoryConnector = null;
-                Toast.makeText(applicationSettingsActivityContext, getResources().getString(R.string.all_detected_booths_deleted), Toast.LENGTH_LONG).show();
+                if (boothsDeletedNo == 0) {
+                    Toast.makeText(applicationSettingsActivityContext, getResources().getString(R.string.no_booths_detected_zero_deleted_msg), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(applicationSettingsActivityContext, getResources().getString(R.string.all_detected_booths_deleted, boothsDeletedNo), Toast.LENGTH_LONG).show();
+                }
             }
         }.execute();
-    }
-
-    private void deleteAllItems() {
-        DeleteAllItemsTask deleteAllItemsTask = new DeleteAllItemsTask();
-        deleteAllItemsTask.execute();
-    }
-
-    private void deleteAllTags() {
-        DeleteAllTagsTask deleteAllTagsTask = new DeleteAllTagsTask();
-        deleteAllTagsTask.execute();
     }
 
     ////// INACTIVE METHODS
@@ -302,93 +297,5 @@ public class ApplicationSettings extends AppCompatActivity {
                 tenderConnector = null;
             }
         }.execute();
-    }
-
-    private class DeleteAllItemsTask extends AsyncTask<Void, Void, Void> {
-        private ProgressDialog progressDialog;
-        /////// CLOVER CONNECTION
-        private Account merchantAccount;
-        private InventoryConnector inventoryConnector;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(applicationSettingsActivityContext);
-            progressDialog.setMessage(getResources().getString(R.string.quick_ops_delete_all_progress_message));
-            progressDialog.show();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                merchantAccount = CloverAccount.getAccount(applicationSettingsActivityContext);
-                inventoryConnector = new InventoryConnector(applicationSettingsActivityContext, merchantAccount, null);
-                inventoryConnector.connect();
-                for (Item currentItem : inventoryConnector.getItems()) {
-                    inventoryConnector.deleteItem(currentItem.getId());
-                }
-            } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
-                Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
-            } catch (SQLiteException e2) {
-                Log.e("SQLiteExcptn: ", e2.getClass().getName() + " - " + e2.getMessage());
-            } finally {
-                inventoryConnector.disconnect();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            progressDialog.dismiss();
-            Toast toast = Toast.makeText(applicationSettingsActivityContext, "Done Deleting All", Toast.LENGTH_SHORT);
-            toast.show();
-        }
-    }
-
-    private class DeleteAllTagsTask extends AsyncTask<Void, Void, Void> {
-        private ProgressDialog progressDialog;
-        /////// CLOVER CONNECTION
-        private Account merchantAccount;
-        private InventoryConnector inventoryConnector;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(applicationSettingsActivityContext);
-            progressDialog.setMessage(getResources().getString(R.string.quick_ops_delete_all_tags_progress_message));
-            progressDialog.show();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                merchantAccount = CloverAccount.getAccount(applicationSettingsActivityContext);
-                inventoryConnector = new InventoryConnector(applicationSettingsActivityContext, merchantAccount, null);
-                inventoryConnector.connect();
-
-                Iterator tagKiller = inventoryConnector.getTags().iterator();
-                do {
-                    Tag dieTag = (Tag) tagKiller.next();
-                    inventoryConnector.deleteTag(dieTag.getId());
-                } while (tagKiller.hasNext());
-
-            } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
-                Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
-            } catch (SQLiteException e2) {
-                Log.e("SQLiteExcptn: ", e2.getClass().getName() + " - " + e2.getMessage());
-            } finally {
-                inventoryConnector.disconnect();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            progressDialog.dismiss();
-            Toast toast = Toast.makeText(applicationSettingsActivityContext, "Done Deleting All Tags", Toast.LENGTH_SHORT);
-            toast.show();
-        }
     }
 }

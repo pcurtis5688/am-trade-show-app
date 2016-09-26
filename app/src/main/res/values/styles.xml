@@ -50,6 +50,7 @@
         <item name="android:textSize">@dimen/dimen_30sp</item>
         <item name="android:textAlignment">center</item>
         <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:textColor">@color/matching_header_color</item>
     </style>
 
     <style name="no_rows_style">
