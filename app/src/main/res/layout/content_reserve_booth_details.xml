@@ -262,7 +262,7 @@
 
                         <Button
                             android:id="@+id/save_customer_to_order_btn"
-                            style="@style/button_font_style"
+                            style="@style/non_italic_blue_button_style"
                             android:layout_span="2"
                             android:text="@string/save_customer_information_btn_text" />
                     </TableRow>
@@ -310,14 +310,14 @@
 
                         <Button
                             android:id="@+id/cancel_reserve_booth_btn"
-                            style="@style/button_font_style"
+                            style="@style/non_italic_blue_button_style"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/booth_reservation_cancel_booth_reservation_btn_text" />
 
                         <Button
                             android:id="@+id/finalize_or_order_btn"
-                            style="@style/button_font_style"
+                            style="@style/non_italic_blue_button_style"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
                     </TableRow>

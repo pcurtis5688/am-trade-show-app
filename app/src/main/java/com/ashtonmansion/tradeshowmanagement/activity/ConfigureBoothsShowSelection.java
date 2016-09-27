@@ -86,7 +86,7 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
 
                 ///// HANDLE FONTS
                 newShowSelectionTitleTV.setTextAppearance(configureBoothsShowSelectionActivityContext, R.style.trade_show_row_style);
-                showSelectionButton.setTextAppearance(configureBoothsShowSelectionActivityContext, R.style.button_font_style);
+                showSelectionButton.setTextAppearance(configureBoothsShowSelectionActivityContext, R.style.non_italic_blue_button_style);
 
                 ///// SET SHOW NAME AND BUTTON TEXT
                 newShowSelectionTitleTV.setText(showNameForUser);

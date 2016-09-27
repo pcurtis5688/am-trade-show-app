@@ -55,7 +55,9 @@ public class BoothReservationShowSelection extends Activity
         ////// DATA WORK
         Intent intent = getIntent();
         Bundle extrasBundle = intent.getExtras();
-        orderID = getIntent().getStringExtra(Intents.EXTRA_ORDER_ID);
+        if (null != extrasBundle)
+            orderID = (String) extrasBundle.get("orderid");
+
         ///// SET CONTEXT, ATTACH TO SHOW TABLE, AND POPULATE
         boothReservationShowSelectionActivityContext = this;
         showSelectionTable = (TableLayout) findViewById(R.id.booth_reservation_show_select_table);
@@ -83,7 +85,7 @@ public class BoothReservationShowSelection extends Activity
 
                 ///// HANDLE FONTS
                 showSelectionNameTv.setTextAppearance(boothReservationShowSelectionActivityContext, R.style.trade_show_row_style);
-                showSelectButton.setTextAppearance(boothReservationShowSelectionActivityContext, R.style.button_font_style);
+                showSelectButton.setTextAppearance(boothReservationShowSelectionActivityContext, R.style.non_italic_blue_button_style);
 
                 ///// SHOW NAME BUTTON TEXT AND ACTION
                 showSelectionNameTv.setText(showNameForUser);

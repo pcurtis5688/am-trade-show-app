@@ -1,6 +1,5 @@
 package com.ashtonmansion.tradeshowmanagement.activity;
 
-import android.accounts.Account;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +15,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
+import com.ashtonmansion.tradeshowmanagement.util.BoothWithTags;
 import com.ashtonmansion.tradeshowmanagement.util.GlobalUtils;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
@@ -157,7 +157,9 @@ public class BoothReservation extends AppCompatActivity {
 
         if (boothWithTagsList.size() > 0) {
             for (BoothWithTags boothWithTags : boothWithTagsList) {
-                final Item finalizedBooth = boothWithTags.booth;
+                final BoothWithTags finalizedBooth = boothWithTags;
+                Log.d("boothwithtagsID: ", boothWithTags.getBooth().getId());
+                Log.d("finalizedboothID: ", finalizedBooth.getBooth().getId());
                 /////////CREATE NEW ROW AND NECESSARY TEXTVIEWS
                 TableRow newBoothRow = new TableRow(boothReservationActivityContext);
                 TextView boothNumberTv = new TextView(boothReservationActivityContext);
@@ -175,16 +177,16 @@ public class BoothReservation extends AppCompatActivity {
                 boothTypeTv.setTextAppearance(boothReservationActivityContext, R.style.large_table_row_font_station);
 
                 /////////POPULATE TVS / HANDLE ANY PROCESSING
-                boothNumberTv.setText(boothWithTags.booth.getSku());
-                boothPriceTv.setText(GlobalUtils.getFormattedPriceStringFromLong(boothWithTags.booth.getPrice()));
-                boothSizeTv.setText(boothWithTags.getSizeTag());
-                boothAreaTv.setText(boothWithTags.getAreaTag());
-                boothTypeTv.setText(boothWithTags.getTypeTag());
-                if (boothWithTags.booth.getCode().equalsIgnoreCase("AVAILABLE")) {
+                boothNumberTv.setText(finalizedBooth.getBooth().getSku());
+                boothPriceTv.setText(GlobalUtils.getFormattedPriceStringFromLong(finalizedBooth.getBooth().getPrice()));
+                boothSizeTv.setText(finalizedBooth.getUnformattedSize());
+                boothAreaTv.setText(finalizedBooth.getUnformattedArea());
+                boothTypeTv.setText(finalizedBooth.getUnformattedType());
+                if (finalizedBooth.getBooth().getCode().equalsIgnoreCase("AVAILABLE")) {
                     boothAvailabilityTv.setText(getResources().getString(R.string.booth_reservation_available_string));
                     boothAvailabilityTv.setTextAppearance(boothReservationActivityContext, R.style.available_booth_style);
                 } else {
-                    boothAvailabilityTv.setText(boothWithTags.booth.getCode());
+                    boothAvailabilityTv.setText(finalizedBooth.getBooth().getCode());
                     boothAvailabilityTv.setTextAppearance(boothReservationActivityContext, R.style.reserved_booth_style);
                 }
 
@@ -196,12 +198,12 @@ public class BoothReservation extends AppCompatActivity {
                 reserveBoothButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        reserveBoothAction(show, finalizedBooth);
+                        reserveBoothAction(show, finalizedBooth.getBooth());
                     }
                 });
                 reserveBoothButton.setTextAppearance(boothReservationActivityContext, R.style.row_item_button_style);
                 if (!startedFromApp) {
-                    if (!finalizedBooth.getCode().equalsIgnoreCase("AVAILABLE")) {
+                    if (!finalizedBooth.getBooth().getCode().equalsIgnoreCase("AVAILABLE")) {
                         reserveBoothButton.setEnabled(false);
                     }
                 }
@@ -248,7 +250,7 @@ public class BoothReservation extends AppCompatActivity {
             lastSortedBy = "boothNumber";
             Collections.sort(boothWithTagsList, new Comparator<BoothWithTags>() {
                 public int compare(BoothWithTags boothWithTags1, BoothWithTags boothWithTags2) {
-                    return (boothWithTags1.booth.getSku().compareTo(boothWithTags2.booth.getSku()));
+                    return (boothWithTags1.getBooth().getSku().compareTo(boothWithTags2.getBooth().getSku()));
                 }
             });
         }
@@ -262,7 +264,7 @@ public class BoothReservation extends AppCompatActivity {
             lastSortedBy = "boothPrice";
             Collections.sort(boothWithTagsList, new Comparator<BoothWithTags>() {
                 public int compare(BoothWithTags boothWithTags1, BoothWithTags boothWithTags2) {
-                    return boothWithTags1.booth.getPrice().compareTo(boothWithTags2.booth.getPrice());
+                    return boothWithTags1.getBooth().getPrice().compareTo(boothWithTags2.getBooth().getPrice());
                 }
             });
         }
@@ -276,7 +278,7 @@ public class BoothReservation extends AppCompatActivity {
             lastSortedBy = "boothAvailability";
             Collections.sort(boothWithTagsList, new Comparator<BoothWithTags>() {
                 public int compare(BoothWithTags boothWithTags1, BoothWithTags boothWithTags2) {
-                    return boothWithTags1.booth.getCode().compareTo(boothWithTags2.booth.getCode());
+                    return boothWithTags1.getBooth().getCode().compareTo(boothWithTags2.getBooth().getCode());
                 }
             });
         }
@@ -290,7 +292,7 @@ public class BoothReservation extends AppCompatActivity {
             lastSortedBy = "sizeTag";
             Collections.sort(boothWithTagsList, new Comparator<BoothWithTags>() {
                 public int compare(BoothWithTags boothWithTags1, BoothWithTags boothWithTags2) {
-                    return (boothWithTags1.getSizeTag().compareTo(boothWithTags2.getSizeTag()));
+                    return (boothWithTags1.getSizeTag().getName().compareTo(boothWithTags2.getSizeTag().getName()));
                 }
             });
         }
@@ -304,7 +306,7 @@ public class BoothReservation extends AppCompatActivity {
             lastSortedBy = "areaTag";
             Collections.sort(boothWithTagsList, new Comparator<BoothWithTags>() {
                 public int compare(BoothWithTags boothWithTags1, BoothWithTags boothWithTags2) {
-                    return (boothWithTags1.getAreaTag().compareTo(boothWithTags2.getAreaTag()));
+                    return (boothWithTags1.getAreaTag().getName().compareTo(boothWithTags2.getAreaTag().getName()));
                 }
             });
         }
@@ -318,7 +320,7 @@ public class BoothReservation extends AppCompatActivity {
             lastSortedBy = "typeTag";
             Collections.sort(boothWithTagsList, new Comparator<BoothWithTags>() {
                 public int compare(BoothWithTags boothWithTags1, BoothWithTags boothWithTags2) {
-                    return (boothWithTags1.getTypeTag().compareTo(boothWithTags2.getTypeTag()));
+                    return (boothWithTags1.getTypeTag().getName().compareTo(boothWithTags2.getTypeTag().getName()));
                 }
             });
         }
@@ -327,14 +329,14 @@ public class BoothReservation extends AppCompatActivity {
 
     private void processBoothWithTagsList() {
         for (BoothWithTags boothWithTags : boothWithTagsList) {
-            for (Tag currentTag : boothWithTags.booth.getTags()) {
+            for (Tag currentTag : boothWithTags.getBooth().getTags()) {
                 if (!currentTag.getName().contains(" [Show]")) {
                     if (currentTag.getName().substring(0, 4).equalsIgnoreCase("size")) {
-                        boothWithTags.setSizeTag(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Size"));
+                        boothWithTags.setSizeTag(currentTag);
                     } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("area")) {
-                        boothWithTags.setAreaTag(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Area"));
+                        boothWithTags.setAreaTag(currentTag);
                     } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("type")) {
-                        boothWithTags.setTypeTag(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Type"));
+                        boothWithTags.setTypeTag(currentTag);
                     }
                 }
             }
@@ -385,48 +387,6 @@ public class BoothReservation extends AppCompatActivity {
             processBoothWithTagsList();
             createBoothSelectionTable();
             progressDialog.dismiss();
-        }
-    }
-
-    private class BoothWithTags {
-        private Item booth;
-        private String sizeTag;
-        private String areaTag;
-        private String typeTag;
-
-        private BoothWithTags(Item booth) {
-            this.booth = booth;
-        }
-
-        private BoothWithTags(Item booth, String sizeTag, String areaTag, String typeTag) {
-            this.booth = booth;
-            this.sizeTag = sizeTag;
-            this.areaTag = areaTag;
-            this.typeTag = typeTag;
-        }
-
-        public String getSizeTag() {
-            return sizeTag;
-        }
-
-        public void setSizeTag(String sizeTag) {
-            this.sizeTag = sizeTag;
-        }
-
-        public String getAreaTag() {
-            return areaTag;
-        }
-
-        public void setAreaTag(String areaTag) {
-            this.areaTag = areaTag;
-        }
-
-        public String getTypeTag() {
-            return typeTag;
-        }
-
-        public void setTypeTag(String typeTag) {
-            this.typeTag = typeTag;
         }
     }
 }

@@ -22,58 +22,58 @@
 
             <TextView
                 android:id="@+id/edit_show_name_and_id_header"
-                android:layout_span="2"
-                style="@style/activity_header_style" />
+                style="@style/activity_header_style"
+                android:layout_span="2" />
         </TableRow>
 
         <TableRow>
 
             <TextView
-                android:text="@string/edit_show_name_string"
-                style="@style/prompt_text_font_style" />
+                style="@style/prompt_text_font_style"
+                android:text="@string/edit_show_name_string" />
 
             <EditText
                 android:id="@+id/edit_show_name_field"
+                style="@style/prompt_text_font_style"
                 android:hint="@string/edit_show_name_hint"
-                android:maxLength="50"
-                style="@style/prompt_text_font_style" />
+                android:maxLength="50" />
         </TableRow>
 
         <TableRow>
 
             <TextView
-                android:text="@string/edit_show_date_string"
-                style="@style/prompt_text_font_style" />
+                style="@style/prompt_text_font_style"
+                android:text="@string/edit_show_date_string" />
 
             <EditText
                 android:id="@+id/edit_show_date_field"
+                style="@style/prompt_text_font_style"
                 android:hint="@string/edit_show_date_hint"
-                android:inputType="date"
-                style="@style/prompt_text_font_style" />
+                android:inputType="date" />
         </TableRow>
 
         <TableRow>
 
             <TextView
-                android:text="@string/edit_show_location_string"
-                style="@style/prompt_text_font_style" />
+                style="@style/prompt_text_font_style"
+                android:text="@string/edit_show_location_string" />
 
             <EditText
                 android:id="@+id/edit_show_location_field"
-                android:hint="@string/edit_show_location_hint"
-                style="@style/prompt_text_font_style" />
+                style="@style/prompt_text_font_style"
+                android:hint="@string/edit_show_location_hint" />
         </TableRow>
 
         <TableRow>
 
             <TextView
-                android:text="@string/edit_show_notes_string"
-                style="@style/prompt_text_font_style" />
+                style="@style/prompt_text_font_style"
+                android:text="@string/edit_show_notes_string" />
 
             <EditText
                 android:id="@+id/edit_show_notes_field"
-                android:hint="@string/edit_show_notes_hint"
-                style="@style/prompt_text_font_style" />
+                style="@style/prompt_text_font_style"
+                android:hint="@string/edit_show_notes_hint" />
         </TableRow>
     </TableLayout>
 
@@ -87,21 +87,21 @@
 
             <Button
                 android:id="@+id/delete_show_btn"
+                style="@style/non_italic_blue_button_style"
                 android:onClick="deleteShowAction"
-                android:text="@string/delete_show_btn_string"
-                style="@style/button_font_style" />
+                android:text="@string/delete_show_btn_string" />
 
             <Button
                 android:id="@+id/cancel_edit_show_activity_btn"
+                style="@style/non_italic_blue_button_style"
                 android:onClick="cancelEditShow"
-                android:text="@string/cancel_show_edit_string"
-                style="@style/button_font_style" />
+                android:text="@string/cancel_show_edit_string" />
 
             <Button
                 android:id="@+id/save_show_edits_btn"
+                style="@style/non_italic_blue_button_style"
                 android:onClick="saveShowChangesAction"
-                android:text="@string/save_show_changes_btn_string"
-                style="@style/button_font_style" />
+                android:text="@string/save_show_changes_btn_string" />
         </TableRow>
     </TableLayout>
 </LinearLayout>

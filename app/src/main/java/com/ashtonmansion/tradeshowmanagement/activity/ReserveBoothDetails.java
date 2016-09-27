@@ -159,7 +159,6 @@ public class ReserveBoothDetails extends AppCompatActivity {
             ////// SPAN NONSENSE
             TableRow.LayoutParams params = new TableRow.LayoutParams();
             params.span = 2;
-            params.topMargin = 30;
             params.gravity = Gravity.CENTER_HORIZONTAL;
             reserveThroughRegisterWarningRow.addView(reserveThroughRegisterTv, params);
             reserveThroughRegisterWarningRow.setVisibility(View.VISIBLE);
@@ -462,7 +461,11 @@ public class ReserveBoothDetails extends AppCompatActivity {
         TextView boothReservationSizeTV = (TextView) findViewById(R.id.booth_reservation_details_size);
         TextView boothReservationAreaTV = (TextView) findViewById(R.id.booth_reservation_details_area);
         TextView boothReservationTypeTV = (TextView) findViewById(R.id.booth_reservation_details_type);
-
+        ////// HANDLE FONTS
+        boothReservationSizeTV.setTextAppearance(reserveBoothDetailsActivityContext, R.style.large_table_row_font_station);
+        boothReservationAreaTV.setTextAppearance(reserveBoothDetailsActivityContext, R.style.large_table_row_font_station);
+        boothReservationTypeTV.setTextAppearance(reserveBoothDetailsActivityContext, R.style.large_table_row_font_station);
+        ////// POPULATE DATA
         if (sizeTag != null) {
             String unformattedSizeTagName = GlobalUtils.getUnformattedTagName(sizeTag.getName(), "Size");
             if (unformattedSizeTagName.length() > 0) {

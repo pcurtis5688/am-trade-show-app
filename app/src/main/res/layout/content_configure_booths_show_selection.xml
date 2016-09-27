@@ -23,10 +23,11 @@
             <TableRow>
 
                 <TextView
-                    android:text="@string/configure_booth_show_selection_string"
-                    style="@style/activity_header_style" />
+                    style="@style/activity_header_style"
+                    android:layout_marginBottom="@dimen/dimen_25dp"
+                    android:text="@string/configure_booth_show_selection_string" />
             </TableRow>
-
+            f
             <TableRow>
 
                 <TableLayout

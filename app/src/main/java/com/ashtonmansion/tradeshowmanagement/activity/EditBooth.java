@@ -8,12 +8,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,15 +25,10 @@ import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.ServiceException;
-import com.clover.sdk.v3.base.Reference;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
-import com.clover.sdk.v3.inventory.PriceType;
 import com.clover.sdk.v3.inventory.Tag;
-import com.clover.sdk.v3.order.LineItem;
-import com.clover.sdk.v3.order.Order;
 import com.clover.sdk.v3.order.OrderConnector;
-import com.clover.sdk.v3.payments.Refund;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -140,31 +133,6 @@ public class EditBooth extends AppCompatActivity {
                 saveBoothChangesAction();
             }
         });
-//        setBoothAvailableBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                //setBoothAvailableAction();
-//                PopupMenu popupMenu = new PopupMenu(editBoothActivityContext, findViewById(R.id.set_booth_available_action_btn));
-//                popupMenu.getMenuInflater().inflate(R.menu.popup_menu_booth_availability, popupMenu.getMenu());
-//                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//                    @Override
-//                    public boolean onMenuItemClick(MenuItem menuItem) {
-//                        if (menuItem.getTitle().toString().equalsIgnoreCase("Refund entire order")) {
-//                            SET_AVAILABLE_ACTION = "REFUNDORDER";
-//                            setBoothAvailableAction();
-//                        } else if (menuItem.getTitle().toString().equalsIgnoreCase("Remove Booth, Add Generic, Re-open Order")) {
-//                            SET_AVAILABLE_ACTION = "SWAPANDREOPEN";
-//                            setBoothAvailableAction();
-//                        } else if (menuItem.getTitle().toString().equalsIgnoreCase("Delete Order and Make Available")) {
-//                            SET_AVAILABLE_ACTION = "DELETEORDER";
-//                            setBoothAvailableAction();
-//                        }
-//                        return true;
-//                    }
-//                });
-//                popupMenu.show();
-//            }
-//        });
         setBoothAvailableBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -281,7 +249,6 @@ public class EditBooth extends AppCompatActivity {
     private class UpdateBoothTask extends AsyncTask<Void, Void, Void> {
         private ProgressDialog progressDialog;
         /////// CLOVER CONNECTION
-        private Account merchantAccount;
         private InventoryConnector inventoryConnector;
         /////// SELECTED BOOTH DATA
         private Item boothToUpdate;
@@ -304,7 +271,6 @@ public class EditBooth extends AppCompatActivity {
             boothIdInStringList = new ArrayList<>();
             boothIdInStringList.add(boothIdString);
             editBoothNumberFieldData = editBoothNumberField.getText().toString();
-            //// TODO: 9/8/2016 price handling here
             editBoothPriceFieldData = editBoothPriceField.getText().toString();
             editBoothSizeFieldData = editBoothSizeField.getText().toString();
             editBoothAreaFieldData = editBoothAreaField.getText().toString();
@@ -321,15 +287,14 @@ public class EditBooth extends AppCompatActivity {
             sizeTag.setName(GlobalUtils.getFormattedTagName(editBoothSizeFieldData, "Size"));
             areaTag.setName(GlobalUtils.getFormattedTagName(editBoothAreaFieldData, "Area"));
             typeTag.setName(GlobalUtils.getFormattedTagName(editBoothTypeFieldData, "Type"));
+            ////// INIT CLOVER CONNECTIONS
+            inventoryConnector = new InventoryConnector(editBoothActivityContext, CloverAccount.getAccount(editBoothActivityContext), null);
+            inventoryConnector.connect();
         }
 
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                merchantAccount = CloverAccount.getAccount(editBoothActivityContext);
-                inventoryConnector = new InventoryConnector(editBoothActivityContext, merchantAccount, null);
-                inventoryConnector.connect();
-
                 //////////BOOTH UPDATE PROCESS
                 boothToUpdate = inventoryConnector.getItem(booth.getId());
                 boothToUpdate.setName(getResources().getString(R.string.booth_name_string, editBoothNumberFieldData, editBoothSizeFieldData, editBoothAreaFieldData, editBoothTypeFieldData));
@@ -360,8 +325,6 @@ public class EditBooth extends AppCompatActivity {
                 Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
             } catch (SQLiteException e2) {
                 Log.e("SQLiteExcptn: ", e2.getClass().getName() + " - " + e2.getMessage());
-            } finally {
-                inventoryConnector.disconnect();
             }
             return null;
         }
@@ -369,6 +332,7 @@ public class EditBooth extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
+            inventoryConnector.disconnect();
             progressDialog.dismiss();
             finish();
             Toast.makeText(editBoothActivityContext, "Booth Updated!", Toast.LENGTH_LONG).show();

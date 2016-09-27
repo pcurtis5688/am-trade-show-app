@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
 import com.ashtonmansion.tradeshowmanagement.HomeActivity;
+import com.ashtonmansion.tradeshowmanagement.util.BoothWithTags;
 import com.ashtonmansion.tradeshowmanagement.util.GlobalUtils;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
@@ -157,7 +158,7 @@ public class ConfigureBooths extends AppCompatActivity
         ////// not really sure.
         Button boothFilterButton = new Button(configureBoothsActivityContext);
         boothFilterButton.setText(getResources().getString(R.string.configure_show_booths_filter_btn_text));
-        boothFilterButton.setTextAppearance(configureBoothsActivityContext, R.style.button_font_style);
+        boothFilterButton.setTextAppearance(configureBoothsActivityContext, R.style.non_italic_blue_button_style);
         boothFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -181,8 +182,6 @@ public class ConfigureBooths extends AppCompatActivity
 
         if (boothWithTagsList != null && boothWithTagsList.size() > 0) {
             for (final BoothWithTags boothWithTags : boothWithTagsList) {
-                final BoothWithTags finalizedBoothWithTagsItem = boothWithTags;
-
                 ///// CREATE TEXT VIEWS
                 TableRow newBoothRow = new TableRow(configureBoothsActivityContext);
                 TextView boothNumberTv = new TextView(configureBoothsActivityContext);
@@ -199,18 +198,31 @@ public class ConfigureBooths extends AppCompatActivity
                 boothAreaTv.setTextAppearance(configureBoothsActivityContext, R.style.large_table_row_font_station);
                 boothTypeTv.setTextAppearance(configureBoothsActivityContext, R.style.large_table_row_font_station);
 
-                ///// SET ROW DATA
-                boothNumberTv.setText(boothWithTags.booth.getSku());
-                boothPriceTv.setText(GlobalUtils.getFormattedPriceStringFromLong(boothWithTags.booth.getPrice()));
-                boothSizeTv.setText(boothWithTags.getSizeTag());
-                boothAreaTv.setText(boothWithTags.getAreaTag());
-                boothTypeTv.setText(boothWithTags.getTypeTag());
+                ////// SET ROW DATA
+                boothNumberTv.setText(boothWithTags.getBooth().getSku());
+                boothPriceTv.setText(GlobalUtils.getFormattedPriceStringFromLong(boothWithTags.getBooth().getPrice()));
+                ////// HANDLE TAG DATA
+                if (null != boothWithTags.getUnformattedSize() && !boothWithTags.getUnformattedSize().isEmpty()) {
+                    boothSizeTv.setText(boothWithTags.getUnformattedSize());
+                } else {
+                    boothSizeTv.setText("N/A");
+                }
+                if (null != boothWithTags.getUnformattedArea() && !boothWithTags.getUnformattedArea().isEmpty()) {
+                    boothAreaTv.setText(boothWithTags.getUnformattedArea());
+                } else {
+                    boothAreaTv.setText("N/A");
+                }
+                if (null != boothWithTags.getUnformattedType() && !boothWithTags.getUnformattedType().isEmpty()) {
+                    boothTypeTv.setText(boothWithTags.getUnformattedType());
+                } else {
+                    boothTypeTv.setText("N/A");
+                }
 
-                if (boothWithTags.booth.getCode().equalsIgnoreCase("AVAILABLE")) {
+                if (boothWithTags.getBooth().getCode().equalsIgnoreCase("AVAILABLE")) {
                     boothAvailabilityTv.setText(getResources().getString(R.string.booth_reservation_available_string));
                     boothAvailabilityTv.setTextAppearance(configureBoothsActivityContext, R.style.available_booth_style);
                 } else {
-                    boothAvailabilityTv.setText(boothWithTags.booth.getCode());
+                    boothAvailabilityTv.setText(boothWithTags.getBooth().getCode());
                     boothAvailabilityTv.setTextAppearance(configureBoothsActivityContext, R.style.reserved_booth_style);
                 }
 
@@ -220,10 +232,9 @@ public class ConfigureBooths extends AppCompatActivity
                 editBoothButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        editBoothAction(boothWithTags.booth);
+                        editBoothAction(boothWithTags);
                     }
                 });
-
                 ///// ADD NEW ROW TO BOOTH CONFIG TABLE
                 newBoothRow.addView(boothNumberTv);
                 newBoothRow.addView(boothPriceTv);
@@ -257,7 +268,7 @@ public class ConfigureBooths extends AppCompatActivity
                 .
 
                         getString(R.string.action_create_new_booth_string));
-        addBoothButton.setTextAppearance(configureBoothsActivityContext, R.style.button_font_style);
+        addBoothButton.setTextAppearance(configureBoothsActivityContext, R.style.non_italic_blue_button_style);
         addBoothButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -273,9 +284,9 @@ public class ConfigureBooths extends AppCompatActivity
         showTable.addView(addBoothButtonRow);
     }
 
-    private void editBoothAction(Item booth) {
+    private void editBoothAction(BoothWithTags boothWithTags) {
         Intent editBoothIntent = new Intent(configureBoothsActivityContext, EditBooth.class);
-        editBoothIntent.putExtra("booth", booth);
+        editBoothIntent.putExtra("booth", boothWithTags.getBooth());
         startActivity(editBoothIntent);
     }
 
@@ -292,7 +303,7 @@ public class ConfigureBooths extends AppCompatActivity
             lastSortedBy = "boothNumber";
             Collections.sort(boothWithTagsList, new Comparator<BoothWithTags>() {
                 public int compare(BoothWithTags boothWithTags1, BoothWithTags boothWithTags2) {
-                    return (boothWithTags1.booth.getSku().compareTo(boothWithTags2.booth.getSku()));
+                    return (boothWithTags1.getBooth().getSku().compareTo(boothWithTags2.getBooth().getSku()));
                 }
             });
         }
@@ -306,7 +317,7 @@ public class ConfigureBooths extends AppCompatActivity
             lastSortedBy = "boothPrice";
             Collections.sort(boothWithTagsList, new Comparator<BoothWithTags>() {
                 public int compare(BoothWithTags boothWithTags1, BoothWithTags boothWithTags2) {
-                    return (boothWithTags1.booth.getPrice().compareTo(boothWithTags2.booth.getPrice()));
+                    return (boothWithTags1.getBooth().getPrice().compareTo(boothWithTags2.getBooth().getPrice()));
                 }
             });
         }
@@ -320,7 +331,7 @@ public class ConfigureBooths extends AppCompatActivity
             lastSortedBy = "boothAvailability";
             Collections.sort(boothWithTagsList, new Comparator<BoothWithTags>() {
                 public int compare(BoothWithTags boothWithTags1, BoothWithTags boothWithTags2) {
-                    return (boothWithTags1.booth.getCode().compareTo(boothWithTags2.booth.getCode()));
+                    return (boothWithTags1.getBooth().getCode().compareTo(boothWithTags2.getBooth().getCode()));
                 }
             });
         }
@@ -334,7 +345,7 @@ public class ConfigureBooths extends AppCompatActivity
             lastSortedBy = "sizeTag";
             Collections.sort(boothWithTagsList, new Comparator<BoothWithTags>() {
                 public int compare(BoothWithTags boothWithTags1, BoothWithTags boothWithTags2) {
-                    return (boothWithTags1.getSizeTag().compareTo(boothWithTags2.getSizeTag()));
+                    return (boothWithTags1.getSizeTag().getName().compareTo(boothWithTags2.getSizeTag().getName()));
                 }
             });
         }
@@ -348,7 +359,7 @@ public class ConfigureBooths extends AppCompatActivity
             lastSortedBy = "areaTag";
             Collections.sort(boothWithTagsList, new Comparator<BoothWithTags>() {
                 public int compare(BoothWithTags boothWithTags1, BoothWithTags boothWithTags2) {
-                    return (boothWithTags1.getAreaTag().compareTo(boothWithTags2.getAreaTag()));
+                    return (boothWithTags1.getUnformattedArea().compareTo(boothWithTags2.getUnformattedArea()));
                 }
             });
         }
@@ -362,36 +373,75 @@ public class ConfigureBooths extends AppCompatActivity
             lastSortedBy = "typeTag";
             Collections.sort(boothWithTagsList, new Comparator<BoothWithTags>() {
                 public int compare(BoothWithTags boothWithTags1, BoothWithTags boothWithTags2) {
-                    return (boothWithTags1.getTypeTag().compareTo(boothWithTags2.getTypeTag()));
+                    return (boothWithTags1.getUnformattedType().compareTo(boothWithTags2.getUnformattedType()));
                 }
             });
         }
         populateBoothsForShowTable();
     }
 
-    private void processBoothWithTagsList() {
-        for (BoothWithTags boothWithTags : boothWithTagsList) {
-            for (Tag currentTag : boothWithTags.booth.getTags()) {
-                if (!currentTag.getName().contains(" [Show]")) {
-                    if (currentTag.getName().substring(0, 4).equalsIgnoreCase("size")) {
-                        boothWithTags.setSizeTag(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Size"));
-                    } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("area")) {
-                        boothWithTags.setAreaTag(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Area"));
-                    } else if (currentTag.getName().substring(0, 4).equalsIgnoreCase("type")) {
-                        boothWithTags.setTypeTag(GlobalUtils.getUnformattedTagName(currentTag.getName(), "Type"));
-                    }
-                }
-            }
-            if (null == boothWithTags.getSizeTag() || boothWithTags.getSizeTag().equalsIgnoreCase("")){
-                boothWithTags.setSizeTag("N/A");
-            }
-            if (null == boothWithTags.getAreaTag() || boothWithTags.getAreaTag().equalsIgnoreCase("")){
-                boothWithTags.setAreaTag("N/A");
-            }
-            if (null == boothWithTags.getTypeTag() || boothWithTags.getTypeTag().equalsIgnoreCase("")){
-                boothWithTags.setTypeTag("N/A");
-            }
+    ////// NAVIGATION METHODS
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.configure_booths_drawerlayout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_configure_booths, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == R.id.action_create_new_booth_option) {
+            Intent createBoothIntent = new Intent(configureBoothsActivityContext, CreateBooth.class);
+            createBoothIntent.putExtra("show", show);
+            startActivity(createBoothIntent);
+            return true;
+        } else if (id == R.id.action_app_settings) {
+            Intent applicationSettingsIntent = new Intent(configureBoothsActivityContext, ApplicationSettings.class);
+            startActivity(applicationSettingsIntent);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_home_btn) {
+            Intent homeActivityIntent = new Intent(configureBoothsActivityContext, HomeActivity.class);
+            startActivity(homeActivityIntent);
+        } else if (id == R.id.nav_show_setup_btn) {
+            Intent showSetupIntent = new Intent(configureBoothsActivityContext, TradeShows.class);
+            startActivity(showSetupIntent);
+        } else if (id == R.id.nav_config_booths_btn) {
+            // nothing ; already in activity
+        } else if (id == R.id.nav_make_reservation_btn) {
+            Intent makeReservationIntent = new Intent(configureBoothsActivityContext, BoothReservationShowSelection.class);
+            startActivity(makeReservationIntent);
+        } else if (id == R.id.nav_app_settings_btn) {
+            Intent applicationSettingsIntent = new Intent(configureBoothsActivityContext, ApplicationSettings.class);
+            startActivity(applicationSettingsIntent);
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.configure_booths_drawerlayout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     private class GetShowBoothsTask extends AsyncTask<Void, Void, Void> {
@@ -440,116 +490,8 @@ public class ConfigureBooths extends AppCompatActivity
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
             inventoryConnector.disconnect();
-            processBoothWithTagsList();
             populateBoothsForShowTable();
             progressDialog.dismiss();
         }
-    }
-
-    private class BoothWithTags {
-        private Item booth;
-        private String sizeTag;
-        private String areaTag;
-        private String typeTag;
-
-        private BoothWithTags(Item booth) {
-            this.booth = booth;
-        }
-
-        private BoothWithTags(Item booth, String sizeTag, String areaTag, String typeTag) {
-            this.booth = booth;
-            this.sizeTag = sizeTag;
-            this.areaTag = areaTag;
-            this.typeTag = typeTag;
-        }
-
-        public String getSizeTag() {
-            return sizeTag;
-        }
-
-        public void setSizeTag(String sizeTag) {
-            this.sizeTag = sizeTag;
-        }
-
-        public String getAreaTag() {
-            return areaTag;
-        }
-
-        public void setAreaTag(String areaTag) {
-            this.areaTag = areaTag;
-        }
-
-        public String getTypeTag() {
-            return typeTag;
-        }
-
-        public void setTypeTag(String typeTag) {
-            this.typeTag = typeTag;
-        }
-    }
-
-    ////// NAVIGATION METHODS
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.configure_booths_drawerlayout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_configure_booths, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        if (id == R.id.action_create_new_booth_option) {
-            Intent createBoothIntent = new Intent(configureBoothsActivityContext, CreateBooth.class);
-            createBoothIntent.putExtra("show", show);
-            startActivity(createBoothIntent);
-            return true;
-        } else if (id == R.id.action_app_settings) {
-            Intent applicationSettingsIntent = new Intent(configureBoothsActivityContext, ApplicationSettings.class);
-            startActivity(applicationSettingsIntent);
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_home_btn) {
-            Intent homeActivityIntent = new Intent(configureBoothsActivityContext, HomeActivity.class);
-            startActivity(homeActivityIntent);
-        } else if (id == R.id.nav_show_setup_btn) {
-            Intent showSetupIntent = new Intent(configureBoothsActivityContext, TradeShows.class);
-            startActivity(showSetupIntent);
-        } else if (id == R.id.nav_config_booths_btn) {
-            // nothing ; already in activity
-        } else if (id == R.id.nav_make_reservation_btn) {
-            Intent makeReservationIntent = new Intent(configureBoothsActivityContext, BoothReservationShowSelection.class);
-            startActivity(makeReservationIntent);
-        } else if (id == R.id.nav_app_settings_btn) {
-            Intent applicationSettingsIntent = new Intent(configureBoothsActivityContext, ApplicationSettings.class);
-            startActivity(applicationSettingsIntent);
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.configure_booths_drawerlayout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 }

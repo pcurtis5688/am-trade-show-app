@@ -360,6 +360,13 @@
     <string name="detect_and_delete_booths">Delete All Detected Booths</string>
     <string name="no_booths_detected_zero_deleted_msg">No Booths Deleted; none detected</string>
     <string name="all_detected_booths_deleted">All Detected Booths Deleted: %1$d booth(s)</string>
+    <string name="booths_deleted_log_message">Booth Names Deleted:</string>
+    <!-- DELETE UNUSED BOOTH SAT TAGS -->
+    <string name="delete_unused_booth_SAT_tags_string">Delete Unused Booth Size, Area, Type Tags</string>
+    <string name="deleted_SAT_tags_found_and_number">Deleted Unused Size, Area, Type Tags - Number: %1$d</string>
+    <string name="no_unused_SAT_tags_found">No Unused Size, Area, Type tags found - Congratulations!</string>
+    <!-- APP SETTINGS LOG STRINGS -->
+    <string name="booths_with_no_skus_detected">Booths without Booth Numbers were detected&#8230; IDs are:</string>
 
     <!-- SELECT BOOTH ACTIVITY BEGUN FROM CLOVER STRINGS -->
     <string name="title_activity_select_booth">Select A Booth</string>
