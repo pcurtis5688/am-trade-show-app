@@ -15,6 +15,8 @@ import com.ashtonmansion.amtradeshowmanagement.R;
 import com.ashtonmansion.tradeshowmanagement.util.GlobalUtils;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.tender.TenderConnector;
+import com.clover.sdk.v3.base.Reference;
+import com.clover.sdk.v3.inventory.Category;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
 import com.clover.sdk.v3.inventory.Tag;
@@ -41,12 +43,20 @@ public class ApplicationSettings extends AppCompatActivity {
         appSettingsLogTv = (TextView) findViewById(R.id.app_settings_log_tv);
 
         ////// FETCH BUTTONS
+        final Button createSelectBoothItemBtn = (Button) findViewById(R.id.create_select_booth_item_and_category_btn);
         final Button checkBoothIntegrityBtn = (Button) findViewById(R.id.check_booth_integrity_btn);
         final Button validateBoothNamesBtn = (Button) findViewById(R.id.validate_booth_names_btn);
         final Button deleteAllDetectedBoothsBtn = (Button) findViewById(R.id.delete_detected_booths_btn);
         final Button deleteUnusedBoothSATTagsBtn = (Button) findViewById(R.id.delete_unused_booth_SAT_tags);
 
         ////// ADD BUTTON LISTENERS
+        createSelectBoothItemBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createSelectBoothButtonInInventory();
+                createSelectBoothItemBtn.setEnabled(false);
+            }
+        });
         checkBoothIntegrityBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,13 +82,114 @@ public class ApplicationSettings extends AppCompatActivity {
         deleteUnusedBoothSATTagsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteAllUnusedBoothTags();
+                deleteAllUnusedBoothLabels();
                 deleteUnusedBoothSATTagsBtn.setEnabled(false);
             }
         });
     }
 
-    private boolean checkBoothIntegrityAndCorrect() {
+    private void createSelectBoothButtonInInventory() {
+        new AsyncTask<Void, Void, Void>() {
+            private InventoryConnector inventoryConnector;
+            private List<Category> categoryList;
+            private boolean hasSelectBoothItem;
+            private boolean selectBoothHasBoothsCategory;
+            private boolean hasBoothsCategory;
+            private String existingSelectBoothItemID;
+            private Category boothsCategory;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                ////// INITIALIZE VARS
+                categoryList = new ArrayList<>();
+                hasSelectBoothItem = false;
+                selectBoothHasBoothsCategory = false;
+                hasBoothsCategory = false;
+                boothsCategory = null;
+                ////// INITIALIZE CLOVER CONNECTIONS
+                inventoryConnector = new InventoryConnector(applicationSettingsActivityContext, CloverAccount.getAccount(applicationSettingsActivityContext), null);
+                inventoryConnector.connect();
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                try {
+                    categoryList = inventoryConnector.getCategories();
+                    ////// FIGURE OUT THREE CASES, HAS ITEM, HAS CATEGORY, AND IF TIED
+                    for (Item inventoryItem : inventoryConnector.getItems()) {
+                        if ((inventoryItem.getName().toLowerCase().startsWith("select booth"))) {
+                            hasSelectBoothItem = true;
+                            existingSelectBoothItemID = inventoryItem.getId();
+                            List<Category> inventoryItemCats = inventoryConnector.getItem(inventoryItem.getId()).getCategories();
+                            if (null != inventoryItemCats && inventoryItemCats.size() > 0) {
+                                for (Category checkCategory : inventoryItem.getCategories()) {
+                                    if ((checkCategory.getName().toLowerCase().startsWith("booths"))) {
+                                        selectBoothHasBoothsCategory = true;
+                                        boothsCategory = checkCategory;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (!selectBoothHasBoothsCategory) {
+                        if (categoryList.size() > 0) {
+                            for (Category category : categoryList) {
+                                if ((category.getName().replaceAll("\\s", "").equalsIgnoreCase("booths"))) {
+                                    hasBoothsCategory = true;
+                                    boothsCategory = category;
+                                }
+                            }
+                        }
+                    }
+                    ////// HANDLE THE THREE CASES
+                    if (!hasSelectBoothItem) {
+                        ////// PREP THE SELECT BOOTH ITEM
+                        Item selectBoothItem = new Item();
+                        selectBoothItem.setName("Select Booth");
+                        selectBoothItem.setPrice((long) 100);
+                        selectBoothItem.setCost((long) 100);
+                        selectBoothItem = inventoryConnector.createItem(selectBoothItem);
+                        if (hasBoothsCategory) {
+                            inventoryConnector.addItemToCategory(selectBoothItem.getId(), boothsCategory.getId());
+                        } else {
+                            boothsCategory = new Category();
+                            boothsCategory.setName("Booths");
+                            boothsCategory = inventoryConnector.createCategory(boothsCategory);
+                            inventoryConnector.addItemToCategory(selectBoothItem.getId(), boothsCategory.getId());
+                        }
+                    } else if (hasSelectBoothItem && hasBoothsCategory && !selectBoothHasBoothsCategory) {
+                        inventoryConnector.addItemToCategory(existingSelectBoothItemID, boothsCategory.getId());
+                    } else if (hasSelectBoothItem && !hasBoothsCategory) {
+                        boothsCategory = new Category();
+                        boothsCategory.setSortOrder(0);
+                        Reference existingSelectBoothReference = new Reference();
+                        existingSelectBoothReference.setId(existingSelectBoothItemID);
+                        List<Reference> selectBoothRefInList = new ArrayList<>();
+                        selectBoothRefInList.add(existingSelectBoothReference);
+                        boothsCategory.setItems(selectBoothRefInList);
+                        boothsCategory.setName("Booths");
+                        boothsCategory = inventoryConnector.createCategory(boothsCategory);
+                        inventoryConnector.addItemToCategory(existingSelectBoothItemID, boothsCategory.getId());
+                    }
+                } catch (Exception e) {
+                    Log.d("Excptn: ", e.getMessage(), e.getCause());
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                super.onPostExecute(result);
+                inventoryConnector.disconnect();
+                inventoryConnector = null;
+                Toast.makeText(applicationSettingsActivityContext, getResources().getString(R.string.successfully_created_select_booth_item), Toast.LENGTH_LONG).show();
+            }
+        }.execute();
+    }
+
+    private void checkBoothIntegrityAndCorrect() {
         new AsyncTask<Void, Void, Void>() {
             private InventoryConnector inventoryConnector;
             private OrderConnector orderConnector;
@@ -132,8 +243,6 @@ public class ApplicationSettings extends AppCompatActivity {
                 }
             }
         }.execute();
-
-        return false;
     }
 
     private void validateBoothNamesAndRecreateTags() {
@@ -276,7 +385,7 @@ public class ApplicationSettings extends AppCompatActivity {
         }.execute();
     }
 
-    private void deleteAllUnusedBoothTags() {
+    private void deleteAllUnusedBoothLabels() {
         new AsyncTask<Void, Void, Void>() {
             private InventoryConnector inventoryConnector;
             private List<Tag> allTagsList;
@@ -301,7 +410,8 @@ public class ApplicationSettings extends AppCompatActivity {
                         if (currentTag.getName().toLowerCase().contains("size -")
                                 | currentTag.getName().toLowerCase().contains("area -")
                                 | currentTag.getName().toLowerCase().contains("type -")) {
-                            if (!inventoryConnector.getTag(currentTag.getId()).hasItems()) {
+                            List<Reference> currentTagItemReferencesList = currentTag.getItems();
+                            if (null == currentTagItemReferencesList || currentTagItemReferencesList.size() == 0) {
                                 inventoryConnector.deleteTag(currentTag.getId());
                                 numberDeletedUnusedSATTags++;
                             }

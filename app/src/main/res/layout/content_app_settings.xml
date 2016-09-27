@@ -26,6 +26,16 @@
             android:text="@string/application_settings_string" />
 
         <Button
+            android:id="@+id/create_select_booth_item_and_category_btn"
+            style="@style/app_settings_button_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/admin_button_bg_color"
+            android:text="@string/create_select_booth_item_btn_text"
+            android:textAllCaps="false" />
+
+        <Button
             android:id="@+id/check_booth_integrity_btn"
             style="@style/app_settings_button_style"
             android:layout_width="match_parent"
