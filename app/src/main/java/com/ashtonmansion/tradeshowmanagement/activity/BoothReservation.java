@@ -32,16 +32,16 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class BoothReservation extends AppCompatActivity {
-    ///// CONTEXT AND UI OBJECTS
+    ////// CONTEXT AND UI OBJECTS
     private Context boothReservationActivityContext;
     private TableLayout boothListTable;
     private boolean startedFromApp;
     private String lastSortedBy;
-    ///// DATA VARS
+    ////// DATA VARS
     private Tag show;
     private String showNameForUser;
     private List<BoothWithTags> boothWithTagsList;
-    ///// ORDER DATA BEING PASSED FROM CLOVER CUSTOM TENDER
+    ////// ORDER DATA BEING PASSED FROM CLOVER CUSTOM TENDER
     private String orderID;
 
     @Override
@@ -193,17 +193,16 @@ public class BoothReservation extends AppCompatActivity {
 
                 Button reserveBoothButton = new Button(boothReservationActivityContext);
                 reserveBoothButton.setTextAppearance(boothReservationActivityContext, R.style.row_item_button_style);
-
+                reserveBoothButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        reserveBoothAction(finalizedShowTag, finalizedBooth.getBooth());
+                    }
+                });
                 if (startedFromApp)
                     reserveBoothButton.setText(getResources().getString(R.string.view_booth_details_string));
                 else {
                     reserveBoothButton.setText(getResources().getString(R.string.reserve_booth_button_text));
-                    reserveBoothButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            reserveBoothAction(finalizedShowTag, finalizedBooth.getBooth());
-                        }
-                    });
                     if (!finalizedBooth.getBooth().getCode().equalsIgnoreCase("AVAILABLE")) {
                         reserveBoothButton.setEnabled(false);
                     }
@@ -251,7 +250,16 @@ public class BoothReservation extends AppCompatActivity {
             lastSortedBy = "boothNumber";
             Collections.sort(boothWithTagsList, new Comparator<BoothWithTags>() {
                 public int compare(BoothWithTags boothWithTags1, BoothWithTags boothWithTags2) {
-                    return (boothWithTags1.getBooth().getSku().compareTo(boothWithTags2.getBooth().getSku()));
+                    String sku1NoSpaces = boothWithTags1.getBooth().getSku().replace("\\s", "");
+                    String sku2NoSpaces = boothWithTags2.getBooth().getSku().replace("\\s", "");
+                    int sku1Int = Integer.valueOf(sku1NoSpaces);
+                    int sku2Int = Integer.valueOf(sku2NoSpaces);
+                    String regex = "\\d+";
+                    if (sku1NoSpaces.matches(regex) && sku2NoSpaces.matches(regex)) {
+                        return (sku1Int - sku2Int);
+                    } else {
+                        return (sku1NoSpaces.compareTo(sku2NoSpaces));
+                    }
                 }
             });
         }
@@ -387,6 +395,7 @@ public class BoothReservation extends AppCompatActivity {
             inventoryConnector.disconnect();
             processBoothWithTagsList();
             createBoothSelectionTable();
+            sortBoothListByBoothNo();
             progressDialog.dismiss();
         }
     }
