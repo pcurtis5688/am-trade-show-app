@@ -39,6 +39,9 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
             getItemNameTask.setData(context, itemID);
             getItemNameTask.execute();
         }
+
+        //String test = intent.getAction();
+        //Log.d("Intent Action Name: ", test);
     }
 
     @Override

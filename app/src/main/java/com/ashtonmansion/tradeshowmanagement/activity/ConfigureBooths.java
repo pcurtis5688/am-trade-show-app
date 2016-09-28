@@ -282,6 +282,7 @@ public class ConfigureBooths extends AppCompatActivity
         addBoothButton.setLayoutParams(params);
         addBoothButtonRow.addView(addBoothButton);
         showTable.addView(addBoothButtonRow);
+        ////// SORT BY BOOTH NO INITIALLY
     }
 
     private void editBoothAction(BoothWithTags boothWithTags) {
@@ -303,7 +304,16 @@ public class ConfigureBooths extends AppCompatActivity
             lastSortedBy = "boothNumber";
             Collections.sort(boothWithTagsList, new Comparator<BoothWithTags>() {
                 public int compare(BoothWithTags boothWithTags1, BoothWithTags boothWithTags2) {
-                    return (boothWithTags1.getBooth().getSku().compareTo(boothWithTags2.getBooth().getSku()));
+                    String sku1NoSpaces = boothWithTags1.getBooth().getSku().replace("\\s", "");
+                    String sku2NoSpaces = boothWithTags2.getBooth().getSku().replace("\\s", "");
+                    int sku1Int = Integer.valueOf(sku1NoSpaces);
+                    int sku2Int = Integer.valueOf(sku2NoSpaces);
+                    String regex = "\\d+";
+                    if (sku1NoSpaces.matches(regex) && sku2NoSpaces.matches(regex)) {
+                        return (sku1Int - sku2Int);
+                    } else {
+                        return (sku1NoSpaces.compareTo(sku2NoSpaces));
+                    }
                 }
             });
         }
@@ -491,6 +501,7 @@ public class ConfigureBooths extends AppCompatActivity
             super.onPostExecute(result);
             inventoryConnector.disconnect();
             populateBoothsForShowTable();
+            sortBoothListByBoothNo();
             progressDialog.dismiss();
         }
     }

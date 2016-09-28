@@ -158,6 +158,7 @@ public class BoothReservation extends AppCompatActivity {
         if (boothWithTagsList.size() > 0) {
             for (BoothWithTags boothWithTags : boothWithTagsList) {
                 final BoothWithTags finalizedBooth = boothWithTags;
+                final Tag finalizedShowTag = show;
                 Log.d("boothwithtagsID: ", boothWithTags.getBooth().getId());
                 Log.d("finalizedboothID: ", finalizedBooth.getBooth().getId());
                 /////////CREATE NEW ROW AND NECESSARY TEXTVIEWS
@@ -191,18 +192,18 @@ public class BoothReservation extends AppCompatActivity {
                 }
 
                 Button reserveBoothButton = new Button(boothReservationActivityContext);
+                reserveBoothButton.setTextAppearance(boothReservationActivityContext, R.style.row_item_button_style);
+
                 if (startedFromApp)
                     reserveBoothButton.setText(getResources().getString(R.string.view_booth_details_string));
-                else
+                else {
                     reserveBoothButton.setText(getResources().getString(R.string.reserve_booth_button_text));
-                reserveBoothButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        reserveBoothAction(show, finalizedBooth.getBooth());
-                    }
-                });
-                reserveBoothButton.setTextAppearance(boothReservationActivityContext, R.style.row_item_button_style);
-                if (!startedFromApp) {
+                    reserveBoothButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            reserveBoothAction(finalizedShowTag, finalizedBooth.getBooth());
+                        }
+                    });
                     if (!finalizedBooth.getBooth().getCode().equalsIgnoreCase("AVAILABLE")) {
                         reserveBoothButton.setEnabled(false);
                     }
