@@ -410,6 +410,7 @@ public class ApplicationSettings extends AppCompatActivity {
                         if (currentTag.getName().toLowerCase().contains("size -")
                                 | currentTag.getName().toLowerCase().contains("area -")
                                 | currentTag.getName().toLowerCase().contains("type -")) {
+                            Tag tag = currentTag;
                             List<Reference> currentTagItemReferencesList = currentTag.getItems();
                             if (null == currentTagItemReferencesList || currentTagItemReferencesList.size() == 0) {
                                 inventoryConnector.deleteTag(currentTag.getId());
