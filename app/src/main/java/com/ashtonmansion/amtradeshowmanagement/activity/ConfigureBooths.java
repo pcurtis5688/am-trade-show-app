@@ -3,6 +3,7 @@ package com.ashtonmansion.amtradeshowmanagement.activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.RemoteException;
 import android.support.design.widget.NavigationView;
@@ -20,6 +21,7 @@ import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
 import com.ashtonmansion.amtradeshowmanagement.util.BoothWithTags;
@@ -42,6 +44,11 @@ public class ConfigureBooths extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     /////CONTEXT AND UI FIELDS
     private Context configureBoothsActivityContext;
+    private String platform;
+    private int tableRowHeaderStyleId;
+    private int tableRowStyleId;
+    private int availableBoothStyle;
+    private int reservedBoothStyle;
     private TableLayout showTable;
     private String lastSortedBy;
     /////DATA VARS
@@ -67,6 +74,7 @@ public class ConfigureBooths extends AppCompatActivity
 
         //DATA AND ACTIVITY WORK
         configureBoothsActivityContext = this;
+        handleSizing();
         showTable = (TableLayout) findViewById(R.id.booths_for_show_table);
         lastSortedBy = "none";
 
@@ -104,17 +112,17 @@ public class ConfigureBooths extends AppCompatActivity
 
         ////// SET TEXT AND APPEARANCES
         boothNumberHeaderTv.setText(getResources().getString(R.string.configure_show_booths_number_header));
-        boothNumberHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style_sortable);
+        boothNumberHeaderTv.setTextAppearance(configureBoothsActivityContext, tableRowHeaderStyleId);
         boothPriceHeaderTv.setText(getResources().getString(R.string.configure_show_booths_price_header));
-        boothPriceHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style_sortable);
+        boothPriceHeaderTv.setTextAppearance(configureBoothsActivityContext, tableRowHeaderStyleId);
         boothSizeHeaderTv.setText(getResources().getString(R.string.configure_show_booths_size_header));
-        boothSizeHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style_sortable);
+        boothSizeHeaderTv.setTextAppearance(configureBoothsActivityContext, tableRowHeaderStyleId);
         boothAreaHeaderTv.setText(getResources().getString(R.string.configure_show_booths_area_header));
-        boothAreaHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style_sortable);
+        boothAreaHeaderTv.setTextAppearance(configureBoothsActivityContext, tableRowHeaderStyleId);
         boothTypeHeaderTv.setText(getResources().getString(R.string.configure_show_booths_type_header));
-        boothTypeHeaderTv.setTextAppearance(configureBoothsActivityContext, R.style.table_header_text_style_sortable);
+        boothTypeHeaderTv.setTextAppearance(configureBoothsActivityContext, tableRowHeaderStyleId);
         boothAvailabilityTv.setText(getResources().getString(R.string.booth_selection_booth_availability_header));
-        boothAvailabilityTv.setTextAppearance(configureBoothsActivityContext, R.style.span_2_and_table_header_style);
+        boothAvailabilityTv.setTextAppearance(configureBoothsActivityContext, tableRowHeaderStyleId);
 
         ////// ATTACH LISTENERS FOR SORTING PURPOSES
         boothNumberHeaderTv.setOnClickListener(new View.OnClickListener() {
@@ -190,11 +198,11 @@ public class ConfigureBooths extends AppCompatActivity
                 TextView boothAvailabilityTv = new TextView(configureBoothsActivityContext);
 
                 ///// SET FONTS
-                boothNumberTv.setTextAppearance(configureBoothsActivityContext, R.style.large_table_row_font_station);
-                boothPriceTv.setTextAppearance(configureBoothsActivityContext, R.style.large_table_row_font_station);
-                boothSizeTv.setTextAppearance(configureBoothsActivityContext, R.style.large_table_row_font_station);
-                boothAreaTv.setTextAppearance(configureBoothsActivityContext, R.style.large_table_row_font_station);
-                boothTypeTv.setTextAppearance(configureBoothsActivityContext, R.style.large_table_row_font_station);
+                boothNumberTv.setTextAppearance(configureBoothsActivityContext, tableRowStyleId);
+                boothPriceTv.setTextAppearance(configureBoothsActivityContext, tableRowStyleId);
+                boothSizeTv.setTextAppearance(configureBoothsActivityContext, tableRowStyleId);
+                boothAreaTv.setTextAppearance(configureBoothsActivityContext, tableRowStyleId);
+                boothTypeTv.setTextAppearance(configureBoothsActivityContext, tableRowStyleId);
 
                 ////// SET ROW DATA
                 boothNumberTv.setText(boothWithTags.getBooth().getSku());
@@ -218,10 +226,10 @@ public class ConfigureBooths extends AppCompatActivity
 
                 if (boothWithTags.getBooth().getCode().equalsIgnoreCase("AVAILABLE")) {
                     boothAvailabilityTv.setText(getResources().getString(R.string.booth_reservation_available_string));
-                    boothAvailabilityTv.setTextAppearance(configureBoothsActivityContext, R.style.available_booth_style);
+                    boothAvailabilityTv.setTextAppearance(configureBoothsActivityContext, availableBoothStyle);
                 } else {
                     boothAvailabilityTv.setText(boothWithTags.getBooth().getCode());
-                    boothAvailabilityTv.setTextAppearance(configureBoothsActivityContext, R.style.reserved_booth_style);
+                    boothAvailabilityTv.setTextAppearance(configureBoothsActivityContext, reservedBoothStyle);
                 }
 
                 Button editBoothButton = new Button(configureBoothsActivityContext);
@@ -450,6 +458,21 @@ public class ConfigureBooths extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.configure_booths_drawerlayout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void handleSizing() {
+        platform = GlobalUtils.determinePlatform(getApplicationContext());
+        if (platform.equalsIgnoreCase("station")) {
+            tableRowHeaderStyleId = R.style.table_header_text_style_station;
+            tableRowStyleId = R.style.large_table_row_font_station;
+            availableBoothStyle = R.style.available_booth_style_station;
+            reservedBoothStyle = R.style.reserved_booth_style_station;
+        } else {
+            tableRowHeaderStyleId = R.style.table_header_text_style_mobile;
+            tableRowStyleId = R.style.small_table_row_font_mobile;
+            availableBoothStyle = R.style.available_booth_style_mobile;
+            reservedBoothStyle = R.style.reserved_booth_style_mobile;
+        }
     }
 
     private class GetShowBoothsTask extends AsyncTask<Void, Void, Void> {

@@ -3,6 +3,7 @@ package com.ashtonmansion.amtradeshowmanagement.activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
 import com.ashtonmansion.amtradeshowmanagement.util.BoothWithTags;
@@ -35,6 +37,11 @@ import java.util.ListIterator;
 public class BoothReservation extends AppCompatActivity {
     ////// CONTEXT AND UI OBJECTS
     private Context boothReservationActivityContext;
+    private String platform;
+    private int tableRowHeaderStyleId;
+    private int tableRowStyleId;
+    private int availableBoothStyle;
+    private int reservedBoothStyle;
     private TableLayout boothListTable;
     private boolean startedFromApp;
     private String lastSortedBy;
@@ -54,6 +61,7 @@ public class BoothReservation extends AppCompatActivity {
 
         //////////////FIELD DEFINITIONS & DATA HANDLING
         boothReservationActivityContext = this;
+        handleSizing();
         boothListTable = (TableLayout) findViewById(R.id.booth_selection_booth_table);
         lastSortedBy = "none";
 
@@ -96,17 +104,17 @@ public class BoothReservation extends AppCompatActivity {
         TextView boothAvailabilityTv = new TextView(boothReservationActivityContext);
 
         boothNumberHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_number_header));
-        boothNumberHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style_sortable);
+        boothNumberHeaderTv.setTextAppearance(boothReservationActivityContext, tableRowHeaderStyleId);
         boothPriceHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_price_header));
-        boothPriceHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style_sortable);
+        boothPriceHeaderTv.setTextAppearance(boothReservationActivityContext, tableRowHeaderStyleId);
         boothSizeHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_size_header));
-        boothSizeHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style_sortable);
+        boothSizeHeaderTv.setTextAppearance(boothReservationActivityContext, tableRowHeaderStyleId);
         boothAreaHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_area_header));
-        boothAreaHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style_sortable);
+        boothAreaHeaderTv.setTextAppearance(boothReservationActivityContext, tableRowHeaderStyleId);
         boothTypeHeaderTv.setText(getResources().getString(R.string.booth_selection_booth_type_header));
-        boothTypeHeaderTv.setTextAppearance(boothReservationActivityContext, R.style.table_header_text_style_sortable);
+        boothTypeHeaderTv.setTextAppearance(boothReservationActivityContext, tableRowHeaderStyleId);
         boothAvailabilityTv.setText(getResources().getString(R.string.booth_selection_booth_availability_header));
-        boothAvailabilityTv.setTextAppearance(boothReservationActivityContext, R.style.span_2_and_table_header_style);
+        boothAvailabilityTv.setTextAppearance(boothReservationActivityContext, tableRowHeaderStyleId);
 
         ////// ADD ACTION LISTENERS TO SORT BY THE CLICKED HEADER
         boothNumberHeaderTv.setOnClickListener(new View.OnClickListener() {
@@ -173,11 +181,11 @@ public class BoothReservation extends AppCompatActivity {
                 TextView boothAvailabilityTv = new TextView(boothReservationActivityContext);
 
                 ///// FONT HANDLING
-                boothNumberTv.setTextAppearance(boothReservationActivityContext, R.style.large_table_row_font_station);
-                boothPriceTv.setTextAppearance(boothReservationActivityContext, R.style.large_table_row_font_station);
-                boothSizeTv.setTextAppearance(boothReservationActivityContext, R.style.large_table_row_font_station);
-                boothAreaTv.setTextAppearance(boothReservationActivityContext, R.style.large_table_row_font_station);
-                boothTypeTv.setTextAppearance(boothReservationActivityContext, R.style.large_table_row_font_station);
+                boothNumberTv.setTextAppearance(boothReservationActivityContext, tableRowStyleId);
+                boothPriceTv.setTextAppearance(boothReservationActivityContext, tableRowStyleId);
+                boothSizeTv.setTextAppearance(boothReservationActivityContext, tableRowStyleId);
+                boothAreaTv.setTextAppearance(boothReservationActivityContext, tableRowStyleId);
+                boothTypeTv.setTextAppearance(boothReservationActivityContext, tableRowStyleId);
 
                 /////////POPULATE TVS / HANDLE ANY PROCESSING
                 boothNumberTv.setText(finalizedBooth.getBooth().getSku());
@@ -187,10 +195,10 @@ public class BoothReservation extends AppCompatActivity {
                 boothTypeTv.setText(finalizedBooth.getUnformattedType());
                 if (finalizedBooth.getBooth().getCode().equalsIgnoreCase("AVAILABLE")) {
                     boothAvailabilityTv.setText(getResources().getString(R.string.booth_reservation_available_string));
-                    boothAvailabilityTv.setTextAppearance(boothReservationActivityContext, R.style.available_booth_style);
+                    boothAvailabilityTv.setTextAppearance(boothReservationActivityContext, availableBoothStyle);
                 } else {
                     boothAvailabilityTv.setText(finalizedBooth.getBooth().getCode());
-                    boothAvailabilityTv.setTextAppearance(boothReservationActivityContext, R.style.reserved_booth_style);
+                    boothAvailabilityTv.setTextAppearance(boothReservationActivityContext, reservedBoothStyle);
                 }
 
                 Button reserveBoothButton = new Button(boothReservationActivityContext);
@@ -352,6 +360,21 @@ public class BoothReservation extends AppCompatActivity {
                     }
                 }
             }
+        }
+    }
+
+    private void handleSizing() {
+        platform = GlobalUtils.determinePlatform(getApplicationContext());
+        if (platform.equalsIgnoreCase("station")) {
+            tableRowHeaderStyleId = R.style.table_header_text_style_station;
+            tableRowStyleId = R.style.large_table_row_font_station;
+            availableBoothStyle = R.style.available_booth_style_station;
+            reservedBoothStyle = R.style.reserved_booth_style_station;
+        } else {
+            tableRowHeaderStyleId = R.style.table_header_text_style_mobile;
+            tableRowStyleId = R.style.small_table_row_font_mobile;
+            availableBoothStyle = R.style.available_booth_style_mobile;
+            reservedBoothStyle = R.style.reserved_booth_style_mobile;
         }
     }
 

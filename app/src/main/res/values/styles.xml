@@ -31,25 +31,11 @@
         <item name="android:textAlignment">center</item>
     </style>
 
-    <style name="table_header_text_style_sortable">
-        <item name="android:textSize">@dimen/dimen_36sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textAlignment">center</item>
-        <item name="android:textColor">@color/matching_header_color</item>
-    </style>
-
     <style name="span_2_and_table_header_style">
         <item name="android:layout_span">2</item>
         <item name="android:textSize">@dimen/dimen_36sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textColor">@color/matching_header_color</item>
-    </style>
-
-    <style name="large_table_row_font_station">
-        <item name="android:textSize">@dimen/dimen_30sp</item>
-        <item name="android:textAlignment">center</item>
-        <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:textColor">@color/matching_header_color</item>
     </style>
 
@@ -130,20 +116,6 @@
         <item name="android:textSize">@dimen/line_item_text_size</item>
     </style>
 
-    <style name="available_booth_style">
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">@dimen/dimen_30sp</item>
-        <item name="android:textAlignment">viewStart</item>
-        <item name="android:textColor">@color/available_booth_color</item>
-    </style>
-
-    <style name="reserved_booth_style">
-        <item name="android:textStyle">bold|italic</item>
-        <item name="android:textSize">@dimen/dimen_30sp</item>
-        <item name="android:textAlignment">viewStart</item>
-        <item name="android:textColor">@color/reserved_booth_color</item>
-    </style>
-
     <style name="existing_customer_lv_style">
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/dimen_30sp</item>
@@ -155,5 +127,63 @@
         <item name="android:textAlignment">textStart</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/dimen_30sp</item>
+    </style>
+
+    <!--STYLES FOR STATION V MOBILE -->
+
+    <style name="table_header_text_style_station">
+        <item name="android:textSize">@dimen/dimen_36sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/matching_header_color</item>
+    </style>
+
+    <style name="table_header_text_style_mobile">
+        <item name="android:textSize">@dimen/dimen_22sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/matching_header_color</item>
+    </style>
+
+    <style name="large_table_row_font_station">
+        <item name="android:textSize">@dimen/dimen_30sp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:textColor">@color/matching_header_color</item>
+    </style>
+
+    <style name="small_table_row_font_mobile">
+        <item name="android:textSize">@dimen/dimen_20sp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:textColor">@color/matching_header_color</item>
+    </style>
+
+    <style name="available_booth_style_station">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/dimen_30sp</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textColor">@color/available_booth_color</item>
+    </style>
+
+    <style name="reserved_booth_style_station">
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:textSize">@dimen/dimen_30sp</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textColor">@color/reserved_booth_color</item>
+    </style>
+
+    <style name="available_booth_style_mobile">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/dimen_30sp</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textColor">@color/available_booth_color</item>
+    </style>
+
+    <style name="reserved_booth_style_mobile">
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:textSize">@dimen/dimen_20sp</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textColor">@color/reserved_booth_color</item>
     </style>
 </resources>

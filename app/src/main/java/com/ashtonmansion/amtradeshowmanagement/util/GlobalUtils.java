@@ -1,6 +1,9 @@
 package com.ashtonmansion.amtradeshowmanagement.util;
 
+import android.content.Context;
+import android.content.res.Configuration;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.clover.sdk.v3.customers.Customer;
 import com.clover.sdk.v3.customers.PhoneNumber;
@@ -146,5 +149,17 @@ public class GlobalUtils {
         String desiredNotesPart = notesPart.substring(0, indexOfShow);
         result.set(3, desiredNotesPart);
         return result;
+    }
+
+    public static String determinePlatform(Context appContext) {
+        String platform = "";
+        if ((appContext.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE) {
+            platform = "mobile";
+        } else if ((appContext.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_XLARGE) {
+            platform = "station";
+        } else {
+            platform = "other";
+        }
+        return platform;
     }
 }

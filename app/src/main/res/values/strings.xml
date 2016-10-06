@@ -229,7 +229,7 @@
     <string name="booth_selection_booth_size_header">Size</string>
     <string name="booth_selection_booth_area_header">Area</string>
     <string name="booth_selection_booth_type_header">Type</string>
-    <string name="booth_selection_booth_availability_header">Availability / Order No.</string>
+    <string name="booth_selection_booth_availability_header">Availability</string>
     <string name="booth_selection_booth_price_header">Price</string>
 (
     <string name="finalize_reservation_btn_text">Finalize Reservation</string>
