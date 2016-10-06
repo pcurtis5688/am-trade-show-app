@@ -1,4 +1,4 @@
-package com.ashtonmansion.tsmanagement1.util;
+package com.ashtonmansion.amtradeshowmanagement.util;
 
 import com.clover.sdk.v3.inventory.Item;
 import com.clover.sdk.v3.inventory.Tag;

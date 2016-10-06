@@ -1,4 +1,4 @@
-package com.ashtonmansion.tsmanagement1.activity;
+package com.ashtonmansion.amtradeshowmanagement.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -14,10 +14,10 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.ashtonmansion.tsmanagement1.R;
-import com.ashtonmansion.tsmanagement1.util.BoothWithTags;
-import com.ashtonmansion.tsmanagement1.util.GlobalUtils;
-import com.ashtonmansion.tsmanagement1.util.ParcelableListener;
+import com.ashtonmansion.amtradeshowmanagement.R;
+import com.ashtonmansion.amtradeshowmanagement.util.BoothWithTags;
+import com.ashtonmansion.amtradeshowmanagement.util.GlobalUtils;
+import com.ashtonmansion.amtradeshowmanagement.util.ParcelableListener;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
@@ -163,8 +163,6 @@ public class BoothReservation extends AppCompatActivity {
             for (BoothWithTags boothWithTags : boothWithTagsList) {
                 final BoothWithTags finalizedBooth = boothWithTags;
                 final Tag finalizedShowTag = show;
-                Log.d("boothwithtagsID: ", boothWithTags.getBooth().getId());
-                Log.d("finalizedboothID: ", finalizedBooth.getBooth().getId());
                 /////////CREATE NEW ROW AND NECESSARY TEXTVIEWS
                 TableRow newBoothRow = new TableRow(boothReservationActivityContext);
                 TextView boothNumberTv = new TextView(boothReservationActivityContext);

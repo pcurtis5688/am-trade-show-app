@@ -1,4 +1,4 @@
-package com.ashtonmansion.tsmanagement1;
+package com.ashtonmansion.amtradeshowmanagement;
 
 import org.junit.Test;
 

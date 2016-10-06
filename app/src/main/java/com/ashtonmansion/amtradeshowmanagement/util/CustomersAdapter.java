@@ -1,4 +1,4 @@
-package com.ashtonmansion.tsmanagement1.util;
+package com.ashtonmansion.amtradeshowmanagement.util;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -10,7 +10,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import com.ashtonmansion.tsmanagement1.R;
+import com.ashtonmansion.amtradeshowmanagement.R;
 import com.clover.sdk.v3.customers.Customer;
 
 import java.util.ArrayList;

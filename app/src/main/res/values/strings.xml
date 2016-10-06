@@ -73,8 +73,7 @@
     <string name="no_trade_shows_available_string">Currently no trade shows have been created. Please create one.</string>
 
     <!-- CONFIGURE BOOTHS STRINGS //////////////////////////////-->
-    <string name="configure_booth_show_selection_string">Select Show for Booth Configuration</string>
-    <string name="show_selection_button_text">Select Show</string>
+    <string name="configure_booth_show_selection_string">Select Show</string>
     <string name="configure_booths_string">Configure Booths</string>
 
     <string name="configure_show_booths_number_header">No.</string>

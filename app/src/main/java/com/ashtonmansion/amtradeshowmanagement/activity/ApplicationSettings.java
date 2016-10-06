@@ -1,4 +1,4 @@
-package com.ashtonmansion.tsmanagement1.activity;
+package com.ashtonmansion.amtradeshowmanagement.activity;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -11,8 +11,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ashtonmansion.tsmanagement1.R;
-import com.ashtonmansion.tsmanagement1.util.GlobalUtils;
+import com.ashtonmansion.amtradeshowmanagement.R;
+import com.ashtonmansion.amtradeshowmanagement.util.GlobalUtils;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.tender.TenderConnector;
 import com.clover.sdk.v3.base.Reference;

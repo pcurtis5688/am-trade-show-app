@@ -1,4 +1,4 @@
-package com.ashtonmansion.tsmanagement1.util;
+package com.ashtonmansion.amtradeshowmanagement.util;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.ashtonmansion.tsmanagement1.activity.BoothReservationShowSelection;
+import com.ashtonmansion.amtradeshowmanagement.activity.BoothReservationShowSelection;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.Intents;
 import com.clover.sdk.v3.inventory.InventoryConnector;
@@ -224,6 +224,7 @@ class AddOrderListenerTask extends AsyncTask<Void, Void, ParcelableListener> {
 
                 @Override
                 public void onLineItemExchanged(String orderId, String oldLineItemId, String newLineItemId) {
+                    Log.d("LI EXHANGED: ", "order#" + orderId);
                 }
 
                 @Override

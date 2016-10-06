@@ -1,4 +1,4 @@
-package com.ashtonmansion.tsmanagement1.activity;
+package com.ashtonmansion.amtradeshowmanagement.activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -20,9 +20,9 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.ashtonmansion.tsmanagement1.R;
-import com.ashtonmansion.tsmanagement1.util.GlobalUtils;
-import com.ashtonmansion.tsmanagement1.util.ParcelableListener;
+import com.ashtonmansion.amtradeshowmanagement.R;
+import com.ashtonmansion.amtradeshowmanagement.util.GlobalUtils;
+import com.ashtonmansion.amtradeshowmanagement.util.ParcelableListener;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
@@ -83,16 +83,13 @@ public class BoothReservationShowSelection extends Activity
 
                 ///// TEXT VIEW AND BUTTON CREATION
                 TableRow newShowSelectionRow = new TableRow(boothReservationShowSelectionActivityContext);
-                TextView showSelectionNameTv = new TextView(boothReservationShowSelectionActivityContext);
                 Button showSelectButton = new Button(boothReservationShowSelectionActivityContext);
 
                 ///// HANDLE FONTS
-                showSelectionNameTv.setTextAppearance(boothReservationShowSelectionActivityContext, R.style.trade_show_row_style);
                 showSelectButton.setTextAppearance(boothReservationShowSelectionActivityContext, R.style.non_italic_blue_button_style);
 
                 ///// SHOW NAME BUTTON TEXT AND ACTION
-                showSelectionNameTv.setText(showNameForUser);
-                showSelectButton.setText(getResources().getString(R.string.select_show_button_text));
+                showSelectButton.setText(showNameForUser);
                 showSelectButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -101,7 +98,6 @@ public class BoothReservationShowSelection extends Activity
                 });
 
                 ///// ADD TO TABLE
-                newShowSelectionRow.addView(showSelectionNameTv);
                 newShowSelectionRow.addView(showSelectButton);
                 showSelectionTable.addView(newShowSelectionRow);
             }

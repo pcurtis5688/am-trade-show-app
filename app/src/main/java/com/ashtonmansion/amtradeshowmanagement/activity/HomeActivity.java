@@ -1,4 +1,4 @@
-package com.ashtonmansion.tsmanagement1.activity;
+package com.ashtonmansion.amtradeshowmanagement.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.ashtonmansion.tsmanagement1.R;
+import com.ashtonmansion.amtradeshowmanagement.R;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

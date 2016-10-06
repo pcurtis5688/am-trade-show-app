@@ -1,4 +1,4 @@
-package com.ashtonmansion.tsmanagement1.activity;
+package com.ashtonmansion.amtradeshowmanagement.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -21,7 +21,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.ashtonmansion.tsmanagement1.R;
+import com.ashtonmansion.amtradeshowmanagement.R;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
@@ -79,16 +79,13 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
 
                 ///// TEXT VIEW AND BUTTON CONFIGURATION
                 TableRow newShowSelectionRow = new TableRow(configureBoothsShowSelectionActivityContext);
-                TextView newShowSelectionTitleTV = new TextView(configureBoothsShowSelectionActivityContext);
                 Button showSelectionButton = new Button(configureBoothsShowSelectionActivityContext);
 
                 ///// HANDLE FONTS
-                newShowSelectionTitleTV.setTextAppearance(configureBoothsShowSelectionActivityContext, R.style.trade_show_row_style);
                 showSelectionButton.setTextAppearance(configureBoothsShowSelectionActivityContext, R.style.non_italic_blue_button_style);
 
                 ///// SET SHOW NAME AND BUTTON TEXT
-                newShowSelectionTitleTV.setText(showNameForUser);
-                showSelectionButton.setText(getResources().getString(R.string.show_selection_button_text));
+                showSelectionButton.setText(showNameForUser);
                 showSelectionButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -97,7 +94,6 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
                 });
 
                 ///// ADD NEW SHOW ROW TO SHOW TABLE
-                newShowSelectionRow.addView(newShowSelectionTitleTV);
                 newShowSelectionRow.addView(showSelectionButton);
                 configureBoothsShowSelectionTable.addView(newShowSelectionRow);
             }

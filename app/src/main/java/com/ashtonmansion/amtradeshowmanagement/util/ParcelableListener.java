@@ -1,4 +1,4 @@
-package com.ashtonmansion.tsmanagement1.util;
+package com.ashtonmansion.amtradeshowmanagement.util;
 
 import android.os.Parcel;
 import android.os.Parcelable;
