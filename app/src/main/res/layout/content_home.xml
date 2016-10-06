@@ -8,12 +8,12 @@
     android:paddingStart="@dimen/dimen_75dp"
     android:paddingTop="@dimen/dimen_25dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.ashtonmansion.tradeshowmanagement.HomeActivity"
+    tools:context="com.ashtonmansion.tsmanagement1.activity.HomeActivity"
     tools:showIn="@layout/app_bar_home">
 
     <TextView
+        style="@style/activity_header_style"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/nav_home_text"
-        style="@style/activity_header_style" />
+        android:text="@string/nav_home_text" />
 </LinearLayout>

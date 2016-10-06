@@ -10,7 +10,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:stretchColumns="*"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.ashtonmansion.tradeshowmanagement.activity.EditBooth"
+    tools:context="com.ashtonmansion.tsmanagement1.activity.EditBooth"
     tools:showIn="@layout/activity_edit_booth">
 
     <TableRow>
@@ -33,7 +33,8 @@
             android:id="@+id/edit_booth_no_field"
             style="@style/prompt_text_font_style"
             android:layout_span="2"
-            android:hint="@string/edit_booth_number_hint" />
+            android:hint="@string/edit_booth_number_hint"
+            android:singleLine="true" />
     </TableRow>
 
     <TableRow>
@@ -47,7 +48,8 @@
             style="@style/prompt_text_font_style"
             android:layout_span="2"
             android:hint="@string/edit_booth_price_hint"
-            android:inputType="numberDecimal" />
+            android:inputType="numberDecimal"
+            android:singleLine="true" />
     </TableRow>
 
     <TableRow>
@@ -60,7 +62,8 @@
             android:id="@+id/edit_boothsize_field"
             style="@style/prompt_text_font_style"
             android:layout_span="2"
-            android:hint="@string/edit_booth_size_hint" />
+            android:hint="@string/edit_booth_size_hint"
+            android:singleLine="true" />
     </TableRow>
 
     <TableRow>
@@ -73,7 +76,8 @@
             android:id="@+id/edit_booth_area_field"
             style="@style/prompt_text_font_style"
             android:layout_span="2"
-            android:hint="@string/edit_booth_area_hint" />
+            android:hint="@string/edit_booth_area_hint"
+            android:singleLine="true" />
     </TableRow>
 
     <TableRow>
@@ -86,7 +90,8 @@
             android:id="@+id/edit_booth_type_field"
             style="@style/prompt_text_font_style"
             android:layout_span="2"
-            android:hint="@string/edit_booth_type_hint" />
+            android:hint="@string/edit_booth_type_hint"
+            android:singleLine="true" />
     </TableRow>
 
     <TableRow android:layout_marginTop="@dimen/dimen_25dp">

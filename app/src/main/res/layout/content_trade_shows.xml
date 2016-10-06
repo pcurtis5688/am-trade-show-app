@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.ashtonmansion.tradeshowmanagement.activity.TradeShows"
+    tools:context="com.ashtonmansion.tsmanagement1.activity.TradeShows"
     tools:showIn="@layout/activity_trade_shows">
 
     <LinearLayout
@@ -23,8 +23,8 @@
             <TableRow>
 
                 <TextView
-                    android:text="@string/trade_shows_string"
-                    style="@style/activity_header_style" />
+                    style="@style/activity_header_style"
+                    android:text="@string/trade_shows_string" />
             </TableRow>
 
             <TableRow>

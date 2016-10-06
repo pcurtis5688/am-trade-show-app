@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fadeScrollbars="false"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.ashtonmansion.tradeshowmanagement.activity.ConfigureBooths"
+    tools:context="com.ashtonmansion.tsmanagement1.activity.ConfigureBooths"
     tools:showIn="@layout/activity_configure_booths">
 
     <LinearLayout

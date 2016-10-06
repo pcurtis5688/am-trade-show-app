@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.ashtonmansion.tradeshowmanagement.activity.BoothReservationShowSelection"
+    tools:context="com.ashtonmansion.tsmanagement1.activity.BoothReservationShowSelection"
     tools:showIn="@layout/activity_booth_reservation_show_selection">
 
     <LinearLayout
@@ -24,10 +24,10 @@
             <TableRow>
 
                 <TextView
+                    style="@style/activity_header_style"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/booth_reservation_show_selection_header_text"
-                    style="@style/activity_header_style" />
+                    android:text="@string/booth_reservation_show_selection_header_text" />
             </TableRow>
 
             <TableRow android:id="@+id/row_container_for_active_table">

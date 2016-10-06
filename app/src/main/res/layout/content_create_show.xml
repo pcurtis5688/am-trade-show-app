@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/dimen_25dp"
+    android:paddingEnd="@dimen/dimen_75dp"
+    android:paddingStart="@dimen/dimen_75dp"
+    android:paddingTop="@dimen/dimen_25dp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.ashtonmansion.tsmanagement1.activity.CreateShow"
+    tools:showIn="@layout/activity_create_show">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="*">
+
+        <TableRow android:layout_marginBottom="@dimen/dimen_25dp">
+
+            <TextView
+                style="@style/activity_header_style"
+                android:layout_span="2"
+                android:text="@string/add_show_string" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:text="@string/add_show_name_string"
+                android:textSize="@dimen/dimen_24sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/add_show_name_field"
+                android:hint="@string/add_show_name_hint"
+                android:maxLength="50"
+                android:textAlignment="center"
+                android:textSize="@dimen/dimen_24sp" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:text="@string/add_show_date_string"
+                android:textSize="@dimen/dimen_24sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/add_show_date_field"
+                android:hint="@string/add_show_date_hint"
+                android:inputType="date"
+                android:textAlignment="center"
+                android:textSize="@dimen/dimen_24sp" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:text="@string/add_show_location_string"
+                android:textSize="@dimen/dimen_24sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/add_show_location_field"
+                android:hint="@string/add_show_location_hint"
+                android:textAlignment="center"
+                android:textSize="@dimen/dimen_24sp" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:text="@string/add_show_notes_string"
+                android:textSize="@dimen/dimen_24sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/add_show_notes_field"
+                android:hint="@string/add_show_notes_hint"
+                android:textAlignment="center"
+                android:textSize="@dimen/dimen_24sp" />
+        </TableRow>
+    </TableLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_25dp"
+        android:stretchColumns="*">
+
+        <TableRow>
+
+            <Button
+                android:id="@+id/cancel_add_new_show_btn"
+                android:onClick="cancelAddNewShowAction"
+                android:text="@string/cancel_show_add_string"
+                android:textAlignment="center" />
+
+            <Button
+                android:id="@+id/add_new_show_submit_btn"
+                android:onClick="addNewShowAction"
+                android:text="@string/add_new_show_btn_string"
+                android:textAlignment="center" />
+        </TableRow>
+    </TableLayout>
+</LinearLayout>
+
+

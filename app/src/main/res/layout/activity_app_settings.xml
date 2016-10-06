@@ -5,7 +5,7 @@
     android:id="@+id/app_settings_drawerlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ashtonmansion.tradeshowmanagement.activity.ApplicationSettings">
+    tools:context="com.ashtonmansion.tsmanagement1.activity.ApplicationSettings">
 
     <include
         layout="@layout/app_bar_app_settings"

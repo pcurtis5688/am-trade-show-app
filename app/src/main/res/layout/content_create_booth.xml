@@ -9,7 +9,7 @@
     android:paddingTop="@dimen/dimen_25dp"
     android:stretchColumns="*"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.ashtonmansion.tradeshowmanagement.activity.CreateBooth"
+    tools:context="com.ashtonmansion.tsmanagement1.activity.CreateBooth"
     tools:showIn="@layout/activity_create_booth">
 
     <TextView
@@ -26,7 +26,8 @@
         <EditText
             android:id="@+id/create_booth_number_field"
             style="@style/prompt_text_font_style"
-            android:hint="@string/create_booth_number_hint" />
+            android:hint="@string/create_booth_number_hint"
+            android:singleLine="true" />
     </TableRow>
 
     <TableRow>
@@ -39,7 +40,8 @@
             android:id="@+id/create_booth_price_field"
             style="@style/prompt_text_font_style"
             android:hint="@string/create_booth_price_hint"
-            android:inputType="numberDecimal" />
+            android:inputType="numberDecimal"
+            android:singleLine="true" />
     </TableRow>
 
     <TableRow>
@@ -51,7 +53,8 @@
         <EditText
             android:id="@+id/create_booth_size_field"
             style="@style/prompt_text_font_style"
-            android:hint="@string/create_booth_size_hint" />
+            android:hint="@string/create_booth_size_hint"
+            android:singleLine="true" />
     </TableRow>
 
     <TableRow>
@@ -63,7 +66,8 @@
         <EditText
             android:id="@+id/create_booth_area_field"
             style="@style/prompt_text_font_style"
-            android:hint="@string/create_booth_area_hint" />
+            android:hint="@string/create_booth_area_hint"
+            android:singleLine="true" />
     </TableRow>
 
     <TableRow>
@@ -75,7 +79,8 @@
         <EditText
             android:id="@+id/create_booth_type_field"
             style="@style/prompt_text_font_style"
-            android:hint="@string/create_booth_type_hint" />
+            android:hint="@string/create_booth_type_hint"
+            android:singleLine="true" />
     </TableRow>
 
     <TableRow>
