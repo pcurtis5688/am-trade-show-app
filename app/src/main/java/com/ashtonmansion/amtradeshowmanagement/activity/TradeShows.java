@@ -37,7 +37,6 @@ public class TradeShows extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     //ACTIVITY AND UI HANDLING
     private Context tradeShowsActivityContext;
-    private String platform;
     private int tableRowFontResId;
     private TableLayout showSelectionTable;
     // DATA HANDLING
@@ -148,7 +147,7 @@ public class TradeShows extends AppCompatActivity
     }
 
     private void handleSizing() {
-        platform = GlobalUtils.determinePlatform(getApplicationContext());
+        String platform = GlobalUtils.determinePlatform(getApplicationContext());
         if (platform.equalsIgnoreCase("station"))
             tableRowFontResId = R.style.trade_show_row_style_station;
         else tableRowFontResId = R.style.trade_show_row_style_mobile;

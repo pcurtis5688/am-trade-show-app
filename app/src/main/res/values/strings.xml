@@ -46,7 +46,7 @@
     <string name="show_name_for_user_string">%1$s (%2$s - %3$s)</string>
     <string name="loading_trade_shows_text">Loading Trade Shows. . .</string>
     <string name="booth_config_show_selection_string">Booth Configuration - Show Selection</string>
-    <string name="trade_shows_edit_btn_string">Edit Show</string>
+    <string name="trade_shows_edit_btn_string">Edit</string>
     <string name="edit_show_header_string">%1$s (%2$s - %3$s)</string>
     <string name="add_show_string">Add Trade Show</string>
     <string name="add_show_name_string">Name:</string>

@@ -130,22 +130,16 @@
         <item name="android:layout_marginStart">@dimen/dimen_25dp</item>
     </style>
 
-    <style name="trade_show_row_style_station">
+    <style name="show_selection_button_style">
         <item name="android:textColor">@color/matching_header_color</item>
-        <item name="android:textAlignment">textStart</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textAlignment">center</item>
         <item name="android:textSize">@dimen/dimen_30sp</item>
-    </style>
-
-    <style name="trade_show_row_style_mobile">
-        <item name="android:textColor">@color/matching_header_color</item>
-        <item name="android:textAlignment">textStart</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">@dimen/dimen_22sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:paddingBottom">@dimen/dimen_20dp</item>
+        <item name="android:paddingTop">@dimen/dimen_20dp</item>
     </style>
 
     <!--STYLES FOR STATION V MOBILE -->
-
     <style name="table_header_text_style_station">
         <item name="android:textSize">@dimen/dimen_36sp</item>
         <item name="android:textStyle">bold</item>
@@ -208,5 +202,19 @@
         <item name="android:textSize">@dimen/dimen_30sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="trade_show_row_style_station">
+        <item name="android:textColor">@color/matching_header_color</item>
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/dimen_30sp</item>
+    </style>
+
+    <style name="trade_show_row_style_mobile">
+        <item name="android:textColor">@color/matching_header_color</item>
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/dimen_24sp</item>
     </style>
 </resources>
