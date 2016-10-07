@@ -92,24 +92,25 @@
 
         <Button
             android:id="@+id/edit_booth_delete_booth_btn"
-            android:layout_height="@dimen/dimen_100dp"
+            style="@style/standard_button_style_mobile"
             android:text="@string/delete_booth_btn_text" />
 
         <Button
             android:id="@+id/edit_booth_cancel_btn"
-            android:layout_height="@dimen/dimen_100dp"
+            style="@style/standard_button_style_mobile"
             android:text="@string/edit_booth_cancel_btn_text" />
 
         <Button
             android:id="@+id/edit_booth_save_changes_btn"
-            android:layout_height="@dimen/dimen_100dp"
+            style="@style/standard_button_style_mobile"
             android:text="@string/edit_booth_save_changes_text" />
     </TableRow>
 
-    <TableRow android:layout_marginTop="@dimen/dimen_25dp">
+    <TableRow android:layout_marginTop="@dimen/dimen_10dp">
 
         <Button
             android:id="@+id/set_booth_available_action_btn"
+            style="@style/standard_button_style_mobile"
             android:layout_span="3"
             android:text="@string/edit_booth_set_available_btn_text" />
     </TableRow>

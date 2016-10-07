@@ -81,12 +81,14 @@
 
         <Button
             android:id="@+id/create_booth_cancel_btn"
+            style="@style/standard_button_style_mobile"
             android:layout_marginTop="@dimen/dimen_10dp"
             android:onClick="cancelCreateBooth"
             android:text="@string/create_booth_cancel_btn_text" />
 
         <Button
             android:id="@+id/finalize_booth_creation_btn"
+            style="@style/standard_button_style_mobile"
             android:layout_marginTop="@dimen/dimen_10dp"
             android:onClick="finalizeBoothCreation"
             android:text="@string/create_booth_finish_booth_creation_str" />

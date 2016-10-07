@@ -114,9 +114,13 @@ public class CreateBooth extends AppCompatActivity {
 
     private void handleSizing() {
         platform = GlobalUtils.determinePlatform(getApplicationContext());
-        if (platform.equalsIgnoreCase("station"))
+        if (platform.equalsIgnoreCase("station")) {
             activityHeaderResId = R.style.activity_header_style_station;
-        else activityHeaderResId = R.style.activity_header_style_mobile;
+            promptFontResId = R.style.prompt_text_font_style_station;
+        } else {
+            activityHeaderResId = R.style.activity_header_style_mobile;
+            promptFontResId = R.style.prompt_text_font_style_mobile;
+        }
     }
 
     private void handlePromptAndFieldStyles() {

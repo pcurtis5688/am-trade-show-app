@@ -82,16 +82,19 @@
 
             <Button
                 android:id="@+id/delete_show_btn"
+                style="@style/standard_button_style_mobile"
                 android:onClick="deleteShowAction"
                 android:text="@string/delete_show_btn_string" />
 
             <Button
                 android:id="@+id/cancel_edit_show_activity_btn"
+                style="@style/standard_button_style_mobile"
                 android:onClick="cancelEditShow"
                 android:text="@string/cancel_show_edit_string" />
 
             <Button
                 android:id="@+id/save_show_edits_btn"
+                style="@style/standard_button_style_mobile"
                 android:onClick="saveShowChangesAction"
                 android:text="@string/save_show_changes_btn_string" />
         </TableRow>
