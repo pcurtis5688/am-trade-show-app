@@ -39,6 +39,7 @@ public class EditBooth extends AppCompatActivity {
     //////ACTIVITY VARS
     private Context editBoothActivityContext;
     private int headerFontResId;
+    private int promptFontResId;
     ////// CLOVER VARS
     private Item booth;
     private List<Tag> boothTags;
@@ -64,7 +65,6 @@ public class EditBooth extends AppCompatActivity {
         //////////////////NAVIGATION AND UI WORK//////////////
         editBoothActivityContext = this;
         handleSizing();
-
         TextView editBoothHeaderTv = (TextView) findViewById(R.id.edit_booth_header);
         editBoothNumberField = (EditText) findViewById(R.id.edit_booth_no_field);
         editBoothPriceField = (EditText) findViewById(R.id.edit_booth_price_field);
@@ -99,6 +99,7 @@ public class EditBooth extends AppCompatActivity {
         editBoothSizeField = (EditText) findViewById(R.id.edit_boothsize_field);
         editBoothAreaField = (EditText) findViewById(R.id.edit_booth_area_field);
         editBoothTypeField = (EditText) findViewById(R.id.edit_booth_type_field);
+        handlePromptAndFieldStyles();
 
         //////////////////DATA WORK///////////////////////////
         Bundle extrasBundle = getIntent().getExtras();
@@ -252,9 +253,34 @@ public class EditBooth extends AppCompatActivity {
 
     private void handleSizing() {
         String platform = GlobalUtils.determinePlatform(getApplicationContext());
-        if (platform.equalsIgnoreCase("station"))
+        if (platform.equalsIgnoreCase("station")) {
             headerFontResId = R.style.activity_header_style_station;
-        else headerFontResId = R.style.activity_header_style_mobile;
+            promptFontResId = R.style.prompt_text_font_style_station;
+        } else {
+            headerFontResId = R.style.activity_header_style_mobile;
+            promptFontResId = R.style.prompt_text_font_style_mobile;
+        }
+    }
+
+    private void handlePromptAndFieldStyles() {
+        ////// GET PRIVATE HANDLERS TO PROMPTS
+        TextView boothNoPrompt = (TextView) findViewById(R.id.eb_booth_no_prompt);
+        TextView boothPricePrompt = (TextView) findViewById(R.id.eb_booth_price_prompt);
+        TextView boothSizePrompt = (TextView) findViewById(R.id.eb_booth_size_prompt);
+        TextView boothAreaPrompt = (TextView) findViewById(R.id.eb_booth_area_prompt);
+        TextView boothTypePrompt = (TextView) findViewById(R.id.eb_booth_type_prompt);
+        ////// SET PROMPT APPEARANCE
+        boothNoPrompt.setTextAppearance(editBoothActivityContext, promptFontResId);
+        boothPricePrompt.setTextAppearance(editBoothActivityContext, promptFontResId);
+        boothSizePrompt.setTextAppearance(editBoothActivityContext, promptFontResId);
+        boothAreaPrompt.setTextAppearance(editBoothActivityContext, promptFontResId);
+        boothTypePrompt.setTextAppearance(editBoothActivityContext, promptFontResId);
+        ////// SET FIELD APPERANCES
+        editBoothNumberField.setTextAppearance(editBoothActivityContext, promptFontResId);
+        editBoothPriceField.setTextAppearance(editBoothActivityContext, promptFontResId);
+        editBoothSizeField.setTextAppearance(editBoothActivityContext, promptFontResId);
+        editBoothAreaField.setTextAppearance(editBoothActivityContext, promptFontResId);
+        editBoothTypeField.setTextAppearance(editBoothActivityContext, promptFontResId);
     }
 
     private class UpdateBoothTask extends AsyncTask<Void, Void, Void> {

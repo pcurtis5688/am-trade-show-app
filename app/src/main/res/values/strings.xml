@@ -117,7 +117,7 @@
     <string name="edit_booth_type_hint">[Booth Type]</string>
     <string name="delete_booth_btn_text">Delete Booth</string>
     <string name="edit_booth_cancel_btn_text">Cancel</string>
-    <string name="edit_booth_save_changes_text">Save Booth Changes</string>
+    <string name="edit_booth_save_changes_text">Save Changes</string>
     <string name="edit_booth_set_available_btn_text">Set Booth to Available</string>
     <string name="edit_booth_updating_booth_msg">Updating Booth. . .</string>
     <string name="booth_successfully_made_available_msg">Booth is now set to available. . .</string>

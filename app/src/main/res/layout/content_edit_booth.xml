@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:isScrollContainer="true"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:stretchColumns="*"
-    android:isScrollContainer="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.ashtonmansion.amtradeshowmanagement.activity.EditBooth"
     tools:showIn="@layout/activity_edit_booth">
@@ -25,12 +25,11 @@
     <TableRow>
 
         <TextView
-            style="@style/prompt_text_font_style"
+            android:id="@+id/eb_booth_no_prompt"
             android:text="@string/edit_booth_number_prompt" />
 
         <EditText
             android:id="@+id/edit_booth_no_field"
-            style="@style/prompt_text_font_style"
             android:layout_span="2"
             android:hint="@string/edit_booth_number_hint"
             android:singleLine="true" />
@@ -39,12 +38,11 @@
     <TableRow>
 
         <TextView
-            style="@style/prompt_text_font_style"
+            android:id="@+id/eb_booth_price_prompt"
             android:text="@string/edit_booth_price_prompt" />
 
         <EditText
             android:id="@+id/edit_booth_price_field"
-            style="@style/prompt_text_font_style"
             android:layout_span="2"
             android:hint="@string/edit_booth_price_hint"
             android:inputType="numberDecimal"
@@ -54,12 +52,11 @@
     <TableRow>
 
         <TextView
-            style="@style/prompt_text_font_style"
+            android:id="@+id/eb_booth_size_prompt"
             android:text="@string/edit_booth_size_prompt" />
 
         <EditText
             android:id="@+id/edit_boothsize_field"
-            style="@style/prompt_text_font_style"
             android:layout_span="2"
             android:hint="@string/edit_booth_size_hint"
             android:singleLine="true" />
@@ -68,12 +65,11 @@
     <TableRow>
 
         <TextView
-            style="@style/prompt_text_font_style"
+            android:id="@+id/eb_booth_area_prompt"
             android:text="@string/edit_booth_area_prompt" />
 
         <EditText
             android:id="@+id/edit_booth_area_field"
-            style="@style/prompt_text_font_style"
             android:layout_span="2"
             android:hint="@string/edit_booth_area_hint"
             android:singleLine="true" />
@@ -82,12 +78,11 @@
     <TableRow>
 
         <TextView
-            style="@style/prompt_text_font_style"
+            android:id="@+id/eb_booth_type_prompt"
             android:text="@string/edit_booth_type_prompt" />
 
         <EditText
             android:id="@+id/edit_booth_type_field"
-            style="@style/prompt_text_font_style"
             android:layout_span="2"
             android:hint="@string/edit_booth_type_hint"
             android:singleLine="true" />
@@ -97,19 +92,16 @@
 
         <Button
             android:id="@+id/edit_booth_delete_booth_btn"
-            style="@style/non_italic_blue_button_style"
             android:layout_height="@dimen/dimen_100dp"
             android:text="@string/delete_booth_btn_text" />
 
         <Button
             android:id="@+id/edit_booth_cancel_btn"
-            style="@style/non_italic_blue_button_style"
             android:layout_height="@dimen/dimen_100dp"
             android:text="@string/edit_booth_cancel_btn_text" />
 
         <Button
             android:id="@+id/edit_booth_save_changes_btn"
-            style="@style/non_italic_blue_button_style"
             android:layout_height="@dimen/dimen_100dp"
             android:text="@string/edit_booth_save_changes_text" />
     </TableRow>
@@ -118,7 +110,6 @@
 
         <Button
             android:id="@+id/set_booth_available_action_btn"
-            style="@style/non_italic_blue_button_style"
             android:layout_span="3"
             android:text="@string/edit_booth_set_available_btn_text" />
     </TableRow>

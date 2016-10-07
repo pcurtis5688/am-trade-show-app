@@ -30,14 +30,12 @@
         <TableRow>
 
             <TextView
-                style="@style/prompt_text_font_style"
                 android:text="@string/add_show_name_string"
                 android:textSize="@dimen/dimen_24sp"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/add_show_name_field"
-                style="@style/prompt_text_font_style"
                 android:hint="@string/add_show_name_hint"
                 android:maxLength="50"
                 android:singleLine="true"
@@ -48,14 +46,12 @@
         <TableRow>
 
             <TextView
-                style="@style/prompt_text_font_style"
                 android:text="@string/add_show_date_string"
                 android:textSize="@dimen/dimen_24sp"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/add_show_date_field"
-                style="@style/prompt_text_font_style"
                 android:hint="@string/add_show_date_hint"
                 android:inputType="date"
                 android:singleLine="true"
@@ -66,14 +62,12 @@
         <TableRow>
 
             <TextView
-                style="@style/prompt_text_font_style"
                 android:text="@string/add_show_location_string"
                 android:textSize="@dimen/dimen_24sp"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/add_show_location_field"
-                style="@style/prompt_text_font_style"
                 android:hint="@string/add_show_location_hint"
                 android:singleLine="true"
                 android:textAlignment="center"
@@ -83,14 +77,12 @@
         <TableRow>
 
             <TextView
-                style="@style/prompt_text_font_style"
                 android:text="@string/add_show_notes_string"
                 android:textSize="@dimen/dimen_24sp"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/add_show_notes_field"
-                style="@style/prompt_text_font_style"
                 android:hint="@string/add_show_notes_hint"
                 android:singleLine="true"
                 android:textAlignment="center"

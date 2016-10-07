@@ -36,6 +36,7 @@ public class CreateBooth extends AppCompatActivity {
     private Context createBoothActivityContext;
     private String platform;
     private int activityHeaderResId;
+    private int promptFontResId;
     ///////UI AND DATA VARS
     private EditText createBoothNumberField;
     private EditText createBoothPriceField;
@@ -90,6 +91,7 @@ public class CreateBooth extends AppCompatActivity {
         createBoothAreaField = (EditText) findViewById(R.id.create_booth_area_field);
         createBoothTypeField = (EditText) findViewById(R.id.create_booth_type_field);
         handleSizing();
+        handlePromptAndFieldStyles();
 
         ///////GET CURRENT SHOWID & SHOWNAME from CONFIGURE BOOTHS ACTIVITY
         Bundle extrasBundle = getIntent().getExtras();
@@ -112,8 +114,30 @@ public class CreateBooth extends AppCompatActivity {
 
     private void handleSizing() {
         platform = GlobalUtils.determinePlatform(getApplicationContext());
-        if (platform.equalsIgnoreCase("station")) activityHeaderResId = R.style.activity_header_style_station;
+        if (platform.equalsIgnoreCase("station"))
+            activityHeaderResId = R.style.activity_header_style_station;
         else activityHeaderResId = R.style.activity_header_style_mobile;
+    }
+
+    private void handlePromptAndFieldStyles() {
+        ////// GET PRIVATE HANDLERS TO PROMPTS
+        TextView boothNoPrompt = (TextView) findViewById(R.id.create_booth_no_prompt);
+        TextView boothPricePrompt = (TextView) findViewById(R.id.create_booth_price_prompt);
+        TextView boothSizePrompt = (TextView) findViewById(R.id.create_booth_size_prompt);
+        TextView boothAreaPrompt = (TextView) findViewById(R.id.create_booth_area_prompt);
+        TextView boothTypePrompt = (TextView) findViewById(R.id.create_booth_type_prompt);
+        ////// SET PROMPT APPEARANCE
+        boothNoPrompt.setTextAppearance(createBoothActivityContext, promptFontResId);
+        boothPricePrompt.setTextAppearance(createBoothActivityContext, promptFontResId);
+        boothSizePrompt.setTextAppearance(createBoothActivityContext, promptFontResId);
+        boothAreaPrompt.setTextAppearance(createBoothActivityContext, promptFontResId);
+        boothTypePrompt.setTextAppearance(createBoothActivityContext, promptFontResId);
+        ////// SET FIELD APPERANCES
+        createBoothNumberField.setTextAppearance(createBoothActivityContext, promptFontResId);
+        createBoothPriceField.setTextAppearance(createBoothActivityContext, promptFontResId);
+        createBoothSizeField.setTextAppearance(createBoothActivityContext, promptFontResId);
+        createBoothAreaField.setTextAppearance(createBoothActivityContext, promptFontResId);
+        createBoothTypeField.setTextAppearance(createBoothActivityContext, promptFontResId);
     }
 
     private class CreateBoothTask extends AsyncTask<Void, Void, Void> {
