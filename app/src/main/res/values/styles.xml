@@ -17,11 +17,19 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="activity_header_style">
+    <style name="activity_header_style_station">
         <item name="android:textColor">@color/matching_header_color</item>
         <item name="android:layout_marginBottom">15dp</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textSize">@dimen/dimen_36sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="activity_header_style_mobile">
+        <item name="android:textColor">@color/matching_header_color</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">@dimen/dimen_28sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
@@ -153,7 +161,7 @@
     </style>
 
     <style name="small_table_row_font_mobile">
-        <item name="android:textSize">@dimen/dimen_20sp</item>
+        <item name="android:textSize">@dimen/dimen_18sp</item>
         <item name="android:textAlignment">center</item>
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:textColor">@color/matching_header_color</item>
@@ -175,14 +183,14 @@
 
     <style name="available_booth_style_mobile">
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">@dimen/dimen_30sp</item>
+        <item name="android:textSize">@dimen/dimen_18sp</item>
         <item name="android:textAlignment">viewStart</item>
         <item name="android:textColor">@color/available_booth_color</item>
     </style>
 
     <style name="reserved_booth_style_mobile">
         <item name="android:textStyle">bold|italic</item>
-        <item name="android:textSize">@dimen/dimen_20sp</item>
+        <item name="android:textSize">@dimen/dimen_18sp</item>
         <item name="android:textAlignment">viewStart</item>
         <item name="android:textColor">@color/reserved_booth_color</item>
     </style>

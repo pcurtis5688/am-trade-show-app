@@ -14,8 +14,7 @@
 
     <TextView
         android:id="@+id/create_booth_activity_header_w_showname"
-        style="@style/activity_header_style"
-        android:textAlignment="center" />
+        android:textAlignment="center"/>
 
     <TableRow>
 
@@ -88,14 +87,14 @@
         <Button
             android:id="@+id/create_booth_cancel_btn"
             style="@style/prompt_text_font_style"
-            android:layout_marginTop="@dimen/dimen_25dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
             android:onClick="cancelCreateBooth"
             android:text="@string/create_booth_cancel_btn_text" />
 
         <Button
             android:id="@+id/finalize_booth_creation_btn"
             style="@style/prompt_text_font_style"
-            android:layout_marginTop="@dimen/dimen_25dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
             android:onClick="finalizeBoothCreation"
             android:text="@string/create_booth_finish_booth_creation_str" />
     </TableRow>

@@ -18,7 +18,7 @@
         android:orientation="vertical">
 
         <TextView
-            style="@style/activity_header_style"
+            android:id="@+id/application_settings_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"

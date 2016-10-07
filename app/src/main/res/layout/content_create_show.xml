@@ -21,7 +21,7 @@
         <TableRow android:layout_marginBottom="@dimen/dimen_25dp">
 
             <TextView
-                style="@style/activity_header_style"
+                style="@style/activity_header_style_station"
                 android:layout_span="2"
                 android:text="@string/add_show_string" />
         </TableRow>

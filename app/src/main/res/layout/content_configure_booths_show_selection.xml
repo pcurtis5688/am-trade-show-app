@@ -23,7 +23,7 @@
             <TableRow>
 
                 <TextView
-                    style="@style/activity_header_style"
+                    style="@style/activity_header_style_station"
                     android:layout_marginBottom="@dimen/dimen_25dp"
                     android:text="@string/configure_booth_show_selection_string" />
             </TableRow>

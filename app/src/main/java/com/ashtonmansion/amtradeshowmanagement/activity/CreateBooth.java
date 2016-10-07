@@ -34,6 +34,8 @@ import java.util.Locale;
 public class CreateBooth extends AppCompatActivity {
     ///////ACTIVITY VARS
     private Context createBoothActivityContext;
+    private String platform;
+    private int activityHeaderResId;
     ///////UI AND DATA VARS
     private EditText createBoothNumberField;
     private EditText createBoothPriceField;
@@ -87,6 +89,7 @@ public class CreateBooth extends AppCompatActivity {
         createBoothSizeField = (EditText) findViewById(R.id.create_booth_size_field);
         createBoothAreaField = (EditText) findViewById(R.id.create_booth_area_field);
         createBoothTypeField = (EditText) findViewById(R.id.create_booth_type_field);
+        handleSizing();
 
         ///////GET CURRENT SHOWID & SHOWNAME from CONFIGURE BOOTHS ACTIVITY
         Bundle extrasBundle = getIntent().getExtras();
@@ -94,6 +97,7 @@ public class CreateBooth extends AppCompatActivity {
             show = (Tag) extrasBundle.get("show");
             TextView createBoothActivityHeader = (TextView) findViewById(R.id.create_booth_activity_header_w_showname);
             createBoothActivityHeader.setText(getResources().getString(R.string.title_activity_create_booth));
+            createBoothActivityHeader.setTextAppearance(createBoothActivityContext, activityHeaderResId);
         }
     }
 
@@ -104,6 +108,12 @@ public class CreateBooth extends AppCompatActivity {
     public void finalizeBoothCreation(View view) {
         CreateBoothTask createBoothTask = new CreateBoothTask();
         createBoothTask.execute();
+    }
+
+    private void handleSizing() {
+        platform = GlobalUtils.determinePlatform(getApplicationContext());
+        if (platform.equalsIgnoreCase("station")) activityHeaderResId = R.style.activity_header_style_station;
+        else activityHeaderResId = R.style.activity_header_style_mobile;
     }
 
     private class CreateBoothTask extends AsyncTask<Void, Void, Void> {

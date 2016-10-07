@@ -17,7 +17,7 @@
 
         <TextView
             android:id="@+id/edit_booth_header"
-            style="@style/activity_header_style"
+            style="@style/activity_header_style_station"
             android:layout_marginBottom="@dimen/dimen_25dp"
             android:layout_span="3"
             android:textAlignment="center" />

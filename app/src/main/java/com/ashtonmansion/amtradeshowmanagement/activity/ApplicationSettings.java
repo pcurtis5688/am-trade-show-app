@@ -27,7 +27,9 @@ import java.util.List;
 
 public class ApplicationSettings extends AppCompatActivity {
     private Context applicationSettingsActivityContext;
+    private int activityHeaderResId;
     private TextView appSettingsLogTv;
+
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -39,7 +41,10 @@ public class ApplicationSettings extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ////// SET LOCAL VARS
+        handleSizing();
         applicationSettingsActivityContext = this;
+        TextView activityHeaderTv = (TextView) findViewById(R.id.application_settings_header);
+        activityHeaderTv.setTextAppearance(applicationSettingsActivityContext, activityHeaderResId);
         appSettingsLogTv = (TextView) findViewById(R.id.app_settings_log_tv);
 
         ////// FETCH BUTTONS
@@ -436,6 +441,13 @@ public class ApplicationSettings extends AppCompatActivity {
                 }
             }
         }.execute();
+    }
+
+    private void handleSizing() {
+        String platform = GlobalUtils.determinePlatform(getApplicationContext());
+        if (platform.equalsIgnoreCase("station"))
+            activityHeaderResId = R.style.activity_header_style_station;
+        else activityHeaderResId = R.style.activity_header_style_mobile;
     }
 
     ////// INACTIVE METHODS

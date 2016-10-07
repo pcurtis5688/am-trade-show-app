@@ -51,6 +51,8 @@ import static android.view.View.GONE;
 public class ReserveBoothDetails extends AppCompatActivity {
     private Context reserveBoothDetailsActivityContext;
     private boolean orderIDOriginBoothCode;
+    private String platform;
+    private int activityHeaderResId;
     ///////SHOW DATA
     private String showName;
     ///// BOOTH DATA
@@ -76,6 +78,8 @@ public class ReserveBoothDetails extends AppCompatActivity {
 
         ///// GET DATA PASSED FROM BOOTH SELECTION
         reserveBoothDetailsActivityContext = this;
+        handleSizing();
+
         Bundle extrasBundle = getIntent().getExtras();
         if (extrasBundle != null) {
             orderID = (String) extrasBundle.get("orderid");
@@ -90,7 +94,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
         TextView boothReservationHeader = (TextView) findViewById(R.id.booth_reservation_header);
         TextView boothReservationPriceTV = (TextView) findViewById(R.id.booth_reservation_details_price);
         ///// SET FONTS
-        boothReservationHeader.setTextAppearance(reserveBoothDetailsActivityContext, R.style.activity_header_style);
+        boothReservationHeader.setTextAppearance(reserveBoothDetailsActivityContext, activityHeaderResId);
         boothReservationPriceTV.setTextAppearance(reserveBoothDetailsActivityContext, R.style.large_table_row_font_station);
         ///// POPULATE FIELDS
         boothReservationHeader.setText(getResources().getString(R.string.booth_reservation_details_header_text, showName, booth.getSku()));
@@ -681,5 +685,12 @@ public class ReserveBoothDetails extends AppCompatActivity {
             public void afterTextChanged(Editable arg0) {
             }
         });
+    }
+
+    private void handleSizing() {
+        platform = GlobalUtils.determinePlatform(getApplicationContext());
+        if (platform.equalsIgnoreCase("station"))
+            activityHeaderResId = R.style.activity_header_style_station;
+        else activityHeaderResId = R.style.activity_header_style_mobile;
     }
 }

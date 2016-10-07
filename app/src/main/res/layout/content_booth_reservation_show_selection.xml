@@ -24,7 +24,7 @@
             <TableRow>
 
                 <TextView
-                    style="@style/activity_header_style"
+                    style="@style/activity_header_style_station"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/booth_reservation_show_selection_header_text" />

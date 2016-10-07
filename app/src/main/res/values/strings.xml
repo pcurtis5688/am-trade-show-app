@@ -240,8 +240,8 @@
 
     <!-- BOOTH RESERVATION STRINGS //////////////////-->
     <string name="booth_reservation_details_header_text">%1$s - Booth No.: %2$s</string>
-    <string name="reserve_booth_button_text">Reserve Booth</string>
-    <string name="view_booth_details_string">View Details</string>
+    <string name="reserve_booth_button_text">Reserve</string>
+    <string name="view_booth_details_string">View</string>
     <string name="booth_reservation_price_label">Booth Price:</string>
     <string name="booth_reservation_size_label">Booth Size:</string>
     <string name="booth_reservation_area_label">Booth Area:</string>
