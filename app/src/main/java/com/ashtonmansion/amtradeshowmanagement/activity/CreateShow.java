@@ -25,10 +25,11 @@ import com.clover.sdk.v3.inventory.Tag;
 
 public class CreateShow extends AppCompatActivity {
     /////CONTEXT AND SHOW NAME
-    private Context addShowActivityContext;
+    private Context createShowActivityContext;
     private String formattedFullShowName;
     /////UI FIELDS
     private int headerFontResId;
+    private int promptFontResId;
     private EditText newShowNameField;
     private EditText newShowDateField;
     private EditText newShowLocationField;
@@ -44,21 +45,44 @@ public class CreateShow extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ///////ACTIVITY CONTEXT AND UI FIELD WORK //////////////////
-        addShowActivityContext = this;
+        createShowActivityContext = this;
         handleSizing();
         TextView headerView = (TextView) findViewById(R.id.create_show_header);
-        headerView.setTextAppearance(addShowActivityContext, headerFontResId);
+        headerView.setTextAppearance(createShowActivityContext, headerFontResId);
         newShowNameField = (EditText) findViewById(R.id.add_show_name_field);
         newShowDateField = (EditText) findViewById(R.id.add_show_date_field);
         newShowLocationField = (EditText) findViewById(R.id.add_show_location_field);
         newShowNotesField = (EditText) findViewById(R.id.add_show_notes_field);
+        stylePromptsAndFields();
     }
 
     private void handleSizing() {
         String platform = GlobalUtils.determinePlatform(getApplicationContext());
-        if (platform.equalsIgnoreCase("station"))
+        if (platform.equalsIgnoreCase("station")) {
             headerFontResId = R.style.activity_header_style_station;
-        else headerFontResId = R.style.activity_header_style_mobile;
+            promptFontResId = R.style.prompt_text_font_style_station;
+        } else {
+            headerFontResId = R.style.activity_header_style_mobile;
+            promptFontResId = R.style.prompt_text_font_style_mobile;
+        }
+    }
+
+    private void stylePromptsAndFields() {
+        ////// GET PROMPT HANDLERS PRIVATELY
+        TextView createShowNamePrompt = (TextView) findViewById(R.id.create_show_name_prompt);
+        TextView createShowDatePrompt = (TextView) findViewById(R.id.create_show_date_prompt);
+        TextView createShowLocationPrompt = (TextView) findViewById(R.id.create_show_location_prompt);
+        TextView createShowNotesPrompt = (TextView) findViewById(R.id.create_show_notes_prompt);
+        ////// SET PROMPT FONT
+        createShowNamePrompt.setTextAppearance(createShowActivityContext, promptFontResId);
+        createShowDatePrompt.setTextAppearance(createShowActivityContext, promptFontResId);
+        createShowLocationPrompt.setTextAppearance(createShowActivityContext, promptFontResId);
+        createShowNotesPrompt.setTextAppearance(createShowActivityContext, promptFontResId);
+        ////// SET FIELD FONTS
+        newShowNameField.setTextAppearance(createShowActivityContext, promptFontResId);
+        newShowDateField.setTextAppearance(createShowActivityContext, promptFontResId);
+        newShowLocationField.setTextAppearance(createShowActivityContext, promptFontResId);
+        newShowNotesField.setTextAppearance(createShowActivityContext, promptFontResId);
     }
 
     ////////DATA METHODS AND BUTTON ACTIONS////////////////////
@@ -74,7 +98,7 @@ public class CreateShow extends AppCompatActivity {
     }
 
     private void closeOutActivity() {
-        Toast showAddedToast = Toast.makeText(addShowActivityContext, "Show Added!", Toast.LENGTH_SHORT);
+        Toast showAddedToast = Toast.makeText(createShowActivityContext, "Show Added!", Toast.LENGTH_SHORT);
         showAddedToast.show();
         finish();
     }
@@ -91,7 +115,7 @@ public class CreateShow extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            progressDialog = new ProgressDialog(addShowActivityContext);
+            progressDialog = new ProgressDialog(createShowActivityContext);
             progressDialog.setMessage("Adding New Show...");
             progressDialog.show();
         }
@@ -100,8 +124,8 @@ public class CreateShow extends AppCompatActivity {
         protected Void doInBackground(Void... params) {
             try {
                 //ACCESS CLOVER
-                merchantAccount = CloverAccount.getAccount(addShowActivityContext);
-                inventoryConnector = new InventoryConnector(addShowActivityContext, merchantAccount, null);
+                merchantAccount = CloverAccount.getAccount(createShowActivityContext);
+                inventoryConnector = new InventoryConnector(createShowActivityContext, merchantAccount, null);
                 inventoryConnector.connect();
 
                 //CREATE NEW LABEL AND SET DATA, ADD TO CLOVER

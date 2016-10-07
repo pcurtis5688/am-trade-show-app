@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -27,6 +28,8 @@ import java.util.List;
 public class EditShow extends AppCompatActivity {
     private Context editShowActivityContext;
     //UI FIELDS
+    private int headerFontResId;
+    private int promptFieldFontResId;
     private EditText showNameEditText;
     private EditText showDateEditText;
     private EditText showLocationEditText;
@@ -49,11 +52,13 @@ public class EditShow extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         editShowActivityContext = this;
+        handleSizing();
         TextView showNameAndIDHeaderTV = (TextView) findViewById(R.id.edit_show_name_and_id_header);
         showNameEditText = (EditText) findViewById(R.id.edit_show_name_field);
         showDateEditText = (EditText) findViewById(R.id.edit_show_date_field);
         showLocationEditText = (EditText) findViewById(R.id.edit_show_location_field);
         showNotesEditText = (EditText) findViewById(R.id.edit_show_notes_field);
+        stylePromptsAndFields();
 
         ////////////DATA HANDLING/////////////////
         Bundle extrasBundle = getIntent().getExtras();
@@ -65,7 +70,37 @@ public class EditShow extends AppCompatActivity {
             populateFields();
             String editShowHeader = getResources().getString(R.string.edit_show_header_string, showName, showDate, showLocation);
             showNameAndIDHeaderTV.setText(editShowHeader);
+            showNameAndIDHeaderTV.setTextAppearance(editShowActivityContext, headerFontResId);
         }
+    }
+
+    private void handleSizing() {
+        String platform = GlobalUtils.determinePlatform(getApplicationContext());
+        if (platform.equalsIgnoreCase("station")) {
+            headerFontResId = R.style.activity_header_style_station;
+            promptFieldFontResId = R.style.prompt_text_font_style_station;
+        } else {
+            headerFontResId = R.style.activity_header_style_mobile;
+            promptFieldFontResId = R.style.prompt_text_font_style_mobile;
+        }
+    }
+
+    private void stylePromptsAndFields() {
+        ////// GET PVT HANDLERS TO PROMPTS
+        TextView editShowNamePrompt = (TextView) findViewById(R.id.edit_show_name_prompt);
+        TextView editShowDatePrompt = (TextView) findViewById(R.id.edit_show_date_prompt);
+        TextView editShowLocationPrompt = (TextView) findViewById(R.id.edit_show_location_prompt);
+        TextView editShowNotesPrompt = (TextView) findViewById(R.id.edit_show_notes_prompt);
+        ////// STYLE PROMPTS
+        editShowNamePrompt.setTextAppearance(editShowActivityContext, promptFieldFontResId);
+        editShowDatePrompt.setTextAppearance(editShowActivityContext, promptFieldFontResId);
+        editShowLocationPrompt.setTextAppearance(editShowActivityContext, promptFieldFontResId);
+        editShowNotesPrompt.setTextAppearance(editShowActivityContext, promptFieldFontResId);
+        ////// STYLE FIELDS
+        showNameEditText.setTextAppearance(editShowActivityContext, promptFieldFontResId);
+        showDateEditText.setTextAppearance(editShowActivityContext, promptFieldFontResId);
+        showLocationEditText.setTextAppearance(editShowActivityContext, promptFieldFontResId);
+        showNotesEditText.setTextAppearance(editShowActivityContext, promptFieldFontResId);
     }
 
     private void decoupleShowName() {

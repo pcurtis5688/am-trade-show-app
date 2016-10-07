@@ -165,7 +165,7 @@ public class ConfigureBooths extends AppCompatActivity
         ////// not really sure.
         Button boothFilterButton = new Button(configureBoothsActivityContext);
         boothFilterButton.setText(getResources().getString(R.string.configure_show_booths_filter_btn_text));
-        boothFilterButton.setTextAppearance(configureBoothsActivityContext, R.style.non_italic_blue_button_style);
+        boothFilterButton.setTextAppearance(configureBoothsActivityContext, R.style.standard_button_style_mobile);
         boothFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -274,7 +274,7 @@ public class ConfigureBooths extends AppCompatActivity
                 .
 
                         getString(R.string.action_create_new_booth_string));
-        addBoothButton.setTextAppearance(configureBoothsActivityContext, R.style.non_italic_blue_button_style);
+        addBoothButton.setTextAppearance(configureBoothsActivityContext, R.style.standard_button_style_mobile);
         addBoothButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -95,7 +95,7 @@ public class TradeShows extends AppCompatActivity
                 ///// SHOW NAME- BUTTON TXT- BUTTON ACTION
                 newShowTV.setText(showNameForUser);
                 editShowButton.setText(getResources().getString(R.string.trade_shows_edit_btn_string));
-                editShowButton.setTextAppearance(tradeShowsActivityContext, R.style.non_italic_blue_button_style);
+                editShowButton.setTextAppearance(tradeShowsActivityContext, R.style.standard_button_style_mobile);
                 editShowButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -126,7 +126,7 @@ public class TradeShows extends AppCompatActivity
         //// ADD SHOW BUTTON TO TABLE
         Button addShowButton = new Button(tradeShowsActivityContext);
         addShowButton.setText(getResources().getString(R.string.add_show_string));
-        addShowButton.setTextAppearance(tradeShowsActivityContext, R.style.non_italic_blue_button_style);
+        addShowButton.setTextAppearance(tradeShowsActivityContext, R.style.standard_button_style_mobile);
         addShowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -147,9 +147,10 @@ public class TradeShows extends AppCompatActivity
         startActivity(editShowIntent);
     }
 
-    private void handleSizing(){
+    private void handleSizing() {
         platform = GlobalUtils.determinePlatform(getApplicationContext());
-        if (platform.equalsIgnoreCase("station")) tableRowFontResId = R.style.trade_show_row_style_station;
+        if (platform.equalsIgnoreCase("station"))
+            tableRowFontResId = R.style.trade_show_row_style_station;
         else tableRowFontResId = R.style.trade_show_row_style_mobile;
     }
 

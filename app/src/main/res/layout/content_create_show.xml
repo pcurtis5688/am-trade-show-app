@@ -30,6 +30,7 @@
         <TableRow>
 
             <TextView
+                android:id="@+id/create_show_name_prompt"
                 android:text="@string/add_show_name_string"
                 android:textSize="@dimen/dimen_24sp"
                 android:textStyle="bold" />
@@ -46,6 +47,7 @@
         <TableRow>
 
             <TextView
+                android:id="@+id/create_show_date_prompt"
                 android:text="@string/add_show_date_string"
                 android:textSize="@dimen/dimen_24sp"
                 android:textStyle="bold" />
@@ -62,6 +64,7 @@
         <TableRow>
 
             <TextView
+                android:id="@+id/create_show_location_prompt"
                 android:text="@string/add_show_location_string"
                 android:textSize="@dimen/dimen_24sp"
                 android:textStyle="bold" />
@@ -77,6 +80,7 @@
         <TableRow>
 
             <TextView
+                android:id="@+id/create_show_notes_prompt"
                 android:text="@string/add_show_notes_string"
                 android:textSize="@dimen/dimen_24sp"
                 android:textStyle="bold" />
@@ -100,14 +104,14 @@
 
             <Button
                 android:id="@+id/cancel_add_new_show_btn"
-                style="@style/non_italic_blue_button_style"
+                style="@style/standard_button_style_mobile"
                 android:onClick="cancelAddNewShowAction"
                 android:text="@string/cancel_show_add_string"
                 android:textAlignment="center" />
 
             <Button
                 android:id="@+id/add_new_show_submit_btn"
-                style="@style/non_italic_blue_button_style"
+                style="@style/standard_button_style_mobile"
                 android:onClick="addNewShowAction"
                 android:text="@string/add_new_show_btn_string"
                 android:textAlignment="center" />
