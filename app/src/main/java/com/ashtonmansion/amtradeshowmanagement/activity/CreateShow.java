@@ -6,14 +6,17 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ashtonmansion.amtradeshowmanagement.R;
+import com.ashtonmansion.amtradeshowmanagement.util.GlobalUtils;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
@@ -26,6 +29,7 @@ public class CreateShow extends AppCompatActivity {
     private Context addShowActivityContext;
     private String formattedFullShowName;
     /////UI FIELDS
+    private int headerFontResId;
     private EditText newShowNameField;
     private EditText newShowDateField;
     private EditText newShowLocationField;
@@ -42,10 +46,20 @@ public class CreateShow extends AppCompatActivity {
 
         ///////ACTIVITY CONTEXT AND UI FIELD WORK //////////////////
         addShowActivityContext = this;
+        handleSizing();
+        TextView headerView = (TextView) findViewById(R.id.create_show_header);
+        headerView.setTextAppearance(addShowActivityContext, headerFontResId);
         newShowNameField = (EditText) findViewById(R.id.add_show_name_field);
         newShowDateField = (EditText) findViewById(R.id.add_show_date_field);
         newShowLocationField = (EditText) findViewById(R.id.add_show_location_field);
         newShowNotesField = (EditText) findViewById(R.id.add_show_notes_field);
+    }
+
+    private void handleSizing() {
+        String platform = GlobalUtils.determinePlatform(getApplicationContext());
+        if (platform.equalsIgnoreCase("station"))
+            headerFontResId = R.style.activity_header_style_station;
+        else headerFontResId = R.style.activity_header_style_mobile;
     }
 
     ////////DATA METHODS AND BUTTON ACTIONS////////////////////

@@ -37,6 +37,8 @@ public class TradeShows extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     //ACTIVITY AND UI HANDLING
     private Context tradeShowsActivityContext;
+    private String platform;
+    private int tableRowFontResId;
     private TableLayout showSelectionTable;
     // DATA HANDLING
     private List<Tag> showList;
@@ -58,6 +60,7 @@ public class TradeShows extends AppCompatActivity
 
         ///// DATA WORK
         tradeShowsActivityContext = this;
+        handleSizing();
         showSelectionTable = (TableLayout) findViewById(R.id.trade_show_selection_table);
     }
 
@@ -87,7 +90,7 @@ public class TradeShows extends AppCompatActivity
                 Button editShowButton = new Button(tradeShowsActivityContext);
 
                 ///// HANDLE FONTS
-                newShowTV.setTextAppearance(tradeShowsActivityContext, R.style.trade_show_row_style);
+                newShowTV.setTextAppearance(tradeShowsActivityContext, tableRowFontResId);
 
                 ///// SHOW NAME- BUTTON TXT- BUTTON ACTION
                 newShowTV.setText(showNameForUser);
@@ -142,6 +145,12 @@ public class TradeShows extends AppCompatActivity
         Intent editShowIntent = new Intent(tradeShowsActivityContext, EditShow.class);
         editShowIntent.putExtra("show", showToPass);
         startActivity(editShowIntent);
+    }
+
+    private void handleSizing(){
+        platform = GlobalUtils.determinePlatform(getApplicationContext());
+        if (platform.equalsIgnoreCase("station")) tableRowFontResId = R.style.trade_show_row_style_station;
+        else tableRowFontResId = R.style.trade_show_row_style_mobile;
     }
 
     ////////////NAVIGATION HANDLING METHODS ////////////////////

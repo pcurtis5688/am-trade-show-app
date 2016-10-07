@@ -130,11 +130,18 @@
         <item name="android:layout_marginStart">@dimen/dimen_25dp</item>
     </style>
 
-    <style name="trade_show_row_style">
+    <style name="trade_show_row_style_station">
         <item name="android:textColor">@color/matching_header_color</item>
         <item name="android:textAlignment">textStart</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/dimen_30sp</item>
+    </style>
+
+    <style name="trade_show_row_style_mobile">
+        <item name="android:textColor">@color/matching_header_color</item>
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/dimen_22sp</item>
     </style>
 
     <!--STYLES FOR STATION V MOBILE -->

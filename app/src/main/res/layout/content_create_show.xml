@@ -18,25 +18,29 @@
         android:layout_height="wrap_content"
         android:stretchColumns="*">
 
-        <TableRow android:layout_marginBottom="@dimen/dimen_25dp">
+        <TableRow android:layout_marginBottom="@dimen/dimen_10dp">
 
             <TextView
-                style="@style/activity_header_style_station"
+                android:id="@+id/create_show_header"
                 android:layout_span="2"
-                android:text="@string/add_show_string" />
+                android:text="@string/add_show_string"
+                android:textAlignment="center" />
         </TableRow>
 
         <TableRow>
 
             <TextView
+                style="@style/prompt_text_font_style"
                 android:text="@string/add_show_name_string"
                 android:textSize="@dimen/dimen_24sp"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/add_show_name_field"
+                style="@style/prompt_text_font_style"
                 android:hint="@string/add_show_name_hint"
                 android:maxLength="50"
+                android:singleLine="true"
                 android:textAlignment="center"
                 android:textSize="@dimen/dimen_24sp" />
         </TableRow>
@@ -44,14 +48,17 @@
         <TableRow>
 
             <TextView
+                style="@style/prompt_text_font_style"
                 android:text="@string/add_show_date_string"
                 android:textSize="@dimen/dimen_24sp"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/add_show_date_field"
+                style="@style/prompt_text_font_style"
                 android:hint="@string/add_show_date_hint"
                 android:inputType="date"
+                android:singleLine="true"
                 android:textAlignment="center"
                 android:textSize="@dimen/dimen_24sp" />
         </TableRow>
@@ -59,13 +66,16 @@
         <TableRow>
 
             <TextView
+                style="@style/prompt_text_font_style"
                 android:text="@string/add_show_location_string"
                 android:textSize="@dimen/dimen_24sp"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/add_show_location_field"
+                style="@style/prompt_text_font_style"
                 android:hint="@string/add_show_location_hint"
+                android:singleLine="true"
                 android:textAlignment="center"
                 android:textSize="@dimen/dimen_24sp" />
         </TableRow>
@@ -73,13 +83,16 @@
         <TableRow>
 
             <TextView
+                style="@style/prompt_text_font_style"
                 android:text="@string/add_show_notes_string"
                 android:textSize="@dimen/dimen_24sp"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/add_show_notes_field"
+                style="@style/prompt_text_font_style"
                 android:hint="@string/add_show_notes_hint"
+                android:singleLine="true"
                 android:textAlignment="center"
                 android:textSize="@dimen/dimen_24sp" />
         </TableRow>
@@ -95,12 +108,14 @@
 
             <Button
                 android:id="@+id/cancel_add_new_show_btn"
+                style="@style/non_italic_blue_button_style"
                 android:onClick="cancelAddNewShowAction"
                 android:text="@string/cancel_show_add_string"
                 android:textAlignment="center" />
 
             <Button
                 android:id="@+id/add_new_show_submit_btn"
+                style="@style/non_italic_blue_button_style"
                 android:onClick="addNewShowAction"
                 android:text="@string/add_new_show_btn_string"
                 android:textAlignment="center" />

@@ -38,6 +38,7 @@ import java.util.Locale;
 public class EditBooth extends AppCompatActivity {
     //////ACTIVITY VARS
     private Context editBoothActivityContext;
+    private int headerFontResId;
     ////// CLOVER VARS
     private Item booth;
     private List<Tag> boothTags;
@@ -55,12 +56,14 @@ public class EditBooth extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        editBoothActivityContext = this;
-        //////////////////NAVIGATION AND UI WORK//////////////
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_booth);
         Toolbar toolbar = (Toolbar) findViewById(R.id.edit_booth_toolbar);
         setSupportActionBar(toolbar);
+
+        //////////////////NAVIGATION AND UI WORK//////////////
+        editBoothActivityContext = this;
+        handleSizing();
 
         TextView editBoothHeaderTv = (TextView) findViewById(R.id.edit_booth_header);
         editBoothNumberField = (EditText) findViewById(R.id.edit_booth_no_field);
@@ -102,6 +105,7 @@ public class EditBooth extends AppCompatActivity {
         if (extrasBundle != null) {
             booth = (Item) extrasBundle.get("booth");
             editBoothHeaderTv.setText(getApplicationContext().getString(R.string.edit_booth_header_string, booth.getName()));
+            editBoothHeaderTv.setTextAppearance(editBoothActivityContext, headerFontResId);
             editBoothNumberField.setText(booth.getSku());
             editBoothPriceField.setText(GlobalUtils.getFormattedPriceStringFromLong(booth.getPrice()));
             boothTags = new ArrayList<>();
@@ -244,6 +248,13 @@ public class EditBooth extends AppCompatActivity {
                 Toast.makeText(editBoothActivityContext, getResources().getString(R.string.booth_successfully_made_available_msg), Toast.LENGTH_LONG).show();
             }
         }.execute();
+    }
+
+    private void handleSizing() {
+        String platform = GlobalUtils.determinePlatform(getApplicationContext());
+        if (platform.equalsIgnoreCase("station"))
+            headerFontResId = R.style.activity_header_style_station;
+        else headerFontResId = R.style.activity_header_style_mobile;
     }
 
     private class UpdateBoothTask extends AsyncTask<Void, Void, Void> {
