@@ -12,8 +12,7 @@ import java.util.List;
 
 public class ParcelableListener implements Parcelable {
     // Creator
-    public static final Parcelable.Creator CREATOR
-            = new Parcelable.Creator() {
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
         public ParcelableListener createFromParcel(Parcel in) {
             return new ParcelableListener(in);
         }
@@ -51,7 +50,7 @@ public class ParcelableListener implements Parcelable {
         return orderUpdateListener2;
     }
 
-    public void setOrderUpdateListener2(OrderConnector.OnOrderUpdateListener2 orderUpdateListener2) {
+    private void setOrderUpdateListener2(OrderConnector.OnOrderUpdateListener2 orderUpdateListener2) {
         this.orderUpdateListener2 = orderUpdateListener2;
     }
 
@@ -59,7 +58,7 @@ public class ParcelableListener implements Parcelable {
         return orderID;
     }
 
-    public void setOrderID(String orderID) {
+    private void setOrderID(String orderID) {
         this.orderID = orderID;
     }
 
@@ -84,6 +83,7 @@ public class ParcelableListener implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(orderID);
+        dest.writeValue(orderFetched);
         dest.writeTypedList(parcelableListeners);
     }
 }

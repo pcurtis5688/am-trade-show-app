@@ -70,7 +70,7 @@
     <string name="cancel_show_edit_string">Cancel</string>
     <string name="add_new_show_btn_string">Add New Show</string>
     <string name="save_show_changes_btn_string">Save Changes</string>
-    <string name="no_trade_shows_available_string">Currently no trade shows have been created. Please create one.</string>
+    <string name="no_trade_shows_available_string">Currently no trade shows have been created. <br/> Please create one.</string>
 
     <!-- CONFIGURE BOOTHS STRINGS //////////////////////////////-->
     <string name="configure_booth_show_selection_string">Select Show</string>

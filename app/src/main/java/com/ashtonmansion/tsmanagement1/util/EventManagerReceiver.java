@@ -78,16 +78,15 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
 }
 
 class GetItemNameTask extends AsyncTask<Void, Void, String> {
-    public AsyncResponse delegate = null;
+    private AsyncResponse delegate = null;
     private InventoryConnector inventoryConnector;
     ////// INPUTS
-    private Context appContext;
     private String itemID;
     ////// RESULT ITEM NAME
     private String itemName;
 
     void setData(Context taskContext, String itemID) {
-        this.appContext = taskContext.getApplicationContext();
+        Context appContext = taskContext.getApplicationContext();
         this.itemID = itemID;
         inventoryConnector = new InventoryConnector(appContext, CloverAccount.getAccount(appContext), null);
         inventoryConnector.connect();
@@ -242,10 +241,9 @@ class AddOrderListenerTask extends AsyncTask<Void, Void, ParcelableListener> {
             };
 
 
-            parcelableListener = new ParcelableListener();
-            parcelableListener.setOrderID(orderID);
-            parcelableListener.setOrderUpdateListener2(orderUpdateListener2);
-            //initializeObjects();
+        //    parcelableListener = new ParcelableListener();
+        //  parcelableListener.setOrderID(orderID);
+        //initializeObjects();
             orderConnector.addOnOrderChangedListener(orderUpdateListener2);
         } catch (Exception e) {
             Log.d("ExceptionCheckInBooth: ", e.getMessage(), e.getCause());
