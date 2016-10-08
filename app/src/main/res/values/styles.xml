@@ -29,7 +29,7 @@
         <item name="android:textColor">@color/matching_header_color</item>
         <item name="android:layout_marginBottom">10dp</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textSize">@dimen/dimen_28sp</item>
+        <item name="android:textSize">@dimen/dimen_30sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
@@ -56,7 +56,7 @@
 
     <style name="reserve_through_register_style">
         <item name="android:textAlignment">center</item>
-        <item name="android:textSize">@dimen/dimen_36sp</item>
+        <item name="android:textSize">@dimen/dimen_30sp</item>
         <item name="android:textStyle">bold|italic</item>
         <item name="android:layout_span">2</item>
         <item name="android:layout_marginTop">@dimen/dimen_150dp</item>
@@ -103,7 +103,7 @@
         <item name="android:textColor">@color/matching_header_color</item>
     </style>
 
-    <style name="row_item_button_style">
+    <style name="row_item_button_style_both_platforms_currently">
         <item name="android:textSize">@dimen/dimen_24sp</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">@color/matching_header_color</item>

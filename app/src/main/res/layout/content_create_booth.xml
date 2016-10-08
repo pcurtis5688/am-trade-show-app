@@ -25,7 +25,8 @@
         <EditText
             android:id="@+id/create_booth_number_field"
             android:hint="@string/create_booth_number_hint"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:textAlignment="center" />
     </TableRow>
 
     <TableRow>
@@ -38,7 +39,8 @@
             android:id="@+id/create_booth_price_field"
             android:hint="@string/create_booth_price_hint"
             android:inputType="numberDecimal"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:textAlignment="center" />
     </TableRow>
 
     <TableRow>
@@ -50,7 +52,8 @@
         <EditText
             android:id="@+id/create_booth_size_field"
             android:hint="@string/create_booth_size_hint"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:textAlignment="center" />
     </TableRow>
 
     <TableRow>
@@ -62,7 +65,8 @@
         <EditText
             android:id="@+id/create_booth_area_field"
             android:hint="@string/create_booth_area_hint"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:textAlignment="center" />
     </TableRow>
 
     <TableRow>
@@ -74,7 +78,8 @@
         <EditText
             android:id="@+id/create_booth_type_field"
             android:hint="@string/create_booth_type_hint"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:textAlignment="center" />
     </TableRow>
 
     <TableRow>

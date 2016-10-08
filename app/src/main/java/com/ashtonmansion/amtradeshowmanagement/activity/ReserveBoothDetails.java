@@ -51,7 +51,6 @@ import static android.view.View.GONE;
 public class ReserveBoothDetails extends AppCompatActivity {
     private Context reserveBoothDetailsActivityContext;
     private boolean orderIDOriginBoothCode;
-    private String platform;
     private int activityHeaderResId;
     ///////SHOW DATA
     private String showName;
@@ -688,7 +687,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
     }
 
     private void handleSizing() {
-        platform = GlobalUtils.determinePlatform(getApplicationContext());
+        String platform = GlobalUtils.determinePlatform(getApplicationContext());
         if (platform.equalsIgnoreCase("station"))
             activityHeaderResId = R.style.activity_header_style_station;
         else activityHeaderResId = R.style.activity_header_style_mobile;

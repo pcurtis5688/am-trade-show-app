@@ -19,6 +19,7 @@
         android:paddingTop="@dimen/dimen_25dp">
 
         <TableLayout
+            android:layout_marginBottom="@dimen/dimen_25dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:stretchColumns="*">
@@ -27,10 +28,10 @@
 
                 <TextView
                     android:id="@+id/booth_reservation_header"
-                    style="@style/activity_header_style_station"
                     android:layout_width="match_parent"
+                    android:textAlignment="center"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dimen_12dp"
+                    android:layout_marginBottom="@dimen/dimen_25dp"
                     android:layout_span="4" />
             </TableRow>
 
@@ -298,11 +299,11 @@
                 <TableLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dimen_12dp"
                     android:stretchColumns="*">
 
                     <TableRow
                         android:id="@+id/make_reservation_through_register_warning_row"
+                        android:layout_marginBottom="@dimen/dimen_25dp"
                         android:visibility="gone" />
 
                     <TableRow>

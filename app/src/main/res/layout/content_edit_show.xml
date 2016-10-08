@@ -34,7 +34,8 @@
             <EditText
                 android:id="@+id/edit_show_name_field"
                 android:hint="@string/edit_show_name_hint"
-                android:maxLength="50" />
+                android:maxLength="50"
+                android:singleLine="true" />
         </TableRow>
 
         <TableRow>
@@ -46,7 +47,8 @@
             <EditText
                 android:id="@+id/edit_show_date_field"
                 android:hint="@string/edit_show_date_hint"
-                android:inputType="date" />
+                android:inputType="date"
+                android:singleLine="true" />
         </TableRow>
 
         <TableRow>
@@ -57,7 +59,8 @@
 
             <EditText
                 android:id="@+id/edit_show_location_field"
-                android:hint="@string/edit_show_location_hint" />
+                android:hint="@string/edit_show_location_hint"
+                android:singleLine="true" />
         </TableRow>
 
         <TableRow>
@@ -68,7 +71,8 @@
 
             <EditText
                 android:id="@+id/edit_show_notes_field"
-                android:hint="@string/edit_show_notes_hint" />
+                android:hint="@string/edit_show_notes_hint"
+                android:singleLine="true" />
         </TableRow>
     </TableLayout>
 

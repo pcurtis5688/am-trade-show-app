@@ -234,7 +234,7 @@ public class ConfigureBooths extends AppCompatActivity
 
                 Button editBoothButton = new Button(configureBoothsActivityContext);
                 editBoothButton.setText(getResources().getString(R.string.configure_show_booths_edit_booth_btn_text));
-                editBoothButton.setTextAppearance(configureBoothsActivityContext, R.style.row_item_button_style);
+                editBoothButton.setTextAppearance(configureBoothsActivityContext, R.style.row_item_button_style_both_platforms_currently);
                 editBoothButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

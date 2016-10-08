@@ -202,7 +202,7 @@ public class BoothReservation extends AppCompatActivity {
                 }
 
                 Button reserveBoothButton = new Button(boothReservationActivityContext);
-                reserveBoothButton.setTextAppearance(boothReservationActivityContext, R.style.row_item_button_style);
+                reserveBoothButton.setTextAppearance(boothReservationActivityContext, R.style.row_item_button_style_both_platforms_currently);
                 reserveBoothButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

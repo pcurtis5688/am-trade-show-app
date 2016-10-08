@@ -83,7 +83,7 @@
     <string name="configure_show_booths_customer_header">Customer</string>
     <string name="configure_show_booths_price_header">Price</string>
     <string name="configure_show_booths_filter_btn_text">Filter Booths</string>
-    <string name="configure_show_booths_edit_booth_btn_text">Edit Booth</string>
+    <string name="configure_show_booths_edit_booth_btn_text">Edit</string>
 
     <!-- CREATE BOOTH STRINGS////////////////////////////////////-->
     <string name="booth_name_string">Booth #%1$s (%2$s, %3$s, %4$s)</string>
@@ -94,7 +94,7 @@
     <string name="create_booth_area_prompt">Area:</string>
     <string name="create_booth_type_prompt">Booth Type:</string>
     <string name="create_booth_name_hint">[Booth Name]</string>
-    <string name="create_booth_number_hint">[Booth Number]</string>
+    <string name="create_booth_number_hint">[Booth #]</string>
     <string name="create_booth_price_hint">[Price]</string>
     <string name="create_booth_size_hint">[Size]</string>
     <string name="create_booth_area_hint">[Area]</string>
