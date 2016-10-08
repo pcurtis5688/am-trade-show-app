@@ -2,11 +2,13 @@ package com.ashtonmansion.tsmanagement1.util;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.clover.sdk.v3.order.Order;
 import com.clover.sdk.v3.order.OrderConnector;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ParcelableListener implements Parcelable {
     // Creator
@@ -22,7 +24,7 @@ public class ParcelableListener implements Parcelable {
     };
     private String orderID;
     private OrderConnector.OnOrderUpdateListener2 orderUpdateListener2;
-    private ArrayList<ParcelableListener> parcelableListeners;
+    private List<ParcelableListener> parcelableListeners;
     private Order orderFetched;
     private String finalBoothID;
     private int idx;
@@ -32,15 +34,18 @@ public class ParcelableListener implements Parcelable {
     }
 
     // "De-parcel object
-    private ParcelableListener(Parcel in) {
-        orderID = in.readString();
-        if (in.readValue(Order.class.getClassLoader()) != null) {
-            orderFetched = (Order) in.readValue(Order.class.getClassLoader());
-        }
-        idx = in.readInt();
+    private ParcelableListener(Parcel sourceParcel) {
         parcelableListeners = new ArrayList<>();
-        in.readTypedList(parcelableListeners, ParcelableListener.CREATOR);
+
+        orderID = sourceParcel.readString();
+        if (sourceParcel.readValue(Order.class.getClassLoader()) != null) {
+            orderFetched = (Order) sourceParcel.readValue(Order.class.getClassLoader());
+        }
+
+        sourceParcel.readTypedList(parcelableListeners, ParcelableListener.CREATOR);
+        Log.d("Through Parcel ", "Read");
     }
+
 
     public OrderConnector.OnOrderUpdateListener2 getOrderUpdateListener2() {
         return orderUpdateListener2;
@@ -78,6 +83,7 @@ public class ParcelableListener implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(orderID);
         dest.writeTypedList(parcelableListeners);
     }
 }

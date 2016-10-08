@@ -35,7 +35,6 @@ import java.util.ListIterator;
 public class BoothReservation extends AppCompatActivity {
     ////// CONTEXT AND UI OBJECTS
     private Context boothReservationActivityContext;
-    private String platform;
     private int tableRowHeaderStyleId;
     private int tableRowStyleId;
     private int availableBoothStyle;
@@ -200,7 +199,7 @@ public class BoothReservation extends AppCompatActivity {
                 }
 
                 Button reserveBoothButton = new Button(boothReservationActivityContext);
-                reserveBoothButton.setTextAppearance(boothReservationActivityContext, R.style.row_item_button_style_both_platforms_currently);
+                reserveBoothButton.setTextAppearance(boothReservationActivityContext, R.style.standard_button_style_mobile);
                 reserveBoothButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -362,7 +361,7 @@ public class BoothReservation extends AppCompatActivity {
     }
 
     private void handleSizing() {
-        platform = GlobalUtils.determinePlatform(getApplicationContext());
+        String platform = GlobalUtils.determinePlatform(getApplicationContext());
         if (platform.equalsIgnoreCase("station")) {
             tableRowHeaderStyleId = R.style.table_header_text_style_station;
             tableRowStyleId = R.style.large_table_row_font_station;

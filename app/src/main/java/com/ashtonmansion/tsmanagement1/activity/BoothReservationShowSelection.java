@@ -86,13 +86,22 @@ public class BoothReservationShowSelection extends Activity
                 Button showSelectButton = new Button(boothReservationShowSelectionActivityContext);
 
                 ///// HANDLE FONTS
-                showSelectButton.setTextAppearance(boothReservationShowSelectionActivityContext, R.style.show_selection_button_style);
-
+                showSelectButton.setTextAppearance(boothReservationShowSelectionActivityContext, R.style.trade_show_row_select_buttons_leftalign);
+                TableLayout.LayoutParams tableRowParams =
+                        new TableLayout.LayoutParams
+                                (TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
+                int leftMargin = 20;
+                int topMargin = 6;
+                int rightMargin = 20;
+                int bottomMargin = 6;
+                tableRowParams.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
+                newShowSelectionRow.setLayoutParams(tableRowParams);
                 ///// SHOW NAME BUTTON TEXT AND ACTION
                 showSelectButton.setText(showNameForUser);
                 showSelectButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+
                         selectShowForReservation(finalizedShowObject);
                     }
                 });

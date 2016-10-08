@@ -95,11 +95,19 @@ public class EditShow extends AppCompatActivity {
         editShowDatePrompt.setTextAppearance(editShowActivityContext, promptFieldFontResId);
         editShowLocationPrompt.setTextAppearance(editShowActivityContext, promptFieldFontResId);
         editShowNotesPrompt.setTextAppearance(editShowActivityContext, promptFieldFontResId);
+        editShowNamePrompt.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        editShowDatePrompt.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        editShowLocationPrompt.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        editShowNotesPrompt.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         ////// STYLE FIELDS
         showNameEditText.setTextAppearance(editShowActivityContext, promptFieldFontResId);
         showDateEditText.setTextAppearance(editShowActivityContext, promptFieldFontResId);
         showLocationEditText.setTextAppearance(editShowActivityContext, promptFieldFontResId);
         showNotesEditText.setTextAppearance(editShowActivityContext, promptFieldFontResId);
+        showNameEditText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        showDateEditText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        showLocationEditText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        showNotesEditText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
     }
 
     private void decoupleShowName() {

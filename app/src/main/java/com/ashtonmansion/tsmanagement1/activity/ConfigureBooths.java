@@ -231,7 +231,7 @@ public class ConfigureBooths extends AppCompatActivity
 
                 Button editBoothButton = new Button(configureBoothsActivityContext);
                 editBoothButton.setText(getResources().getString(R.string.configure_show_booths_edit_booth_btn_text));
-                editBoothButton.setTextAppearance(configureBoothsActivityContext, R.style.row_item_button_style_both_platforms_currently);
+                editBoothButton.setTextAppearance(configureBoothsActivityContext, R.style.standard_button_style_mobile);
                 editBoothButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -239,6 +239,9 @@ public class ConfigureBooths extends AppCompatActivity
                     }
                 });
                 ///// ADD NEW ROW TO BOOTH CONFIG TABLE
+                TableLayout.LayoutParams params = new TableLayout.LayoutParams();
+                params.leftMargin = 20;
+                params.rightMargin = 20;
                 newBoothRow.addView(boothNumberTv);
                 newBoothRow.addView(boothPriceTv);
                 newBoothRow.addView(boothSizeTv);
@@ -246,7 +249,7 @@ public class ConfigureBooths extends AppCompatActivity
                 newBoothRow.addView(boothTypeTv);
                 newBoothRow.addView(boothAvailabilityTv);
                 newBoothRow.addView(editBoothButton);
-                showTable.addView(newBoothRow);
+                showTable.addView(newBoothRow, params);
             }
         } else {
             ///// HANDLE CASE - NO BOOTHS TO CONFIGURE

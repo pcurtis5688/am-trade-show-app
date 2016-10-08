@@ -94,7 +94,7 @@ public class TradeShows extends AppCompatActivity
                 ///// SHOW NAME- BUTTON TXT- BUTTON ACTION
                 newShowTV.setText(showNameForUser);
                 editShowButton.setText(getResources().getString(R.string.trade_shows_edit_btn_string));
-                editShowButton.setTextAppearance(tradeShowsActivityContext, R.style.row_item_button_style_both_platforms_currently);
+                editShowButton.setTextAppearance(tradeShowsActivityContext, R.style.standard_button_style_mobile);
                 editShowButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
