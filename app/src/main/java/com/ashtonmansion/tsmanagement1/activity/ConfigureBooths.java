@@ -73,6 +73,7 @@ public class ConfigureBooths extends AppCompatActivity
         configureBoothsActivityContext = this;
         handleSizing();
         showTable = (TableLayout) findViewById(R.id.booths_for_show_table);
+
         lastSortedBy = "none";
 
         Bundle extrasBundle = getIntent().getExtras();
@@ -239,9 +240,6 @@ public class ConfigureBooths extends AppCompatActivity
                     }
                 });
                 ///// ADD NEW ROW TO BOOTH CONFIG TABLE
-                TableLayout.LayoutParams params = new TableLayout.LayoutParams();
-                params.leftMargin = 20;
-                params.rightMargin = 20;
                 newBoothRow.addView(boothNumberTv);
                 newBoothRow.addView(boothPriceTv);
                 newBoothRow.addView(boothSizeTv);
@@ -249,7 +247,7 @@ public class ConfigureBooths extends AppCompatActivity
                 newBoothRow.addView(boothTypeTv);
                 newBoothRow.addView(boothAvailabilityTv);
                 newBoothRow.addView(editBoothButton);
-                showTable.addView(newBoothRow, params);
+                showTable.addView(newBoothRow);
             }
         } else {
             ///// HANDLE CASE - NO BOOTHS TO CONFIGURE
@@ -286,8 +284,6 @@ public class ConfigureBooths extends AppCompatActivity
         params.span = 7;
         addBoothButton.setLayoutParams(params);
         addBoothButtonRow.addView(addBoothButton);
-        showTable.addView(addBoothButtonRow);
-        ////// SORT BY BOOTH NO INITIALLY
     }
 
     private void editBoothAction(BoothWithTags boothWithTags) {

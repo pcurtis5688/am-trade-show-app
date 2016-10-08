@@ -209,6 +209,8 @@
         <item name="android:textAlignment">textStart</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/dimen_30sp</item>
+        <item name="android:layout_marginStart">@dimen/dimen_42dp</item>
+        <item name="android:layout_marginEnd">@dimen/dimen_42dp</item>
     </style>
 
     <style name="trade_show_row_style_mobile">

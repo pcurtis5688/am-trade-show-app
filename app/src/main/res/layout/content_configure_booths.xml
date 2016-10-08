@@ -13,8 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fadeScrollbars="false"
-        android:paddingEnd="@dimen/dimen_15dp"
-        android:paddingStart="@dimen/dimen_15dp"
+        android:paddingEnd="@dimen/dimen_42dp"
+        android:paddingStart="@dimen/dimen_42dp"
         android:paddingTop="@dimen/dimen_15dp">
 
         <TableLayout

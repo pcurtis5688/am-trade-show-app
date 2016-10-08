@@ -17,8 +17,6 @@
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingEnd="@dimen/dimen_15dp"
-            android:paddingStart="@dimen/dimen_15dp"
             android:stretchColumns="*">
 
             <TableRow>
@@ -37,6 +35,8 @@
                     android:id="@+id/booth_selection_booth_table"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/dimen_25dp"
+                    android:layout_marginStart="@dimen/dimen_25dp"
                     android:stretchColumns="*" />
             </TableRow>
         </TableLayout>

@@ -86,7 +86,15 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
 
                 ///// HANDLE FONTS
                 showSelectionButton.setTextAppearance(configureBoothsShowSelectionActivityContext, R.style.trade_show_row_select_buttons_leftalign);
-
+                TableLayout.LayoutParams tableRowParams =
+                        new TableLayout.LayoutParams
+                                (TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
+                int leftMargin = 20;
+                int topMargin = 6;
+                int rightMargin = 20;
+                int bottomMargin = 6;
+                tableRowParams.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
+                newShowSelectionRow.setLayoutParams(tableRowParams);
                 ///// SET SHOW NAME AND BUTTON TEXT
                 showSelectionButton.setText(showNameForUser);
                 showSelectionButton.setOnClickListener(new View.OnClickListener() {
