@@ -103,7 +103,11 @@ public class TradeShows extends AppCompatActivity
                 });
 
                 ///// ADD NEW ROW
-                newShowRow.addView(newShowTV);
+                TableRow.LayoutParams rowParamsStart = new TableRow.LayoutParams();
+                TableRow.LayoutParams rowParamsEnd = new TableRow.LayoutParams();
+                rowParamsStart.leftMargin = 45;
+                rowParamsEnd.rightMargin = 45;
+                newShowRow.addView(newShowTV, rowParamsStart);
                 newShowRow.addView(editShowButton);
                 showSelectionTable.addView(newShowRow);
             }

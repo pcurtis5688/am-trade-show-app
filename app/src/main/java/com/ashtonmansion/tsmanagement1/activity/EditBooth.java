@@ -114,12 +114,12 @@ public class EditBooth extends AppCompatActivity {
             boothTags = booth.getTags();
             populateTagFields();
         }
-
-        ///// ATTACH BUTTON LISTENERS
+        ////// GRAB BUTTON HANDLERS
         Button deleteBoothBtn = (Button) findViewById(R.id.edit_booth_delete_booth_btn);
         Button cancelEditBoothBtn = (Button) findViewById(R.id.edit_booth_cancel_btn);
         Button saveBoothChangesBtn = (Button) findViewById(R.id.edit_booth_save_changes_btn);
         final Button setBoothAvailableBtn = (Button) findViewById(R.id.set_booth_available_action_btn);
+        ////// ATTACH BUTTON LISTENERS
         deleteBoothBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -144,6 +144,11 @@ public class EditBooth extends AppCompatActivity {
                 setBoothAvailableAction();
             }
         });
+        ////// STYLE THE BUTTONS
+        deleteBoothBtn.setTextAppearance(editBoothActivityContext, R.style.standard_button_style_mobile);
+        cancelEditBoothBtn.setTextAppearance(editBoothActivityContext, R.style.standard_button_style_mobile);
+        saveBoothChangesBtn.setTextAppearance(editBoothActivityContext, R.style.standard_button_style_mobile);
+        setBoothAvailableBtn.setTextAppearance(editBoothActivityContext, R.style.standard_button_style_mobile);
     }
 
     private void populateTagFields() {
@@ -275,12 +280,24 @@ public class EditBooth extends AppCompatActivity {
         boothSizePrompt.setTextAppearance(editBoothActivityContext, promptFontResId);
         boothAreaPrompt.setTextAppearance(editBoothActivityContext, promptFontResId);
         boothTypePrompt.setTextAppearance(editBoothActivityContext, promptFontResId);
-        ////// SET FIELD APPERANCES
+        ////// SET TEXT ALIGNMENT POST POP
+        boothNoPrompt.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        boothPricePrompt.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        boothSizePrompt.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        boothAreaPrompt.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        boothTypePrompt.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        ////// SET FIELD APPEARANCES
         editBoothNumberField.setTextAppearance(editBoothActivityContext, promptFontResId);
         editBoothPriceField.setTextAppearance(editBoothActivityContext, promptFontResId);
         editBoothSizeField.setTextAppearance(editBoothActivityContext, promptFontResId);
         editBoothAreaField.setTextAppearance(editBoothActivityContext, promptFontResId);
         editBoothTypeField.setTextAppearance(editBoothActivityContext, promptFontResId);
+        ////// SET FIELD ALIGNMENT
+        editBoothNumberField.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        editBoothPriceField.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        editBoothSizeField.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        editBoothAreaField.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        editBoothTypeField.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
     }
 
     private class UpdateBoothTask extends AsyncTask<Void, Void, Void> {
