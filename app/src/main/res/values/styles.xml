@@ -224,7 +224,7 @@
         <item name="android:layout_marginTop">@dimen/dimen_20sp</item>
         <item name="android:paddingBottom">@dimen/dimen_20sp</item>
         <item name="android:paddingTop">@dimen/dimen_20sp</item>
-        <item name="android:textSize">@dimen/dimen_42sp</item>
+        <item name="android:textSize">@dimen/dimen_72sp</item>
         <item name="android:textColor">@color/matching_header_color</item>
     </style>
 

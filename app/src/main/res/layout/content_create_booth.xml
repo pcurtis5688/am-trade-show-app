@@ -20,7 +20,8 @@
 
         <TextView
             android:id="@+id/create_booth_no_prompt"
-            android:text="@string/create_booth_number_prompt" />
+            android:text="@string/create_booth_number_prompt"
+            android:textAlignment="center" />
 
         <EditText
             android:id="@+id/create_booth_number_field"
@@ -33,7 +34,8 @@
 
         <TextView
             android:id="@+id/create_booth_price_prompt"
-            android:text="@string/create_booth_price_prompt" />
+            android:text="@string/create_booth_price_prompt"
+            android:textAlignment="center" />
 
         <EditText
             android:id="@+id/create_booth_price_field"
@@ -47,7 +49,8 @@
 
         <TextView
             android:id="@+id/create_booth_size_prompt"
-            android:text="@string/create_booth_size_prompt" />
+            android:text="@string/create_booth_size_prompt"
+            android:textAlignment="center" />
 
         <EditText
             android:id="@+id/create_booth_size_field"
@@ -60,7 +63,8 @@
 
         <TextView
             android:id="@+id/create_booth_area_prompt"
-            android:text="@string/create_booth_area_prompt" />
+            android:text="@string/create_booth_area_prompt"
+            android:textAlignment="center" />
 
         <EditText
             android:id="@+id/create_booth_area_field"
@@ -73,7 +77,8 @@
 
         <TextView
             android:id="@+id/create_booth_type_prompt"
-            android:text="@string/create_booth_type_prompt" />
+            android:text="@string/create_booth_type_prompt"
+            android:textAlignment="center" />
 
         <EditText
             android:id="@+id/create_booth_type_field"

@@ -145,8 +145,14 @@ public class GlobalUtils {
         List<String> result = Arrays.asList(formattedShowName.split(","));
         String notesPart = result.get(3);
         int indexOfShow = notesPart.indexOf("[Show]");
-        String desiredNotesPart = notesPart.substring(0, indexOfShow);
-        result.set(3, desiredNotesPart);
+        if (indexOfShow == -1) {
+            result.set(3, "");
+        } else {
+            String desiredNotesPart = notesPart.substring(0, indexOfShow);
+            result.set(3, desiredNotesPart);
+        }
+
+
         return result;
     }
 

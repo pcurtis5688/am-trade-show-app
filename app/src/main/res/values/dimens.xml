@@ -35,6 +35,7 @@
     <dimen name="dimen_36sp">36sp</dimen>
     <dimen name="dimen_42sp">42sp</dimen>
     <dimen name="dimen_48sp">48sp</dimen>
+    <dimen name="dimen_72sp">72sp</dimen>
 
     <dimen name="button_text_size_32sp">32sp</dimen>
 
