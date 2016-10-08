@@ -1,4 +1,4 @@
-package com.ashtonmansion.amtradeshowmanagement.activity;
+package com.ashtonmansion.tsmanagement1.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -21,7 +21,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.ashtonmansion.amtradeshowmanagement.R;
+import com.ashtonmansion.tsmanagement1.R;
+import com.ashtonmansion.tsmanagement1.util.GlobalUtils;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
@@ -38,6 +39,7 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
     ///// ACTIVITY CONTEXT AND UI VARS
     private Context configureBoothsShowSelectionActivityContext;
     private TableLayout configureBoothsShowSelectionTable;
+    private int platformFontStyle1;
     ///// DATA VARS
     private List<Tag> showList;
 
@@ -63,6 +65,7 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
         configureBoothsShowSelectionTable = (TableLayout) findViewById(R.id.configure_booths_show_selection_table);
         GetShowListTask getShowListTask = new GetShowListTask();
         getShowListTask.execute();
+        handleSizing();
     }
 
     private void populateShowSelectionTable() {
@@ -82,7 +85,7 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
                 Button showSelectionButton = new Button(configureBoothsShowSelectionActivityContext);
 
                 ///// HANDLE FONTS
-                showSelectionButton.setTextAppearance(configureBoothsShowSelectionActivityContext, R.style.show_selection_button_style);
+                showSelectionButton.setTextAppearance(configureBoothsShowSelectionActivityContext, R.style.trade_show_row_select_buttons);
 
                 ///// SET SHOW NAME AND BUTTON TEXT
                 showSelectionButton.setText(showNameForUser);
@@ -116,6 +119,14 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
         Intent configureBoothsForShowIntent = new Intent(configureBoothsShowSelectionActivityContext, ConfigureBooths.class);
         configureBoothsForShowIntent.putExtra("show", showTag);
         startActivity(configureBoothsForShowIntent);
+    }
+
+    private void handleSizing() {
+        if (((GlobalUtils.determinePlatform(getApplicationContext())).equalsIgnoreCase("station"))) {
+            platformFontStyle1 = R.style.station_flagship_font;
+        } else {
+            platformFontStyle1 = R.style.mobile_flagship_font;
+        }
     }
 
     ////////////////NAVIGATION METHODS//////////////////////////
@@ -170,7 +181,7 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
         } else if (id == R.id.nav_make_reservation_btn) {
             Intent makeReservationIntent = new Intent(configureBoothsShowSelectionActivityContext, BoothReservationShowSelection.class);
             startActivity(makeReservationIntent);
-        } else if (id == R.id.nav_app_settings_btn){
+        } else if (id == R.id.nav_app_settings_btn) {
             Intent applicationSettingsIntent = new Intent(configureBoothsShowSelectionActivityContext, ApplicationSettings.class);
             startActivity(applicationSettingsIntent);
         }

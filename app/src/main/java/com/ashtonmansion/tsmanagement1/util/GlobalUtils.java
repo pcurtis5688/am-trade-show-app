@@ -1,9 +1,8 @@
-package com.ashtonmansion.amtradeshowmanagement.util;
+package com.ashtonmansion.tsmanagement1.util;
 
 import android.content.Context;
 import android.content.res.Configuration;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.clover.sdk.v3.customers.Customer;
 import com.clover.sdk.v3.customers.PhoneNumber;

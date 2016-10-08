@@ -1,4 +1,4 @@
-package com.ashtonmansion.amtradeshowmanagement.db;
+package com.ashtonmansion.tsmanagement1.db;
 
 import android.content.ContentValues;
 import android.content.Context;

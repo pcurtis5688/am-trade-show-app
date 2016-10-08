@@ -1,4 +1,4 @@
-package com.ashtonmansion.amtradeshowmanagement.util;
+package com.ashtonmansion.tsmanagement1.util;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

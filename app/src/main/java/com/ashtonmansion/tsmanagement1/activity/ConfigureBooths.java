@@ -1,9 +1,8 @@
-package com.ashtonmansion.amtradeshowmanagement.activity;
+package com.ashtonmansion.tsmanagement1.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.RemoteException;
 import android.support.design.widget.NavigationView;
@@ -21,11 +20,10 @@ import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.ashtonmansion.amtradeshowmanagement.R;
-import com.ashtonmansion.amtradeshowmanagement.util.BoothWithTags;
-import com.ashtonmansion.amtradeshowmanagement.util.GlobalUtils;
+import com.ashtonmansion.tsmanagement1.R;
+import com.ashtonmansion.tsmanagement1.util.BoothWithTags;
+import com.ashtonmansion.tsmanagement1.util.GlobalUtils;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
@@ -44,7 +42,6 @@ public class ConfigureBooths extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     /////CONTEXT AND UI FIELDS
     private Context configureBoothsActivityContext;
-    private String platform;
     private int tableRowHeaderStyleId;
     private int tableRowStyleId;
     private int availableBoothStyle;
@@ -256,9 +253,8 @@ public class ConfigureBooths extends AppCompatActivity
             TableRow noBoothsForShowRow = new TableRow(configureBoothsActivityContext);
             TextView noBoothsForShowTV = new TextView(configureBoothsActivityContext);
             noBoothsForShowTV.setText(getResources().getString(R.string.booth_configuration_no_booths_message));
-            noBoothsForShowTV.setTextAppearance(configureBoothsActivityContext, R.style.no_rows_style);
+            noBoothsForShowTV.setTextAppearance(configureBoothsActivityContext, R.style.large_table_row_font_station);
             noBoothsForShowTV.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-
             TableRow.LayoutParams params = new TableRow.LayoutParams();
             params.span = 6;
             params.topMargin = 25;
@@ -461,7 +457,7 @@ public class ConfigureBooths extends AppCompatActivity
     }
 
     private void handleSizing() {
-        platform = GlobalUtils.determinePlatform(getApplicationContext());
+        String platform = GlobalUtils.determinePlatform(getApplicationContext());
         if (platform.equalsIgnoreCase("station")) {
             tableRowHeaderStyleId = R.style.table_header_text_style_station;
             tableRowStyleId = R.style.large_table_row_font_station;

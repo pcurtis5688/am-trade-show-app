@@ -8,7 +8,7 @@
     android:paddingStart="@dimen/dimen_75dp"
     android:paddingTop="@dimen/dimen_25dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.ashtonmansion.amtradeshowmanagement.activity.HomeActivity"
+    tools:context="com.ashtonmansion.tsmanagement1.activity.HomeActivity"
     tools:showIn="@layout/app_bar_home">
 
     <TextView

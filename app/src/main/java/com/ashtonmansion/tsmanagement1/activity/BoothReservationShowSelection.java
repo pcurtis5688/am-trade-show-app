@@ -1,4 +1,4 @@
-package com.ashtonmansion.amtradeshowmanagement.activity;
+package com.ashtonmansion.tsmanagement1.activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -20,9 +20,9 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.ashtonmansion.amtradeshowmanagement.R;
-import com.ashtonmansion.amtradeshowmanagement.util.GlobalUtils;
-import com.ashtonmansion.amtradeshowmanagement.util.ParcelableListener;
+import com.ashtonmansion.tsmanagement1.R;
+import com.ashtonmansion.tsmanagement1.util.GlobalUtils;
+import com.ashtonmansion.tsmanagement1.util.ParcelableListener;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;

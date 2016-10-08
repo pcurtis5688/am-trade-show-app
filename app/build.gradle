@@ -4,11 +4,11 @@ android {
     buildToolsVersion "24.0.0"
 
     defaultConfig {
-        applicationId "com.ashtonmansion.tradeshowmanagement"
+        applicationId "com.ashtonmansion.tsmanagement1"
         minSdkVersion 17
         targetSdkVersion 17
-        versionCode 27
-        versionName "0.982"
+        versionCode 28
+        versionName "0.983"
     }
     buildTypes {
         release {

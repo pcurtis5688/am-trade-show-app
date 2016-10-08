@@ -9,7 +9,7 @@
     android:paddingTop="@dimen/dimen_25dp"
     android:stretchColumns="*"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.ashtonmansion.amtradeshowmanagement.activity.CreateBooth"
+    tools:context="com.ashtonmansion.tsmanagement1.activity.CreateBooth"
     tools:showIn="@layout/activity_create_booth">
 
     <TextView

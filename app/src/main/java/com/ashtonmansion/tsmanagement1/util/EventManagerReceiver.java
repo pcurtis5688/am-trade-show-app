@@ -1,4 +1,4 @@
-package com.ashtonmansion.amtradeshowmanagement.util;
+package com.ashtonmansion.tsmanagement1.util;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.ashtonmansion.amtradeshowmanagement.activity.BoothReservationShowSelection;
+import com.ashtonmansion.tsmanagement1.activity.BoothReservationShowSelection;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.Intents;
 import com.clover.sdk.v3.inventory.InventoryConnector;

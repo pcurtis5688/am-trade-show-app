@@ -1,4 +1,4 @@
-package com.ashtonmansion.amtradeshowmanagement;
+package com.ashtonmansion.tsmanagement1;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
