@@ -25,6 +25,7 @@ import com.clover.sdk.v1.ServiceException;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
 import com.clover.sdk.v3.inventory.Tag;
+import com.clover.sdk.v3.payments.CardEntryType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -78,6 +79,7 @@ public class BoothReservation extends AppCompatActivity {
             }
             TextView boothSelectionHeaderTV = (TextView) findViewById(R.id.booth_selection_header);
             boothSelectionHeaderTV.setText(showNameForUser);
+            boothSelectionHeaderTV.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             boothSelectionHeaderTV.setTextAppearance(boothReservationActivityContext, pageHeaderFontResId);
             ////// TO DETERMINE BUTTON TEXT
             if (orderID == null) startedFromApp = true;

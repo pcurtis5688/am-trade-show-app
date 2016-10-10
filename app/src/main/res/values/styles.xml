@@ -254,4 +254,12 @@
         <item name="android:textSize">@dimen/dimen_36sp</item>
         <item name="android:textColor">@color/matching_header_color</item>
     </style>
+
+    <style name="no_customer_selected_warning_style">
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">@dimen/dimen_30sp</item>
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:layout_span">2</item>
+        <item name="android:layout_marginTop">@dimen/dimen_150dp</item>
+    </style>
 </resources>

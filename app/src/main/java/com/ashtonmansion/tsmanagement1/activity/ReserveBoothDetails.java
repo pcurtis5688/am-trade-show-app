@@ -222,11 +222,11 @@ public class ReserveBoothDetails extends AppCompatActivity {
         } else {
             selectedCustomerPhoneTv.setText("N/A");
         }
-       if (null != customerAttachedToOrder.getEmailAddresses() && customerAttachedToOrder.getEmailAddresses().size() > 0){
-           selectedCustomerEmailTv.setText(getResources().getString(R.string.selected_customer_email_address_text, customerAttachedToOrder.getEmailAddresses().get(0).getEmailAddress()));
-       } else {
-           selectedCustomerEmailTv.setText("N/A");
-       }
+        if (null != customerAttachedToOrder.getEmailAddresses() && customerAttachedToOrder.getEmailAddresses().size() > 0) {
+            selectedCustomerEmailTv.setText(getResources().getString(R.string.selected_customer_email_address_text, customerAttachedToOrder.getEmailAddresses().get(0).getEmailAddress()));
+        } else {
+            selectedCustomerEmailTv.setText("N/A");
+        }
     }
 
     private void promptForCustomer() {
@@ -238,7 +238,9 @@ public class ReserveBoothDetails extends AppCompatActivity {
         final LinearLayout newCustomerEntryTable = (LinearLayout) findViewById(R.id.br_new_customer_table_layout);
         final TableLayout existingCustomerSelectionTable = (TableLayout) findViewById(R.id.existing_customer_selection_table);
         no_customer_warnAndRadio_table.setVisibility(View.VISIBLE);
-        findViewById(R.id.no_customer_selected_warning_text_view).setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        TextView noCustomerSelectedWarningTv = (TextView) findViewById(R.id.no_customer_selected_warning_text_view);
+        noCustomerSelectedWarningTv.setTextAppearance(reserveBoothDetailsActivityContext, R.style.no_customer_selected_warning_style);
+        noCustomerSelectedWarningTv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         newCustomerEntryTable.setVisibility(View.VISIBLE);
 
         ////// DEACTIVATE FINISH RESERVATION BUTTON AND REMOVE SELECTED CUSTOMER FIELDS

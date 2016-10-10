@@ -366,7 +366,7 @@
     <string name="deleted_SAT_tags_found_and_number">Deleted Unused Size, Area, Type Tags - Number: %1$d</string>
     <string name="no_unused_SAT_tags_found">No Unused Size, Area, Type tags found - Congratulations!</string>
     <!-- CREATE SELECT BOOTH BUTTON (ITEM) IN INVENTORY, ENSURE BOOTH CATEGORY EXISTS AND ASSIGNED -->
-    <string name="create_select_booth_item_btn_text">Create Select Booth (Item) Button in Inventory and Create \'Booths\' Category If Needed</string>
+    <string name="create_select_booth_item_btn_text">Create Select Booth (Item) Button in Inventory \n(and Create \'Booths\' Category If Needed)</string>
     <string name="successfully_created_select_booth_item">Successfully Created Select Booth Button (Item) and ensured Booth category exists and assigned</string>
     <!-- APP SETTINGS LOG STRINGS -->
     <string name="booths_with_no_skus_detected">Booths without Booth Numbers were detected&#8230; IDs are:</string>

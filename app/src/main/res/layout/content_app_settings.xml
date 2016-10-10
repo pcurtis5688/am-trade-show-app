@@ -19,11 +19,11 @@
 
         <TextView
             android:id="@+id/application_settings_header"
+            android:layout_marginBottom="@dimen/dimen_30dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:layout_marginBottom="@dimen/dimen_50dp"
-            android:text="@string/application_settings_string" />
+            android:text="@string/application_settings_string"
+            android:textAlignment="center" />
 
         <Button
             android:id="@+id/create_select_booth_item_and_category_btn"
