@@ -32,8 +32,11 @@ public class CustomersAdapter extends BaseAdapter implements Filterable {
         adapterContext = context;
         Collections.sort(customers, new Comparator<Customer>() {
             public int compare(Customer customer1, Customer customer2) {
-
-                return customer1.getLastName().compareTo(customer2.getLastName());
+                if (customer1.getLastName() == null || customer2.getLastName() == null) {
+                    return -1;
+                } else {
+                    return customer1.getLastName().compareTo(customer2.getLastName());
+                }
             }
         });
         this.originalCustomerList = customers;
