@@ -21,7 +21,7 @@
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dimen_25dp"
+            android:layout_marginBottom="@dimen/dimen_15dp"
             android:stretchColumns="*">
 
             <TableRow>
@@ -30,7 +30,6 @@
                     android:id="@+id/booth_reservation_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dimen_25dp"
                     android:layout_span="4"
                     android:textAlignment="center" />
             </TableRow>
@@ -82,7 +81,6 @@
             android:id="@+id/selected_customer_table"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_8dp"
             android:stretchColumns="*">
 
             <TableRow>
@@ -121,15 +119,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dimen_10dp"
-            android:layout_marginTop="@dimen/dimen_8dp"
             android:textAlignment="center"
             android:visibility="gone">
 
             <TableRow>
 
                 <TextView
-                    style="@style/selected_booth_label_style"
-                    android:text="@string/no_customer_was_selected_string" />
+                    android:id="@+id/no_customer_selected_warning_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingStart="@dimen/dimen_250dp"
+                    android:text="@string/no_customer_was_selected_string"
+                    android:textAlignment="center" />
             </TableRow>
 
             <TableRow
@@ -140,7 +141,9 @@
                     android:id="@+id/booth_reservation_new_or_existing_radiogrp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingStart="@dimen/dimen_250dp"
+                    android:paddingTop="@dimen/dimen_10dp">
 
                     <RadioButton
                         android:id="@+id/booth_reservation_new_customer_btn"

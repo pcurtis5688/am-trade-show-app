@@ -23,6 +23,8 @@
     <dimen name="dimen_150dp">150dp</dimen>
     <dimen name="dimen_170dp">170dp</dimen>
     <dimen name="dimen_200dp">200dp</dimen>
+    <dimen name="dimen_250dp">250dp</dimen>
+    <dimen name="dimen_375dp">375dp</dimen>
 
 
     <dimen name="dimen_16sp">16sp</dimen>

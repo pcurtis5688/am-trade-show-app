@@ -238,6 +238,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
         final LinearLayout newCustomerEntryTable = (LinearLayout) findViewById(R.id.br_new_customer_table_layout);
         final TableLayout existingCustomerSelectionTable = (TableLayout) findViewById(R.id.existing_customer_selection_table);
         no_customer_warnAndRadio_table.setVisibility(View.VISIBLE);
+        findViewById(R.id.no_customer_selected_warning_text_view).setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         newCustomerEntryTable.setVisibility(View.VISIBLE);
 
         ////// DEACTIVATE FINISH RESERVATION BUTTON AND REMOVE SELECTED CUSTOMER FIELDS

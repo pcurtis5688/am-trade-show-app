@@ -383,7 +383,7 @@
     <string name="selected_customer_phone_number_text">Phone No.: %1$s</string>
     <string name="selected_customer_email_address_text">Email Address: %1$s</string>
     <string name="associated_customer_alternate_string">Associated Customer:</string>
-    <string name="no_customer_was_selected_string">No Customer has been selected for the order; please add info or select from existing</string>
+    <string name="no_customer_was_selected_string">No Customer selected; please add or select info</string>
     <string name="save_customer_information_btn_text">Save Customer Information</string>
     <string name="customer_created_message_text">Customer Created! You can now finalize the reservation</string>
 
