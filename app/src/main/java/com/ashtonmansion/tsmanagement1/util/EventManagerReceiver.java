@@ -115,7 +115,7 @@ class GetItemNameTask extends AsyncTask<Void, Void, String> {
 }
 
 class AddOrderListenerTask extends AsyncTask<Void, Void, ParcelableListener> {
-    public AsyncResponse delegate = null;
+    private AsyncResponse delegate = null;
     private OrderConnector orderConnector;
     ////// INPUTS
     private Context appContext;
@@ -126,14 +126,16 @@ class AddOrderListenerTask extends AsyncTask<Void, Void, ParcelableListener> {
     private ParcelableListener parcelableListener;
 
     void setContextAndOrderID(Context receivedContext, String orderID) {
-        this.appContext = receivedContext.getApplicationContext();
+        this.appContext= receivedContext.getApplicationContext();
         this.orderID = orderID;
-        orderConnector = new OrderConnector(appContext, CloverAccount.getAccount(appContext), null);
-        orderConnector.connect();
+
     }
 
     @Override
+
     protected void onPreExecute() {
+        orderConnector = new OrderConnector(appContext, CloverAccount.getAccount(appContext), null);
+        orderConnector.connect();
     }
 
     @Override

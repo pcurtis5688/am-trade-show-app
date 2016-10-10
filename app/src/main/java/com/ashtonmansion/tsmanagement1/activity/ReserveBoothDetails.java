@@ -217,10 +217,16 @@ public class ReserveBoothDetails extends AppCompatActivity {
         TextView selectedCustomerPhoneTv = (TextView) findViewById(R.id.selected_customer_phone_number);
         TextView selectedCustomerEmailTv = (TextView) findViewById(R.id.selected_customer_email_address);
         selectedCustomerFirstAndLastTv.setText(getResources().getString(R.string.selected_customer_first_and_last_text, customerAttachedToOrder.getLastName(), customerAttachedToOrder.getFirstName()));
-        if (customerAttachedToOrder.getPhoneNumbers().size() > 0) {
+        if (null != customerAttachedToOrder.getPhoneNumbers() && customerAttachedToOrder.getPhoneNumbers().size() > 0) {
             selectedCustomerPhoneTv.setText(getResources().getString(R.string.selected_customer_phone_number_text, customerAttachedToOrder.getPhoneNumbers().get(0).getPhoneNumber()));
+        } else {
+            selectedCustomerPhoneTv.setText("N/A");
         }
-        selectedCustomerEmailTv.setText(getResources().getString(R.string.selected_customer_email_address_text, customerAttachedToOrder.getEmailAddresses().get(0).getEmailAddress()));
+       if (null != customerAttachedToOrder.getEmailAddresses() && customerAttachedToOrder.getEmailAddresses().size() > 0){
+           selectedCustomerEmailTv.setText(getResources().getString(R.string.selected_customer_email_address_text, customerAttachedToOrder.getEmailAddresses().get(0).getEmailAddress()));
+       } else {
+           selectedCustomerEmailTv.setText("N/A");
+       }
     }
 
     private void promptForCustomer() {
@@ -395,8 +401,6 @@ public class ReserveBoothDetails extends AppCompatActivity {
                 inventoryConnector.connect();
                 orderConnector = new OrderConnector(reserveBoothDetailsActivityContext, CloverAccount.getAccount(reserveBoothDetailsActivityContext), null);
                 orderConnector.connect();
-                ////// TRY TO RETAIN ACCESS TO THE ORDER LISTENER
-                parcelableListener.setFinalBoothID(booth.getId());
             }
 
             @Override

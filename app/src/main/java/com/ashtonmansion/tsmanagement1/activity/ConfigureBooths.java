@@ -42,6 +42,7 @@ public class ConfigureBooths extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     /////CONTEXT AND UI FIELDS
     private Context configureBoothsActivityContext;
+    private int activityHeaderFontResId;
     private int tableRowHeaderStyleId;
     private int tableRowStyleId;
     private int availableBoothStyle;
@@ -88,6 +89,7 @@ public class ConfigureBooths extends AppCompatActivity
             }
             TextView showNameHeaderTV = (TextView) findViewById(R.id.show_booths_header);
             showNameHeaderTV.setText(showNameForUser);
+            showNameHeaderTV.setTextAppearance(configureBoothsActivityContext, activityHeaderFontResId);
         }
     }
 
@@ -266,11 +268,7 @@ public class ConfigureBooths extends AppCompatActivity
 
         TableRow addBoothButtonRow = new TableRow(configureBoothsActivityContext);
         Button addBoothButton = new Button(configureBoothsActivityContext);
-        addBoothButton.setText(getResources()
-
-                .
-
-                        getString(R.string.action_create_new_booth_string));
+        addBoothButton.setText(getResources().getString(R.string.action_create_new_booth_string));
         addBoothButton.setTextAppearance(configureBoothsActivityContext, R.style.standard_button_style_mobile);
         addBoothButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -284,6 +282,7 @@ public class ConfigureBooths extends AppCompatActivity
         params.span = 7;
         addBoothButton.setLayoutParams(params);
         addBoothButtonRow.addView(addBoothButton);
+        showTable.addView(addBoothButtonRow);
     }
 
     private void editBoothAction(BoothWithTags boothWithTags) {
@@ -458,11 +457,13 @@ public class ConfigureBooths extends AppCompatActivity
     private void handleSizing() {
         String platform = GlobalUtils.determinePlatform(getApplicationContext());
         if (platform.equalsIgnoreCase("station")) {
+            activityHeaderFontResId = R.style.activity_header_style_station;
             tableRowHeaderStyleId = R.style.table_header_text_style_station;
             tableRowStyleId = R.style.large_table_row_font_station;
             availableBoothStyle = R.style.available_booth_style_station;
             reservedBoothStyle = R.style.reserved_booth_style_station;
         } else {
+            activityHeaderFontResId = R.style.activity_header_style_mobile;
             tableRowHeaderStyleId = R.style.table_header_text_style_mobile;
             tableRowStyleId = R.style.small_table_row_font_mobile;
             availableBoothStyle = R.style.available_booth_style_mobile;

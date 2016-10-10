@@ -35,6 +35,7 @@ import java.util.ListIterator;
 public class BoothReservation extends AppCompatActivity {
     ////// CONTEXT AND UI OBJECTS
     private Context boothReservationActivityContext;
+    private int pageHeaderFontResId;
     private int tableRowHeaderStyleId;
     private int tableRowStyleId;
     private int availableBoothStyle;
@@ -77,7 +78,7 @@ public class BoothReservation extends AppCompatActivity {
             }
             TextView boothSelectionHeaderTV = (TextView) findViewById(R.id.booth_selection_header);
             boothSelectionHeaderTV.setText(showNameForUser);
-
+            boothSelectionHeaderTV.setTextAppearance(boothReservationActivityContext, pageHeaderFontResId);
             ////// TO DETERMINE BUTTON TEXT
             if (orderID == null) startedFromApp = true;
             else startedFromApp = false;
@@ -363,11 +364,13 @@ public class BoothReservation extends AppCompatActivity {
     private void handleSizing() {
         String platform = GlobalUtils.determinePlatform(getApplicationContext());
         if (platform.equalsIgnoreCase("station")) {
+            pageHeaderFontResId = R.style.activity_header_style_station;
             tableRowHeaderStyleId = R.style.table_header_text_style_station;
             tableRowStyleId = R.style.large_table_row_font_station;
             availableBoothStyle = R.style.available_booth_style_station;
             reservedBoothStyle = R.style.reserved_booth_style_station;
         } else {
+            pageHeaderFontResId = R.style.activity_header_style_mobile;
             tableRowHeaderStyleId = R.style.table_header_text_style_mobile;
             tableRowStyleId = R.style.small_table_row_font_mobile;
             availableBoothStyle = R.style.available_booth_style_mobile;

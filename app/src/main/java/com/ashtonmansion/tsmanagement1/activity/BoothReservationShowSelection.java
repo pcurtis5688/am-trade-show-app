@@ -38,6 +38,8 @@ public class BoothReservationShowSelection extends Activity
     /////ACTIVITY AND UI VARS
     private Context boothReservationShowSelectionActivityContext;
     private TableLayout showSelectionTable;
+    private int pageHeaderFontResId;
+    private int showSelectionButtonResId;
     /////DATA VARS
     private List<Tag> showList;
     ///// ORDER INFO BEING PASSED TO BOOTH RESERVATION, WILL GRAB CUSTOMER
@@ -63,6 +65,9 @@ public class BoothReservationShowSelection extends Activity
         }
         ///// SET CONTEXT, ATTACH TO SHOW TABLE, AND POPULATE
         boothReservationShowSelectionActivityContext = this;
+        handleSizing();
+        TextView showSelectionHeaderTv = (TextView) findViewById(R.id.booth_reservation_show_selection_header);
+        showSelectionHeaderTv.setTextAppearance(boothReservationShowSelectionActivityContext, pageHeaderFontResId);
         showSelectionTable = (TableLayout) findViewById(R.id.booth_reservation_show_select_table);
         GetShowsForBoothSelection getShowsForBoothSelection = new GetShowsForBoothSelection();
         getShowsForBoothSelection.execute();
@@ -98,10 +103,10 @@ public class BoothReservationShowSelection extends Activity
                 newShowSelectionRow.setLayoutParams(tableRowParams);
                 ///// SHOW NAME BUTTON TEXT AND ACTION
                 showSelectButton.setText(showNameForUser);
+                showSelectButton.setTextAppearance(boothReservationShowSelectionActivityContext, showSelectionButtonResId);
                 showSelectButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
                         selectShowForReservation(finalizedShowObject);
                     }
                 });
@@ -131,6 +136,60 @@ public class BoothReservationShowSelection extends Activity
         boothSelectionIntent.putExtra("orderid", orderID);
         boothSelectionIntent.putParcelableArrayListExtra("parcelablelistener", (ArrayList<? extends Parcelable>) parcelableListener);
         startActivity(boothSelectionIntent);
+    }
+
+    private void handleSizing() {
+        String platform = GlobalUtils.determinePlatform(getApplicationContext());
+        if (platform.equalsIgnoreCase("station")) {
+            pageHeaderFontResId = R.style.activity_header_style_station;
+            showSelectionButtonResId = R.style.show_selection_button_style;
+             } else {
+            pageHeaderFontResId = R.style.activity_header_style_mobile;
+            showSelectionButtonResId = R.style.show_selection_button_style;
+        }
+    }
+
+    private class GetShowsForBoothSelection extends AsyncTask<Void, Void, Void> {
+        private ProgressDialog progressDialog;
+        private InventoryConnector inventoryConnector;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(boothReservationShowSelectionActivityContext);
+            progressDialog.setMessage("Loading Shows...");
+            progressDialog.show();
+            showList = new ArrayList<>();
+            ////// INIT CLOVER CONNECTIONS
+            inventoryConnector = new InventoryConnector(boothReservationShowSelectionActivityContext, CloverAccount.getAccount(boothReservationShowSelectionActivityContext), null);
+            inventoryConnector.connect();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                ///////////GET SHOW LIST (TAG LIST) FOR BOOTH SELECTION
+                if (inventoryConnector.getTags().size() > 0) {
+                    for (Tag currentTag : inventoryConnector.getTags()) {
+                        if (currentTag.getName().contains(" [Show]")) {
+                            showList.add(currentTag);
+                        }
+                    }
+                }
+            } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
+                Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
+            } finally {
+                inventoryConnector.disconnect();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            populateShowSelectionTable();
+            progressDialog.dismiss();
+        }
     }
 
     ////////////////NAVIGATION METHODS//////////////////////////
@@ -191,49 +250,6 @@ public class BoothReservationShowSelection extends Activity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.make_reservation_drawerlayout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    private class GetShowsForBoothSelection extends AsyncTask<Void, Void, Void> {
-        private ProgressDialog progressDialog;
-        private InventoryConnector inventoryConnector;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(boothReservationShowSelectionActivityContext);
-            progressDialog.setMessage("Loading Shows...");
-            progressDialog.show();
-            showList = new ArrayList<>();
-            ////// INIT CLOVER CONNECTIONS
-            inventoryConnector = new InventoryConnector(boothReservationShowSelectionActivityContext, CloverAccount.getAccount(boothReservationShowSelectionActivityContext), null);
-            inventoryConnector.connect();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                ///////////GET SHOW LIST (TAG LIST) FOR BOOTH SELECTION
-                if (inventoryConnector.getTags().size() > 0) {
-                    for (Tag currentTag : inventoryConnector.getTags()) {
-                        if (currentTag.getName().contains(" [Show]")) {
-                            showList.add(currentTag);
-                        }
-                    }
-                }
-            } catch (RemoteException | BindingException | ServiceException | ClientException e1) {
-                Log.e("Clover Excptn; ", e1.getClass().getName() + " : " + e1.getMessage());
-            } finally {
-                inventoryConnector.disconnect();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            populateShowSelectionTable();
-            progressDialog.dismiss();
-        }
     }
 }
 

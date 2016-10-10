@@ -29,7 +29,7 @@
         <item name="android:textColor">@color/matching_header_color</item>
         <item name="android:layout_marginBottom">10dp</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textSize">@dimen/dimen_30sp</item>
+        <item name="android:textSize">@dimen/dimen_36sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
@@ -148,7 +148,7 @@
     </style>
 
     <style name="table_header_text_style_mobile">
-        <item name="android:textSize">@dimen/dimen_22sp</item>
+        <item name="android:textSize">@dimen/dimen_16sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">@color/matching_header_color</item>

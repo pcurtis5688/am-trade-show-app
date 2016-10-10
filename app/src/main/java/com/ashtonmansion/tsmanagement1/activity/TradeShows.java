@@ -117,6 +117,12 @@ public class TradeShows extends AppCompatActivity
             noShowsCreatedTV.setText(getResources().getString(R.string.no_trade_shows_available_string));
             noShowsCreatedTV.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             noShowsCreatedTV.setTextAppearance(tradeShowsActivityContext, R.style.no_shows_style);
+
+            TextView noShowsCreatedSecondLine = new TextView(tradeShowsActivityContext);
+            noShowsCreatedSecondLine.setText(getResources().getString(R.string.no_trade_shows_available_string));
+            noShowsCreatedSecondLine.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            noShowsCreatedSecondLine.setTextAppearance(tradeShowsActivityContext, R.style.no_shows_style);
+
             TableRow noShowsCreatedRow = new TableRow(tradeShowsActivityContext);
             TableRow.LayoutParams params = new TableRow.LayoutParams();
             params.span = 4;

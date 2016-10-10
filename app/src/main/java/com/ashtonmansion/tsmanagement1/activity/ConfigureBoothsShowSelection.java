@@ -39,7 +39,8 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
     ///// ACTIVITY CONTEXT AND UI VARS
     private Context configureBoothsShowSelectionActivityContext;
     private TableLayout configureBoothsShowSelectionTable;
-    private int platformFontStyle1;
+    private int configureBoothsShowSelectionHeaderResId;
+    private int platformShowSelectionResId;
     ///// DATA VARS
     private List<Tag> showList;
 
@@ -66,6 +67,8 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
         GetShowListTask getShowListTask = new GetShowListTask();
         getShowListTask.execute();
         handleSizing();
+        TextView configBoothsHeaderTv = (TextView) findViewById(R.id.configure_booths_show_selection_header);
+        configBoothsHeaderTv.setTextAppearance(configureBoothsShowSelectionActivityContext, configureBoothsShowSelectionHeaderResId);
     }
 
     private void populateShowSelectionTable() {
@@ -89,6 +92,7 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
                 newShowSelectionRow.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
                 ///// SET SHOW NAME AND BUTTON TEXT
                 showSelectionButton.setText(showNameForUser);
+                showSelectionButton.setTextAppearance(configureBoothsShowSelectionActivityContext, platformShowSelectionResId);
                 showSelectionButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -123,9 +127,11 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
 
     private void handleSizing() {
         if (((GlobalUtils.determinePlatform(getApplicationContext())).equalsIgnoreCase("station"))) {
-            platformFontStyle1 = R.style.station_flagship_font;
+            configureBoothsShowSelectionHeaderResId = R.style.activity_header_style_station;
+            platformShowSelectionResId = R.style.show_selection_button_style;
         } else {
-            platformFontStyle1 = R.style.mobile_flagship_font;
+            configureBoothsShowSelectionHeaderResId = R.style.activity_header_style_mobile;
+            platformShowSelectionResId = R.style.show_selection_button_style;
         }
     }
 

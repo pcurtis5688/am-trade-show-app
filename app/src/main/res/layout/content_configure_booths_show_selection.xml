@@ -23,9 +23,10 @@
             <TableRow>
 
                 <TextView
-                    style="@style/activity_header_style_station"
+                    android:id="@+id/configure_booths_show_selection_header"
                     android:layout_marginBottom="@dimen/dimen_25dp"
-                    android:text="@string/configure_booth_show_selection_string" />
+                    android:text="@string/configure_booth_show_selection_string"
+                    android:textAlignment="center" />
             </TableRow>
 
             <TableRow>

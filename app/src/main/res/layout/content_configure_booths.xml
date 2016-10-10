@@ -26,7 +26,6 @@
 
                 <TextView
                     android:id="@+id/show_booths_header"
-                    style="@style/activity_header_style_station"
                     android:layout_marginBottom="@dimen/dimen_25dp" />
             </TableRow>
 
