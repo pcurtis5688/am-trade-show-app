@@ -103,15 +103,9 @@
         <TableRow>
 
             <Button
-                android:id="@+id/cancel_add_new_show_btn"
-                style="@style/standard_button_style_mobile"
-                android:onClick="cancelAddNewShowAction"
-                android:text="@string/cancel_show_add_string"
-                android:textAlignment="center" />
-
-            <Button
                 android:id="@+id/add_new_show_submit_btn"
                 style="@style/standard_button_style_mobile"
+                android:layout_span="2"
                 android:onClick="addNewShowAction"
                 android:text="@string/add_new_show_btn_string"
                 android:textAlignment="center" />

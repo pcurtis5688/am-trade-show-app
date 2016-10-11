@@ -30,7 +30,6 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
     private String itemName = "";
     private Context fromContext;
     private Intent fromIntent;
-    private GetItemNameTask getItemNameTask;
     private OrderConnector.OnOrderUpdateListener2 orderListenerGlobal;
 
     @Override
@@ -41,7 +40,7 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
             itemID = intent.getStringExtra(Intents.EXTRA_CLOVER_ITEM_ID);
             orderID = intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID);
 
-            getItemNameTask = new GetItemNameTask();
+            GetItemNameTask getItemNameTask = new GetItemNameTask();
             getItemNameTask.setDelegateAsyncResponse(this);
             getItemNameTask.setData(context, itemID);
             getItemNameTask.execute();
@@ -202,7 +201,7 @@ class AddOrderListenerTask extends AsyncTask<Void, Void, ParcelableListener> {
                 @Override
                 public void onLineItemsDeleted(String orderId, List<String> lineItemIds) {
                     Log.d("SWAPPED HERE", " onLineItemsDeleted()");
-
+                    //////HERE SHOULD BE THE ID OF THE BOOTH ITEM THAT WAS ADDED, OR ADD SECOND LISTENER?
                     if (!Collections.disjoint(lineItemIds, selectBoothLineItemIDs)) {
 
                     }

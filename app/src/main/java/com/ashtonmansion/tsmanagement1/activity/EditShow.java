@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ashtonmansion.tsmanagement1.R;
 import com.ashtonmansion.tsmanagement1.util.GlobalUtils;
@@ -145,6 +146,11 @@ public class EditShow extends AppCompatActivity {
         finish();
     }
 
+    public void closeOutEditShowActivity(){
+        Toast.makeText(editShowActivityContext, getResources().getString(R.string.edit_show_show_deleted_toast_string), Toast.LENGTH_LONG).show();
+        finish();
+    }
+
     private class UpdateShowTask extends AsyncTask<Void, Void, Void> {
         private ProgressDialog progressDialog;
         //CLOVER ACCESS VARS
@@ -218,7 +224,7 @@ public class EditShow extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
             progressDialog.dismiss();
-            finish();
+            closeOutEditShowActivity();
         }
     }
 }

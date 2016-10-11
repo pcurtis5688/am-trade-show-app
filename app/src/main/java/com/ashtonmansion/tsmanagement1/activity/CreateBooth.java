@@ -103,10 +103,6 @@ public class CreateBooth extends AppCompatActivity {
         }
     }
 
-    public void cancelCreateBooth(View view) {
-        finish();
-    }
-
     public void finalizeBoothCreation(View view) {
         CreateBoothTask createBoothTask = new CreateBoothTask();
         createBoothTask.execute();

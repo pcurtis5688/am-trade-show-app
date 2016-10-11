@@ -25,7 +25,6 @@ import com.clover.sdk.v1.ServiceException;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
 import com.clover.sdk.v3.inventory.Tag;
-import com.clover.sdk.v3.payments.CardEntryType;
 
 import java.util.ArrayList;
 import java.util.Collections;

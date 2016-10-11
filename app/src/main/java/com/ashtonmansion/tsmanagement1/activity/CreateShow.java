@@ -98,12 +98,7 @@ public class CreateShow extends AppCompatActivity {
     }
 
     private void closeOutActivity() {
-        Toast showAddedToast = Toast.makeText(createShowActivityContext, "Show Added!", Toast.LENGTH_SHORT);
-        showAddedToast.show();
-        finish();
-    }
-
-    public void cancelAddNewShowAction(View view) {
+        Toast.makeText(createShowActivityContext, getResources().getString(R.string.create_show_show_added_toast_string), Toast.LENGTH_SHORT).show();
         finish();
     }
 
