@@ -99,14 +99,7 @@ public class ReserveBoothDetails extends AppCompatActivity {
         boothReservationHeader.setText(getResources().getString(R.string.booth_reservation_details_header_text, showName, booth.getSku()));
         boothReservationPriceTV.setText(GlobalUtils.getFormattedPriceStringFromLong(booth.getPrice()));
         populateTagFields();
-        ///// SET UP CANCEL BUTTON
-        Button cancelBoothReservationBtn = (Button) findViewById(R.id.cancel_reserve_booth_btn);
-        cancelBoothReservationBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                cancelBoothReservation();
-            }
-        });
+
         ///// ATTEMPT TO GET A CUSTOMER ASSOCIATED WITH ORDER
         if (null != orderID) {
             orderIDOriginBoothCode = false;
@@ -382,10 +375,6 @@ public class ReserveBoothDetails extends AppCompatActivity {
         }.execute();
     }
 
-    private void cancelBoothReservation() {
-        finish();
-    }
-
     private void finalizeBoothReservation() {
         injectSelectedBoothAndRemoveGeneric();
         Toast.makeText(reserveBoothDetailsActivityContext, getResources().getString(R.string.booth_reservation_booth_reserved_notification), Toast.LENGTH_LONG).show();
@@ -539,7 +528,6 @@ public class ReserveBoothDetails extends AppCompatActivity {
             @Override
             protected void onPostExecute(Void result) {
                 findViewById(R.id.finalize_or_order_btn).setEnabled(false);
-                findViewById(R.id.cancel_reserve_booth_btn).setEnabled(false);
                 orderConnector.disconnect();
                 inventoryConnector.disconnect();
                 orderConnector = null;

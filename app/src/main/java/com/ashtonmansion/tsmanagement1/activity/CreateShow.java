@@ -83,6 +83,7 @@ public class CreateShow extends AppCompatActivity {
         newShowDateField.setTextAppearance(createShowActivityContext, promptFontResId);
         newShowLocationField.setTextAppearance(createShowActivityContext, promptFontResId);
         newShowNotesField.setTextAppearance(createShowActivityContext, promptFontResId);
+
     }
 
     ////////DATA METHODS AND BUTTON ACTIONS////////////////////

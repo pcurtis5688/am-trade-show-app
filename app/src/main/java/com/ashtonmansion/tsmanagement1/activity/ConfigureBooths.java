@@ -74,7 +74,6 @@ public class ConfigureBooths extends AppCompatActivity
         configureBoothsActivityContext = this;
         handleSizing();
         showTable = (TableLayout) findViewById(R.id.booths_for_show_table);
-
         lastSortedBy = "none";
 
         Bundle extrasBundle = getIntent().getExtras();

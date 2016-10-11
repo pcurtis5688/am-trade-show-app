@@ -312,17 +312,11 @@
                     <TableRow>
 
                         <Button
-                            android:id="@+id/cancel_reserve_booth_btn"
-                            style="@style/standard_button_style_mobile"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/booth_reservation_cancel_booth_reservation_btn_text" />
-
-                        <Button
                             android:id="@+id/finalize_or_order_btn"
                             style="@style/standard_button_style_mobile"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:layout_span="2" />
                     </TableRow>
                 </TableLayout>
 
