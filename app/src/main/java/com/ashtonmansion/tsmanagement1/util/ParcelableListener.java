@@ -2,6 +2,7 @@ package com.ashtonmansion.tsmanagement1.util;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import com.clover.sdk.v3.order.Order;
@@ -23,7 +24,7 @@ public class ParcelableListener implements Parcelable {
     };
     private String orderID;
     private OrderConnector.OnOrderUpdateListener2 orderUpdateListener2;
-    private List<ParcelableListener> parcelableListeners;
+    private List<OrderConnector.OnOrderUpdateListener2> updateListener2List;
     private Order orderFetched;
     private String finalBoothID;
     private int idx;
@@ -34,36 +35,35 @@ public class ParcelableListener implements Parcelable {
 
     // "De-parcel object
     private ParcelableListener(Parcel sourceParcel) {
-        parcelableListeners = new ArrayList<>();
-
-        orderID = sourceParcel.readString();
+        updateListener2List = new ArrayList<>();
+        ////// INITIALIZE THE OBJECTS AND READ THE ORDER AND LISTENER
         if (sourceParcel.readValue(Order.class.getClassLoader()) != null) {
             orderFetched = (Order) sourceParcel.readValue(Order.class.getClassLoader());
         }
+        orderUpdateListener2 = (OrderConnector.OnOrderUpdateListener2) sourceParcel.readValue(OrderConnector.OnOrderUpdateListener2.class.getClassLoader());
 
-        sourceParcel.readTypedList(parcelableListeners, ParcelableListener.CREATOR);
         Log.d("Through Parcel ", "Read");
     }
 
-
     public OrderConnector.OnOrderUpdateListener2 getOrderUpdateListener2() {
         return orderUpdateListener2;
-    }
-
-    private void setOrderUpdateListener2(OrderConnector.OnOrderUpdateListener2 orderUpdateListener2) {
-        this.orderUpdateListener2 = orderUpdateListener2;
     }
 
     public String getOrderID() {
         return orderID;
     }
 
-    private void setOrderID(String orderID) {
+    public Order getOrderFetched() {
+        return orderFetched;
+    }
+
+    public void setOrderID(String orderID) {
         this.orderID = orderID;
     }
 
-    public Order getOrderFetched() {
-        return orderFetched;
+    public void setOrderUpdateListener2(OrderConnector.OnOrderUpdateListener2 orderUpdateListener2) {
+        this.orderUpdateListener2 = orderUpdateListener2;
+        this.updateListener2List.add(orderUpdateListener2);
     }
 
     public void setOrderFetched(Order orderFetched) {
@@ -82,8 +82,7 @@ public class ParcelableListener implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(orderID);
         dest.writeValue(orderFetched);
-        dest.writeTypedList(parcelableListeners);
+    //    dest.writeTypedList(updateListener2List);
     }
 }
