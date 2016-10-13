@@ -4,10 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.EventLog;
 import android.util.Log;
 
 import com.ashtonmansion.tsmanagement1.activity.BoothReservationShowSelection;
+import com.clover.sdk.fragment.ReturnToMerchantDialogFragment;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.Intents;
 import com.clover.sdk.v3.inventory.InventoryConnector;
@@ -17,16 +17,23 @@ import com.clover.sdk.v3.order.Order;
 import com.clover.sdk.v3.order.OrderConnector;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+
+interface ListenerAsyncResponse {
+    void processGetLineItems(List<LineItem> lineItemsRetrieved);
+}
+
+interface AsyncResponse {
+    void processFinish(String output);
+
+    void processOrderListenerFinish(OrderConnector.OnOrderUpdateListener2 orderUpdateListener2s);
+}
 
 public class EventManagerReceiver extends BroadcastReceiver implements AsyncResponse {
     private String orderID;
     private String itemID;
-    private Item itemToExamine;
     private Context fromContext;
     private Intent fromIntent;
-    private List<Item> specificBoothList;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -35,12 +42,19 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
         if (intent.getAction().equalsIgnoreCase("com.clover.intent.action.LINE_ITEM_ADDED")) {
             itemID = intent.getStringExtra(Intents.EXTRA_CLOVER_ITEM_ID);
             orderID = intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID);
-
-            GetItemNameTask getItemNameTask = new GetItemNameTask();
-            getItemNameTask.setDelegateAsyncResponse(this);
-            getItemNameTask.setData(context, itemID);
-            getItemNameTask.execute();
+            checkItemName();
         }
+        Log.d("intent action: ", "" + intent.getAction());
+        ////// there must be abetter wayyyyy! no tricky tricky
+        //// TODO: 10/12/2016 create a "GLOBAL" delegate and remove these tasks from this class
+        //// TODO: 10/12/2016 this class should only have logic for what action was received
+    }
+
+    public void checkItemName() {
+        GetItemNameTask getItemNameTask = new GetItemNameTask();
+        getItemNameTask.setData(fromContext, itemID);
+        getItemNameTask.setDelegateAsyncResponse(this);
+        getItemNameTask.execute();
     }
 
     @Override
@@ -52,10 +66,6 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
             addOrderListenerTask.setDelegateAsyncResponse(this);
             addOrderListenerTask.execute();
         }
-    }
-
-    public void processItemFetch(Item item) {
-        this.itemToExamine = item;
     }
 
     @Override
@@ -70,14 +80,13 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
 
 class AddOrderListenerTask extends AsyncTask<Void, Void, OrderConnector.OnOrderUpdateListener2> {
     private AsyncResponse delegate = null;
-    private OrderConnector orderConnector;
+    private OrderConnector orderConnectorToAddListener;
     ////// INPUTS
     private Context appContext;
     private String orderID;
     ////// RESULT ITEM NAME
     private Order orderFetched;
     private OrderConnector.OnOrderUpdateListener2 orderUpdateListener2;
-    private EventManagerReceiver eventManagerReceiver;
 
     void setContextAndOrderId(Context receivedContext, String orderID) {
         this.appContext = receivedContext.getApplicationContext();
@@ -86,34 +95,37 @@ class AddOrderListenerTask extends AsyncTask<Void, Void, OrderConnector.OnOrderU
 
     @Override
     protected void onPreExecute() {
-        orderConnector = new OrderConnector(appContext, CloverAccount.getAccount(appContext), null);
-        orderConnector.connect();
+        orderConnectorToAddListener = new OrderConnector(appContext, CloverAccount.getAccount(appContext), null);
+        orderConnectorToAddListener.connect();
     }
 
     @Override
     protected OrderConnector.OnOrderUpdateListener2 doInBackground(Void... params) {
         try {
-            orderFetched = orderConnector.getOrder(orderID);
+            orderFetched = orderConnectorToAddListener.getOrder(orderID);
 
             orderUpdateListener2 = new OrderConnector.OnOrderUpdateListener2() {
+                public int testint;
+                ////// APP CONTEXT / CONNECTION HELPERS
+                private Context listenerContext;
                 private List<String> selectBoothLineItemIDs;
                 private String orderId;
                 private Order fetchedOrder;
                 private List<LineItem> initialLineItems;
-                private OrderConnector orderConnector;
                 private List<String> lineItemIdsToWatchFor;
+                private ListenerDelegate listenerDelegateClass;
+                private List<LineItem> fetchedLineItems;
 
                 private void initializeOrderListener2Object() {
                     initialLineItems = fetchedOrder.getLineItems();
                     for (LineItem lineItem : initialLineItems) {
                         if (null != lineItem.getName() && lineItem.getName().toLowerCase().contains("select booth")) {
                             selectBoothLineItemIDs.add(lineItem.getId());
-                            Log.d("only see if slct boo ", lineItem.getName() + " id: " + lineItem.getId());
                         }
                     }
                     this.fetchedOrder = orderFetched;
-                    orderConnector = new OrderConnector(appContext, CloverAccount.getAccount(appContext), null);
-                    orderConnector.connect();
+                    this.listenerContext = appContext;
+                    this.listenerDelegateClass = new ListenerDelegate(this);
                 }
 
                 @Override
@@ -140,7 +152,7 @@ class AddOrderListenerTask extends AsyncTask<Void, Void, OrderConnector.OnOrderU
 
                 @Override
                 public void onOrderDiscountAdded(String orderId, String discountId) {
-                    Log.d("Order dscnt added", " orderID: " + orderId);
+                    Log.d("Discount Added", " Order listener from order: " + orderId);
                 }
 
                 @Override
@@ -152,7 +164,6 @@ class AddOrderListenerTask extends AsyncTask<Void, Void, OrderConnector.OnOrderU
                 public void onLineItemsAdded(String orderId, List<String> lineItemIds) {
                     ////// THIS METHOD CALLED AFTER LINE ITEM DELETION WHEN BOOTH SWAP OCCURS
                     Log.d("LI Added - ", " orderID: " + orderId + " - lineitems: " + lineItemIds.toString());
-
                 }
 
                 @Override
@@ -165,6 +176,9 @@ class AddOrderListenerTask extends AsyncTask<Void, Void, OrderConnector.OnOrderU
                 public void onLineItemsDeleted(String orderId, List<String> lineItemIds) {
                     ////// HERE WE MUST CHECK TO ENSURE THAT IT WAS NOT A SPECIFIC BOOTH
                     ////// THAT WAS REMOVED...
+                    GetOrderLineItemsTask getOrderLineItemObjects = new GetOrderLineItemsTask();
+                    getOrderLineItemObjects.setDataAndDelegate(listenerContext, orderId, listenerDelegateClass);
+                    getOrderLineItemObjects.execute();
                 }
 
                 @Override
@@ -192,11 +206,16 @@ class AddOrderListenerTask extends AsyncTask<Void, Void, OrderConnector.OnOrderU
 
                 @Override
                 public void onCreditProcessed(String orderId, String creditId) {
-
+                    if (creditId.equalsIgnoreCase("li_deletion")) {
+                        Log.d("TRICKY TRICKY", "TRICKY TRICKY");
+                        for (LineItem lineItem : listenerDelegateClass.getLineItems()) {
+                            Log.d("TRICKY! : ", lineItem.getName());
+                        }
+                    }
                 }
             };
 
-            orderConnector.addOnOrderChangedListener(orderUpdateListener2);
+            orderConnectorToAddListener.addOnOrderChangedListener(orderUpdateListener2);
         } catch (Exception e) {
             Log.d("ExceptionCheckInBooth: ", e.getMessage(), e.getCause());
         }
@@ -206,56 +225,70 @@ class AddOrderListenerTask extends AsyncTask<Void, Void, OrderConnector.OnOrderU
     @Override
     protected void onPostExecute(OrderConnector.OnOrderUpdateListener2 orderListener2) {
         super.onPostExecute(orderListener2);
+        orderConnectorToAddListener.disconnect();
         delegate.processOrderListenerFinish(orderListener2);
     }
 
     void setDelegateAsyncResponse(EventManagerReceiver callingReceiver) {
         delegate = callingReceiver;
-        eventManagerReceiver = callingReceiver;
     }
 }
 
-class GetItemTask extends AsyncTask<Void, Void, Item> {
-    private AsyncResponse delegate = null;
-    private InventoryConnector inventoryConnector;
+class GetOrderLineItemsTask extends AsyncTask<Void, Void, List<LineItem>> {
+    private ListenerAsyncResponse listenerDelegate = null;
+    private OrderConnector orderConnector;
     ////// INPUTS
-    private String itemID;
-    ////// RESULT ITEM NAME
-    private Item item;
-    private Item item2;
+    private String orderId;
+    ////// RESULT - LIST LINE ITEMS
+    private List<LineItem> fetchedLineItems;
 
-    void setData(Context taskContext, String itemID) {
-        Context appContext = taskContext.getApplicationContext();
-        this.itemID = itemID;
-        inventoryConnector = new InventoryConnector(taskContext, CloverAccount.getAccount(taskContext), null);
-        inventoryConnector.connect();
+    void setDataAndDelegate(Context taskContext, String orderId, ListenerDelegate listenerDelegate) {
+        //Context appContext = taskContext.getApplicationContext();
+        this.orderId = orderId;
+        this.listenerDelegate = listenerDelegate;
+        orderConnector = new OrderConnector(taskContext, CloverAccount.getAccount(taskContext), null);
+        orderConnector.connect();
     }
 
     @Override
-    protected Item doInBackground(Void... params) {
+    protected List<LineItem> doInBackground(Void... params) {
         try {
-            item = inventoryConnector.getItem(itemID);
-            item2 = inventoryConnector.getItemWithCategories(itemID);
+            fetchedLineItems = orderConnector.getOrder(orderId).getLineItems();
         } catch (Exception e) {
             Log.d("ExceptionCheckInBooth: ", e.getMessage(), e.getCause());
             e.printStackTrace();
-            Log.d("stacktrace: ", e.getStackTrace().toString());
         }
-        return item;
+        return fetchedLineItems;
     }
 
     @Override
-    protected void onPostExecute(Item item) {
-        super.onPostExecute(item);
-        inventoryConnector.disconnect();
-        delegate.processItemFetch(item);
-    }
-
-    void setDelegateAsyncResponse(EventManagerReceiver callingReceiver) {
-        delegate = callingReceiver;
+    protected void onPostExecute(List<LineItem> fetchedLineItems) {
+        super.onPostExecute(fetchedLineItems);
+        orderConnector.disconnect();
+        listenerDelegate.processGetLineItems(fetchedLineItems);
     }
 }
 
+class ListenerDelegate implements ListenerAsyncResponse {
+    private OrderConnector.OnOrderUpdateListener2 parentListener2;
+    private List<LineItem> lineItems;
+
+    ListenerDelegate(OrderConnector.OnOrderUpdateListener2 parentListener2) {
+        this.parentListener2 = parentListener2;
+    }
+
+    public List<LineItem> getLineItems() {
+        return this.lineItems;
+    }
+
+    @Override
+    public void processGetLineItems(List<LineItem> lineItemsRetrieved) {
+        this.lineItems = lineItemsRetrieved;
+        parentListener2.onCreditProcessed("placeholder", "li_deletion");
+    }
+}
+
+////// don't touch
 class GetItemNameTask extends AsyncTask<Void, Void, String> {
     private AsyncResponse delegate = null;
     private InventoryConnector inventoryConnector;
@@ -292,13 +325,4 @@ class GetItemNameTask extends AsyncTask<Void, Void, String> {
         delegate = callingReceiver;
     }
 }
-
-interface AsyncResponse {
-    void processFinish(String output);
-
-    void processItemFetch(Item item);
-
-    void processOrderListenerFinish(OrderConnector.OnOrderUpdateListener2 orderUpdateListener2s);
-}
-
 
