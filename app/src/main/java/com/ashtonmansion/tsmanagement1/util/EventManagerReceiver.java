@@ -12,33 +12,44 @@ import com.clover.sdk.v1.Intents;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.order.OrderConnector;
 
-import java.util.ArrayList;
+import java.util.List;
+
+////// don't touch
+interface AsyncResponse {
+    void processFinish(String output);
+
+    void processOrderListenerFinish(OrderConnector.OnOrderUpdateListener2 orderUpdateListener2s);
+}
 
 /**
  * Created by paul curtis on 10/12/2016.
  */
 
 public class EventManagerReceiver extends BroadcastReceiver implements AsyncResponse {
+    ////// PUBLIC ACCESS VARS
+    ////// PRIVATE CONNEX & DATA
+    public OrderConnector.OnOrderUpdateListener2 orderUpdateListener2;
     ////// INPUTS FROM RECEIVER
     private Intent fromIntent;
     private String orderID;
     private String itemID;
     private Context fromContext;
     private String itemName;
-    ////// PUBLIC ACCESS VARS
-    ////// PRIVATE CONNEX & DATA
-    public OrderSentry orderSentry;
 
     ////// Test purposes segment
     @Override
     public void onReceive(Context context, Intent intent) {
         this.fromContext = context;
         this.fromIntent = intent;
-        if (intent.getAction().equalsIgnoreCase("com.clover.intent.action.LINE_ITEM_ADDED")) {
+        //  if (intent.getAction().equalsIgnoreCase("com.clover.intent.action.LINE_ITEM_ADDED")) {
+        if (null != itemID)
             itemID = intent.getStringExtra(Intents.EXTRA_CLOVER_ITEM_ID);
+        else itemID = "";
+        if (null != orderID)
             orderID = intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID);
-            checkItemName();
-        }
+        else orderID = "";
+        checkItemName();
+        // }
     }
 
     public void checkItemName() {
@@ -58,27 +69,16 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
     }
 
     @Override
-    public void processOrderListenerFinish(OrderSentry orderSentry) {
+    public void processOrderListenerFinish(OrderConnector.OnOrderUpdateListener2 orderUpdateListener2) {
         ////// ONLY NEED TO SWITCH ACTIVITY IF ITEM IS SELECT BOOTH
-        this.orderSentry = orderSentry;
-        if (itemName.equalsIgnoreCase("select booth")) {
+        this.orderUpdateListener2 = orderUpdateListener2;
+        if (null != itemName && itemName.equalsIgnoreCase("select booth")) {
             Intent selectBoothForOrderIntent = new Intent(fromContext, BoothReservationShowSelection.class);
             selectBoothForOrderIntent.putExtra("orderid", orderID);
             selectBoothForOrderIntent.putExtra("itemid", itemID);
-            ArrayList<OrderSentry> orderSentries = new ArrayList<>();
-            orderSentries.add(orderSentry);
-            selectBoothForOrderIntent.putExtra("orderSentry", orderSentry);
             selectBoothForOrderIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             fromContext.getApplicationContext().startActivity(selectBoothForOrderIntent);
         }
-    }
-
-    public void setOrderSentry(OrderSentry orderSentry) {
-        this.orderSentry = orderSentry;
-    }
-
-    public OrderSentry getOrderSentry() {
-        return orderSentry;
     }
 }
 
@@ -119,14 +119,14 @@ class GetItemNameTask extends AsyncTask<Void, Void, String> {
     }
 }
 
-class AddOrderListenerTask extends AsyncTask<Void, Void, OrderSentry> {
+class AddOrderListenerTask extends AsyncTask<Void, Void, OrderConnector.OnOrderUpdateListener2> {
     private AsyncResponse delegate = null;
     private OrderConnector orderConnectorToAddListener;
     ////// INPUTS
     private Context appContext;
     private String orderID;
     ////// RESULT IS AN ORDER SENTRY
-    private OrderSentry orderSentry;
+    private OrderConnector.OnOrderUpdateListener2 orderUpdateListener2;
 
     void setContextAndOrderId(Context receivedContext, String orderID) {
         this.appContext = receivedContext.getApplicationContext();
@@ -144,28 +144,21 @@ class AddOrderListenerTask extends AsyncTask<Void, Void, OrderSentry> {
     }
 
     @Override
-    protected OrderSentry doInBackground(Void... params) {
+    protected OrderConnector.OnOrderUpdateListener2 doInBackground(Void... params) {
         try {
-            orderSentry = new OrderSentry(orderID, appContext);
-            orderConnectorToAddListener.addOnOrderChangedListener(orderSentry);
+            orderUpdateListener2 = new OrderListenerService();
+            orderConnectorToAddListener.addOnOrderChangedListener(orderUpdateListener2);
         } catch (Exception e) {
             Log.d("ExceptionCheckInBooth: ", e.getMessage(), e.getCause());
         }
-        return orderSentry;
+        return orderUpdateListener2;
     }
 
     @Override
-    protected void onPostExecute(OrderSentry orderListenerSentry) {
+    protected void onPostExecute(OrderConnector.OnOrderUpdateListener2 orderListenerSentry) {
         super.onPostExecute(orderListenerSentry);
         orderConnectorToAddListener.disconnect();
         delegate.processOrderListenerFinish(orderListenerSentry);
     }
-}
-
-////// don't touch
-interface AsyncResponse {
-    void processFinish(String output);
-
-    void processOrderListenerFinish(OrderSentry orderUpdateListener2s);
 }
 

@@ -16,12 +16,12 @@ import java.util.List;
  * Created by paul curtis on 10/13/2016.
  */
 
-public class OrderSentry implements OrderConnector.OnOrderUpdateListener2, Parcelable {
+public class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
     ////// APP CONTEXT / CONNECTION HELPERS
-    private Context sentryContext;
     private String orderId;
-    private List<String> idsToWatch;
+    private Context sentryContext;
     private boolean isSentryActive;
+    private List<String> idsToWatch;
 
     ////// LIST OF IDS THAT INDICATE SPECIFIC
     public OrderSentry(String orderId, Context sentryContext) {
@@ -108,45 +108,6 @@ public class OrderSentry implements OrderConnector.OnOrderUpdateListener2, Parce
     @Override
     public void onCreditProcessed(String orderId, String creditId) {
         Log.d("Sentry: ", "onCreditProcessed() hit");
-    }
-
-    ////// PARCELABLE COMPATIBLE BELOW
-    protected OrderSentry(Parcel in) {
-        orderId = in.readString();
-        idsToWatch = in.createStringArrayList();
-    }
-
-    public static final Creator<OrderSentry> CREATOR = new Creator<OrderSentry>() {
-        @Override
-        public OrderSentry createFromParcel(Parcel in) {
-            return new OrderSentry(in);
-        }
-
-        @Override
-        public OrderSentry[] newArray(int size) {
-            return new OrderSentry[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        //// TODO: 10/13/2016 this later
-        dest.writeString(orderId);
-        dest.writeStringList(idsToWatch);
-    }
-
-    ////// UPDATE / RETRIEVE DATA METHODS
-    public void setIdsToWatch(List<String> idsToWatch) {
-        this.idsToWatch = idsToWatch;
-    }
-
-    public List<String> getIdsToWatch() {
-        return idsToWatch;
     }
 }
 
