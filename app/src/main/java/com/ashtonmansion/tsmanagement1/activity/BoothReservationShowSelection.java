@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.ashtonmansion.tsmanagement1.R;
 import com.ashtonmansion.tsmanagement1.util.GlobalUtils;
+import com.ashtonmansion.tsmanagement1.util.OrderSentry;
 import com.ashtonmansion.tsmanagement1.util.ParcelableListener;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
@@ -29,6 +30,7 @@ import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.ServiceException;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Tag;
+import com.clover.sdk.v3.order.Order;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +47,8 @@ public class BoothReservationShowSelection extends Activity
     ///// ORDER INFO BEING PASSED TO BOOTH RESERVATION, WILL GRAB CUSTOMER
     private String orderID;
     ////// PARCELED DATA RELATED TO THE ORDER LISTENER
-    private List<ParcelableListener> parcelableListener;
+    private List<OrderSentry> orderSentries;
+    private OrderSentry theOrderSentry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +64,12 @@ public class BoothReservationShowSelection extends Activity
         Bundle extrasBundle = intent.getExtras();
         if (null != extrasBundle) {
             orderID = (String) extrasBundle.get("orderid");
-            parcelableListener = extrasBundle.getParcelable("parcelablelistener");
+            theOrderSentry = (OrderSentry) extrasBundle.get("orderSentry");
+            if (null != theOrderSentry){
+                theOrderSentry.setSentryActive(true);
+            }
         }
+
         ///// SET CONTEXT, ATTACH TO SHOW TABLE, AND POPULATE
         boothReservationShowSelectionActivityContext = this;
         handleSizing();
@@ -134,7 +141,7 @@ public class BoothReservationShowSelection extends Activity
         Intent boothSelectionIntent = new Intent(boothReservationShowSelectionActivityContext, BoothReservation.class);
         boothSelectionIntent.putExtra("show", showTag);
         boothSelectionIntent.putExtra("orderid", orderID);
-        boothSelectionIntent.putParcelableArrayListExtra("parcelablelistener", (ArrayList<? extends Parcelable>) parcelableListener);
+        boothSelectionIntent.putParcelableArrayListExtra("parcelablelistener", (ArrayList<? extends Parcelable>) orderSentries);
         startActivity(boothSelectionIntent);
     }
 
@@ -143,7 +150,7 @@ public class BoothReservationShowSelection extends Activity
         if (platform.equalsIgnoreCase("station")) {
             pageHeaderFontResId = R.style.activity_header_style_station;
             showSelectionButtonResId = R.style.show_selection_button_style;
-             } else {
+        } else {
             pageHeaderFontResId = R.style.activity_header_style_mobile;
             showSelectionButtonResId = R.style.show_selection_button_style;
         }
