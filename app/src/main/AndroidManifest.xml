@@ -16,9 +16,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <service
-            android:name=".util.OrderListenerService"
-            android:enabled="true" />
 
         <activity
             android:name="com.ashtonmansion.tsmanagement1.activity.HomeActivity"
@@ -129,8 +126,8 @@
         <receiver android:name="com.ashtonmansion.tsmanagement1.util.EventManagerReceiver">
             <intent-filter>
                 <action android:name="com.clover.intent.action.LINE_ITEM_ADDED" />
+                <action android:name="com.clover.intent.action.ACTION_ORDER_CREATEDD" />
             </intent-filter>
         </receiver>
     </application>
-
 </manifest>

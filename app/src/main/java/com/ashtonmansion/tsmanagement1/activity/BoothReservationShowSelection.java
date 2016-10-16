@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.os.RemoteException;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -22,16 +21,12 @@ import android.widget.TextView;
 
 import com.ashtonmansion.tsmanagement1.R;
 import com.ashtonmansion.tsmanagement1.util.GlobalUtils;
-import com.ashtonmansion.tsmanagement1.util.OrderListenerService;
-import com.ashtonmansion.tsmanagement1.util.OrderSentry;
-import com.ashtonmansion.tsmanagement1.util.ParcelableListener;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.ServiceException;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Tag;
-import com.clover.sdk.v3.order.Order;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,8 +52,7 @@ public class BoothReservationShowSelection extends Activity
         navigationView.setNavigationItemSelectedListener(this);
 
         ////// DATA WORK
-        Intent intentToEavesdropOnOrder = new Intent(this, OrderListenerService.class);
-        startService(intentToEavesdropOnOrder);
+
 
         ////// OTHER INITIALIZATION
         Intent intent = getIntent();

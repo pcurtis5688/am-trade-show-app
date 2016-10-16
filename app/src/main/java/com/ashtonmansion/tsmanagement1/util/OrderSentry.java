@@ -8,12 +8,11 @@ import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v3.order.LineItem;
 import com.clover.sdk.v3.order.OrderConnector;
 
-import java.io.StringBufferInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by paul curtis on 10/13/2016.
+ * Created by paul curtis (pcurtis5688@gmail.com) on 10/13/2016.
  */
 
 public class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
@@ -21,29 +20,28 @@ public class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
     private String orderId;
     private Context sentryContext;
     ////// UTILITY DATA
-    private List<LineItem> currentLineItems;
     private List<String> lineItemsAddedList;
 
     ////// LIST OF IDS THAT INDICATE SPECIFIC
-    public OrderSentry(Context sentryContext, String orderId) {
+    OrderSentry(Context sentryContext, String orderId) {
         this.orderId = orderId;
         this.sentryContext = sentryContext;
         this.lineItemsAddedList = new ArrayList<>();
-        getItemListByOrderId(orderId);
+        Log.d("Sentry", "Coming online....");
     }
 
-    public void getItemListByOrderId(String orderId) {
-        GetItemListByOrderIdTASK getItemListByOrderIdTASK = new GetItemListByOrderIdTASK();
-        getItemListByOrderIdTASK.setInputs(this, sentryContext, orderId);
-        getItemListByOrderIdTASK.execute();
+    String getOrderId() {
+        return orderId;
     }
 
-    public List<LineItem> getCurrentLineItems() {
-        return currentLineItems;
-    }
-
-    public void setCurrentLineItems(List<LineItem> inputLineItems) {
-        this.currentLineItems = inputLineItems;
+    void processLineItemAddedInternal(List<LineItem> lineItemsAdded) {
+        for (LineItem currentLineItem : lineItemsAdded) {
+            if (currentLineItem.getName().equalsIgnoreCase("select booth")) {
+                Log.d("Sentry", "\'Select Booth\' Located...");
+            } else if (currentLineItem.getName().equalsIgnoreCase("electricity")) {
+                Log.d("Sentry", "\'Electricity\' Located...");
+            }
+        }
     }
 
     @Override
@@ -76,12 +74,12 @@ public class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
     @Override
     public void onLineItemsAdded(String orderId, List<String> lineItemIds) {
         ////// THIS METHOD CALLED AFTER LINE ITEM DELETION WHEN BOOTH SWAP OCCURS
-        Log.d("Sentry ", "Line Item Added (with ID(s)): ");
+        Log.d("Sentry ", "Line Item Added (with ID(s)): " + lineItemIds.toString());
         for (String lineItemID : lineItemIds) {
-            Log.d("- ", "(" + lineItemID + ")");
             lineItemsAddedList.add(lineItemID);
-            
         }
+        ProcessLineItemAddedTask processLineItemAddedTask = new ProcessLineItemAddedTask(this, sentryContext, lineItemIds);
+        processLineItemAddedTask.execute();
     }
 
     @Override
@@ -92,11 +90,10 @@ public class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
     @Override
     public void onLineItemsDeleted(String orderId, List<String> lineItemIds) {
         ////// ensure not a specific booth that was removed
-        Log.d("Sentry ", "Line Item Deleted (with ID(s)): ");
+        Log.d("Sentry ", "Line Item Deleted (with ID(s)): " + lineItemIds.toString());
         for (String lineItemID : lineItemIds) {
-            Log.d("- ", "(" + lineItemID + ")");
             if (lineItemsAddedList.contains(lineItemID)) {
-                Log.d("RecognizedAdded", "yayyyy");
+                Log.d("Sentry", "Deletion of previously added item...");
             }
         }
     }
@@ -132,41 +129,50 @@ public class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
     }
 }
 
-class GetItemListByOrderIdTASK extends AsyncTask<Void, Void, List<LineItem>> {
+class ProcessLineItemAddedTask extends AsyncTask<Void, Void, List<LineItem>> {
     ////// CALLER AND CONNECTOR
     private OrderSentry caller;
-    private OrderConnector connector;
+    private OrderConnector orderConnector;
     ////// INPUTS FROM CALLER
+    private String orderID;
     private Context callingContext;
-    private String orderId;
+    private List<String> lineItemsAddedStringIDList;
     ////// OUTPUTS TO CALLER
-    private List<LineItem> lineItemList;
+    private List<LineItem> lineItemsAddedList;
 
-    public void setInputs(OrderSentry caller, Context callingContext, String orderId) {
+    ProcessLineItemAddedTask(OrderSentry caller, Context callingContext, List<String> lineItemsAddedStringIDList) {
         this.caller = caller;
+        this.orderID = caller.getOrderId();
         this.callingContext = callingContext;
-        this.orderId = orderId;
+        this.lineItemsAddedStringIDList = lineItemsAddedStringIDList;
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        connector = new OrderConnector(callingContext, CloverAccount.getAccount(callingContext), null);
-        connector.connect();
+        lineItemsAddedList = new ArrayList<>();
+        orderConnector = new OrderConnector(callingContext, CloverAccount.getAccount(callingContext), null);
+        orderConnector.connect();
     }
 
     @Override
     protected List<LineItem> doInBackground(Void... params) {
         try {
-            lineItemList = connector.getOrder(orderId).getLineItems();
+            for (String lineItemAddedString : lineItemsAddedStringIDList) {
+                for (LineItem currentLineItem : orderConnector.getOrder(orderID).getLineItems()) {
+                    if (currentLineItem.getId().equals(lineItemAddedString)) {
+                        lineItemsAddedList.add(currentLineItem);
+                    }
+                }
+            }
         } catch (Exception e) {
             Log.d("Excpt: ", e.getMessage(), e.getCause());
         }
-        return lineItemList;
+        return lineItemsAddedList;
     }
 
     @Override
-    protected void onPostExecute(List<LineItem> itemsReturned) {
-        caller.setCurrentLineItems(itemsReturned);
+    protected void onPostExecute(List<LineItem> lineItemsAddedList) {
+        caller.processLineItemAddedInternal(lineItemsAddedList);
     }
 }

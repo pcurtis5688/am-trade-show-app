@@ -1,5 +1,6 @@
 package com.ashtonmansion.tsmanagement1.util;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
@@ -202,6 +203,6 @@ class GetItemNameTask extends AsyncTask<Void, Void, String> {
     protected void onPostExecute(String itemName) {
         super.onPostExecute(itemName);
         inventoryConnector.disconnect();
-        delegate.processFinish(itemName);
+        delegate.processGetItemNameCompletion(itemID, itemName);
     }
 }

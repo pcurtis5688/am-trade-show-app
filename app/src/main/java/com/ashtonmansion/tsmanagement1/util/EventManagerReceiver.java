@@ -1,5 +1,6 @@
 package com.ashtonmansion.tsmanagement1.util;
 
+import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,14 +13,15 @@ import com.clover.sdk.v1.Intents;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.order.OrderConnector;
 
-/**
- * Created by Paul Curtis (pcurtis5688@gmail.com) on 10/12/2016.
- */
 interface AsyncResponse {
-    void processFinish(String output);
+    void processGetItemNameCompletion(String itemIdOut, String itemNameOut);
 
     void processOrderListenerFinish(OrderSentry orderSentry);
 }
+
+/**
+ * Created by Paul Curtis (pcurtis5688@gmail.com) on 10/12/2016.
+ */
 
 public class EventManagerReceiver extends BroadcastReceiver implements AsyncResponse {
     ////// PUBLIC ACCESS VARS
@@ -38,8 +40,8 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
     ////// Test purposes segment
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("Has Sentry : ", "" + hasOrderSentry);
         this.fromContext = context;
+
         if (null == intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID)
                 && null == intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID)) {
             itemID = "";
@@ -54,7 +56,10 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
             itemID = intent.getStringExtra(Intents.EXTRA_CLOVER_ITEM_ID);
             orderID = intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID);
         }
-        checkItemName();
+        SpawnOrderSentryTask spawnOrderSentryTask = new SpawnOrderSentryTask();
+        spawnOrderSentryTask.setContextAndOrderId(fromContext, orderID);
+        spawnOrderSentryTask.setDelegateAsyncResponse(this);
+        spawnOrderSentryTask.execute();
     }
 
     public void checkItemName() {
@@ -64,21 +69,18 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
     }
 
     @Override
-    public void processFinish(String itemName) {
+    public void processGetItemNameCompletion(String itemID, String itemName) {
         this.itemName = itemName;
-        AddOrderListenerTask addOrderListenerTask = new AddOrderListenerTask();
-        addOrderListenerTask.setContextAndOrderId(fromContext, orderID, itemName);
-        addOrderListenerTask.setDelegateAsyncResponse(this);
-        addOrderListenerTask.execute();
+        //// TODO: 10/15/2016 uncomment when near to completion
+        //if (itemName.equalsIgnoreCase("select booth")){
+        SpawnOrderSentryTask spawnOrderSentryTask = new SpawnOrderSentryTask();
+        spawnOrderSentryTask.setContextAndOrderId(fromContext, orderID);
+        spawnOrderSentryTask.setDelegateAsyncResponse(this);
+        spawnOrderSentryTask.execute();
     }
 
     @Override
     public void processOrderListenerFinish(OrderSentry spawnedOrderSentry) {
-        if (!hasOrderSentry) {
-            this.orderSentry = spawnedOrderSentry;
-            this.hasOrderSentry = true;
-        }
-
         if (null != itemName && itemName.equalsIgnoreCase("select booth")) {
             Intent selectBoothForOrderIntent = new Intent(fromContext, BoothReservationShowSelection.class);
             selectBoothForOrderIntent.putExtra("orderid", orderID);
@@ -89,8 +91,7 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
     }
 }
 
-
-class AddOrderListenerTask extends AsyncTask<Void, Void, OrderSentry> {
+class SpawnOrderSentryTask extends AsyncTask<Void, Void, OrderSentry> {
     private AsyncResponse delegate = null;
     private OrderConnector orderConnector;
     ////// INPUTS
@@ -99,7 +100,7 @@ class AddOrderListenerTask extends AsyncTask<Void, Void, OrderSentry> {
     ////// RESULT IS AN ORDER SENTRY
     private OrderSentry orderSentry;
 
-    void setContextAndOrderId(Context receivedContext, String orderID, String itemName) {
+    void setContextAndOrderId(Context receivedContext, String orderID) {
         this.appContext = receivedContext.getApplicationContext();
         this.orderID = orderID;
     }
@@ -118,7 +119,6 @@ class AddOrderListenerTask extends AsyncTask<Void, Void, OrderSentry> {
     protected OrderSentry doInBackground(Void... params) {
         try {
             orderSentry = new OrderSentry(appContext, orderID);
-            orderSentry.setCurrentLineItems(orderConnector.getOrder(orderID).getLineItems());
             orderConnector.addOnOrderChangedListener(orderSentry);
         } catch (Exception e) {
             Log.d("ExceptionCheckInBooth: ", e.getMessage(), e.getCause());
