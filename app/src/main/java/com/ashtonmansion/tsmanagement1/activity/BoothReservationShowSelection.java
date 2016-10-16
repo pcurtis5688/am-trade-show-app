@@ -53,7 +53,6 @@ public class BoothReservationShowSelection extends Activity
         ///////////UI WORK/////////////////////////////////////
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_booth_reservation_show_selection);
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_make_reservation);
         navigationView.setNavigationItemSelectedListener(this);
 

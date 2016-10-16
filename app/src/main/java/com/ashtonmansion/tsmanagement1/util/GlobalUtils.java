@@ -2,12 +2,15 @@ package com.ashtonmansion.tsmanagement1.util;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.util.Log;
 
+import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v3.customers.Customer;
 import com.clover.sdk.v3.customers.PhoneNumber;
 import com.clover.sdk.v3.customers.EmailAddress;
 import com.clover.sdk.v3.customers.Address;
+import com.clover.sdk.v3.inventory.InventoryConnector;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -166,5 +169,39 @@ public class GlobalUtils {
             platform = "other";
         }
         return platform;
+    }
+}
+
+class GetItemNameTask extends AsyncTask<Void, Void, String> {
+    private AsyncResponse delegate = null;
+    private InventoryConnector inventoryConnector;
+    ////// INPUTS
+    private String itemID;
+    ////// RESULT ITEM NAME
+    private String itemName;
+
+    void setDataAndDelegate(EventManagerReceiver eventManagerReceiver, Context taskContext, String itemID) {
+        Context appContext = taskContext.getApplicationContext();
+        this.itemID = itemID;
+        this.delegate = eventManagerReceiver;
+        inventoryConnector = new InventoryConnector(appContext, CloverAccount.getAccount(appContext), null);
+        inventoryConnector.connect();
+    }
+
+    @Override
+    protected String doInBackground(Void... params) {
+        try {
+            itemName = inventoryConnector.getItem(itemID).getName();
+        } catch (Exception e) {
+            Log.d("ExceptionCheckInBooth: ", e.getMessage(), e.getCause());
+        }
+        return itemName;
+    }
+
+    @Override
+    protected void onPostExecute(String itemName) {
+        super.onPostExecute(itemName);
+        inventoryConnector.disconnect();
+        delegate.processFinish(itemName);
     }
 }

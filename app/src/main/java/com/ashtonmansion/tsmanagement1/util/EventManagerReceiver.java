@@ -12,50 +12,54 @@ import com.clover.sdk.v1.Intents;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.order.OrderConnector;
 
-import java.util.List;
-
-////// don't touch
+/**
+ * Created by Paul Curtis (pcurtis5688@gmail.com) on 10/12/2016.
+ */
 interface AsyncResponse {
     void processFinish(String output);
 
-    void processOrderListenerFinish(OrderConnector.OnOrderUpdateListener2 orderUpdateListener2s);
+    void processOrderListenerFinish(OrderSentry orderSentry);
 }
-
-/**
- * Created by paul curtis on 10/12/2016.
- */
 
 public class EventManagerReceiver extends BroadcastReceiver implements AsyncResponse {
     ////// PUBLIC ACCESS VARS
     ////// PRIVATE CONNEX & DATA
-    public OrderConnector.OnOrderUpdateListener2 orderUpdateListener2;
+    private Context fromContext;
     ////// INPUTS FROM RECEIVER
-    private Intent fromIntent;
+    //private Intent fromIntent;
     private String orderID;
     private String itemID;
-    private Context fromContext;
+    ////// ORDER SENTRY IMPLEMENTATION
+    private boolean hasOrderSentry;
+    private OrderSentry orderSentry;
+    ////// OUTPUTS / DECIPHERED DATA
     private String itemName;
 
     ////// Test purposes segment
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.d("Has Sentry : ", "" + hasOrderSentry);
         this.fromContext = context;
-        this.fromIntent = intent;
-        //  if (intent.getAction().equalsIgnoreCase("com.clover.intent.action.LINE_ITEM_ADDED")) {
-        if (null != itemID)
-            itemID = intent.getStringExtra(Intents.EXTRA_CLOVER_ITEM_ID);
-        else itemID = "";
-        if (null != orderID)
+        if (null == intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID)
+                && null == intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID)) {
+            itemID = "";
+            orderID = "";
+        } else if (null == intent.getStringExtra(Intents.EXTRA_CLOVER_ITEM_ID)) {
+            itemID = "";
             orderID = intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID);
-        else orderID = "";
+        } else if (null == intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID)) {
+            orderID = "";
+            itemID = intent.getStringExtra(Intents.EXTRA_CLOVER_ITEM_ID);
+        } else {
+            itemID = intent.getStringExtra(Intents.EXTRA_CLOVER_ITEM_ID);
+            orderID = intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID);
+        }
         checkItemName();
-        // }
     }
 
     public void checkItemName() {
         GetItemNameTask getItemNameTask = new GetItemNameTask();
-        getItemNameTask.setData(fromContext, itemID);
-        getItemNameTask.setDelegateAsyncResponse(this);
+        getItemNameTask.setDataAndDelegate(this, fromContext, itemID);
         getItemNameTask.execute();
     }
 
@@ -63,15 +67,18 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
     public void processFinish(String itemName) {
         this.itemName = itemName;
         AddOrderListenerTask addOrderListenerTask = new AddOrderListenerTask();
-        addOrderListenerTask.setContextAndOrderId(fromContext, orderID);
+        addOrderListenerTask.setContextAndOrderId(fromContext, orderID, itemName);
         addOrderListenerTask.setDelegateAsyncResponse(this);
         addOrderListenerTask.execute();
     }
 
     @Override
-    public void processOrderListenerFinish(OrderConnector.OnOrderUpdateListener2 orderUpdateListener2) {
-        ////// ONLY NEED TO SWITCH ACTIVITY IF ITEM IS SELECT BOOTH
-        this.orderUpdateListener2 = orderUpdateListener2;
+    public void processOrderListenerFinish(OrderSentry spawnedOrderSentry) {
+        if (!hasOrderSentry) {
+            this.orderSentry = spawnedOrderSentry;
+            this.hasOrderSentry = true;
+        }
+
         if (null != itemName && itemName.equalsIgnoreCase("select booth")) {
             Intent selectBoothForOrderIntent = new Intent(fromContext, BoothReservationShowSelection.class);
             selectBoothForOrderIntent.putExtra("orderid", orderID);
@@ -82,53 +89,17 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
     }
 }
 
-class GetItemNameTask extends AsyncTask<Void, Void, String> {
+
+class AddOrderListenerTask extends AsyncTask<Void, Void, OrderSentry> {
     private AsyncResponse delegate = null;
-    private InventoryConnector inventoryConnector;
-    ////// INPUTS
-    private String itemID;
-    ////// RESULT ITEM NAME
-    private String itemName;
-
-    void setData(Context taskContext, String itemID) {
-        Context appContext = taskContext.getApplicationContext();
-        this.itemID = itemID;
-        inventoryConnector = new InventoryConnector(appContext, CloverAccount.getAccount(appContext), null);
-        inventoryConnector.connect();
-    }
-
-    @Override
-    protected String doInBackground(Void... params) {
-        try {
-            itemName = inventoryConnector.getItem(itemID).getName();
-        } catch (Exception e) {
-            Log.d("ExceptionCheckInBooth: ", e.getMessage(), e.getCause());
-        }
-        return itemName;
-    }
-
-    @Override
-    protected void onPostExecute(String itemName) {
-        super.onPostExecute(itemName);
-        inventoryConnector.disconnect();
-        delegate.processFinish(itemName);
-    }
-
-    public void setDelegateAsyncResponse(EventManagerReceiver callingReceiver) {
-        delegate = callingReceiver;
-    }
-}
-
-class AddOrderListenerTask extends AsyncTask<Void, Void, OrderConnector.OnOrderUpdateListener2> {
-    private AsyncResponse delegate = null;
-    private OrderConnector orderConnectorToAddListener;
+    private OrderConnector orderConnector;
     ////// INPUTS
     private Context appContext;
     private String orderID;
     ////// RESULT IS AN ORDER SENTRY
-    private OrderConnector.OnOrderUpdateListener2 orderUpdateListener2;
+    private OrderSentry orderSentry;
 
-    void setContextAndOrderId(Context receivedContext, String orderID) {
+    void setContextAndOrderId(Context receivedContext, String orderID, String itemName) {
         this.appContext = receivedContext.getApplicationContext();
         this.orderID = orderID;
     }
@@ -139,26 +110,25 @@ class AddOrderListenerTask extends AsyncTask<Void, Void, OrderConnector.OnOrderU
 
     @Override
     protected void onPreExecute() {
-        orderConnectorToAddListener = new OrderConnector(appContext, CloverAccount.getAccount(appContext), null);
-        orderConnectorToAddListener.connect();
+        orderConnector = new OrderConnector(appContext, CloverAccount.getAccount(appContext), null);
+        orderConnector.connect();
     }
 
     @Override
-    protected OrderConnector.OnOrderUpdateListener2 doInBackground(Void... params) {
+    protected OrderSentry doInBackground(Void... params) {
         try {
-            orderUpdateListener2 = new OrderListenerService();
-            orderConnectorToAddListener.addOnOrderChangedListener(orderUpdateListener2);
+            orderSentry = new OrderSentry(appContext, orderID);
+            orderSentry.setCurrentLineItems(orderConnector.getOrder(orderID).getLineItems());
+            orderConnector.addOnOrderChangedListener(orderSentry);
         } catch (Exception e) {
             Log.d("ExceptionCheckInBooth: ", e.getMessage(), e.getCause());
         }
-        return orderUpdateListener2;
+        return orderSentry;
     }
 
     @Override
-    protected void onPostExecute(OrderConnector.OnOrderUpdateListener2 orderListenerSentry) {
-        super.onPostExecute(orderListenerSentry);
-        orderConnectorToAddListener.disconnect();
-        delegate.processOrderListenerFinish(orderListenerSentry);
+    protected void onPostExecute(OrderSentry orderSentry) {
+        super.onPostExecute(orderSentry);
+        delegate.processOrderListenerFinish(orderSentry);
     }
 }
-

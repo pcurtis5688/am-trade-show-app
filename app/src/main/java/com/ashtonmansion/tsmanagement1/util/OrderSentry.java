@@ -2,14 +2,14 @@ package com.ashtonmansion.tsmanagement1.util;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.Log;
 
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v3.order.LineItem;
 import com.clover.sdk.v3.order.OrderConnector;
 
+import java.io.StringBufferInputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,21 +17,33 @@ import java.util.List;
  */
 
 public class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
-    ////// APP CONTEXT / CONNECTION HELPERS
+    ////// INITIAL OR UPDATED DATA
     private String orderId;
     private Context sentryContext;
-    private boolean isSentryActive;
-    private List<String> idsToWatch;
+    ////// UTILITY DATA
+    private List<LineItem> currentLineItems;
+    private List<String> lineItemsAddedList;
 
     ////// LIST OF IDS THAT INDICATE SPECIFIC
-    public OrderSentry(String orderId, Context sentryContext) {
+    public OrderSentry(Context sentryContext, String orderId) {
         this.orderId = orderId;
         this.sentryContext = sentryContext;
+        this.lineItemsAddedList = new ArrayList<>();
+        getItemListByOrderId(orderId);
     }
 
-    public void setSentryActive(boolean isSentryActive) {
-        Log.d("Sentry Status: ", "Active: " + isSentryActive);
-        this.isSentryActive = isSentryActive;
+    public void getItemListByOrderId(String orderId) {
+        GetItemListByOrderIdTASK getItemListByOrderIdTASK = new GetItemListByOrderIdTASK();
+        getItemListByOrderIdTASK.setInputs(this, sentryContext, orderId);
+        getItemListByOrderIdTASK.execute();
+    }
+
+    public List<LineItem> getCurrentLineItems() {
+        return currentLineItems;
+    }
+
+    public void setCurrentLineItems(List<LineItem> inputLineItems) {
+        this.currentLineItems = inputLineItems;
     }
 
     @Override
@@ -64,7 +76,12 @@ public class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
     @Override
     public void onLineItemsAdded(String orderId, List<String> lineItemIds) {
         ////// THIS METHOD CALLED AFTER LINE ITEM DELETION WHEN BOOTH SWAP OCCURS
-        Log.d("Sentry: ", "onLineItemsAdded() hit");
+        Log.d("Sentry ", "Line Item Added (with ID(s)): ");
+        for (String lineItemID : lineItemIds) {
+            Log.d("- ", "(" + lineItemID + ")");
+            lineItemsAddedList.add(lineItemID);
+            
+        }
     }
 
     @Override
@@ -74,10 +91,14 @@ public class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
 
     @Override
     public void onLineItemsDeleted(String orderId, List<String> lineItemIds) {
-        ////// HERE WE MUST CHECK TO ENSURE THAT IT WAS NOT A SPECIFIC BOOTH
-        ////// THAT WAS REMOVED...
-        Log.d("Sentry: ", "onLineItemsDeleted() hit");
-        //// TODO: 10/13/2016 write check against idsToWatch
+        ////// ensure not a specific booth that was removed
+        Log.d("Sentry ", "Line Item Deleted (with ID(s)): ");
+        for (String lineItemID : lineItemIds) {
+            Log.d("- ", "(" + lineItemID + ")");
+            if (lineItemsAddedList.contains(lineItemID)) {
+                Log.d("RecognizedAdded", "yayyyy");
+            }
+        }
     }
 
     @Override
@@ -111,7 +132,7 @@ public class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
     }
 }
 
-class GetItemList extends AsyncTask<Void, Void, List<LineItem>> {
+class GetItemListByOrderIdTASK extends AsyncTask<Void, Void, List<LineItem>> {
     ////// CALLER AND CONNECTOR
     private OrderSentry caller;
     private OrderConnector connector;
@@ -146,6 +167,6 @@ class GetItemList extends AsyncTask<Void, Void, List<LineItem>> {
 
     @Override
     protected void onPostExecute(List<LineItem> itemsReturned) {
-
+        caller.setCurrentLineItems(itemsReturned);
     }
 }
