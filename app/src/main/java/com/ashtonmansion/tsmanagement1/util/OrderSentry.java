@@ -22,15 +22,14 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
     private String orderId;
     private Context sentryContext;
     ////// PERSISTENT DATA
-    private List<LineItem> specificBoothsLIsAttachedToOrderList;
+    private List<String> specificBoothIdsAttachedToOrder;
 
     ////// CONSTRUCTOR / PUBLIC METHODS
     OrderSentry(Context sentryContext, String orderId) {
         this.orderId = orderId;
         this.sentryContext = sentryContext;
-        this.specificBoothsLIsAttachedToOrderList = new ArrayList<>();
-        Log.d("Sentry", "Coming online....");
-        fetchLineItems();
+        this.specificBoothIdsAttachedToOrder = new ArrayList<>();
+        checkInitialLineItems();
     }
 
     String getOrderId() {
@@ -38,34 +37,35 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
     }
 
     ////// ORDER SENTRY PRIVATE METHODS
-    private void fetchLineItems() {
+    private void checkInitialLineItems() {
         GetLineItemsForOrderTask getLineItemsForOrderTask = new GetLineItemsForOrderTask();
         getLineItemsForOrderTask.setDataAndDelegate(this, sentryContext, orderId);
         getLineItemsForOrderTask.execute();
     }
 
+    void receiveInitialLineItemListAndProcess(List<LineItem> lineItems) {
+        for (LineItem currentLineItem : lineItems) {
+            if (currentLineItem.getName().contains("Booth #"))
+                specificBoothIdsAttachedToOrder.add(currentLineItem.getId());
+        }
+    }
+
     void processLineItemAddedInternal(List<LineItem> lineItemsAdded) {
         for (LineItem currentLineItem : lineItemsAdded) {
-            if (currentLineItem.getName().equalsIgnoreCase("select booth")) {
-                Log.d("Sentry", "\'Select Booth\' Located...");
-            } else {
-                Log.d("Sentry", "Other Located...");
-            }
             if (currentLineItem.getName().contains("Booth #")) {
-                specificBoothsLIsAttachedToOrderList.add(currentLineItem);
+                specificBoothIdsAttachedToOrder.add(currentLineItem.getId());
+                Log.d("Sentry", "Specific booth added to order detected...");
             }
         }
     }
 
     void processLineItemDeletedInternal(List<LineItem> lineItemsDeleted) {
+        ////// TEST EXISTENCE OF SPECIFIC BOOTH
         for (LineItem lineItem : lineItemsDeleted) {
-            if (specificBoothsLIsAttachedToOrderList.contains(lineItem))
-                Log.d("Sentry", "a specific booth was removed from an open order...");
-        }
-        ////// ALTERNATE METHOD TEST
-        for (LineItem lineItem : lineItemsDeleted) {
-            if (lineItem.getName().contains("Booth #"))
+            if (specificBoothIdsAttachedToOrder.contains(lineItem.getId())) {
+                Log.d("Complete", "This implementation");
                 Log.d("Sentry", "Located a specific booth's removal from order...");
+            }
         }
     }
 
@@ -146,11 +146,6 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
     @Override
     public void onCreditProcessed(String orderId, String creditId) {
         Log.d("Sentry: ", "onCreditProcessed() hit");
-    }
-
-    public List<LineItem> receiveLineItemList(List<LineItem> lineItems) {
-        Log.d("Sentry", "Received Line Item(s): " + lineItems.toString());
-        return lineItems;
     }
 }
 
@@ -253,3 +248,36 @@ class ProcessLineItemDeletedTask extends AsyncTask<Void, Void, List<LineItem>> {
     }
 }
 
+class GetLineItemsForOrderTask extends AsyncTask<Void, Void, List<LineItem>> {
+    private OrderSentry delegate = null;
+    private OrderConnector orderConnector;
+    ////// INPUTS
+    private String orderID;
+    ////// RESULT ITEM NAME
+    private List<LineItem> lineItems;
+
+    void setDataAndDelegate(OrderSentry orderSentry, Context taskContext, String orderID) {
+        //Context appContext = taskContext.getApplicationContext();
+        this.delegate = orderSentry;
+        this.orderID = orderID;
+        orderConnector = new OrderConnector(taskContext, CloverAccount.getAccount(taskContext), null);
+        orderConnector.connect();
+    }
+
+    @Override
+    protected List<LineItem> doInBackground(Void... params) {
+        try {
+            lineItems = orderConnector.getOrder(orderID).getLineItems();
+        } catch (Exception e) {
+            Log.d("ExceptionCheckInBooth: ", e.getMessage(), e.getCause());
+        }
+        return lineItems;
+    }
+
+    @Override
+    protected void onPostExecute(List<LineItem> lineItems) {
+        super.onPostExecute(lineItems);
+        orderConnector.disconnect();
+        delegate.receiveInitialLineItemListAndProcess(lineItems);
+    }
+}

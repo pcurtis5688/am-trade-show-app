@@ -209,37 +209,3 @@ class GetItemNameTask extends AsyncTask<Void, Void, String> {
         //delegate.something(something);
     }
 }
-
-class GetLineItemsForOrderTask extends AsyncTask<Void, Void, List<LineItem>> {
-    private OrderSentry delegate = null;
-    private OrderConnector orderConnector;
-    ////// INPUTS
-    private String orderID;
-    ////// RESULT ITEM NAME
-    private List<LineItem> lineItems;
-
-    void setDataAndDelegate(OrderSentry orderSentry, Context taskContext, String orderID) {
-        //Context appContext = taskContext.getApplicationContext();
-        this.delegate = orderSentry;
-        this.orderID = orderID;
-        orderConnector = new OrderConnector(taskContext, CloverAccount.getAccount(taskContext), null);
-        orderConnector.connect();
-    }
-
-    @Override
-    protected List<LineItem> doInBackground(Void... params) {
-        try {
-            lineItems = orderConnector.getOrder(orderID).getLineItems();
-        } catch (Exception e) {
-            Log.d("ExceptionCheckInBooth: ", e.getMessage(), e.getCause());
-        }
-        return lineItems;
-    }
-
-    @Override
-    protected void onPostExecute(List<LineItem> lineItems) {
-        super.onPostExecute(lineItems);
-        orderConnector.disconnect();
-        delegate.receiveLineItemList(lineItems);
-    }
-}

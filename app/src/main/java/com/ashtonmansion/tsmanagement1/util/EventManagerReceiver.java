@@ -35,8 +35,8 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
     ////// THIS RECEIVES BOTH ORDER CREATED AND
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.d("Receiver", "Intent Action: " + intent.getAction().toString());
         this.fromContext = context;
-
         if (null == intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID)
                 && null == intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID)) {
             itemID = "";
@@ -61,13 +61,12 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
             spawnOrderSentryTask.setContextAndOrderId(fromContext, orderID);
             spawnOrderSentryTask.setDelegateAsyncResponse(this);
             spawnOrderSentryTask.execute();
+            Log.d("Receiver", "Spawning new instance of Sentry....");
         } else {
             /////// ALREADY AVAILABLE IN APPLICATIONCONTEXT, but also set one
             this.orderSentry = ((GlobalClass) fromContext.getApplicationContext()).getOrderSentry();
-            Log.d("Sentry", "Acquiring previous instance...");
+            Log.d("Receiver", "Acquiring previous instance of Sentry...");
         }
-
-        Log.d("Receiver", "Item ID: " + itemID);
     }
 
     @Override
