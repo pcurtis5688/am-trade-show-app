@@ -40,15 +40,15 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
                 && null == intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID)) {
             itemID = "";
             orderID = "";
-            Log.d("Sentry", "Case where both orderID & itemID is null was located");
+            Log.d("SENTRY FATAL", "Case where both orderID and itemID were null");
         } else if (null == intent.getStringExtra(Intents.EXTRA_CLOVER_ITEM_ID)) {
             itemID = "";
             orderID = intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID);
-            Log.d("Sentry", "Case where itemID is null was located");
+            Log.d("SENTRY FATAL", "Case where itemID is null was located");
         } else if (null == intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID)) {
             orderID = "";
             itemID = intent.getStringExtra(Intents.EXTRA_CLOVER_ITEM_ID);
-            Log.d("Sentry", "Case where orderID is null was located");
+            Log.d("SENTRY FATAL", "Case where orderID is null was located");
         } else {
             itemID = intent.getStringExtra(Intents.EXTRA_CLOVER_ITEM_ID);
             orderID = intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID);
