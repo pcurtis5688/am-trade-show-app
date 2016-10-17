@@ -61,10 +61,11 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
 
     void processLineItemDeletedInternal(List<LineItem> lineItemsDeleted) {
         ////// TEST EXISTENCE OF SPECIFIC BOOTH
-        for (LineItem lineItem : lineItemsDeleted) {
-            if (specificBoothIdsAttachedToOrder.contains(lineItem.getId())) {
-                Log.d("Complete", "This implementation");
-                Log.d("Sentry", "Located a specific booth's removal from order...");
+        if (null != lineItemsDeleted && lineItemsDeleted.size() > 0) {
+            for (LineItem lineItem : lineItemsDeleted) {
+                if (lineItem.getName().contains("Booth #")) {
+                    Log.d("Sentry", "Located a specific booth's removal from order...");
+                }
             }
         }
     }
@@ -229,10 +230,19 @@ class ProcessLineItemDeletedTask extends AsyncTask<Void, Void, List<LineItem>> {
     protected List<LineItem> doInBackground(Void... params) {
         try {
             lineItemsDeletedList = orderConnector.getOrder(orderID).getLineItems();
+
             for (String lineItemDeletedString : lineItemsDeletedStringIDList) {
-                for (LineItem currentLineItem : orderConnector.getOrder(orderID).getLineItems()) {
-                    if (currentLineItem.getId().equals(lineItemDeletedString))
-                        lineItemsDeletedList.add(currentLineItem);
+                if (null != orderConnector.getOrder(orderID).getLineItems()) {
+                    for (LineItem currentLineItem : orderConnector.getOrder(orderID).getLineItems()) {
+                        if (currentLineItem.getId().equals(lineItemDeletedString)) {
+                            lineItemsDeletedList.add(currentLineItem);
+                        }
+                        if (currentLineItem.getName().contains("Booth #")) {
+                            Log.d("Sentry", "Detected removal of Specific Booth Object...");
+                        } else {
+                            Log.d("Sentry", "Looks as if the item was already deleted.");
+                        }
+                    }
                 }
             }
         } catch (Exception e) {

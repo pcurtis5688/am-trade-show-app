@@ -35,7 +35,6 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
     ////// THIS RECEIVES BOTH ORDER CREATED AND
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("Receiver", "Intent Action: " + intent.getAction().toString());
         this.fromContext = context;
         if (null == intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID)
                 && null == intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID)) {
