@@ -66,6 +66,8 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
             this.orderSentry = ((GlobalClass) fromContext.getApplicationContext()).getOrderSentry();
             Log.d("Sentry", "Acquiring previous instance...");
         }
+
+        Log.d("Receiver", "Item ID: " + itemID);
     }
 
     @Override

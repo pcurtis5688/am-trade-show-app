@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by paul curtis (pcurtis5688@gmail.com)
+ * Created by paul curtis
+ * (pcurtis5688@gmail.com)
  * on 10/13/2016.
  */
 
@@ -20,10 +21,10 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
     ////// INITIAL OR UPDATED DATA
     private String orderId;
     private Context sentryContext;
-    ////// UTILITY DATA
+    ////// PERSISTENT DATA
     private List<LineItem> specificBoothsLIsAttachedToOrderList;
 
-    ////// LIST OF IDS THAT INDICATE SPECIFIC
+    ////// CONSTRUCTOR / PUBLIC METHODS
     OrderSentry(Context sentryContext, String orderId) {
         this.orderId = orderId;
         this.sentryContext = sentryContext;
@@ -36,13 +37,11 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
         return orderId;
     }
 
-    private Context getSentryContext() {
-        return sentryContext;
-    }
-
+    ////// ORDER SENTRY PRIVATE METHODS
     private void fetchLineItems() {
         GetLineItemsForOrderTask getLineItemsForOrderTask = new GetLineItemsForOrderTask();
         getLineItemsForOrderTask.setDataAndDelegate(this, sentryContext, orderId);
+        getLineItemsForOrderTask.execute();
     }
 
     void processLineItemAddedInternal(List<LineItem> lineItemsAdded) {
@@ -70,6 +69,7 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
         }
     }
 
+    ////// ORDER LISTENER METHOD IMPLEMENTATIONS
     @Override
     public void onOrderCreated(String orderId) {
         Log.d("Sentry: ", "onOrderCreated() hit");
