@@ -1,26 +1,23 @@
 package com.ashtonmansion.tsmanagement1.util;
 
-import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.ashtonmansion.tsmanagement1.activity.BoothReservationShowSelection;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.Intents;
-import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.order.OrderConnector;
 
 interface AsyncResponse {
-    void processGetItemNameCompletion(String itemIdOut, String itemNameOut);
-
     void processOrderListenerFinish(OrderSentry orderSentry);
 }
 
 /**
- * Created by Paul Curtis (pcurtis5688@gmail.com) on 10/12/2016.
+ * Created by Paul Curtis
+ * (pcurtis5688@gmail.com)
+ * on 10/12/2016.
  */
 
 public class EventManagerReceiver extends BroadcastReceiver implements AsyncResponse {
@@ -34,10 +31,8 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
     ////// ORDER SENTRY IMPLEMENTATION
     private boolean hasOrderSentry;
     private OrderSentry orderSentry;
-    ////// OUTPUTS / DECIPHERED DATA
-    private String itemName;
 
-    ////// Test purposes segment
+    ////// THIS RECEIVES BOTH ORDER CREATED AND
     @Override
     public void onReceive(Context context, Intent intent) {
         this.fromContext = context;
@@ -46,48 +41,39 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
                 && null == intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID)) {
             itemID = "";
             orderID = "";
+            Log.d("Sentry", "Case where both orderID & itemID is null was located");
         } else if (null == intent.getStringExtra(Intents.EXTRA_CLOVER_ITEM_ID)) {
             itemID = "";
             orderID = intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID);
+            Log.d("Sentry", "Case where itemID is null was located");
         } else if (null == intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID)) {
             orderID = "";
             itemID = intent.getStringExtra(Intents.EXTRA_CLOVER_ITEM_ID);
+            Log.d("Sentry", "Case where orderID is null was located");
         } else {
             itemID = intent.getStringExtra(Intents.EXTRA_CLOVER_ITEM_ID);
             orderID = intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID);
         }
-        SpawnOrderSentryTask spawnOrderSentryTask = new SpawnOrderSentryTask();
-        spawnOrderSentryTask.setContextAndOrderId(fromContext, orderID);
-        spawnOrderSentryTask.setDelegateAsyncResponse(this);
-        spawnOrderSentryTask.execute();
-    }
 
-    public void checkItemName() {
-        GetItemNameTask getItemNameTask = new GetItemNameTask();
-        getItemNameTask.setDataAndDelegate(this, fromContext, itemID);
-        getItemNameTask.execute();
-    }
-
-    @Override
-    public void processGetItemNameCompletion(String itemID, String itemName) {
-        this.itemName = itemName;
-        //// TODO: 10/15/2016 uncomment when near to completion
-        //if (itemName.equalsIgnoreCase("select booth")){
-        SpawnOrderSentryTask spawnOrderSentryTask = new SpawnOrderSentryTask();
-        spawnOrderSentryTask.setContextAndOrderId(fromContext, orderID);
-        spawnOrderSentryTask.setDelegateAsyncResponse(this);
-        spawnOrderSentryTask.execute();
+        ////// IF SENTRY HAS NOT YET BEEN SPAWNED, CREATE ONE
+        if (null == ((GlobalClass) fromContext.getApplicationContext()).getOrderSentry()) {
+            SpawnOrderSentryTask spawnOrderSentryTask = new SpawnOrderSentryTask();
+            spawnOrderSentryTask.setContextAndOrderId(fromContext, orderID);
+            spawnOrderSentryTask.setDelegateAsyncResponse(this);
+            spawnOrderSentryTask.execute();
+        } else {
+            /////// ALREADY AVAILABLE IN APPLICATIONCONTEXT, but also set one
+            this.orderSentry = ((GlobalClass) fromContext.getApplicationContext()).getOrderSentry();
+            Log.d("Sentry", "Acquiring previous instance...");
+        }
     }
 
     @Override
     public void processOrderListenerFinish(OrderSentry spawnedOrderSentry) {
-        if (null != itemName && itemName.equalsIgnoreCase("select booth")) {
-            Intent selectBoothForOrderIntent = new Intent(fromContext, BoothReservationShowSelection.class);
-            selectBoothForOrderIntent.putExtra("orderid", orderID);
-            selectBoothForOrderIntent.putExtra("itemid", itemID);
-            selectBoothForOrderIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            fromContext.getApplicationContext().startActivity(selectBoothForOrderIntent);
-        }
+        GlobalClass globalClass = (GlobalClass) this.fromContext.getApplicationContext();
+        globalClass.setOrderSentry(spawnedOrderSentry);
+        this.orderSentry = spawnedOrderSentry;
+        Log.d("Sentry", "Global instance of sentry set...");
     }
 }
 
@@ -103,6 +89,7 @@ class SpawnOrderSentryTask extends AsyncTask<Void, Void, OrderSentry> {
     void setContextAndOrderId(Context receivedContext, String orderID) {
         this.appContext = receivedContext.getApplicationContext();
         this.orderID = orderID;
+
     }
 
     void setDelegateAsyncResponse(EventManagerReceiver callingReceiver) {

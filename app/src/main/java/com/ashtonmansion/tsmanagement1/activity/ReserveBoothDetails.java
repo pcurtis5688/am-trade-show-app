@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.ashtonmansion.tsmanagement1.R;
 import com.ashtonmansion.tsmanagement1.util.CustomersAdapter;
+import com.ashtonmansion.tsmanagement1.util.GlobalClass;
 import com.ashtonmansion.tsmanagement1.util.GlobalUtils;
 import com.ashtonmansion.tsmanagement1.util.ParcelableListener;
 import com.clover.sdk.util.CloverAccount;

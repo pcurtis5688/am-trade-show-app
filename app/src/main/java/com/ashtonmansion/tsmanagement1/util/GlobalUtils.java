@@ -1,6 +1,5 @@
 package com.ashtonmansion.tsmanagement1.util;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
@@ -12,6 +11,8 @@ import com.clover.sdk.v3.customers.PhoneNumber;
 import com.clover.sdk.v3.customers.EmailAddress;
 import com.clover.sdk.v3.customers.Address;
 import com.clover.sdk.v3.inventory.InventoryConnector;
+import com.clover.sdk.v3.order.LineItem;
+import com.clover.sdk.v3.order.OrderConnector;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -21,7 +22,9 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Created by paul on 8/31/2016.
+ * Created by paul curtis
+ * (pcurtis5688@gmail.com
+ * on 8/31/2016.
  */
 public class GlobalUtils {
 
@@ -203,6 +206,40 @@ class GetItemNameTask extends AsyncTask<Void, Void, String> {
     protected void onPostExecute(String itemName) {
         super.onPostExecute(itemName);
         inventoryConnector.disconnect();
-        delegate.processGetItemNameCompletion(itemID, itemName);
+        //delegate.something(something);
+    }
+}
+
+class GetLineItemsForOrderTask extends AsyncTask<Void, Void, List<LineItem>> {
+    private OrderSentry delegate = null;
+    private OrderConnector orderConnector;
+    ////// INPUTS
+    private String orderID;
+    ////// RESULT ITEM NAME
+    private List<LineItem> lineItems;
+
+    void setDataAndDelegate(OrderSentry orderSentry, Context taskContext, String orderID) {
+        //Context appContext = taskContext.getApplicationContext();
+        this.delegate = orderSentry;
+        this.orderID = orderID;
+        orderConnector = new OrderConnector(taskContext, CloverAccount.getAccount(taskContext), null);
+        orderConnector.connect();
+    }
+
+    @Override
+    protected List<LineItem> doInBackground(Void... params) {
+        try {
+            lineItems = orderConnector.getOrder(orderID).getLineItems();
+        } catch (Exception e) {
+            Log.d("ExceptionCheckInBooth: ", e.getMessage(), e.getCause());
+        }
+        return lineItems;
+    }
+
+    @Override
+    protected void onPostExecute(List<LineItem> lineItems) {
+        super.onPostExecute(lineItems);
+        orderConnector.disconnect();
+        delegate.receiveLineItemList(lineItems);
     }
 }
