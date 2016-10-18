@@ -62,7 +62,7 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
     }
 
     void processLineItemDeletedInternal(List<LineItem> lineItemsDeleted) {
-        ////// TEST EXISTENCE OF SPECIFIC BOOTH
+        ////// HANDLE ANY LINE ITEM DELETION CASES INTERNALLY BY ORDER SENTRY
         if (null != lineItemsDeleted && lineItemsDeleted.size() > 0) {
             Log.d("Sentry", lineItemsDeleted.toString());
             for (LineItem lineItem : lineItemsDeleted) {
