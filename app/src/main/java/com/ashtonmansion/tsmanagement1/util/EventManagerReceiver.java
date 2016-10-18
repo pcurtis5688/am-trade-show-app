@@ -67,9 +67,7 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
 
     @Override
     public void processItemNameCheck(String itemName) {
-        if (itemName.contains("Booth #")) {
-            Log.d("Receiver", " Receiver located a specific booth in Item Name Check");
-        }
+        Log.d("Sentry Receiver", "Item Name: " + itemName + "...");
     }
 }
 
@@ -85,7 +83,6 @@ class SpawnOrderSentryTask extends AsyncTask<Void, Void, OrderSentry> {
     void setContextAndOrderId(Context receivedContext, String orderID) {
         this.appContext = receivedContext.getApplicationContext();
         this.orderID = orderID;
-
     }
 
     void setDelegateAsyncResponse(EventManagerReceiver callingReceiver) {

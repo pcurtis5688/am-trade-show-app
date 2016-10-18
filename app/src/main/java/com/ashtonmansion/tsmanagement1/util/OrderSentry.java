@@ -22,13 +22,13 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
     private String orderId;
     private Context sentryContext;
     ////// PERSISTENT DATA
-    private List<String> specificBoothIdsAttachedToOrder;
+    private List<String> specificBoothWatchList;
 
     ////// CONSTRUCTOR / PUBLIC METHODS
     OrderSentry(Context sentryContext, String orderId) {
         this.orderId = orderId;
         this.sentryContext = sentryContext;
-        this.specificBoothIdsAttachedToOrder = new ArrayList<>();
+        this.specificBoothWatchList = new ArrayList<>();
         checkInitialLineItems();
     }
 
@@ -45,41 +45,27 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
 
     void receiveInitialLineItemListAndProcess(List<LineItem> lineItems) {
         for (LineItem currentLineItem : lineItems) {
-            if (currentLineItem.getName().contains("Booth #"))
-                specificBoothIdsAttachedToOrder.add(currentLineItem.getId());
+            if (currentLineItem.getName().contains("Booth #")) {
+                specificBoothWatchList.add(currentLineItem.getId());
+                Log.d("Sentry", "Specific Booth located as initial line item and added to watch list...");
+            }
         }
     }
 
     void processLineItemAddedInternal(List<LineItem> lineItemsAdded) {
         for (LineItem currentLineItem : lineItemsAdded) {
             if (currentLineItem.getName().contains("Booth #")) {
-                specificBoothIdsAttachedToOrder.add(currentLineItem.getId());
-                Log.d("Sentry", "Specific booth added to order detected...");
+                specificBoothWatchList.add(currentLineItem.getId());
+                Log.d("Sentry", "Specific booth added to order detected and line item added to watch list...");
             } else {
                 Log.d("Sentry", "Ignored non-booth object: " + currentLineItem.getName());
             }
         }
     }
 
-    void processLineItemDeletedInternal(List<LineItem> lineItemsDeleted) {
-        ////// HANDLE ANY LINE ITEM DELETION CASES INTERNALLY BY ORDER SENTRY
-        if (null != lineItemsDeleted && lineItemsDeleted.size() > 0) {
-            Log.d("Sentry", lineItemsDeleted.toString());
-            for (LineItem lineItem : lineItemsDeleted) {
-                if (specificBoothIdsAttachedToOrder.contains(lineItem.getId())) {
-                    Log.d("Sentry", "Specific booth being removed from order notification...");
-                }
-            }
-        } else {
-            Log.d("Sentry", "Empty method firing process Line Items Internal");
-        }
-        if (null != lineItemsDeleted && lineItemsDeleted.size() > 0) {
-            for (LineItem lineItem : lineItemsDeleted) {
-                if (lineItem.getName().contains("Booth #")) {
-                    Log.d("Sentry", "Located a specific booth's removal from order...");
-                }
-            }
-        }
+    void processLineItemDeletedInternal() {
+        ////// NO LONGER HAVE ACCESS TO DELETED ITEMS IN CLOVER
+        ////// BODY LEFT FOR CLARITY
     }
 
     ////// ORDER LISTENER METHOD IMPLEMENTATIONS
@@ -113,9 +99,9 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
     @Override
     public void onLineItemsAdded(String orderId, List<String> lineItemIds) {
         ////// NOTIFY SENTRY OF ITEMS ADDED AND LOG OCCURANCE
-        Log.d("Sentry ", "Line Item Added (with ID(s)): " + lineItemIds.toString());
         ProcessLineItemAddedTask processLineItemAddedTask = new ProcessLineItemAddedTask(this, sentryContext, lineItemIds);
         processLineItemAddedTask.execute();
+        Log.d("Sentry ", "Line Item Added (with ID(s)): " + lineItemIds.toString());
     }
 
     @Override
@@ -124,11 +110,16 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
     }
 
     @Override
-    public void onLineItemsDeleted(String orderId, List<String> lineItemIds) {
+    public void onLineItemsDeleted(String orderId, List<String> lineItemIDsDeleted) {
         ////// NOTIFY SENTRY OF ITEMS DELETED AND LOG OCCURANCE
-        ProcessLineItemDeletedTask processLineItemDeletedTask = new ProcessLineItemDeletedTask(this, sentryContext, lineItemIds);
+        for (String lineItemDeletedID : lineItemIDsDeleted) {
+            if (specificBoothWatchList.contains(lineItemDeletedID)) {
+                Log.d("Sentry", "Watch List ID Triggered... " + lineItemDeletedID
+                        + "\n Need to set that booth to available...");
+            }
+        }
+        ProcessLineItemDeletedTask processLineItemDeletedTask = new ProcessLineItemDeletedTask(this, sentryContext, lineItemIDsDeleted);
         processLineItemDeletedTask.execute();
-        Log.d("Sentry ", "Line Item Deleted (with ID(s)): " + lineItemIds.toString());
     }
 
     @Override
@@ -195,7 +186,6 @@ class ProcessLineItemAddedTask extends AsyncTask<Void, Void, List<LineItem>> {
                 for (LineItem currentLineItem : orderConnector.getOrder(orderID).getLineItems()) {
                     if (currentLineItem.getId().equals(lineItemAddedString)) {
                         lineItemsAddedList.add(currentLineItem);
-                        Log.d("SentryTask", "Process Line Item Added() : " + currentLineItem.getName());
                     }
                 }
             }
@@ -218,23 +208,24 @@ class ProcessLineItemDeletedTask extends AsyncTask<Void, Void, List<LineItem>> {
     ////// INPUTS FROM CALLER
     private String orderID;
     private Context callingContext;
-    private List<String> deletedLineItemIDs;
+    private List<String> deletedLineItemIDsTriggered;
     ////// OUTPUTS TO CALLER
     private List<LineItem> lineItemsDeletedList;
 
     ProcessLineItemDeletedTask(OrderSentry caller,
                                Context callingContext,
-                               List<String> deletedLineItemIDs) {
+                               List<String> deletedLineItemIDsTriggered) {
         this.caller = caller;
         this.orderID = caller.getOrderId();
         this.callingContext = callingContext;
-        this.deletedLineItemIDs = deletedLineItemIDs;
-        Log.d("Sentry", "Deleted Line Item IDs" + deletedLineItemIDs.toString());
+        this.deletedLineItemIDsTriggered = deletedLineItemIDsTriggered;
+        Log.d("Sentry", "Deleted Line Item IDs" + deletedLineItemIDsTriggered.toString());
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+        ////// INITIALIZE LIST FOR PROCESS LINE ITEM TASK
         lineItemsDeletedList = new ArrayList<>();
         orderConnector = new OrderConnector(callingContext, CloverAccount.getAccount(callingContext), null);
         orderConnector.connect();
@@ -242,27 +233,9 @@ class ProcessLineItemDeletedTask extends AsyncTask<Void, Void, List<LineItem>> {
 
     @Override
     protected List<LineItem> doInBackground(Void... params) {
+        ////// SENTRY'S CONNECTION POST ITEM DELETION... USE TO MAKE AVAILABLE IF WAS A SPECIFIC BOOTH
         try {
-            lineItemsDeletedList = orderConnector.getOrder(orderID).getLineItems();
-
-            if (null != lineItemsDeletedList && lineItemsDeletedList.size() > 0) {
-                for (String lineItemDeletedString : deletedLineItemIDs) {
-                    if (null != orderConnector.getOrder(orderID).getLineItems()) {
-                        for (LineItem currentLineItem : orderConnector.getOrder(orderID).getLineItems()) {
-                            if (currentLineItem.getId().equals(lineItemDeletedString)) {
-                                lineItemsDeletedList.add(currentLineItem);
-                            }
-                            if (currentLineItem.getName().contains("Booth #")) {
-                                Log.d("Sentry", "Detected removal of Specific Booth Object...");
-                            }
-                        }
-                    }
-                }
-            } else if (null != lineItemsDeletedList && lineItemsDeletedList.size() == 0) {
-                Log.d("Sentry", "Zero Line Items deleted list.");
-            } else {
-                Log.d("Sentry", "WTF; non-positive number of Line Items Deleted");
-            }
+            //// TODO: 10/18/2016 later
         } catch (Exception e) {
             Log.d("Sentry excptn", e.getMessage(), e.getCause());
             e.printStackTrace();
@@ -271,8 +244,9 @@ class ProcessLineItemDeletedTask extends AsyncTask<Void, Void, List<LineItem>> {
     }
 
     @Override
-    protected void onPostExecute(List<LineItem> lineItemsDeletedList) {
-        caller.processLineItemDeletedInternal(lineItemsDeletedList);
+    protected void onPostExecute(List<LineItem> lineItemsDeleted) {
+        super.onPostExecute(lineItemsDeleted);
+        caller.processLineItemDeletedInternal();
     }
 }
 
@@ -296,13 +270,6 @@ class GetLineItemsForOrderTask extends AsyncTask<Void, Void, List<LineItem>> {
     protected List<LineItem> doInBackground(Void... params) {
         try {
             lineItems = orderConnector.getOrder(orderID).getLineItems();
-            for (LineItem lineitem : lineItems) {
-                if (lineitem.getName().contains("Booth #")) {
-                    Log.d("Sentry", "Specific Booth As Initial Line Item Detected...");
-                } else {
-                    Log.d("Sentry", "Other Item Recognized as Initial Line Item");
-                }
-            }
         } catch (Exception e) {
             Log.d("ExceptionCheckInBooth: ", e.getMessage(), e.getCause());
         }
