@@ -85,7 +85,7 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
     ////// ORDER LISTENER METHOD IMPLEMENTATIONS
     @Override
     public void onOrderCreated(String orderId) {
-        Log.d("Sentry: ", "onOrderCreated() hit");
+        Log.d("Sentry: ", "onOrderCreated() hit... should new Sentry spawn?");
     }
 
     @Override
@@ -254,13 +254,14 @@ class ProcessLineItemDeletedTask extends AsyncTask<Void, Void, List<LineItem>> {
                             }
                             if (currentLineItem.getName().contains("Booth #")) {
                                 Log.d("Sentry", "Detected removal of Specific Booth Object...");
-
                             }
                         }
                     }
                 }
+            } else if (null != lineItemsDeletedList && lineItemsDeletedList.size() == 0) {
+                Log.d("Sentry", "Zero Line Items deleted list.");
             } else {
-                Log.d("Sentry", "WTF");
+                Log.d("Sentry", "WTF; non-positive number of Line Items Deleted");
             }
         } catch (Exception e) {
             Log.d("Sentry excptn", e.getMessage(), e.getCause());

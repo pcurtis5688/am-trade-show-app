@@ -197,7 +197,7 @@ class GetItemNameTask extends AsyncTask<Void, Void, String> {
         try {
             itemName = inventoryConnector.getItem(itemID).getName();
         } catch (Exception e) {
-            Log.d("ExceptionCheckInBooth: ", e.getMessage(), e.getCause());
+            Log.d("GlobalUtils", "GetItemNameTask\n'" + e.getMessage(), e.getCause());
         }
         return itemName;
     }
@@ -206,6 +206,6 @@ class GetItemNameTask extends AsyncTask<Void, Void, String> {
     protected void onPostExecute(String itemName) {
         super.onPostExecute(itemName);
         inventoryConnector.disconnect();
-        //delegate.something(something);
+        delegate.processItemNameCheck(itemName);
     }
 }
