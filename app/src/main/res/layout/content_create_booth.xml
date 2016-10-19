@@ -1,101 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingEnd="@dimen/dimen_75dp"
-    android:paddingStart="@dimen/dimen_75dp"
-    android:paddingTop="@dimen/dimen_25dp"
-    android:stretchColumns="*"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.ashtonmansion.tsmanagement2.activity.CreateBooth"
+    tools:context="com.ashtonmansion.tsmanagement2.activity.TradeShows"
     tools:showIn="@layout/activity_create_booth">
 
-    <TextView
-        android:id="@+id/create_booth_activity_header_w_showname"
-        android:layout_marginBottom="@dimen/dimen_35dp"
-        android:textAlignment="center" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/dimen_75dp"
+        android:paddingStart="@dimen/dimen_75dp"
+        android:paddingTop="@dimen/dimen_25dp">
 
-    <TableRow>
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:stretchColumns="*"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:context="com.ashtonmansion.tsmanagement2.activity.CreateBooth"
+            tools:showIn="@layout/activity_create_booth">
 
-        <TextView
-            android:id="@+id/create_booth_no_prompt"
-            android:text="@string/create_booth_number_prompt"
-            android:textAlignment="center" />
+            <TextView
+                android:id="@+id/create_booth_activity_header_w_showname"
+                android:layout_marginBottom="@dimen/dimen_35dp"
+                android:textAlignment="center" />
 
-        <EditText
-            android:id="@+id/create_booth_number_field"
-            android:hint="@string/create_booth_number_hint"
-            android:singleLine="true"
-            android:textAlignment="center" />
-    </TableRow>
+            <TableRow>
 
-    <TableRow>
+                <TextView
+                    android:id="@+id/create_booth_no_prompt"
+                    android:text="@string/create_booth_number_prompt"
+                    android:textAlignment="center" />
 
-        <TextView
-            android:id="@+id/create_booth_price_prompt"
-            android:text="@string/create_booth_price_prompt"
-            android:textAlignment="center" />
+                <EditText
+                    android:id="@+id/create_booth_number_field"
+                    android:hint="@string/create_booth_number_hint"
+                    android:singleLine="true"
+                    android:textAlignment="center" />
+            </TableRow>
 
-        <EditText
-            android:id="@+id/create_booth_price_field"
-            android:hint="@string/create_booth_price_hint"
-            android:inputType="numberDecimal"
-            android:singleLine="true"
-            android:textAlignment="center" />
-    </TableRow>
+            <TableRow>
 
-    <TableRow>
+                <TextView
+                    android:id="@+id/create_booth_price_prompt"
+                    android:text="@string/create_booth_price_prompt"
+                    android:textAlignment="center" />
 
-        <TextView
-            android:id="@+id/create_booth_size_prompt"
-            android:text="@string/create_booth_size_prompt"
-            android:textAlignment="center" />
+                <EditText
+                    android:id="@+id/create_booth_price_field"
+                    android:hint="@string/create_booth_price_hint"
+                    android:inputType="numberDecimal"
+                    android:singleLine="true"
+                    android:textAlignment="center" />
+            </TableRow>
 
-        <EditText
-            android:id="@+id/create_booth_size_field"
-            android:hint="@string/create_booth_size_hint"
-            android:singleLine="true"
-            android:textAlignment="center" />
-    </TableRow>
+            <TableRow>
 
-    <TableRow>
+                <TextView
+                    android:id="@+id/create_booth_size_prompt"
+                    android:text="@string/create_booth_size_prompt"
+                    android:textAlignment="center" />
 
-        <TextView
-            android:id="@+id/create_booth_area_prompt"
-            android:text="@string/create_booth_area_prompt"
-            android:textAlignment="center" />
+                <EditText
+                    android:id="@+id/create_booth_size_field"
+                    android:hint="@string/create_booth_size_hint"
+                    android:singleLine="true"
+                    android:textAlignment="center" />
+            </TableRow>
 
-        <EditText
-            android:id="@+id/create_booth_area_field"
-            android:hint="@string/create_booth_area_hint"
-            android:singleLine="true"
-            android:textAlignment="center" />
-    </TableRow>
+            <TableRow>
 
-    <TableRow>
+                <TextView
+                    android:id="@+id/create_booth_area_prompt"
+                    android:text="@string/create_booth_area_prompt"
+                    android:textAlignment="center" />
 
-        <TextView
-            android:id="@+id/create_booth_type_prompt"
-            android:text="@string/create_booth_type_prompt"
-            android:textAlignment="center" />
+                <EditText
+                    android:id="@+id/create_booth_area_field"
+                    android:hint="@string/create_booth_area_hint"
+                    android:singleLine="true"
+                    android:textAlignment="center" />
+            </TableRow>
 
-        <EditText
-            android:id="@+id/create_booth_type_field"
-            android:hint="@string/create_booth_type_hint"
-            android:singleLine="true"
-            android:textAlignment="center" />
-    </TableRow>
+            <TableRow>
 
-    <TableRow>
+                <TextView
+                    android:id="@+id/create_booth_type_prompt"
+                    android:text="@string/create_booth_type_prompt"
+                    android:textAlignment="center" />
 
-        <Button
-            android:id="@+id/finalize_booth_creation_btn"
-            style="@style/standard_button_style_mobile"
-            android:layout_marginTop="@dimen/dimen_10dp"
-            android:layout_span="2"
-            android:onClick="finalizeBoothCreation"
-            android:text="@string/create_booth_finish_booth_creation_str" />
-    </TableRow>
-</TableLayout>
+                <EditText
+                    android:id="@+id/create_booth_type_field"
+                    android:hint="@string/create_booth_type_hint"
+                    android:singleLine="true"
+                    android:textAlignment="center" />
+            </TableRow>
+
+            <TableRow>
+
+                <Button
+                    android:id="@+id/finalize_booth_creation_btn"
+                    style="@style/standard_button_style_mobile"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:layout_span="2"
+                    android:onClick="finalizeBoothCreation"
+                    android:text="@string/create_booth_finish_booth_creation_str" />
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>
