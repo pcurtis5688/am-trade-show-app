@@ -51,9 +51,6 @@ public class BoothReservationShowSelection extends Activity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_make_reservation);
         navigationView.setNavigationItemSelectedListener(this);
 
-        ////// DATA WORK
-
-
         ////// OTHER INITIALIZATION
         Intent intent = getIntent();
         Bundle extrasBundle = intent.getExtras();

@@ -11,6 +11,7 @@ import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.ServiceException;
 import com.clover.sdk.v3.base.Reference;
 import com.clover.sdk.v3.inventory.InventoryConnector;
+import com.clover.sdk.v3.inventory.Item;
 import com.clover.sdk.v3.order.LineItem;
 import com.clover.sdk.v3.order.OrderConnector;
 
@@ -213,6 +214,11 @@ class ProcessLineItemAddedTask extends AsyncTask<Void, Void, List<LineItem>> {
 }
 
 class HandleWatchlistTriggeredTask extends AsyncTask<Void, Void, Boolean> {
+    /**
+     * Created by paul curtis
+     * (pcurtis5688@gmail.com)
+     * * on 10/13/2016.
+     */
     ////// CALLER AND CONNECTOR
     private OrderSentry caller;
     private InventoryConnector inventoryConnector;
@@ -239,32 +245,27 @@ class HandleWatchlistTriggeredTask extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected void onPreExecute() {
+        ////// INITIALIZE INVENTORY CONNECTION TO HANDLE SETTING AVAILABIL
         super.onPreExecute();
-        ////// INITIALIZE LIST FOR PROCESS LINE ITEM TASK
         inventoryConnector = new InventoryConnector(callingContext, CloverAccount.getAccount(callingContext), null);
         inventoryConnector.connect();
     }
 
     @Override
     protected Boolean doInBackground(Void... params) {
-        ////// SENTRY'S CONNECTION POST ITEM DELETION...
-        ////// USE TO MAKE AVAILABLE IF WAS A SPECIFIC BOOTH
         try {
             if (null != lineItemsDeleted && lineItemsDeleted.size() > 0) {
                 for (LineItem lineItem : lineItemsDeleted) {
                     Reference lineItemReference = lineItem.getItem();
-                    Log.d("Sentry", "Cross-referenced Item : " + inventoryConnector.getItem(lineItemReference.getId()));
-                    Log.d("sentry", "Set this to available..." + inventoryConnector.getItem(lineItemReference.getId()).getCode());
-                    inventoryConnector.getItem(lineItemReference.getId()).setCode("AVAILABLE");
+                    Log.d("Sentry", "Cross-referenced Item (set to available) : " + inventoryConnector.getItem(lineItemReference.getId()).getName());
+                    Item resetBoothItem = inventoryConnector.getItem(lineItemReference.getId()).setCode("AVAILABLE");
+                    inventoryConnector.updateItem(resetBoothItem);
                     resetToAvailableSuccessful = true;
                 }
             }
         } catch (ClientException | ServiceException | BindingException | RemoteException e) {
             Log.d("Sentry excptn", e.getMessage(), e.getCause());
             e.printStackTrace();
-        } catch (Exception e2) {
-            Log.d("Sentry", "Non-Clover exception encountered...");
-            e2.printStackTrace();
         }
         return resetToAvailableSuccessful;
     }

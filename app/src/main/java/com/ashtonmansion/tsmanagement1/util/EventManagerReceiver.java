@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.ashtonmansion.tsmanagement1.R;
+import com.ashtonmansion.tsmanagement1.activity.BoothReservationShowSelection;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.Intents;
 import com.clover.sdk.v3.order.OrderConnector;
@@ -23,13 +25,11 @@ interface AsyncResponse {
  */
 
 public class EventManagerReceiver extends BroadcastReceiver implements AsyncResponse {
-    ////// PUBLIC ACCESS VARS
     ////// PRIVATE CONNEX & DATA
     private Context fromContext;
+    private Intent fromIntent;
     ////// INPUTS FROM RECEIVER
-    //private Intent fromIntent;
     private String orderID;
-    private String itemID;
     ////// ORDER SENTRY IMPLEMENTATION
     private OrderSentry orderSentry;
 
@@ -37,7 +37,8 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
     @Override
     public void onReceive(Context context, Intent intent) {
         this.fromContext = context;
-        this.itemID = intent.getStringExtra(Intents.EXTRA_CLOVER_ITEM_ID);
+        this.fromIntent = intent;
+        String itemID = intent.getStringExtra(Intents.EXTRA_CLOVER_ITEM_ID);
         this.orderID = intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID);
 
         ////// IF SENTRY HAS NOT YET BEEN SPAWNED, CREATE ONE
@@ -68,6 +69,12 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
     @Override
     public void processItemNameCheck(String itemName) {
         //Log.d("Sentry Receiver", "Item Name: " + itemName + "...");
+        if (itemName.equalsIgnoreCase("Select Booth")) {
+            Intent boothReservationIntent = new Intent(fromContext, BoothReservationShowSelection.class);
+            boothReservationIntent.putExtra("orderid", orderID);
+            boothReservationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            fromContext.getApplicationContext().startActivity(boothReservationIntent);
+        }
     }
 }
 
