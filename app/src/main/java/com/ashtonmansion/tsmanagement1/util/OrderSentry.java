@@ -52,7 +52,7 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
     }
 
     private void toastMessageSentryContext(String msg) {
-        Toast.makeText(sentryContext, "Test", Toast.LENGTH_LONG).show();
+        Toast.makeText(sentryContext, "Toast Message in Sentry Context: " + msg, Toast.LENGTH_LONG).show();
     }
 
     void receiveInitialLineItemListAndProcess(List<LineItem> lineItems) {

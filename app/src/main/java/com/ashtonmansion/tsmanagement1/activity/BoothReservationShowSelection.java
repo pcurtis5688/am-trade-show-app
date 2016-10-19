@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ashtonmansion.tsmanagement1.R;
 import com.ashtonmansion.tsmanagement1.util.GlobalUtils;
@@ -58,8 +59,13 @@ public class BoothReservationShowSelection extends Activity
             orderID = (String) extrasBundle.get("orderid");
         }
 
-        ///// SET CONTEXT, ATTACH TO SHOW TABLE, AND POPULATE
+        ////// SET CONTEXT, ATTACH TO SHOW TABLE, AND POPULATE
         boothReservationShowSelectionActivityContext = this;
+        ////// TOAST TO SELECT SHOW IF A PROMPT
+        if (orderID != null && !orderID.equalsIgnoreCase("")) {
+            Toast.makeText(boothReservationShowSelectionActivityContext, "Please select a show", Toast.LENGTH_SHORT).show();
+        }
+
         handleSizing();
         TextView showSelectionHeaderTv = (TextView) findViewById(R.id.booth_reservation_show_selection_header);
         showSelectionHeaderTv.setTextAppearance(boothReservationShowSelectionActivityContext, pageHeaderFontResId);
