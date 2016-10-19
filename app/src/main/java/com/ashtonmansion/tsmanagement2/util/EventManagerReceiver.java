@@ -1,4 +1,4 @@
-package com.ashtonmansion.tsmanagement1.util;
+package com.ashtonmansion.tsmanagement2.util;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.ashtonmansion.tsmanagement1.activity.BoothReservationShowSelection;
+import com.ashtonmansion.tsmanagement2.activity.BoothReservationShowSelection;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.Intents;
 import com.clover.sdk.v3.order.OrderConnector;
@@ -74,9 +74,6 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
             boothReservationIntent.putExtra("orderid", orderID);
             boothReservationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             fromContext.getApplicationContext().startActivity(boothReservationIntent);
-        }
-        if (itemName.toLowerCase().contains("fountain")) {
-            Toast.makeText(fromContext, "Would you like a straw?", Toast.LENGTH_LONG).show();
         }
     }
 }

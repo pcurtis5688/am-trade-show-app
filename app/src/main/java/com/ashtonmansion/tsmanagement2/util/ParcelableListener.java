@@ -1,8 +1,7 @@
-package com.ashtonmansion.tsmanagement1.util;
+package com.ashtonmansion.tsmanagement2.util;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import com.clover.sdk.v3.order.Order;
@@ -49,21 +48,21 @@ public class ParcelableListener implements Parcelable {
         return orderUpdateListener2;
     }
 
-    public String getOrderID() {
-        return orderID;
+    public void setOrderUpdateListener2(OrderConnector.OnOrderUpdateListener2 orderUpdateListener2) {
+        this.orderUpdateListener2 = orderUpdateListener2;
+        this.updateListener2List.add(orderUpdateListener2);
     }
 
-    public Order getOrderFetched() {
-        return orderFetched;
+    public String getOrderID() {
+        return orderID;
     }
 
     public void setOrderID(String orderID) {
         this.orderID = orderID;
     }
 
-    public void setOrderUpdateListener2(OrderConnector.OnOrderUpdateListener2 orderUpdateListener2) {
-        this.orderUpdateListener2 = orderUpdateListener2;
-        this.updateListener2List.add(orderUpdateListener2);
+    public Order getOrderFetched() {
+        return orderFetched;
     }
 
     public void setOrderFetched(Order orderFetched) {

@@ -1,4 +1,4 @@
-package com.ashtonmansion.tsmanagement1;
+package com.ashtonmansion.tsmanagement2;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

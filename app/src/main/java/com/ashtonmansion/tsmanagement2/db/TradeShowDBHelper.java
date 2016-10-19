@@ -1,4 +1,4 @@
-package com.ashtonmansion.tsmanagement1.db;
+package com.ashtonmansion.tsmanagement2.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

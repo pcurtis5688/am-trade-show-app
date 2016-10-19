@@ -1,4 +1,4 @@
-package com.ashtonmansion.tsmanagement1.util;
+package com.ashtonmansion.tsmanagement2.util;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -11,8 +11,6 @@ import com.clover.sdk.v3.customers.PhoneNumber;
 import com.clover.sdk.v3.customers.EmailAddress;
 import com.clover.sdk.v3.customers.Address;
 import com.clover.sdk.v3.inventory.InventoryConnector;
-import com.clover.sdk.v3.order.LineItem;
-import com.clover.sdk.v3.order.OrderConnector;
 
 import java.text.NumberFormat;
 import java.text.ParseException;

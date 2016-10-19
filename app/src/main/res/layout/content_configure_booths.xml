@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fadeScrollbars="false"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.ashtonmansion.tsmanagement1.activity.ConfigureBooths"
+    tools:context="com.ashtonmansion.tsmanagement2.activity.ConfigureBooths"
     tools:showIn="@layout/activity_configure_booths">
 
     <LinearLayout
@@ -26,8 +26,8 @@
 
                 <TextView
                     android:id="@+id/show_booths_header"
-                    android:textAlignment="center"
-                    android:layout_marginBottom="@dimen/dimen_25dp" />
+                    android:layout_marginBottom="@dimen/dimen_25dp"
+                    android:textAlignment="center" />
             </TableRow>
 
             <TableRow>

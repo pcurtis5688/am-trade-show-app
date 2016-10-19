@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.ashtonmansion.tsmanagement1.activity.BoothReservationShowSelection"
+    tools:context="com.ashtonmansion.tsmanagement2.activity.BoothReservationShowSelection"
     tools:showIn="@layout/activity_booth_reservation_show_selection">
 
     <LinearLayout
