@@ -184,11 +184,13 @@
 
                         <EditText
                             android:id="@+id/br_new_customer_first_name_field"
-                            android:hint="@string/br_new_customer_first_name_hint" />
+                            android:hint="@string/br_new_customer_first_name_hint"
+                            android:singleLine="true" />
 
                         <EditText
                             android:id="@+id/br_new_customer_last_name_field"
-                            android:hint="@string/br_new_customer_last_name_hint" />
+                            android:hint="@string/br_new_customer_last_name_hint"
+                            android:singleLine="true" />
 
                     </TableRow>
 
@@ -198,7 +200,9 @@
 
                         <EditText
                             android:id="@+id/br_new_customer_phone_field"
-                            android:hint="@string/br_new_customer_phone_field_hint" />
+                            android:hint="@string/br_new_customer_phone_field_hint"
+                            android:inputType="phone"
+                            android:singleLine="true" />
                     </TableRow>
 
                     <TableRow>
@@ -208,7 +212,8 @@
                         <EditText
                             android:id="@+id/br_new_customer_email_field"
                             android:hint="@string/br_new_customer_email_field_hint"
-                            android:inputType="textEmailAddress" />
+                            android:inputType="textEmailAddress"
+                            android:singleLine="true" />
                     </TableRow>
 
                     <TableRow>
@@ -217,7 +222,8 @@
 
                         <EditText
                             android:id="@+id/br_new_customer_address_line_1_field"
-                            android:hint="@string/br_new_customer_address_field1_hint" />
+                            android:hint="@string/br_new_customer_address_field1_hint"
+                            android:singleLine="true" />
                     </TableRow>
 
                     <TableRow>
@@ -225,7 +231,8 @@
                         <EditText
                             android:id="@+id/br_new_customer_address_line_2_field"
                             android:layout_column="1"
-                            android:hint="@string/br_new_customer_address_field2_hint" />
+                            android:hint="@string/br_new_customer_address_field2_hint"
+                            android:singleLine="true" />
                     </TableRow>
 
                     <TableRow>
@@ -233,14 +240,16 @@
                         <EditText
                             android:id="@+id/br_new_customer_address_line_3_field"
                             android:layout_column="1"
-                            android:hint="@string/br_new_customer_address_field3_hint" />
+                            android:hint="@string/br_new_customer_address_field3_hint"
+                            android:singleLine="true" />
                     </TableRow>
 
                     <TableRow>
 
                         <EditText
                             android:id="@+id/br_new_customer_city_field"
-                            android:hint="@string/br_new_customer_city_field_hint" />
+                            android:hint="@string/br_new_customer_city_field_hint"
+                            android:singleLine="true" />
 
                         <Spinner
                             android:id="@+id/br_new_customer_state_spinner"
@@ -252,7 +261,8 @@
                         <EditText
                             android:id="@+id/br_new_customer_zip_code_field"
                             android:layout_column="1"
-                            android:hint="@string/br_new_customer_zip_field_hint" />
+                            android:hint="@string/br_new_customer_zip_field_hint"
+                            android:singleLine="true" />
                     </TableRow>
 
                     <TableRow>

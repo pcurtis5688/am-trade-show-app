@@ -8,12 +8,11 @@
     tools:context="com.ashtonmansion.tsmanagement2.activity.ApplicationSettings"
     tools:showIn="@layout/activity_app_settings">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginEnd="@dimen/dimen_75dp"
-        android:layout_marginStart="@dimen/dimen_75dp"
+        android:layout_marginEnd="@dimen/dimen_60dp"
+        android:layout_marginStart="@dimen/dimen_60dp"
         android:layout_marginTop="@dimen/dimen_25dp"
         android:orientation="vertical">
 
@@ -33,16 +32,6 @@
             android:layout_gravity="center"
             android:background="@color/admin_button_bg_color"
             android:text="@string/create_select_booth_item_btn_text"
-            android:textAllCaps="false" />
-
-        <Button
-            android:id="@+id/check_booth_integrity_btn"
-            style="@style/app_settings_button_style"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@color/admin_button_bg_color"
-            android:text="@string/check_booth_integrity_text"
             android:textAllCaps="false" />
 
         <Button

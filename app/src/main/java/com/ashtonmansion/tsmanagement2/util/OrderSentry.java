@@ -51,10 +51,6 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
         getLineItemsForOrderTask.execute();
     }
 
-    private void toastMessageSentryContext(String msg) {
-        Toast.makeText(sentryContext, "Toast Message in Sentry Context: " + msg, Toast.LENGTH_LONG).show();
-    }
-
     void receiveInitialLineItemListAndProcess(List<LineItem> lineItems) {
         for (LineItem currentLineItem : lineItems) {
             if (currentLineItem.getName().contains("Booth #")) {
@@ -69,8 +65,6 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
             if (currentLineItem.getName().contains("Booth #")) {
                 specificBoothWatchList.add(currentLineItem);
                 Log.d("Sentry", "Specific booth added to order detected and line item added to watch list...");
-            } else {
-                Log.d("Sentry", "Ignored non-booth object: " + currentLineItem.getName());
             }
         }
     }
@@ -78,7 +72,6 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
     void informResetToAvailableSuccessful(boolean handleTriggeredItemsSuccessful) {
         ////// NO LONGER HAVE ACCESS TO DELETED ITEMS IN CLOVER
         ////// BODY LEFT FOR CLARITY
-        toastMessageSentryContext("Booth(s) Successfully Set To Available");
         Log.d("Sentry", "Triggered Items Handled Successfully: " + handleTriggeredItemsSuccessful);
     }
 
@@ -167,6 +160,10 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
     @Override
     public void onCreditProcessed(String orderId, String creditId) {
         Log.d("Sentry: ", "onCreditProcessed() hit");
+    }
+
+    private void toastMessageSentryContext(String msg) {
+        Toast.makeText(sentryContext, "Toast Message in Sentry Context: " + msg, Toast.LENGTH_LONG).show();
     }
 }
 

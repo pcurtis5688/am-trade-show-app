@@ -3,11 +3,18 @@ package com.ashtonmansion.tsmanagement2.util;
 import com.clover.sdk.v3.inventory.Item;
 import com.clover.sdk.v3.inventory.Tag;
 
-/**
- * Created by paul on 9/26/2016.
- */
 
+/**
+ * Created by paul curtis
+ * (pcurtis5688@gmail.com)
+ * on 10/13/2016.
+ */
 public class BoothWithTags {
+    /**
+     * Created by paul curtis
+     * (pcurtis5688@gmail.com)
+     * on 10/13/2016.
+     */
     private Item booth;
     private Tag sizeTag;
     private Tag areaTag;
