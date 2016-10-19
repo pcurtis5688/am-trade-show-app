@@ -109,7 +109,8 @@
             android:name="com.ashtonmansion.tsmanagement2.activity.ApplicationSettings"
             android:label="@string/title_activity_application_settings"
             android:parentActivityName="com.ashtonmansion.tsmanagement2.activity.HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ashtonmansion.tsmanagement2.activity.HomeActivity" />
