@@ -1,118 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:isScrollContainer="true"
-    android:paddingBottom="@dimen/dimen_35dp"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/dimen_35dp"
-    android:stretchColumns="*"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.ashtonmansion.tsmanagement2.activity.EditBooth"
+    tools:context="com.ashtonmansion.tsmanagement2.activity.TradeShows"
     tools:showIn="@layout/activity_edit_booth">
 
-    <TableRow>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/dimen_75dp"
+        android:paddingStart="@dimen/dimen_75dp"
+        android:paddingTop="@dimen/dimen_25dp">
 
-        <TextView
-            android:id="@+id/edit_booth_header"
-            android:layout_span="3"
-            android:paddingBottom="@dimen/dimen_75dp"
-            android:textAlignment="center" />
-    </TableRow>
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:isScrollContainer="true"
+            android:paddingBottom="@dimen/dimen_35dp"
+            android:paddingTop="@dimen/dimen_35dp"
+            android:stretchColumns="*"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:context="com.ashtonmansion.tsmanagement2.activity.EditBooth"
+            tools:showIn="@layout/activity_edit_booth">
 
-    <TableRow>
+            <TableRow>
 
-        <TextView
-            android:id="@+id/eb_booth_no_prompt"
-            android:text="@string/edit_booth_number_prompt" />
+                <TextView
+                    android:id="@+id/edit_booth_header"
+                    android:layout_span="3"
+                    android:paddingBottom="@dimen/dimen_25dp"
+                    android:textAlignment="center" />
+            </TableRow>
 
-        <EditText
-            android:id="@+id/edit_booth_no_field"
-            android:layout_span="2"
-            android:hint="@string/edit_booth_number_hint"
-            android:singleLine="true" />
-    </TableRow>
+            <TableRow>
 
-    <TableRow>
+                <TextView
+                    android:id="@+id/eb_booth_no_prompt"
+                    android:text="@string/edit_booth_number_prompt" />
 
-        <TextView
-            android:id="@+id/eb_booth_price_prompt"
-            android:text="@string/edit_booth_price_prompt" />
+                <EditText
+                    android:id="@+id/edit_booth_no_field"
+                    android:layout_span="2"
+                    android:hint="@string/edit_booth_number_hint"
+                    android:singleLine="true" />
+            </TableRow>
 
-        <EditText
-            android:id="@+id/edit_booth_price_field"
-            android:layout_span="2"
-            android:hint="@string/edit_booth_price_hint"
-            android:inputType="numberDecimal"
-            android:singleLine="true" />
-    </TableRow>
+            <TableRow>
 
-    <TableRow>
+                <TextView
+                    android:id="@+id/eb_booth_price_prompt"
+                    android:text="@string/edit_booth_price_prompt" />
 
-        <TextView
-            android:id="@+id/eb_booth_size_prompt"
-            android:text="@string/edit_booth_size_prompt" />
+                <EditText
+                    android:id="@+id/edit_booth_price_field"
+                    android:layout_span="2"
+                    android:hint="@string/edit_booth_price_hint"
+                    android:inputType="numberDecimal"
+                    android:singleLine="true" />
+            </TableRow>
 
-        <EditText
-            android:id="@+id/edit_boothsize_field"
-            android:layout_span="2"
-            android:hint="@string/edit_booth_size_hint"
-            android:singleLine="true" />
-    </TableRow>
+            <TableRow>
 
-    <TableRow>
+                <TextView
+                    android:id="@+id/eb_booth_size_prompt"
+                    android:text="@string/edit_booth_size_prompt" />
 
-        <TextView
-            android:id="@+id/eb_booth_area_prompt"
-            android:text="@string/edit_booth_area_prompt" />
+                <EditText
+                    android:id="@+id/edit_boothsize_field"
+                    android:layout_span="2"
+                    android:hint="@string/edit_booth_size_hint"
+                    android:singleLine="true" />
+            </TableRow>
 
-        <EditText
-            android:id="@+id/edit_booth_area_field"
-            android:layout_span="2"
-            android:hint="@string/edit_booth_area_hint"
-            android:singleLine="true" />
-    </TableRow>
+            <TableRow>
 
-    <TableRow>
+                <TextView
+                    android:id="@+id/eb_booth_area_prompt"
+                    android:text="@string/edit_booth_area_prompt" />
 
-        <TextView
-            android:id="@+id/eb_booth_type_prompt"
-            android:text="@string/edit_booth_type_prompt" />
+                <EditText
+                    android:id="@+id/edit_booth_area_field"
+                    android:layout_span="2"
+                    android:hint="@string/edit_booth_area_hint"
+                    android:singleLine="true" />
+            </TableRow>
 
-        <EditText
-            android:id="@+id/edit_booth_type_field"
-            android:layout_span="2"
-            android:hint="@string/edit_booth_type_hint"
-            android:singleLine="true" />
-    </TableRow>
+            <TableRow>
 
-    <TableRow android:layout_marginTop="@dimen/dimen_25dp">
+                <TextView
+                    android:id="@+id/eb_booth_type_prompt"
+                    android:text="@string/edit_booth_type_prompt" />
 
-        <Button
-            android:id="@+id/edit_booth_delete_booth_btn"
-            style="@style/standard_button_style_mobile"
-            android:text="@string/delete_booth_btn_text" />
+                <EditText
+                    android:id="@+id/edit_booth_type_field"
+                    android:layout_span="2"
+                    android:hint="@string/edit_booth_type_hint"
+                    android:singleLine="true" />
+            </TableRow>
 
-        <Button
-            android:id="@+id/edit_booth_cancel_btn"
-            style="@style/standard_button_style_mobile"
-            android:text="@string/edit_booth_cancel_btn_text" />
+            <TableRow android:layout_marginTop="@dimen/dimen_25dp">
 
-        <Button
-            android:id="@+id/edit_booth_save_changes_btn"
-            style="@style/standard_button_style_mobile"
-            android:text="@string/edit_booth_save_changes_text" />
-    </TableRow>
+                <Button
+                    android:id="@+id/edit_booth_delete_booth_btn"
+                    style="@style/standard_button_style_mobile"
+                    android:text="@string/delete_booth_btn_text" />
 
-    <TableRow android:layout_marginTop="@dimen/dimen_10dp">
+                <Button
+                    android:id="@+id/edit_booth_cancel_btn"
+                    style="@style/standard_button_style_mobile"
+                    android:text="@string/edit_booth_cancel_btn_text" />
 
-        <Button
-            android:id="@+id/set_booth_available_action_btn"
-            style="@style/standard_button_style_mobile"
-            android:layout_span="3"
-            android:text="@string/edit_booth_set_available_btn_text" />
-    </TableRow>
-</TableLayout>
+                <Button
+                    android:id="@+id/edit_booth_save_changes_btn"
+                    style="@style/standard_button_style_mobile"
+                    android:text="@string/edit_booth_save_changes_text" />
+            </TableRow>
+
+            <TableRow android:layout_marginTop="@dimen/dimen_10dp">
+
+                <Button
+                    android:id="@+id/set_booth_available_action_btn"
+                    style="@style/standard_button_style_mobile"
+                    android:layout_span="3"
+                    android:text="@string/edit_booth_set_available_btn_text" />
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>
