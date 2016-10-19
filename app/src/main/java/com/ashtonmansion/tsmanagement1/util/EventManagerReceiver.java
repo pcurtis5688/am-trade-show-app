@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
-import com.ashtonmansion.tsmanagement1.R;
 import com.ashtonmansion.tsmanagement1.activity.BoothReservationShowSelection;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.Intents;
@@ -75,10 +75,18 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
             boothReservationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             fromContext.getApplicationContext().startActivity(boothReservationIntent);
         }
+        if (itemName.toLowerCase().contains("fountain")) {
+            Toast.makeText(fromContext, "Would you like a straw?", Toast.LENGTH_LONG).show();
+        }
     }
 }
 
 class SpawnOrderSentryTask extends AsyncTask<Void, Void, OrderSentry> {
+    /**
+     * Created by Paul Curtis
+     * (pcurtis5688@gmail.com)
+     * on 10/12/2016.
+     */
     private AsyncResponse delegate = null;
     private OrderConnector orderConnector;
     ////// INPUTS

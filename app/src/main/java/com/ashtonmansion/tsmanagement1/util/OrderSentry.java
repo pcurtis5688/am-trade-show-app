@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.RemoteException;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
@@ -50,6 +51,10 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
         getLineItemsForOrderTask.execute();
     }
 
+    private void toastMessageSentryContext(String msg) {
+        Toast.makeText(sentryContext, "Test", Toast.LENGTH_LONG).show();
+    }
+
     void receiveInitialLineItemListAndProcess(List<LineItem> lineItems) {
         for (LineItem currentLineItem : lineItems) {
             if (currentLineItem.getName().contains("Booth #")) {
@@ -73,6 +78,7 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
     void informResetToAvailableSuccessful(boolean handleTriggeredItemsSuccessful) {
         ////// NO LONGER HAVE ACCESS TO DELETED ITEMS IN CLOVER
         ////// BODY LEFT FOR CLARITY
+        toastMessageSentryContext("Booth(s) Successfully Set To Available");
         Log.d("Sentry", "Triggered Items Handled Successfully: " + handleTriggeredItemsSuccessful);
     }
 
@@ -124,8 +130,7 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
         for (String lineItemDeletedID : lineItemIDsDeleted) {
             for (LineItem watchListLineItem : specificBoothWatchList) {
                 if (watchListLineItem.getId().equals(lineItemDeletedID)) {
-                    Log.d("Sentry", "Watch List ID Triggered... " + lineItemDeletedID
-                            + "\n Need to set that booth to available...");
+                    Log.d("Sentry", "Watch List ID Triggered... " + lineItemDeletedID);
                     watchListLineItemsTriggered.add(watchListLineItem);
                 }
             }
