@@ -67,7 +67,7 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
 
     @Override
     public void processItemNameCheck(String itemName) {
-        Log.d("Sentry Receiver", "Item Name: " + itemName + "...");
+        //Log.d("Sentry Receiver", "Item Name: " + itemName + "...");
     }
 }
 

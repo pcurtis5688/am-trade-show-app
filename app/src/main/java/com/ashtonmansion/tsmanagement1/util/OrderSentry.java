@@ -2,9 +2,15 @@ package com.ashtonmansion.tsmanagement1.util;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.RemoteException;
 import android.util.Log;
 
 import com.clover.sdk.util.CloverAccount;
+import com.clover.sdk.v1.BindingException;
+import com.clover.sdk.v1.ClientException;
+import com.clover.sdk.v1.ServiceException;
+import com.clover.sdk.v3.base.Reference;
+import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.order.LineItem;
 import com.clover.sdk.v3.order.OrderConnector;
 
@@ -22,7 +28,7 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
     private String orderId;
     private Context sentryContext;
     ////// PERSISTENT DATA
-    private List<String> specificBoothWatchList;
+    private List<LineItem> specificBoothWatchList;
 
     ////// CONSTRUCTOR / PUBLIC METHODS
     OrderSentry(Context sentryContext, String orderId) {
@@ -46,7 +52,7 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
     void receiveInitialLineItemListAndProcess(List<LineItem> lineItems) {
         for (LineItem currentLineItem : lineItems) {
             if (currentLineItem.getName().contains("Booth #")) {
-                specificBoothWatchList.add(currentLineItem.getId());
+                specificBoothWatchList.add(currentLineItem);
                 Log.d("Sentry", "Specific Booth located as initial line item and added to watch list...");
             }
         }
@@ -55,7 +61,7 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
     void processLineItemAddedInternal(List<LineItem> lineItemsAdded) {
         for (LineItem currentLineItem : lineItemsAdded) {
             if (currentLineItem.getName().contains("Booth #")) {
-                specificBoothWatchList.add(currentLineItem.getId());
+                specificBoothWatchList.add(currentLineItem);
                 Log.d("Sentry", "Specific booth added to order detected and line item added to watch list...");
             } else {
                 Log.d("Sentry", "Ignored non-booth object: " + currentLineItem.getName());
@@ -63,9 +69,10 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
         }
     }
 
-    void processLineItemDeletedInternal() {
+    void informResetToAvailableSuccessful(boolean handleTriggeredItemsSuccessful) {
         ////// NO LONGER HAVE ACCESS TO DELETED ITEMS IN CLOVER
         ////// BODY LEFT FOR CLARITY
+        Log.d("Sentry", "Triggered Items Handled Successfully: " + handleTriggeredItemsSuccessful);
     }
 
     ////// ORDER LISTENER METHOD IMPLEMENTATIONS
@@ -112,14 +119,18 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
     @Override
     public void onLineItemsDeleted(String orderId, List<String> lineItemIDsDeleted) {
         ////// NOTIFY SENTRY OF ITEMS DELETED AND LOG OCCURANCE
+        List<LineItem> watchListLineItemsTriggered = new ArrayList<>();
         for (String lineItemDeletedID : lineItemIDsDeleted) {
-            if (specificBoothWatchList.contains(lineItemDeletedID)) {
-                Log.d("Sentry", "Watch List ID Triggered... " + lineItemDeletedID
-                        + "\n Need to set that booth to available...");
+            for (LineItem watchListLineItem : specificBoothWatchList) {
+                if (watchListLineItem.getId().equals(lineItemDeletedID)) {
+                    Log.d("Sentry", "Watch List ID Triggered... " + lineItemDeletedID
+                            + "\n Need to set that booth to available...");
+                    watchListLineItemsTriggered.add(watchListLineItem);
+                }
             }
         }
-        ProcessLineItemDeletedTask processLineItemDeletedTask = new ProcessLineItemDeletedTask(this, sentryContext, lineItemIDsDeleted);
-        processLineItemDeletedTask.execute();
+        HandleWatchlistTriggeredTask handleWatchlistTriggeredTask = new HandleWatchlistTriggeredTask(this, sentryContext, lineItemIDsDeleted, watchListLineItemsTriggered);
+        handleWatchlistTriggeredTask.execute();
     }
 
     @Override
@@ -201,52 +212,68 @@ class ProcessLineItemAddedTask extends AsyncTask<Void, Void, List<LineItem>> {
     }
 }
 
-class ProcessLineItemDeletedTask extends AsyncTask<Void, Void, List<LineItem>> {
+class HandleWatchlistTriggeredTask extends AsyncTask<Void, Void, Boolean> {
     ////// CALLER AND CONNECTOR
     private OrderSentry caller;
-    private OrderConnector orderConnector;
+    private InventoryConnector inventoryConnector;
     ////// INPUTS FROM CALLER
     private String orderID;
     private Context callingContext;
     private List<String> deletedLineItemIDsTriggered;
+    private List<LineItem> lineItemsDeleted;
     ////// OUTPUTS TO CALLER
-    private List<LineItem> lineItemsDeletedList;
+    private boolean resetToAvailableSuccessful;
 
-    ProcessLineItemDeletedTask(OrderSentry caller,
-                               Context callingContext,
-                               List<String> deletedLineItemIDsTriggered) {
+    HandleWatchlistTriggeredTask(OrderSentry caller,
+                                 Context callingContext,
+                                 List<String> deletedLineItemIDsTriggered,
+                                 List<LineItem> lineItemsDeleted) {
         this.caller = caller;
         this.orderID = caller.getOrderId();
         this.callingContext = callingContext;
+        this.lineItemsDeleted = lineItemsDeleted;
         this.deletedLineItemIDsTriggered = deletedLineItemIDsTriggered;
-        Log.d("Sentry", "Deleted Line Item IDs" + deletedLineItemIDsTriggered.toString());
+        this.resetToAvailableSuccessful = false;
+        Log.d("Sentry", "Deleted Line Item IDs Triggered: " + deletedLineItemIDsTriggered.toString());
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
         ////// INITIALIZE LIST FOR PROCESS LINE ITEM TASK
-        lineItemsDeletedList = new ArrayList<>();
-        orderConnector = new OrderConnector(callingContext, CloverAccount.getAccount(callingContext), null);
-        orderConnector.connect();
+        inventoryConnector = new InventoryConnector(callingContext, CloverAccount.getAccount(callingContext), null);
+        inventoryConnector.connect();
     }
 
     @Override
-    protected List<LineItem> doInBackground(Void... params) {
-        ////// SENTRY'S CONNECTION POST ITEM DELETION... USE TO MAKE AVAILABLE IF WAS A SPECIFIC BOOTH
+    protected Boolean doInBackground(Void... params) {
+        ////// SENTRY'S CONNECTION POST ITEM DELETION...
+        ////// USE TO MAKE AVAILABLE IF WAS A SPECIFIC BOOTH
         try {
-            //// TODO: 10/18/2016 later
-        } catch (Exception e) {
+            if (null != lineItemsDeleted && lineItemsDeleted.size() > 0) {
+                for (LineItem lineItem : lineItemsDeleted) {
+                    Reference lineItemReference = lineItem.getItem();
+                    Log.d("Sentry", "Cross-referenced Item : " + inventoryConnector.getItem(lineItemReference.getId()));
+                    Log.d("sentry", "Set this to available..." + inventoryConnector.getItem(lineItemReference.getId()).getCode());
+                    inventoryConnector.getItem(lineItemReference.getId()).setCode("AVAILABLE");
+                    resetToAvailableSuccessful = true;
+                }
+            }
+        } catch (ClientException | ServiceException | BindingException | RemoteException e) {
             Log.d("Sentry excptn", e.getMessage(), e.getCause());
             e.printStackTrace();
+        } catch (Exception e2) {
+            Log.d("Sentry", "Non-Clover exception encountered...");
+            e2.printStackTrace();
         }
-        return lineItemsDeletedList;
+        return resetToAvailableSuccessful;
     }
 
     @Override
-    protected void onPostExecute(List<LineItem> lineItemsDeleted) {
-        super.onPostExecute(lineItemsDeleted);
-        caller.processLineItemDeletedInternal();
+    protected void onPostExecute(Boolean resetToAvailableSuccessful) {
+        super.onPostExecute(resetToAvailableSuccessful);
+        inventoryConnector.disconnect();
+        caller.informResetToAvailableSuccessful(resetToAvailableSuccessful);
     }
 }
 
