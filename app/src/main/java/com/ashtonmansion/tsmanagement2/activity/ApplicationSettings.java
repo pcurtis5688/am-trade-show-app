@@ -3,6 +3,7 @@ package com.ashtonmansion.tsmanagement2.activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -14,14 +15,19 @@ import android.widget.Toast;
 import com.ashtonmansion.tsmanagement2.R;
 import com.ashtonmansion.tsmanagement2.util.GlobalUtils;
 import com.clover.sdk.util.CloverAccount;
+import com.clover.sdk.v1.BindingException;
+import com.clover.sdk.v1.ClientException;
+import com.clover.sdk.v1.ServiceException;
 import com.clover.sdk.v1.tender.TenderConnector;
 import com.clover.sdk.v3.base.Reference;
 import com.clover.sdk.v3.inventory.Category;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
+import com.clover.sdk.v3.inventory.PriceType;
 import com.clover.sdk.v3.inventory.Tag;
 import com.clover.sdk.v3.order.OrderConnector;
 
+import java.security.spec.ECField;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,25 +54,17 @@ public class ApplicationSettings extends AppCompatActivity {
         appSettingsLogTv = (TextView) findViewById(R.id.app_settings_log_tv);
 
         ////// FETCH BUTTONS
-        final Button createSelectBoothItemBtn = (Button) findViewById(R.id.create_select_booth_item_and_category_btn);
-        final Button checkBoothIntegrityBtn = (Button) findViewById(R.id.check_booth_integrity_btn);
+        final Button createNecessaryInventoryItemsBtn = (Button) findViewById(R.id.create_necessary_inventory_items);
         final Button validateBoothNamesBtn = (Button) findViewById(R.id.validate_booth_names_btn);
         final Button deleteAllDetectedBoothsBtn = (Button) findViewById(R.id.delete_detected_booths_btn);
         final Button deleteUnusedBoothSATTagsBtn = (Button) findViewById(R.id.delete_unused_booth_SAT_tags);
 
         ////// ADD BUTTON LISTENERS
-        createSelectBoothItemBtn.setOnClickListener(new View.OnClickListener() {
+        createNecessaryInventoryItemsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createSelectBoothButtonInInventory();
-                createSelectBoothItemBtn.setEnabled(false);
-            }
-        });
-        checkBoothIntegrityBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                checkBoothIntegrityAndCorrect();
-                checkBoothIntegrityBtn.setEnabled(false);
+                createNecessaryInventoryItemsBtn.setEnabled(false);
             }
         });
         validateBoothNamesBtn.setOnClickListener(new View.OnClickListener() {
@@ -83,7 +81,6 @@ public class ApplicationSettings extends AppCompatActivity {
                 deleteAllDetectedBoothsBtn.setEnabled(false);
             }
         });
-
         deleteUnusedBoothSATTagsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,9 +94,8 @@ public class ApplicationSettings extends AppCompatActivity {
         new AsyncTask<Void, Void, Void>() {
             private InventoryConnector inventoryConnector;
             private List<Category> categoryList;
-            private boolean hasSelectBoothItem;
-            private boolean selectBoothHasBoothsCategory;
             private boolean hasBoothsCategory;
+            private boolean hasBoothItem;
             private String existingSelectBoothItemID;
             private Category boothsCategory;
 
@@ -108,9 +104,8 @@ public class ApplicationSettings extends AppCompatActivity {
                 super.onPreExecute();
                 ////// INITIALIZE VARS
                 categoryList = new ArrayList<>();
-                hasSelectBoothItem = false;
-                selectBoothHasBoothsCategory = false;
                 hasBoothsCategory = false;
+                hasBoothsCategory = true;
                 boothsCategory = null;
                 ////// INITIALIZE CLOVER CONNECTIONS
                 inventoryConnector = new InventoryConnector(applicationSettingsActivityContext, CloverAccount.getAccount(applicationSettingsActivityContext), null);
@@ -118,68 +113,51 @@ public class ApplicationSettings extends AppCompatActivity {
             }
 
             @Override
-            protected Void doInBackground(Void... voids) {
+            protected Void doInBackground(Void... params) {
                 try {
+                    ////// ITERATE OVER CATEGORY LIST CHECK IF ALREADY HAS CATEGORY
                     categoryList = inventoryConnector.getCategories();
-                    ////// FIGURE OUT THREE CASES, HAS ITEM, HAS CATEGORY, AND IF TIED
-                    for (Item inventoryItem : inventoryConnector.getItems()) {
-                        if ((inventoryItem.getName().toLowerCase().startsWith("select booth"))) {
-                            hasSelectBoothItem = true;
-                            existingSelectBoothItemID = inventoryItem.getId();
-                            List<Category> inventoryItemCats = inventoryConnector.getItem(inventoryItem.getId()).getCategories();
-                            if (null != inventoryItemCats && inventoryItemCats.size() > 0) {
-                                for (Category checkCategory : inventoryItem.getCategories()) {
-                                    if ((checkCategory.getName().toLowerCase().startsWith("booths"))) {
-                                        selectBoothHasBoothsCategory = true;
-                                        boothsCategory = checkCategory;
-                                    }
-                                }
+                    if (null != categoryList && categoryList.size() > 0) {
+                        for (Category category : categoryList) {
+                            if (category.getName().trim().toLowerCase().contains("booth")) {
+                                hasBoothsCategory = true;
                             }
                         }
                     }
-                    if (!selectBoothHasBoothsCategory) {
-                        if (categoryList.size() > 0) {
-                            for (Category category : categoryList) {
-                                if ((category.getName().replaceAll("\\s", "").equalsIgnoreCase("booths"))) {
-                                    hasBoothsCategory = true;
-                                    boothsCategory = category;
-                                }
-                            }
+                    Log.d("AppSettings Debug", "Creating only if similar one was not found..."
+                            + "\n Category similar to \'Booths\' found: " + hasBoothsCategory);
+
+                    ////// IF DOES *NOT* HAVE CATEGORY, CREATES IT
+                    if (!hasBoothsCategory) {
+                        Category newBoothsCategory = new Category();
+                        newBoothsCategory = inventoryConnector.createCategory(newBoothsCategory);
+                        newBoothsCategory.setName("Booths");
+                        inventoryConnector.updateCategory(newBoothsCategory);
+                    }
+
+                    ////// ITERATE INVENTORY ITEMS CHECK FOR SELECT BOOTH
+                    for (Item currentItem : inventoryConnector.getItemsWithCategories()) {
+                        if (currentItem.getName().trim().toLowerCase().equals("select booth")) {
+                            hasBoothItem = true;
                         }
                     }
-                    ////// HANDLE THE THREE CASES
-                    if (!hasSelectBoothItem) {
-                        ////// PREP THE SELECT BOOTH ITEM
-                        Item selectBoothItem = new Item();
-                        selectBoothItem.setName("Select Booth");
-                        selectBoothItem.setPrice((long) 100);
-                        selectBoothItem.setCost((long) 100);
-                        selectBoothItem = inventoryConnector.createItem(selectBoothItem);
-                        if (hasBoothsCategory) {
-                            inventoryConnector.addItemToCategory(selectBoothItem.getId(), boothsCategory.getId());
-                        } else {
-                            boothsCategory = new Category();
-                            boothsCategory.setName("Booths");
-                            boothsCategory = inventoryConnector.createCategory(boothsCategory);
-                            inventoryConnector.addItemToCategory(selectBoothItem.getId(), boothsCategory.getId());
-                        }
-                    } else if (hasSelectBoothItem && hasBoothsCategory && !selectBoothHasBoothsCategory) {
-                        inventoryConnector.addItemToCategory(existingSelectBoothItemID, boothsCategory.getId());
-                    } else if (hasSelectBoothItem && !hasBoothsCategory) {
-                        boothsCategory = new Category();
-                        boothsCategory.setSortOrder(0);
-                        Reference existingSelectBoothReference = new Reference();
-                        existingSelectBoothReference.setId(existingSelectBoothItemID);
-                        List<Reference> selectBoothRefInList = new ArrayList<>();
-                        selectBoothRefInList.add(existingSelectBoothReference);
-                        boothsCategory.setItems(selectBoothRefInList);
-                        boothsCategory.setName("Booths");
-                        boothsCategory = inventoryConnector.createCategory(boothsCategory);
-                        inventoryConnector.addItemToCategory(existingSelectBoothItemID, boothsCategory.getId());
-                    }
-                } catch (Exception e) {
-                    Log.d("Excptn: ", e.getMessage(), e.getCause());
-                    e.printStackTrace();
+
+                    ////// IF IT DOES *NOT* HAVE 'SELECT BOOTH', CREATES IT
+                    if (!hasBoothItem) {
+                        Item createSelectBoothItem = new Item();
+                        createSelectBoothItem.setName("Select Booth");
+                        createSelectBoothItem.setPrice(Long.parseLong("100"));
+                        createSelectBoothItem.setCost(Long.parseLong("100"));
+                        createSelectBoothItem.setPriceType(PriceType.FIXED);
+                        inventoryConnector.createItem(createSelectBoothItem);
+                        //Returns Item w/ Code if Necessary
+                        Log.d("AppSettings", "Enabled Select Booth option");
+                    } else
+                        Log.d("AppSettings", "Select Booth option already enabled");
+                } catch (BindingException | ServiceException | ClientException | RemoteException e) {
+                    Log.d("Clover E: ", e.getMessage(), e.getCause());
+                } catch (Exception e2) {
+                    Log.e("Non-Clover:", "Exception in Category/Item Creation Method");
                 }
                 return null;
             }
@@ -194,61 +172,61 @@ public class ApplicationSettings extends AppCompatActivity {
         }.execute();
     }
 
-    private void checkBoothIntegrityAndCorrect() {
-        new AsyncTask<Void, Void, Void>() {
-            private InventoryConnector inventoryConnector;
-            private OrderConnector orderConnector;
-            private List<Item> reservedBoothsWithInvalidatedOrders;
-            private int invalidBoothNo;
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                ////// INITIALIZE LISTS
-                reservedBoothsWithInvalidatedOrders = new ArrayList<>();
-                invalidBoothNo = 0;
-                ////// INITIALIZE CLOVER CONNECTIONS
-                inventoryConnector = new InventoryConnector(applicationSettingsActivityContext, CloverAccount.getAccount(applicationSettingsActivityContext), null);
-                orderConnector = new OrderConnector(applicationSettingsActivityContext, CloverAccount.getAccount(applicationSettingsActivityContext), null);
-                inventoryConnector.connect();
-                orderConnector.connect();
-            }
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                try {
-                    for (Item boothToCheck : inventoryConnector.getItems()) {
-                        if (null != boothToCheck.getCode() && boothToCheck.getCode().contains("Order #")) {
-                            String orderNumber = boothToCheck.getCode().substring(7);
-                            if (null == orderConnector.getOrder(orderNumber)) {
-                                reservedBoothsWithInvalidatedOrders.add(boothToCheck);
-                                inventoryConnector.updateItem(boothToCheck.setCode("Available"));
-                                invalidBoothNo++;
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                    Log.d("Excptn: ", e.getMessage(), e.getCause());
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void result) {
-                super.onPostExecute(result);
-                inventoryConnector.disconnect();
-                orderConnector.disconnect();
-                inventoryConnector = null;
-                orderConnector = null;
-                if (reservedBoothsWithInvalidatedOrders.size() > 0) {
-                    Toast.makeText(applicationSettingsActivityContext, getResources().getString(R.string.invalid_booths_found_and_corrected, invalidBoothNo), Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(applicationSettingsActivityContext, getResources().getString(R.string.no_invalid_booths_found), Toast.LENGTH_LONG).show();
-                }
-            }
-        }.execute();
-    }
+//    private void checkBoothIntegrityAndCorrect() {
+//        new AsyncTask<Void, Void, Void>() {
+//            private InventoryConnector inventoryConnector;
+//            private OrderConnector orderConnector;
+//            private List<Item> reservedBoothsWithInvalidatedOrders;
+//            private int invalidBoothNo;
+//
+//            @Override
+//            protected void onPreExecute() {
+//                super.onPreExecute();
+//                ////// INITIALIZE LISTS
+//                reservedBoothsWithInvalidatedOrders = new ArrayList<>();
+//                invalidBoothNo = 0;
+//                ////// INITIALIZE CLOVER CONNECTIONS
+//                inventoryConnector = new InventoryConnector(applicationSettingsActivityContext, CloverAccount.getAccount(applicationSettingsActivityContext), null);
+//                orderConnector = new OrderConnector(applicationSettingsActivityContext, CloverAccount.getAccount(applicationSettingsActivityContext), null);
+//                inventoryConnector.connect();
+//                orderConnector.connect();
+//            }
+//
+//            @Override
+//            protected Void doInBackground(Void... voids) {
+//                try {
+//                    for (Item boothToCheck : inventoryConnector.getItems()) {
+//                        if (null != boothToCheck.getCode() && boothToCheck.getCode().contains("Order #")) {
+//                            String orderNumber = boothToCheck.getCode().substring(7);
+//                            if (null == orderConnector.getOrder(orderNumber)) {
+//                                reservedBoothsWithInvalidatedOrders.add(boothToCheck);
+//                                inventoryConnector.updateItem(boothToCheck.setCode("Available"));
+//                                invalidBoothNo++;
+//                            }
+//                        }
+//                    }
+//                } catch (Exception e) {
+//                    Log.d("Excptn: ", e.getMessage(), e.getCause());
+//                    e.printStackTrace();
+//                }
+//                return null;
+//            }
+//
+//            @Override
+//            protected void onPostExecute(Void result) {
+//                super.onPostExecute(result);
+//                inventoryConnector.disconnect();
+//                orderConnector.disconnect();
+//                inventoryConnector = null;
+//                orderConnector = null;
+//                if (reservedBoothsWithInvalidatedOrders.size() > 0) {
+//                    Toast.makeText(applicationSettingsActivityContext, getResources().getString(R.string.invalid_booths_found_and_corrected, invalidBoothNo), Toast.LENGTH_LONG).show();
+//                } else {
+//                    Toast.makeText(applicationSettingsActivityContext, getResources().getString(R.string.no_invalid_booths_found), Toast.LENGTH_LONG).show();
+//                }
+//            }
+//        }.execute();
+//    }
 
     private void validateBoothNamesAndRecreateTags() {
         new AsyncTask<Void, Void, Void>() {

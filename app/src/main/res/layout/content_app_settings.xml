@@ -25,7 +25,7 @@
             android:textAlignment="center" />
 
         <Button
-            android:id="@+id/create_select_booth_item_and_category_btn"
+            android:id="@+id/create_necessary_inventory_items"
             style="@style/app_settings_button_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

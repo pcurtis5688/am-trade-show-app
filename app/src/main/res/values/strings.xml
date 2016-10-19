@@ -237,7 +237,7 @@
     <string name="finalize_reservation_btn_text">Finalize Reservation</string>
     <string name="finalized_reservation_confirmation">Reservation Complete</string>
     <string name="title_activity_app_settings">Application Settings</string>
-    <string name="title_activity_booth_reservation_details">BoothReservationDetails</string>
+    <string name="title_activity_booth_reservation_details">Booth Reservation - Details</string>
     <string name="title_activity_dev_tools">Developer Options</string>
 
     <!-- BOOTH RESERVATION STRINGS //////////////////-->
@@ -368,7 +368,7 @@
     <string name="deleted_SAT_tags_found_and_number">Deleted Unused Size, Area, Type Tags - Number: %1$d</string>
     <string name="no_unused_SAT_tags_found">No Unused Size, Area, Type tags found - Congratulations!</string>
     <!-- CREATE SELECT BOOTH BUTTON (ITEM) IN INVENTORY, ENSURE BOOTH CATEGORY EXISTS AND ASSIGNED -->
-    <string name="create_select_booth_item_btn_text">Create Booth Category and 'Booth Select' Item in Inventory</string>
+    <string name="create_select_booth_item_btn_text">Create Booth Category and \'Booth Select\' Item in Inventory</string>
     <string name="successfully_created_select_booth_item">Successfully Created Select Booth Button (Item) and ensured Booth category exists and assigned</string>
     <!-- APP SETTINGS LOG STRINGS -->
     <string name="booths_with_no_skus_detected">Booths without Booth Numbers were detected&#8230; IDs are:</string>
