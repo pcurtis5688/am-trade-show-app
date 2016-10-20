@@ -151,7 +151,7 @@ public class ApplicationSettings extends AppCompatActivity {
                         createSelectBoothItem.setPriceType(PriceType.FIXED);
                         inventoryConnector.createItem(createSelectBoothItem);
                         //Returns Item w/ Code if Necessary
-                        Log.d("AppSettings", "Enabled Select Booth option");
+                        Log.d("AppSettings", "Select Booth Item Created/ Option Enabled");
                     } else
                         Log.d("AppSettings", "Select Booth option already enabled");
                 } catch (BindingException | ServiceException | ClientException | RemoteException e) {
@@ -167,7 +167,6 @@ public class ApplicationSettings extends AppCompatActivity {
                 super.onPostExecute(result);
                 inventoryConnector.disconnect();
                 inventoryConnector = null;
-                Toast.makeText(applicationSettingsActivityContext, getResources().getString(R.string.successfully_created_select_booth_item), Toast.LENGTH_LONG).show();
             }
         }.execute();
     }

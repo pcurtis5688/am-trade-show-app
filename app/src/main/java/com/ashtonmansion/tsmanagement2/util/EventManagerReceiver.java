@@ -69,7 +69,7 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
     @Override
     public void processItemNameCheck(String itemName) {
         //Log.d("Sentry Receiver", "Item Name: " + itemName + "...");
-        if (itemName.equalsIgnoreCase("Select Booth")) {
+        if (itemName.trim().toLowerCase().equals("Select Booth")) {
             Intent boothReservationIntent = new Intent(fromContext, BoothReservationShowSelection.class);
             boothReservationIntent.putExtra("orderid", orderID);
             boothReservationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
