@@ -3,14 +3,20 @@ package com.ashtonmansion.tsmanagement2.util;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
+import android.os.RemoteException;
 import android.util.Log;
 
 import com.clover.sdk.util.CloverAccount;
+import com.clover.sdk.v1.BindingException;
+import com.clover.sdk.v1.ClientException;
+import com.clover.sdk.v1.ForbiddenException;
+import com.clover.sdk.v1.ServiceException;
 import com.clover.sdk.v3.customers.Customer;
 import com.clover.sdk.v3.customers.PhoneNumber;
 import com.clover.sdk.v3.customers.EmailAddress;
 import com.clover.sdk.v3.customers.Address;
 import com.clover.sdk.v3.inventory.InventoryConnector;
+import com.clover.sdk.v3.inventory.Item;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -205,5 +211,46 @@ class GetItemNameTask extends AsyncTask<Void, Void, String> {
         super.onPostExecute(itemName);
         inventoryConnector.disconnect();
         delegate.processItemNameCheck(itemName);
+    }
+}
+
+class PermissionsTestTask extends AsyncTask<Void, Void, Boolean> {
+    ////// CLOVER CONNECTIONS
+    private InventoryConnector inventoryConnector;
+    private Context accessingContext;
+    ////// DATA / RESULT HANDLING
+    private Object callingObject;
+    private boolean activePermissions;
+
+    void setContextAndCaller(Object callingObject, Context accessingContext) {
+        this.callingObject = callingObject;
+        this.accessingContext = accessingContext;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        activePermissions = false;
+        inventoryConnector = new InventoryConnector(accessingContext, CloverAccount.getAccount(accessingContext), null);
+        inventoryConnector.connect();
+    }
+
+    @Override
+    protected Boolean doInBackground(Void... params) {
+        try {
+            List<Item> testList = inventoryConnector.getItems();
+        } catch (BindingException | ClientException | RemoteException | ServiceException e1) {
+            if (e1.getClass().equals(ForbiddenException.class)) {
+                Log.d("GlobalUtils", "Test Permission Result Failed");
+            }
+        }
+        return activePermissions;
+    }
+
+    @Override
+    protected void onPostExecute(Boolean activePermissions) {
+        super.onPostExecute(activePermissions);
+        inventoryConnector.disconnect();
+        inventoryConnector = null;
     }
 }

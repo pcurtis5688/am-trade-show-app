@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.ashtonmansion.tsmanagement2.activity.BoothReservationShowSelection;
 import com.clover.sdk.util.CloverAccount;
@@ -18,13 +17,12 @@ interface AsyncResponse {
     void processItemNameCheck(String itemName);
 }
 
-/**
- * Created by Paul Curtis
- * (pcurtis5688@gmail.com)
- * on 10/12/2016.
- */
-
 public class EventManagerReceiver extends BroadcastReceiver implements AsyncResponse {
+    /**
+     * Created by Paul Curtis
+     * (pcurtis5688@gmail.com)
+     * on 10/12/2016.
+     */
     ////// PRIVATE CONNEX & DATA
     private Context fromContext;
     private Intent fromIntent;
@@ -33,7 +31,8 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
     ////// ORDER SENTRY IMPLEMENTATION
     private OrderSentry orderSentry;
 
-    ////// THIS RECEIVES BOTH ORDER CREATED AND
+    ////// THIS RECEIVES ORDER CREATED AND LINE ITEM ADDED INTENTS
+    //// TODO: 10/19/2016 link to order created
     @Override
     public void onReceive(Context context, Intent intent) {
         this.fromContext = context;
@@ -68,12 +67,16 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
 
     @Override
     public void processItemNameCheck(String itemName) {
-        //Log.d("Sentry Receiver", "Item Name: " + itemName + "...");
-        if (itemName.trim().toLowerCase().equals("Select Booth")) {
-            Intent boothReservationIntent = new Intent(fromContext, BoothReservationShowSelection.class);
-            boothReservationIntent.putExtra("orderid", orderID);
-            boothReservationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            fromContext.getApplicationContext().startActivity(boothReservationIntent);
+        Log.d("Sentry Receiver", "Item Name: " + itemName + "...");
+        if (null != itemName) {
+            if (itemName.toLowerCase().equals("Select Booth")) {
+                Intent boothReservationIntent = new Intent(fromContext, BoothReservationShowSelection.class);
+                boothReservationIntent.putExtra("orderid", orderID);
+                boothReservationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                fromContext.getApplicationContext().startActivity(boothReservationIntent);
+            }
+        } else {
+            Log.d("EventManagerReceiver", "Empty item name passed to receiver...");
         }
     }
 }

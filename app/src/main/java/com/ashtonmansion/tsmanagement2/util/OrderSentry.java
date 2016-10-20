@@ -52,11 +52,17 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
     }
 
     void receiveInitialLineItemListAndProcess(List<LineItem> lineItems) {
-        for (LineItem currentLineItem : lineItems) {
-            if (currentLineItem.getName().contains("Booth #")) {
-                specificBoothWatchList.add(currentLineItem);
-                Log.d("Sentry", "Specific Booth located as initial line item and added to watch list...");
+        if (null != lineItems && lineItems.size() > 0) {
+            for (LineItem currentLineItem : lineItems) {
+                if (currentLineItem.getName().contains("Booth #")) {
+                    specificBoothWatchList.add(currentLineItem);
+                    Log.d("Sentry", "Specific Booth located as initial line item and added to watch list...");
+                }
             }
+        } else if (null != lineItems && lineItems.size() == 0) {
+            Log.d("Sentry", "Initial Line Item List was 0 upon sentry creation...");
+        } else {
+            Log.d("Sentry", "Null Initial Line Items");
         }
     }
 

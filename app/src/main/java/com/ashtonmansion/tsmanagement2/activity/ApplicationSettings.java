@@ -27,7 +27,6 @@ import com.clover.sdk.v3.inventory.PriceType;
 import com.clover.sdk.v3.inventory.Tag;
 import com.clover.sdk.v3.order.OrderConnector;
 
-import java.security.spec.ECField;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +34,6 @@ public class ApplicationSettings extends AppCompatActivity {
     private Context applicationSettingsActivityContext;
     private int activityHeaderResId;
     private TextView appSettingsLogTv;
-
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -170,62 +168,6 @@ public class ApplicationSettings extends AppCompatActivity {
             }
         }.execute();
     }
-
-//    private void checkBoothIntegrityAndCorrect() {
-//        new AsyncTask<Void, Void, Void>() {
-//            private InventoryConnector inventoryConnector;
-//            private OrderConnector orderConnector;
-//            private List<Item> reservedBoothsWithInvalidatedOrders;
-//            private int invalidBoothNo;
-//
-//            @Override
-//            protected void onPreExecute() {
-//                super.onPreExecute();
-//                ////// INITIALIZE LISTS
-//                reservedBoothsWithInvalidatedOrders = new ArrayList<>();
-//                invalidBoothNo = 0;
-//                ////// INITIALIZE CLOVER CONNECTIONS
-//                inventoryConnector = new InventoryConnector(applicationSettingsActivityContext, CloverAccount.getAccount(applicationSettingsActivityContext), null);
-//                orderConnector = new OrderConnector(applicationSettingsActivityContext, CloverAccount.getAccount(applicationSettingsActivityContext), null);
-//                inventoryConnector.connect();
-//                orderConnector.connect();
-//            }
-//
-//            @Override
-//            protected Void doInBackground(Void... voids) {
-//                try {
-//                    for (Item boothToCheck : inventoryConnector.getItems()) {
-//                        if (null != boothToCheck.getCode() && boothToCheck.getCode().contains("Order #")) {
-//                            String orderNumber = boothToCheck.getCode().substring(7);
-//                            if (null == orderConnector.getOrder(orderNumber)) {
-//                                reservedBoothsWithInvalidatedOrders.add(boothToCheck);
-//                                inventoryConnector.updateItem(boothToCheck.setCode("Available"));
-//                                invalidBoothNo++;
-//                            }
-//                        }
-//                    }
-//                } catch (Exception e) {
-//                    Log.d("Excptn: ", e.getMessage(), e.getCause());
-//                    e.printStackTrace();
-//                }
-//                return null;
-//            }
-//
-//            @Override
-//            protected void onPostExecute(Void result) {
-//                super.onPostExecute(result);
-//                inventoryConnector.disconnect();
-//                orderConnector.disconnect();
-//                inventoryConnector = null;
-//                orderConnector = null;
-//                if (reservedBoothsWithInvalidatedOrders.size() > 0) {
-//                    Toast.makeText(applicationSettingsActivityContext, getResources().getString(R.string.invalid_booths_found_and_corrected, invalidBoothNo), Toast.LENGTH_LONG).show();
-//                } else {
-//                    Toast.makeText(applicationSettingsActivityContext, getResources().getString(R.string.no_invalid_booths_found), Toast.LENGTH_LONG).show();
-//                }
-//            }
-//        }.execute();
-//    }
 
     private void validateBoothNamesAndRecreateTags() {
         new AsyncTask<Void, Void, Void>() {
@@ -428,6 +370,62 @@ public class ApplicationSettings extends AppCompatActivity {
     }
 
     ////// INACTIVE METHODS
+    private void checkBoothIntegrityAndCorrect() {
+        new AsyncTask<Void, Void, Void>() {
+            private InventoryConnector inventoryConnector;
+            private OrderConnector orderConnector;
+            private List<Item> reservedBoothsWithInvalidatedOrders;
+            private int invalidBoothNo;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                ////// INITIALIZE LISTS
+                reservedBoothsWithInvalidatedOrders = new ArrayList<>();
+                invalidBoothNo = 0;
+                ////// INITIALIZE CLOVER CONNECTIONS
+                inventoryConnector = new InventoryConnector(applicationSettingsActivityContext, CloverAccount.getAccount(applicationSettingsActivityContext), null);
+                orderConnector = new OrderConnector(applicationSettingsActivityContext, CloverAccount.getAccount(applicationSettingsActivityContext), null);
+                inventoryConnector.connect();
+                orderConnector.connect();
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                try {
+                    for (Item boothToCheck : inventoryConnector.getItems()) {
+                        if (null != boothToCheck.getCode() && boothToCheck.getCode().contains("Order #")) {
+                            String orderNumber = boothToCheck.getCode().substring(7);
+                            if (null == orderConnector.getOrder(orderNumber)) {
+                                reservedBoothsWithInvalidatedOrders.add(boothToCheck);
+                                inventoryConnector.updateItem(boothToCheck.setCode("Available"));
+                                invalidBoothNo++;
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    Log.d("Excptn: ", e.getMessage(), e.getCause());
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                super.onPostExecute(result);
+                inventoryConnector.disconnect();
+                orderConnector.disconnect();
+                inventoryConnector = null;
+                orderConnector = null;
+                if (reservedBoothsWithInvalidatedOrders.size() > 0) {
+                    Toast.makeText(applicationSettingsActivityContext, getResources().getString(R.string.invalid_booths_found_and_corrected, invalidBoothNo), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(applicationSettingsActivityContext, getResources().getString(R.string.no_invalid_booths_found), Toast.LENGTH_LONG).show();
+                }
+            }
+        }.execute();
+    }
+
     private void createCustomTender(final Context context) {
         new AsyncTask<Void, Void, Exception>() {
             private TenderConnector tenderConnector;

@@ -42,6 +42,7 @@ public class TradeShows extends AppCompatActivity
     // DATA HANDLING
     private List<Tag> showList;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ///////////UI WORK/////////////////////////////////////
@@ -258,8 +259,8 @@ public class TradeShows extends AppCompatActivity
         }
 
         @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
+        protected void onPostExecute(Void voidResult) {
+            super.onPostExecute(voidResult);
             inventoryConnector.disconnect();
             populateShowTable();
             progressDialog.dismiss();
