@@ -25,16 +25,6 @@
             android:textAlignment="center" />
 
         <Button
-            android:id="@+id/create_necessary_inventory_items"
-            style="@style/app_settings_button_style"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@color/admin_button_bg_color"
-            android:text="@string/create_select_booth_item_btn_text"
-            android:textAllCaps="false" />
-
-        <Button
             android:id="@+id/validate_booth_names_btn"
             style="@style/app_settings_button_style"
             android:layout_width="match_parent"
@@ -53,26 +43,6 @@
             android:background="@color/admin_button_bg_color"
             android:text="@string/detect_and_delete_booths"
             android:textAllCaps="false" />
-
-        <Button
-            android:id="@+id/delete_unused_booth_SAT_tags"
-            style="@style/app_settings_button_style"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@color/admin_button_bg_color"
-            android:text="@string/delete_unused_booth_SAT_tags_string"
-            android:textAllCaps="false" />
-
-        <EditText
-            android:id="@+id/app_settings_log_tv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dimen_25dp"
-            android:background="@android:color/transparent"
-            android:cursorVisible="false"
-            android:inputType="textMultiLine"
-            android:isScrollContainer="true" />
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

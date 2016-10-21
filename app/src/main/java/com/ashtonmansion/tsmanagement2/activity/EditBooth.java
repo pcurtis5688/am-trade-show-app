@@ -204,37 +204,9 @@ public class EditBooth extends AppCompatActivity {
             @Override
             protected Void doInBackground(Void... params) {
                 try {
+                    Log.d("EditBooth PreAvailable", inventoryConnector.getItem(boothIdToMakeAvailable).getCode());
                     inventoryConnector.updateItem(inventoryConnector.getItem(boothIdToMakeAvailable).setCode(getResources().getString(R.string.available_keyword)));
-
-//                    if (SET_AVAILABLE_ACTION.equalsIgnoreCase("REFUNDORDER")) {
-//                        List<Refund> refunds = new ArrayList<>();
-//                        Order orderToRefund = orderConnector.getOrder(booth.getCode());
-//                        // TODO: 9/20/2016 ask if this is needed
-//                        orderConnector.getOrder(booth.getCode()).setRefunds(refunds);
-//                    } else if (SET_AVAILABLE_ACTION.equalsIgnoreCase("SWAPANDREOPEN")) {
-//                        ////// FETCH ORDER, SWAP BOOTHS, AND UPDATE THE ORDER
-//                        Order orderToRefund = orderConnector.getOrder(booth.getCode());
-//                        List<LineItem> lineItems = orderToRefund.getLineItems();
-//                        List<LineItem> newLineItems = new ArrayList<>();
-//                        for (LineItem lineItem : lineItems) {
-//                            if (lineItem.getItem().getId().equalsIgnoreCase(boothIdToMakeAvailable)) {
-//
-//                                ////// CREATE A NEW LINE ITEM FOR GENERIC BOOTH
-//                                LineItem newGenericBoothLineItem = new LineItem();
-//                                newGenericBoothLineItem.setName("GENERIC BOOTH");
-//
-//                                ////// ADD GENERIC
-//                                lineItems.add(newGenericBoothLineItem);
-//                            } else {
-//                                newLineItems.add(lineItem);
-//                            }
-//                        }
-//                        orderToRefund.clearLineItems();
-//                        orderConnector.updateOrder(orderConnector.getOrder(booth.getCode()).setLineItems(newLineItems));
-//                    } else if (SET_AVAILABLE_ACTION.equalsIgnoreCase("DELETEORDER")) {
-//                        Toast.makeText(editBoothActivityContext, booth.getCode(), Toast.LENGTH_LONG).show();
-//
-//                    }
+                    Log.d("EditBooth PostAvail", inventoryConnector.getItem(boothIdToMakeAvailable).getCode());
                 } catch (Exception e) {
                     Log.d("Clover excptn:", e.getMessage(), e.getCause());
                 }

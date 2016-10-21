@@ -33,7 +33,6 @@ import java.util.List;
 public class ApplicationSettings extends AppCompatActivity {
     private Context applicationSettingsActivityContext;
     private int activityHeaderResId;
-    private TextView appSettingsLogTv;
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -49,22 +48,12 @@ public class ApplicationSettings extends AppCompatActivity {
         applicationSettingsActivityContext = this;
         TextView activityHeaderTv = (TextView) findViewById(R.id.application_settings_header);
         activityHeaderTv.setTextAppearance(applicationSettingsActivityContext, activityHeaderResId);
-        appSettingsLogTv = (TextView) findViewById(R.id.app_settings_log_tv);
 
         ////// FETCH BUTTONS
-        final Button createNecessaryInventoryItemsBtn = (Button) findViewById(R.id.create_necessary_inventory_items);
         final Button validateBoothNamesBtn = (Button) findViewById(R.id.validate_booth_names_btn);
         final Button deleteAllDetectedBoothsBtn = (Button) findViewById(R.id.delete_detected_booths_btn);
-        final Button deleteUnusedBoothSATTagsBtn = (Button) findViewById(R.id.delete_unused_booth_SAT_tags);
 
         ////// ADD BUTTON LISTENERS
-        createNecessaryInventoryItemsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createSelectBoothButtonInInventory();
-                createNecessaryInventoryItemsBtn.setEnabled(false);
-            }
-        });
         validateBoothNamesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,13 +66,6 @@ public class ApplicationSettings extends AppCompatActivity {
             public void onClick(View v) {
                 deleteAllDetectedBooths();
                 deleteAllDetectedBoothsBtn.setEnabled(false);
-            }
-        });
-        deleteUnusedBoothSATTagsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteAllUnusedBoothLabels();
-                deleteUnusedBoothSATTagsBtn.setEnabled(false);
             }
         });
     }
@@ -103,8 +85,6 @@ public class ApplicationSettings extends AppCompatActivity {
                 ////// INITIALIZE VARS
                 categoryList = new ArrayList<>();
                 hasBoothsCategory = false;
-                hasBoothsCategory = true;
-                boothsCategory = null;
                 ////// INITIALIZE CLOVER CONNECTIONS
                 inventoryConnector = new InventoryConnector(applicationSettingsActivityContext, CloverAccount.getAccount(applicationSettingsActivityContext), null);
                 inventoryConnector.connect();
@@ -117,7 +97,7 @@ public class ApplicationSettings extends AppCompatActivity {
                     categoryList = inventoryConnector.getCategories();
                     if (null != categoryList && categoryList.size() > 0) {
                         for (Category category : categoryList) {
-                            if (category.getName().trim().toLowerCase().contains("booth")) {
+                            if (category.getName().trim().toLowerCase().contains("booths")) {
                                 hasBoothsCategory = true;
                             }
                         }
@@ -128,9 +108,9 @@ public class ApplicationSettings extends AppCompatActivity {
                     ////// IF DOES *NOT* HAVE CATEGORY, CREATES IT
                     if (!hasBoothsCategory) {
                         Category newBoothsCategory = new Category();
-                        newBoothsCategory = inventoryConnector.createCategory(newBoothsCategory);
                         newBoothsCategory.setName("Booths");
-                        inventoryConnector.updateCategory(newBoothsCategory);
+                        newBoothsCategory.setSortOrder(0);
+                        newBoothsCategory = inventoryConnector.createCategory(newBoothsCategory);
                     }
 
                     ////// ITERATE INVENTORY ITEMS CHECK FOR SELECT BOOTH
@@ -154,6 +134,7 @@ public class ApplicationSettings extends AppCompatActivity {
                         Log.d("AppSettings", "Select Booth option already enabled");
                 } catch (BindingException | ServiceException | ClientException | RemoteException e) {
                     Log.d("Clover E: ", e.getMessage(), e.getCause());
+                    e.printStackTrace();
                 } catch (Exception e2) {
                     Log.e("Non-Clover:", "Exception in Category/Item Creation Method");
                 }
@@ -253,7 +234,6 @@ public class ApplicationSettings extends AppCompatActivity {
                     for (String boothId : boothsWithNoSKU) {
                         boothsNoSKUString += String.format("\n %s", boothId);
                     }
-                    appSettingsLogTv.setText(boothsNoSKUString);
                 }
             }
         }.execute();
@@ -303,7 +283,6 @@ public class ApplicationSettings extends AppCompatActivity {
                     for (String boothName : boothsDeletedNames) {
                         boothsDeletedString += String.format("\r\n %s", boothName);
                     }
-                    appSettingsLogTv.setText(boothsDeletedString);
                 }
             }
         }.execute();
