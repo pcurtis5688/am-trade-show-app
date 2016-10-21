@@ -37,6 +37,11 @@
     <string name="nav_drawer_merchandise_sales_text">Merchandise Sales</string>
     <string name="nav_drawer_app_settings_text">Application Settings</string>
 
+    <!-- HOME RELATED STRINGS -->
+    <string name="clover_connectivity_string">Clover connectivity available: </string>
+    <string name="clover_connectivity_available_string">Online</string>
+    <string name="clover_connectivity_unavailable_string">Off-line</string>
+
     <!--EMAIL RESERVATION CONFIRMATION PAGE STRINGS -->
     <string name="email_reservations_confirmations_string">Email Reservation Confirmations</string>
     <string name="search_reservations_string">Search Reservations... </string>
@@ -76,7 +81,7 @@
 
     <!-- CONFIGURE BOOTHS STRINGS //////////////////////////////-->
     <string name="configure_booth_show_selection_string">Select Show</string>
-    <string name="configure_booths_string">Configure Booths</string>vghh
+    <string name="configure_booths_string">Configure Booths</string>
 
     <string name="configure_show_booths_number_header">No.</string>
     <string name="configure_show_booths_size_header">Size</string>

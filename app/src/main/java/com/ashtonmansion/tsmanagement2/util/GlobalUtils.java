@@ -25,13 +25,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Created by paul curtis
- * (pcurtis5688@gmail.com
- * on 8/31/2016.
- */
 public class GlobalUtils {
-
+    /**
+     * Created by paul curtis
+     * (pcurtis5688@gmail.com
+     * on 8/31/2016.
+     */
     public static String getOrderIDOnlyFromCode(String boothCode) {
         return boothCode.substring(7);
     }
@@ -60,10 +59,6 @@ public class GlobalUtils {
         NumberFormat numberFormatter = NumberFormat.getCurrencyInstance(Locale.US);
         String formattedPrice = numberFormatter.format(parsedBoothPriceDouble / 100.0);
         return formattedPrice;
-    }
-
-    public static void valuesTester(String keyName, String value) {
-        Log.d("Key: " + keyName, ",Value: " + value);
     }
 
     public static String getFormattedTagName(String tagFieldData, String tagType) {
@@ -178,6 +173,28 @@ public class GlobalUtils {
         }
         return platform;
     }
+
+    public static void valuesTester(String keyName, String value) {
+        Log.d("Key: " + keyName, ",Value: " + value);
+    }
+
+    public static void doPermissionCheck(Object caller, Context context) {
+        PermissionsTestTask permissionsTestTask = new PermissionsTestTask();
+        permissionsTestTask.setContextAndCaller(caller, context);
+        permissionsTestTask.execute();
+    }
+
+    public static boolean getPermissionsValid(Object caller, Context context) {
+        doPermissionCheck(caller, context);
+        return ((GlobalClass) context.getApplicationContext()).isApplicationHasValidPermissions();
+    }
+
+    public void setPermissionsValid(boolean permissionsValid, Context permissionsContext) {
+        if (permissionsValid)
+            ((GlobalClass) permissionsContext.getApplicationContext()).setApplicationHasValidPermissions(true);
+        else
+            ((GlobalClass) permissionsContext.getApplicationContext()).setApplicationHasValidPermissions(false);
+    }
 }
 
 class GetItemNameTask extends AsyncTask<Void, Void, String> {
@@ -221,6 +238,7 @@ class PermissionsTestTask extends AsyncTask<Void, Void, Boolean> {
     ////// DATA / RESULT HANDLING
     private Object callingObject;
     private boolean activePermissions;
+    private List<Item> inventoryList;
 
     void setContextAndCaller(Object callingObject, Context accessingContext) {
         this.callingObject = callingObject;
@@ -230,7 +248,7 @@ class PermissionsTestTask extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        activePermissions = false;
+        activePermissions = true;
         inventoryConnector = new InventoryConnector(accessingContext, CloverAccount.getAccount(accessingContext), null);
         inventoryConnector.connect();
     }
@@ -238,12 +256,16 @@ class PermissionsTestTask extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected Boolean doInBackground(Void... params) {
         try {
-            List<Item> testList = inventoryConnector.getItems();
+            inventoryList = inventoryConnector.getItems();
         } catch (BindingException | ClientException | RemoteException | ServiceException e1) {
             if (e1.getClass().equals(ForbiddenException.class)) {
-                Log.d("GlobalUtils", "Test Permission Result Failed");
+                ((GlobalClass) accessingContext.getApplicationContext()).setApplicationHasValidPermissions(false);
+                activePermissions = false;
             }
+            Log.d("GlobalUtils", "Test Permission resulted in exception: " + e1.getMessage() + " " + e1.getCause());
         }
+        Log.d("GlobalUtils", "Inventory size: " + inventoryList.size());
+        Log.d("GlobalUtils", " Active permissions: " + activePermissions);
         return activePermissions;
     }
 

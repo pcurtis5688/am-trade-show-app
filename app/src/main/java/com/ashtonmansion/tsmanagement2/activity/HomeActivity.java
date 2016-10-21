@@ -9,35 +9,67 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.ashtonmansion.tsmanagement2.R;
+import com.ashtonmansion.tsmanagement2.util.GlobalUtils;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private Context homeActivityContext;
+    private boolean appHasValidPermissions;
+    private TextView cloverConnTv;
+    private TextView cloverStatusTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        ///////////UI WORK / INSTANTIATION /////////////////////
+        ////// UI WORK / INSTANTIATION
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.home_drawerlayout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_home);
         navigationView.setNavigationItemSelectedListener(this);
-        //////////DATA WORK
+
+        /////// DATA WORK - SET CONTEXT & CHECK PERMISSIONS
         homeActivityContext = this;
-        //  db.getDbHelper().recreateBoothsTable();
-        // db.getDbHelper().recreateShowsTable();
+        appHasValidPermissions = GlobalUtils.getPermissionsValid(this, getApplicationContext());
+        cloverConnTv = (TextView) findViewById(R.id.clover_connectivity_textview);
+        cloverStatusTv = (TextView) findViewById(R.id.connectivity_status_tv);
+        cloverConnTv.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+        cloverStatusTv.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+        cloverConnTv.setText(getResources().getString(R.string.clover_connectivity_string));
+        if (!appHasValidPermissions) {
+            Log.d("HomeActivity", "Valid Credentials");
+            cloverStatusTv.setTextAppearance(homeActivityContext, R.style.clover_connectivity_available_style);
+            cloverStatusTv.setText(R.string.clover_connectivity_available_string);
+        } else {
+            Log.d("HomeActivity", "Invalid Credentials");
+            cloverStatusTv.setTextAppearance(homeActivityContext, R.style.clover_connectivity_unvailable_style);
+            cloverStatusTv.setText(R.string.clover_connectivity_unavailable_string);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        appHasValidPermissions = GlobalUtils.getPermissionsValid(this, getApplicationContext());
+        if (!appHasValidPermissions) {
+            Log.d("HomeActivity", "Valid Credentials");
+            cloverStatusTv.setTextAppearance(homeActivityContext, R.style.clover_connectivity_available_style);
+        } else {
+            Log.d("HomeActivity", "Invalid Credentials");
+            cloverStatusTv.setTextAppearance(homeActivityContext, R.style.clover_connectivity_unvailable_style);
+        }
     }
 
     ////////////////NAVIGATION METHODS

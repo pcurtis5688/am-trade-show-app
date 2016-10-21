@@ -7,6 +7,9 @@ import android.app.Application;
  */
 
 public class GlobalClass extends Application {
+    ////// PUBLIC GLOBAL VARS
+    public boolean applicationHasValidPermissions;
+    ////// PRIVATE GLOBAL VARS
     private OrderSentry orderSentry;
 
     public OrderSentry getOrderSentry() {
@@ -15,5 +18,13 @@ public class GlobalClass extends Application {
 
     public void setOrderSentry(OrderSentry orderSentry) {
         this.orderSentry = orderSentry;
+    }
+
+    public boolean isApplicationHasValidPermissions() {
+        return applicationHasValidPermissions;
+    }
+
+    public void setApplicationHasValidPermissions(boolean applicationHasValidPermissions) {
+        this.applicationHasValidPermissions = applicationHasValidPermissions;
     }
 }
