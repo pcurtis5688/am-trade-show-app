@@ -44,8 +44,8 @@ public class ApplicationSettings extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ////// SET LOCAL VARS
-        handleSizing();
         applicationSettingsActivityContext = this;
+        handleSizing();
         TextView activityHeaderTv = (TextView) findViewById(R.id.application_settings_header);
         activityHeaderTv.setTextAppearance(applicationSettingsActivityContext, activityHeaderResId);
 
