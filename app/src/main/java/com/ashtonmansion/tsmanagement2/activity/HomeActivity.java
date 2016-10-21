@@ -22,7 +22,6 @@ public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private Context homeActivityContext;
     private boolean appHasValidPermissions;
-    private TextView cloverConnTv;
     private TextView cloverStatusTv;
 
     @Override
@@ -43,19 +42,20 @@ public class HomeActivity extends AppCompatActivity
         /////// DATA WORK - SET CONTEXT & CHECK PERMISSIONS
         homeActivityContext = this;
         appHasValidPermissions = GlobalUtils.getPermissionsValid(this, getApplicationContext());
-        cloverConnTv = (TextView) findViewById(R.id.clover_connectivity_textview);
-        cloverStatusTv = (TextView) findViewById(R.id.connectivity_status_tv);
+        TextView cloverConnTv = (TextView) findViewById(R.id.clover_connectivity_textview);
         cloverConnTv.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
-        cloverStatusTv.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
         cloverConnTv.setText(getResources().getString(R.string.clover_connectivity_string));
-        if (!appHasValidPermissions) {
-            Log.d("HomeActivity", "Valid Credentials");
-            cloverStatusTv.setTextAppearance(homeActivityContext, R.style.clover_connectivity_available_style);
-            cloverStatusTv.setText(R.string.clover_connectivity_available_string);
-        } else {
+
+        cloverStatusTv = (TextView) findViewById(R.id.connectivity_status_tv);
+        cloverStatusTv.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+        if (appHasValidPermissions) {
             Log.d("HomeActivity", "Invalid Credentials");
             cloverStatusTv.setTextAppearance(homeActivityContext, R.style.clover_connectivity_unvailable_style);
             cloverStatusTv.setText(R.string.clover_connectivity_unavailable_string);
+        } else {
+            Log.d("HomeActivity", "Valid Credentials");
+            cloverStatusTv.setTextAppearance(homeActivityContext, R.style.clover_connectivity_available_style);
+            cloverStatusTv.setText(R.string.clover_connectivity_available_string);
         }
     }
 
