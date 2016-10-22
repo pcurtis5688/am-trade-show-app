@@ -261,11 +261,9 @@ class PermissionsTestTask extends AsyncTask<Void, Void, Boolean> {
             if (e1.getClass().equals(ForbiddenException.class)) {
                 ((GlobalClass) accessingContext.getApplicationContext()).setApplicationHasValidPermissions(false);
                 activePermissions = false;
+                Log.d("GlobalUtils", "Active permissions set to false due to Forbidden exception");
             }
-            Log.d("GlobalUtils", "Test Permission resulted in exception: " + e1.getMessage() + " " + e1.getCause());
         }
-        Log.d("GlobalUtils", "Inventory size: " + inventoryList.size());
-        Log.d("GlobalUtils", " Active permissions: " + activePermissions);
         return activePermissions;
     }
 

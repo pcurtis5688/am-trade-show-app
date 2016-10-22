@@ -33,8 +33,7 @@
                 android:text="@string/clover_connectivity_string" />
 
             <TextView
-                android:id="@+id/connectivity_status_tv"
-                android:layout_gravity="end" />
+                android:id="@+id/connectivity_status_tv" />
 
         </TableRow>
     </TableLayout>

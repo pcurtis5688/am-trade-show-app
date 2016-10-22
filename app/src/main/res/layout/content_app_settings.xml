@@ -26,7 +26,6 @@
 
         <Button
             android:id="@+id/validate_booth_names_btn"
-            style="@style/trade_show_row_select_buttons_leftalign"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -35,7 +34,6 @@
 
         <Button
             android:id="@+id/delete_detected_booths_btn"
-            style="@style/trade_show_row_select_buttons_leftalign"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

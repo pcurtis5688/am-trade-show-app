@@ -33,6 +33,7 @@ import java.util.List;
 public class ApplicationSettings extends AppCompatActivity {
     private Context applicationSettingsActivityContext;
     private int activityHeaderResId;
+    private int buttonStyleResId;
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -49,11 +50,9 @@ public class ApplicationSettings extends AppCompatActivity {
         TextView activityHeaderTv = (TextView) findViewById(R.id.application_settings_header);
         activityHeaderTv.setTextAppearance(applicationSettingsActivityContext, activityHeaderResId);
 
-        ////// FETCH BUTTONS
+        ////// FETCH BUTTONS AND ADD BUTTON LISTENERS/STYLING
         final Button validateBoothNamesBtn = (Button) findViewById(R.id.validate_booth_names_btn);
-        final Button deleteAllDetectedBoothsBtn = (Button) findViewById(R.id.delete_detected_booths_btn);
-
-        ////// ADD BUTTON LISTENERS
+        validateBoothNamesBtn.setTextAppearance(applicationSettingsActivityContext, buttonStyleResId);
         validateBoothNamesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,6 +60,8 @@ public class ApplicationSettings extends AppCompatActivity {
                 validateBoothNamesBtn.setEnabled(false);
             }
         });
+        final Button deleteAllDetectedBoothsBtn = (Button) findViewById(R.id.delete_detected_booths_btn);
+        deleteAllDetectedBoothsBtn.setTextAppearance(applicationSettingsActivityContext, buttonStyleResId);
         deleteAllDetectedBoothsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -343,9 +344,13 @@ public class ApplicationSettings extends AppCompatActivity {
 
     private void handleSizing() {
         String platform = GlobalUtils.determinePlatform(getApplicationContext());
-        if (platform.equalsIgnoreCase("station"))
+        if (platform.equalsIgnoreCase("station")) {
             activityHeaderResId = R.style.activity_header_style_station;
-        else activityHeaderResId = R.style.activity_header_style_mobile;
+            buttonStyleResId = R.style.app_settings_button_style_station;
+        } else {
+            activityHeaderResId = R.style.activity_header_style_mobile;
+            buttonStyleResId = R.style.app_settings_button_style_mobile;
+        }
     }
 
     ////// INACTIVE METHODS

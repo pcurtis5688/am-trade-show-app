@@ -60,10 +60,8 @@ public class HomeActivity extends AppCompatActivity
         super.onResume();
         appHasValidPermissions = GlobalUtils.getPermissionsValid(this, getApplicationContext());
         if (!appHasValidPermissions) {
-            Log.d("HomeActivity", "Valid Credentials");
             cloverStatusTv.setTextAppearance(homeActivityContext, R.style.clover_connectivity_available_style);
         } else {
-            Log.d("HomeActivity", "Invalid Credentials");
             cloverStatusTv.setTextAppearance(homeActivityContext, R.style.clover_connectivity_unvailable_style);
         }
     }

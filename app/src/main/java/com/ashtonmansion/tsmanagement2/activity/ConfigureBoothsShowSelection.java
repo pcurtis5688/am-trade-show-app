@@ -88,7 +88,7 @@ public class ConfigureBoothsShowSelection extends AppCompatActivity
                 Button showSelectionButton = new Button(configureBoothsShowSelectionActivityContext);
 
                 ///// HANDLE FONTS AND MARGINS
-                showSelectionButton.setTextAppearance(configureBoothsShowSelectionActivityContext, R.style.trade_show_row_select_buttons_leftalign);
+                showSelectionButton.setTextAppearance(configureBoothsShowSelectionActivityContext, R.style.show_selection_button_style);
                 newShowSelectionRow.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
                 ///// SET SHOW NAME AND BUTTON TEXT
                 showSelectionButton.setText(showNameForUser);
