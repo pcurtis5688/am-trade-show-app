@@ -23,17 +23,18 @@
         android:layout_height="wrap_content"
         android:isScrollContainer="true">
 
-        <TableRow>
+        <TableRow android:gravity="end">
 
             <TextView
                 android:id="@+id/clover_connectivity_textview"
                 android:layout_width="match_parent"
-                android:text="@string/clover_connectivity_string"
-                android:textAlignment="viewEnd" />
+                android:paddingEnd="@dimen/dimen_15dp"
+                android:paddingStart="@dimen/dimen_15dp"
+                android:text="@string/clover_connectivity_string" />
 
             <TextView
                 android:id="@+id/connectivity_status_tv"
-                android:textAlignment="viewEnd" />
+                android:layout_gravity="end" />
 
         </TableRow>
     </TableLayout>

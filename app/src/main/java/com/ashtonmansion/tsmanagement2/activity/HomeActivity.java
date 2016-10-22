@@ -12,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 import com.ashtonmansion.tsmanagement2.R;
@@ -43,10 +42,8 @@ public class HomeActivity extends AppCompatActivity
         homeActivityContext = this;
         appHasValidPermissions = GlobalUtils.getPermissionsValid(this, getApplicationContext());
         TextView cloverConnTv = (TextView) findViewById(R.id.clover_connectivity_textview);
-        cloverConnTv.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
         cloverConnTv.setText(getResources().getString(R.string.clover_connectivity_string));
         cloverStatusTv = (TextView) findViewById(R.id.connectivity_status_tv);
-        cloverStatusTv.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
         if (appHasValidPermissions) {
             Log.d("HomeActivity", "Invalid Credentials");
             cloverStatusTv.setTextAppearance(homeActivityContext, R.style.clover_connectivity_unvailable_style);
