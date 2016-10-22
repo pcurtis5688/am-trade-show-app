@@ -9,7 +9,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -22,8 +21,6 @@ public class HomeActivity extends AppCompatActivity
     private Context homeActivityContext;
     private boolean appHasValidPermissions;
     private TextView cloverStatusTv;
-    private TextView cloverConnTv;
-    private int cloverStatusTvStyleResourceID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +40,6 @@ public class HomeActivity extends AppCompatActivity
         /////// DATA WORK - SET CONTEXT, CHK PERMISSIONS, SET FIELDS
         homeActivityContext = this;
         appHasValidPermissions = GlobalUtils.getPermissionsValid(this, getApplicationContext());
-        cloverConnTv = (TextView) findViewById(R.id.clover_connectivity_textview);
         cloverStatusTv = (TextView) findViewById(R.id.connectivity_status_tv);
 
         ////// INIT METHODS
@@ -62,7 +58,7 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
-    private void setStatusIndicator(){
+    private void setStatusIndicator() {
         if (appHasValidPermissions) {
             cloverStatusTv.setTextAppearance(homeActivityContext, R.style.clover_connectivity_unvailable_style);
             cloverStatusTv.setText(R.string.clover_connectivity_unavailable_string);
@@ -72,9 +68,10 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
-    private void handleSizing(){
-        if (GlobalUtils.determinePlatform(getApplicationContext()).equalsIgnoreCase("station")){
-            cloverConnTv.setTextSize(getResources().getDimension(R.dimen.dimen_28sp));
+    private void handleSizing() {
+        TextView cloverStatusMsgTv = (TextView) findViewById(R.id.clover_connectivity_textview);
+        if (GlobalUtils.determinePlatform(getApplicationContext()).equalsIgnoreCase("station")) {
+            cloverStatusMsgTv.setTextSize(getResources().getDimension(R.dimen.dimen_28sp));
             cloverStatusTv.setTextSize(getResources().getDimension(R.dimen.dimen_28sp));
         }
     }

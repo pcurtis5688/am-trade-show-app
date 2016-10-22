@@ -32,6 +32,7 @@ import java.util.List;
 
 public class ApplicationSettings extends AppCompatActivity {
     private Context applicationSettingsActivityContext;
+    private TextView cloverStatusTv;
     private int activityHeaderResId;
     private int buttonStyleResId;
 
@@ -44,13 +45,43 @@ public class ApplicationSettings extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        ////// SET LOCAL VARS
+        ////// SET LOCAL VARS, CALL UI AND STATUS INDICATOR METHODS
         applicationSettingsActivityContext = this;
         handleSizing();
+        setStatusIndicator();
+
+        ////// HANDLE APPLICATION SETTINGS BUTTONS
+        initAppSettingsButtons();
+    }
+
+    private void handleSizing() {
+        if (GlobalUtils.determinePlatform(getApplicationContext()).equalsIgnoreCase("station")) {
+            activityHeaderResId = R.style.activity_header_style_station;
+            buttonStyleResId = R.style.app_settings_button_style_station;
+            TextView cloverStatusMsgTv = (TextView) findViewById(R.id.clover_connectivity_textview_appSettings);
+            cloverStatusMsgTv.setTextSize(getResources().getDimension(R.dimen.dimen_28sp));
+            cloverStatusTv = (TextView) findViewById(R.id.connectivity_status_tv_appSettings);
+            cloverStatusTv.setTextSize(getResources().getDimension(R.dimen.dimen_28sp));
+        } else {
+            activityHeaderResId = R.style.activity_header_style_mobile;
+            buttonStyleResId = R.style.app_settings_button_style_mobile;
+        }
+        ////// GLOBAL ACCESS
         TextView activityHeaderTv = (TextView) findViewById(R.id.application_settings_header);
         activityHeaderTv.setTextAppearance(applicationSettingsActivityContext, activityHeaderResId);
+    }
 
-        ////// FETCH BUTTONS AND ADD BUTTON LISTENERS/STYLING
+    private void setStatusIndicator() {
+        if (GlobalUtils.getPermissionsValid(this, applicationSettingsActivityContext)) {
+            cloverStatusTv.setTextAppearance(applicationSettingsActivityContext, R.style.clover_connectivity_unvailable_style);
+            cloverStatusTv.setText(R.string.clover_connectivity_unavailable_string);
+        } else {
+            cloverStatusTv.setTextAppearance(applicationSettingsActivityContext, R.style.clover_connectivity_available_style);
+            cloverStatusTv.setText(R.string.clover_connectivity_available_string);
+        }
+    }
+
+    private void initAppSettingsButtons() {
         final Button validateBoothNamesBtn = (Button) findViewById(R.id.validate_booth_names_btn);
         validateBoothNamesBtn.setTextAppearance(applicationSettingsActivityContext, buttonStyleResId);
         validateBoothNamesBtn.setOnClickListener(new View.OnClickListener() {
@@ -69,86 +100,6 @@ public class ApplicationSettings extends AppCompatActivity {
                 deleteAllDetectedBoothsBtn.setEnabled(false);
             }
         });
-    }
-
-    private void createSelectBoothButtonInInventory() {
-        new AsyncTask<Void, Void, Void>() {
-            private InventoryConnector inventoryConnector;
-            private List<Category> categoryList;
-            private boolean hasBoothsCategory;
-            private boolean hasBoothItem;
-            private String existingSelectBoothItemID;
-            private Category boothsCategory;
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                ////// INITIALIZE VARS
-                categoryList = new ArrayList<>();
-                hasBoothsCategory = false;
-                ////// INITIALIZE CLOVER CONNECTIONS
-                inventoryConnector = new InventoryConnector(applicationSettingsActivityContext, CloverAccount.getAccount(applicationSettingsActivityContext), null);
-                inventoryConnector.connect();
-            }
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-                    ////// ITERATE OVER CATEGORY LIST CHECK IF ALREADY HAS CATEGORY
-                    categoryList = inventoryConnector.getCategories();
-                    if (null != categoryList && categoryList.size() > 0) {
-                        for (Category category : categoryList) {
-                            if (category.getName().trim().toLowerCase().contains("booths")) {
-                                hasBoothsCategory = true;
-                            }
-                        }
-                    }
-                    Log.d("AppSettings Debug", "Creating only if similar one was not found..."
-                            + "\n Category similar to \'Booths\' found: " + hasBoothsCategory);
-
-                    ////// IF DOES *NOT* HAVE CATEGORY, CREATES IT
-                    if (!hasBoothsCategory) {
-                        Category newBoothsCategory = new Category();
-                        newBoothsCategory.setName("Booths");
-                        newBoothsCategory.setSortOrder(0);
-                        newBoothsCategory = inventoryConnector.createCategory(newBoothsCategory);
-                    }
-
-                    ////// ITERATE INVENTORY ITEMS CHECK FOR SELECT BOOTH
-                    for (Item currentItem : inventoryConnector.getItemsWithCategories()) {
-                        if (currentItem.getName().trim().toLowerCase().equals("select booth")) {
-                            hasBoothItem = true;
-                        }
-                    }
-
-                    ////// IF IT DOES *NOT* HAVE 'SELECT BOOTH', CREATES IT
-                    if (!hasBoothItem) {
-                        Item createSelectBoothItem = new Item();
-                        createSelectBoothItem.setName("Select Booth");
-                        createSelectBoothItem.setPrice(Long.parseLong("100"));
-                        createSelectBoothItem.setCost(Long.parseLong("100"));
-                        createSelectBoothItem.setPriceType(PriceType.FIXED);
-                        inventoryConnector.createItem(createSelectBoothItem);
-                        //Returns Item w/ Code if Necessary
-                        Log.d("AppSettings", "Select Booth Item Created/ Option Enabled");
-                    } else
-                        Log.d("AppSettings", "Select Booth option already enabled");
-                } catch (BindingException | ServiceException | ClientException | RemoteException e) {
-                    Log.d("Clover E: ", e.getMessage(), e.getCause());
-                    e.printStackTrace();
-                } catch (Exception e2) {
-                    Log.e("Non-Clover:", "Exception in Category/Item Creation Method");
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void result) {
-                super.onPostExecute(result);
-                inventoryConnector.disconnect();
-                inventoryConnector = null;
-            }
-        }.execute();
     }
 
     private void validateBoothNamesAndRecreateTags() {
@@ -288,6 +239,87 @@ public class ApplicationSettings extends AppCompatActivity {
             }
         }.execute();
     }
+    ////// INACTIVE METHODS
+
+    private void createSelectBoothButtonInInventory() {
+        new AsyncTask<Void, Void, Void>() {
+            private InventoryConnector inventoryConnector;
+            private List<Category> categoryList;
+            private boolean hasBoothsCategory;
+            private boolean hasBoothItem;
+            private String existingSelectBoothItemID;
+            private Category boothsCategory;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                ////// INITIALIZE VARS
+                categoryList = new ArrayList<>();
+                hasBoothsCategory = false;
+                ////// INITIALIZE CLOVER CONNECTIONS
+                inventoryConnector = new InventoryConnector(applicationSettingsActivityContext, CloverAccount.getAccount(applicationSettingsActivityContext), null);
+                inventoryConnector.connect();
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    ////// ITERATE OVER CATEGORY LIST CHECK IF ALREADY HAS CATEGORY
+                    categoryList = inventoryConnector.getCategories();
+                    if (null != categoryList && categoryList.size() > 0) {
+                        for (Category category : categoryList) {
+                            if (category.getName().trim().toLowerCase().contains("booths")) {
+                                hasBoothsCategory = true;
+                            }
+                        }
+                    }
+                    Log.d("AppSettings Debug", "Creating only if similar one was not found..."
+                            + "\n Category similar to \'Booths\' found: " + hasBoothsCategory);
+
+                    ////// IF DOES *NOT* HAVE CATEGORY, CREATES IT
+                    if (!hasBoothsCategory) {
+                        Category newBoothsCategory = new Category();
+                        newBoothsCategory.setName("Booths");
+                        newBoothsCategory.setSortOrder(0);
+                        newBoothsCategory = inventoryConnector.createCategory(newBoothsCategory);
+                    }
+
+                    ////// ITERATE INVENTORY ITEMS CHECK FOR SELECT BOOTH
+                    for (Item currentItem : inventoryConnector.getItemsWithCategories()) {
+                        if (currentItem.getName().trim().toLowerCase().equals("select booth")) {
+                            hasBoothItem = true;
+                        }
+                    }
+
+                    ////// IF IT DOES *NOT* HAVE 'SELECT BOOTH', CREATES IT
+                    if (!hasBoothItem) {
+                        Item createSelectBoothItem = new Item();
+                        createSelectBoothItem.setName("Select Booth");
+                        createSelectBoothItem.setPrice(Long.parseLong("100"));
+                        createSelectBoothItem.setCost(Long.parseLong("100"));
+                        createSelectBoothItem.setPriceType(PriceType.FIXED);
+                        inventoryConnector.createItem(createSelectBoothItem);
+                        //Returns Item w/ Code if Necessary
+                        Log.d("AppSettings", "Select Booth Item Created/ Option Enabled");
+                    } else
+                        Log.d("AppSettings", "Select Booth option already enabled");
+                } catch (BindingException | ServiceException | ClientException | RemoteException e) {
+                    Log.d("Clover E: ", e.getMessage(), e.getCause());
+                    e.printStackTrace();
+                } catch (Exception e2) {
+                    Log.e("Non-Clover:", "Exception in Category/Item Creation Method");
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                super.onPostExecute(result);
+                inventoryConnector.disconnect();
+                inventoryConnector = null;
+            }
+        }.execute();
+    }
 
     private void deleteAllUnusedBoothLabels() {
         new AsyncTask<Void, Void, Void>() {
@@ -342,18 +374,6 @@ public class ApplicationSettings extends AppCompatActivity {
         }.execute();
     }
 
-    private void handleSizing() {
-        String platform = GlobalUtils.determinePlatform(getApplicationContext());
-        if (platform.equalsIgnoreCase("station")) {
-            activityHeaderResId = R.style.activity_header_style_station;
-            buttonStyleResId = R.style.app_settings_button_style_station;
-        } else {
-            activityHeaderResId = R.style.activity_header_style_mobile;
-            buttonStyleResId = R.style.app_settings_button_style_mobile;
-        }
-    }
-
-    ////// INACTIVE METHODS
     private void checkBoothIntegrityAndCorrect() {
         new AsyncTask<Void, Void, Void>() {
             private InventoryConnector inventoryConnector;
