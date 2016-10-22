@@ -22,6 +22,8 @@ public class HomeActivity extends AppCompatActivity
     private Context homeActivityContext;
     private boolean appHasValidPermissions;
     private TextView cloverStatusTv;
+    private TextView cloverConnTv;
+    private int cloverStatusTvStyleResourceID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,21 +40,15 @@ public class HomeActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_home);
         navigationView.setNavigationItemSelectedListener(this);
 
-        /////// DATA WORK - SET CONTEXT & CHECK PERMISSIONS
+        /////// DATA WORK - SET CONTEXT, CHK PERMISSIONS, SET FIELDS
         homeActivityContext = this;
         appHasValidPermissions = GlobalUtils.getPermissionsValid(this, getApplicationContext());
-        TextView cloverConnTv = (TextView) findViewById(R.id.clover_connectivity_textview);
-        cloverConnTv.setText(getResources().getString(R.string.clover_connectivity_string));
+        cloverConnTv = (TextView) findViewById(R.id.clover_connectivity_textview);
         cloverStatusTv = (TextView) findViewById(R.id.connectivity_status_tv);
-        if (appHasValidPermissions) {
-            Log.d("HomeActivity", "Invalid Credentials");
-            cloverStatusTv.setTextAppearance(homeActivityContext, R.style.clover_connectivity_unvailable_style);
-            cloverStatusTv.setText(R.string.clover_connectivity_unavailable_string);
-        } else {
-            Log.d("HomeActivity", "Valid Credentials");
-            cloverStatusTv.setTextAppearance(homeActivityContext, R.style.clover_connectivity_available_style);
-            cloverStatusTv.setText(R.string.clover_connectivity_available_string);
-        }
+
+        ////// INIT METHODS
+        setStatusIndicator();
+        handleSizing();
     }
 
     @Override
@@ -63,6 +59,23 @@ public class HomeActivity extends AppCompatActivity
             cloverStatusTv.setTextAppearance(homeActivityContext, R.style.clover_connectivity_available_style);
         } else {
             cloverStatusTv.setTextAppearance(homeActivityContext, R.style.clover_connectivity_unvailable_style);
+        }
+    }
+
+    private void setStatusIndicator(){
+        if (appHasValidPermissions) {
+            cloverStatusTv.setTextAppearance(homeActivityContext, R.style.clover_connectivity_unvailable_style);
+            cloverStatusTv.setText(R.string.clover_connectivity_unavailable_string);
+        } else {
+            cloverStatusTv.setTextAppearance(homeActivityContext, R.style.clover_connectivity_available_style);
+            cloverStatusTv.setText(R.string.clover_connectivity_available_string);
+        }
+    }
+
+    private void handleSizing(){
+        if (GlobalUtils.determinePlatform(getApplicationContext()).equalsIgnoreCase("station")){
+            cloverConnTv.setTextSize(getResources().getDimension(R.dimen.dimen_28sp));
+            cloverStatusTv.setTextSize(getResources().getDimension(R.dimen.dimen_28sp));
         }
     }
 

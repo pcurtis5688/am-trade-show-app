@@ -158,10 +158,11 @@ public class TradeShows extends AppCompatActivity
     }
 
     private void handleSizing() {
-        String platform = GlobalUtils.determinePlatform(getApplicationContext());
-        if (platform.equalsIgnoreCase("station"))
+        if (GlobalUtils.determinePlatform(getApplicationContext()).equalsIgnoreCase("station")) {
             tableRowFontResId = R.style.trade_show_row_style_station;
-        else tableRowFontResId = R.style.trade_show_row_style_mobile;
+        } else {
+            tableRowFontResId = R.style.trade_show_row_style_mobile;
+        }
     }
 
     ////////////NAVIGATION HANDLING METHODS ////////////////////
