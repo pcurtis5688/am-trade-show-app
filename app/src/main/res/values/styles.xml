@@ -41,12 +41,12 @@
 
     <style name="clover_connectivity_available_style">
         <item name="android:textColor">#12B500</item>
-        <item name="android:textAlignment">textStart</item>
+        <item name="android:textAlignment">viewEnd</item>
     </style>
 
     <style name="clover_connectivity_unvailable_style">
         <item name="android:textColor">#E00000</item>
-        <item name="android:textAlignment">textStart</item>
+        <item name="android:textAlignment">viewEnd</item>
     </style>
 
     <style name="span_2_and_table_header_style">

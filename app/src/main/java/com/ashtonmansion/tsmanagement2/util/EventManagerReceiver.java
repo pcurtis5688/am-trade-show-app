@@ -40,6 +40,9 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
         String itemID = intent.getStringExtra(Intents.EXTRA_CLOVER_ITEM_ID);
         this.orderID = intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID);
 
+        if (intent.getAction().equals(Intents.ACTION_ORDER_CREATED)) {
+            Log.d("Receiver", "ORDER CREATED");
+        }
         ////// IF SENTRY HAS NOT YET BEEN SPAWNED, CREATE ONE
         if (null == ((GlobalClass) fromContext.getApplicationContext()).getOrderSentry()) {
             SpawnOrderSentryTask spawnOrderSentryTask = new SpawnOrderSentryTask();

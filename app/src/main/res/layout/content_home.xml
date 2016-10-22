@@ -29,11 +29,11 @@
                 android:id="@+id/clover_connectivity_textview"
                 android:layout_width="match_parent"
                 android:text="@string/clover_connectivity_string"
-                android:textAlignment="textStart" />
+                android:textAlignment="viewEnd" />
 
             <TextView
                 android:id="@+id/connectivity_status_tv"
-                android:textAlignment="textStart" />
+                android:textAlignment="viewEnd" />
 
         </TableRow>
     </TableLayout>

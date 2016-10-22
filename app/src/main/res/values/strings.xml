@@ -38,7 +38,7 @@
     <string name="nav_drawer_app_settings_text">Application Settings</string>
 
     <!-- HOME RELATED STRINGS -->
-    <string name="clover_connectivity_string">Clover connectivity available: </string>
+    <string name="clover_connectivity_string">Clover Connectivity: </string>
     <string name="clover_connectivity_available_string">Online</string>
     <string name="clover_connectivity_unavailable_string">Off-line</string>
 
