@@ -42,7 +42,6 @@ public class TradeShows extends AppCompatActivity
     // DATA HANDLING
     private List<Tag> showList;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ///////////UI WORK/////////////////////////////////////
@@ -168,12 +167,7 @@ public class TradeShows extends AppCompatActivity
     ////////////NAVIGATION HANDLING METHODS ////////////////////
     @Override
     public void onBackPressed() {
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.app_settings_drawerlayout);
-//        if (drawer.isDrawerOpen(GravityCompat.START)) {
-//            drawer.closeDrawer(GravityCompat.START);
-//        } else {
         super.onBackPressed();
-        //}
     }
 
     @Override

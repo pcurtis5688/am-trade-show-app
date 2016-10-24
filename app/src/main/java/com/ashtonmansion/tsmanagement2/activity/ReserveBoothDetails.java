@@ -514,9 +514,10 @@ public class ReserveBoothDetails extends AppCompatActivity {
                                     orderConnector.updateOrder(orderConnector.getOrder(orderID).setNote("Booth No.: " + item.getSku()));
                                     Log.d("ReserveBoothDetails", "Empty order notes were to set to booth's associate number: " + item.getSku());
                                 } else {
-                                    Log.d("ReserveBoothDetails", "Order notes were not empty; orderNotes = " + orderNotes);
+                                    String orderHeader = orderConnector.getOrder(orderID).getNote() + " Booth No.: " + item.getSku();
+                                    orderConnector.updateOrder(orderConnector.getOrder(orderID).setNote(orderHeader));
+                                    Log.d("ReserveBoothDetails", "Order notes were not empty; booth number appended...");
                                 }
-
                             }
                         }
 

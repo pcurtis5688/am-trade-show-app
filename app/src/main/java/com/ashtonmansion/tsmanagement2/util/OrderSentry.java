@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.RemoteException;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
@@ -25,8 +24,12 @@ import java.util.List;
  * (pcurtis5688@gmail.com)
  * on 10/13/2016.
  */
-
 class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
+    /**
+     * Created by paul curtis
+     * (pcurtis5688@gmail.com)
+     * on 10/13/2016.
+     */
     ////// INITIAL OR UPDATED DATA
     private String orderId;
     private Context sentryContext;
@@ -77,9 +80,8 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
     }
 
     void informResetToAvailableSuccessful(boolean handleTriggeredItemsSuccessful) {
-        ////// NO LONGER HAVE ACCESS TO DELETED ITEMS IN CLOVER
-        ////// BODY LEFT FOR CLARITY
-        Log.d("Sentry", "Triggered Items Handled Successfully: " + handleTriggeredItemsSuccessful);
+        ////// UPON DELETING ITEM FROM ORDER, RECHECK NOTES TO ENSURE CORRECT BOOTHS LISTED
+        Log.d("OrderSentry", "Booth successfully removed from order: " + handleTriggeredItemsSuccessful);
     }
 
     ////// ORDER LISTENER METHOD IMPLEMENTATIONS
@@ -132,11 +134,11 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
                 if (watchListLineItem.getId().equals(lineItemDeletedID)) {
                     Log.d("Sentry", "Watch List ID Triggered... " + lineItemDeletedID);
                     watchListLineItemsTriggered.add(watchListLineItem);
+                    HandleWatchlistTriggeredTask handleWatchlistTriggeredTask = new HandleWatchlistTriggeredTask(this, sentryContext, lineItemIDsDeleted, watchListLineItemsTriggered);
+                    handleWatchlistTriggeredTask.execute();
                 }
             }
         }
-        HandleWatchlistTriggeredTask handleWatchlistTriggeredTask = new HandleWatchlistTriggeredTask(this, sentryContext, lineItemIDsDeleted, watchListLineItemsTriggered);
-        handleWatchlistTriggeredTask.execute();
     }
 
     @Override
@@ -167,10 +169,6 @@ class OrderSentry implements OrderConnector.OnOrderUpdateListener2 {
     @Override
     public void onCreditProcessed(String orderId, String creditId) {
         Log.d("Sentry: ", "onCreditProcessed() hit");
-    }
-
-    private void toastMessageSentryContext(String msg) {
-        Toast.makeText(sentryContext, "Toast Message in Sentry Context: " + msg, Toast.LENGTH_LONG).show();
     }
 }
 
@@ -273,10 +271,8 @@ class HandleWatchlistTriggeredTask extends AsyncTask<Void, Void, Boolean> {
                     Item resetBoothItem = inventoryConnector.getItem(lineItemReference.getId()).setCode("AVAILABLE");
                     inventoryConnector.updateItem(resetBoothItem);
 
-                    ////// UPDATE THE ORDER NOTE CONTAINING THE BOOTH NO
-                    Order orderToCorrect = orderConnector.getOrder(orderID);
-                    orderToCorrect.setNote("");
-                    orderConnector.updateOrder(orderToCorrect);
+                    ////// CLEAR ORDER HEADER OF BOOTH NUMBER
+                    orderConnector.updateOrder(orderConnector.getOrder(orderID).setNote(""));
 
                     ////// SET SUCCESS TO TRUE
                     resetToAvailableSuccessful = true;
@@ -295,6 +291,62 @@ class HandleWatchlistTriggeredTask extends AsyncTask<Void, Void, Boolean> {
         super.onPostExecute(resetToAvailableSuccessful);
         inventoryConnector.disconnect();
         caller.informResetToAvailableSuccessful(resetToAvailableSuccessful);
+    }
+}
+
+class UpdateOrderHeaderTask extends AsyncTask<Void, Void, Void> {
+    ////// CALLER AND CONNECTOR
+    private OrderSentry caller;
+    private OrderConnector orderConnector;
+    private InventoryConnector inventoryConnector;
+    ////// INPUTS FROM CALLER
+    private String orderID;
+    private Context callingContext;
+    ////// OUTPUTS TO CALLER
+    private List<LineItem> specificBoothWatchList;
+
+    UpdateOrderHeaderTask(OrderSentry caller, Context callingContext, List<LineItem> specificBoothWatchList) {
+        this.caller = caller;
+        this.orderID = caller.getOrderId();
+        this.callingContext = callingContext;
+        this.specificBoothWatchList = specificBoothWatchList;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        orderConnector = new OrderConnector(callingContext, CloverAccount.getAccount(callingContext), null);
+        inventoryConnector = new InventoryConnector(callingContext, CloverAccount.getAccount(callingContext), null);
+        orderConnector.connect();
+        inventoryConnector.connect();
+    }
+
+    @Override
+    protected Void doInBackground(Void... params) {
+        try {
+            Order orderToUpdate = orderConnector.getOrder(orderID);
+            if (specificBoothWatchList.size() > 0) {
+                String newOrderHeader = "";
+                int sizeOfWatchList = specificBoothWatchList.size();
+                for (int i = 0; i <= sizeOfWatchList; i++) {
+                    LineItem currentLineItem = specificBoothWatchList.get(i);
+                    Reference lineItemRef = currentLineItem.getItem();
+                    Item matchedBoothItem = inventoryConnector.getItem(lineItemRef.getId());
+                    if (i == sizeOfWatchList) {
+                        newOrderHeader += "Booth No: " + matchedBoothItem.getSku();
+                    } else {
+                        newOrderHeader += "Booth No: " + matchedBoothItem.getSku() + ", ";
+                    }
+                }
+                orderToUpdate.setNote(newOrderHeader);
+            }
+            orderConnector.updateOrder(orderToUpdate);
+            Log.d("OrderSentry", "Updated order header after booth removal... (OrderID: " + orderID + ")");
+
+        } catch (Exception e) {
+            Log.d("Excpt: ", e.getMessage(), e.getCause());
+        }
+        return null;
     }
 }
 
