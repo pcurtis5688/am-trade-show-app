@@ -19,8 +19,6 @@ import com.ashtonmansion.tsmanagement2.util.GlobalUtils;
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private Context homeActivityContext;
-    private boolean appHasValidPermissions;
-    private TextView cloverStatusTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,43 +35,18 @@ public class HomeActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_home);
         navigationView.setNavigationItemSelectedListener(this);
 
-        /////// DATA WORK - SET CONTEXT, CHK PERMISSIONS, SET FIELDS
+        /////// INIT METHODS - DATA WORK - SET SIZING
         homeActivityContext = this;
-        appHasValidPermissions = GlobalUtils.getPermissionsValid(this, getApplicationContext());
-        cloverStatusTv = (TextView) findViewById(R.id.connectivity_status_tv);
-
-        ////// INIT METHODS
-        setStatusIndicator();
-        handleSizing();
+        //handleSizing();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        appHasValidPermissions = GlobalUtils.getPermissionsValid(this, getApplicationContext());
-        if (!appHasValidPermissions) {
-            cloverStatusTv.setTextAppearance(homeActivityContext, R.style.clover_connectivity_available_style);
-        } else {
-            cloverStatusTv.setTextAppearance(homeActivityContext, R.style.clover_connectivity_unvailable_style);
-        }
-    }
-
-    private void setStatusIndicator() {
-        if (appHasValidPermissions) {
-            cloverStatusTv.setTextAppearance(homeActivityContext, R.style.clover_connectivity_unvailable_style);
-            cloverStatusTv.setText(R.string.clover_connectivity_unavailable_string);
-        } else {
-            cloverStatusTv.setTextAppearance(homeActivityContext, R.style.clover_connectivity_available_style);
-            cloverStatusTv.setText(R.string.clover_connectivity_available_string);
-        }
     }
 
     private void handleSizing() {
-        TextView cloverStatusMsgTv = (TextView) findViewById(R.id.clover_connectivity_textview);
-        if (GlobalUtils.determinePlatform(getApplicationContext()).equalsIgnoreCase("station")) {
-            cloverStatusMsgTv.setTextSize(getResources().getDimension(R.dimen.dimen_28sp));
-            cloverStatusTv.setTextSize(getResources().getDimension(R.dimen.dimen_28sp));
-        }
+        // TODO: 10/23/2016 not necessary yet.
     }
 
     ////////////////NAVIGATION METHODS
