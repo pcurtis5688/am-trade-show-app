@@ -508,7 +508,15 @@ public class ReserveBoothDetails extends AppCompatActivity {
                                 orderConnector.addFixedPriceLineItem(orderID, item.getId(), null, null);
                                 inventoryConnector.updateItem(inventoryConnector.getItem(item.getId()).setCode(getResources().getString(R.string.booth_product_code_with_prefix, orderID)));
                                 inventoryConnector.updateItemStock(item.getId(), 0);
-                                orderConnector.updateOrder(orderConnector.getOrder(orderID).setNote("Booth No.: " + item.getSku()));
+                                Order boothsOrder = orderConnector.getOrder(orderID);
+                                String orderNotes = boothsOrder.getNote();
+                                if (null == orderNotes || orderNotes.trim().equals("")) {
+                                    orderConnector.updateOrder(orderConnector.getOrder(orderID).setNote("Booth No.: " + item.getSku()));
+                                    Log.d("ReserveBoothDetails", "Empty order notes were to set to booth's associate number: " + item.getSku());
+                                } else {
+                                    Log.d("ReserveBoothDetails", "Order notes were not empty; orderNotes = " + orderNotes);
+                                }
+
                             }
                         }
 

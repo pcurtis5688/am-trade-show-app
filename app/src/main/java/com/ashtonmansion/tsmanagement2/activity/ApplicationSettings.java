@@ -55,12 +55,12 @@ public class ApplicationSettings extends AppCompatActivity {
     }
 
     private void handleSizing() {
+        cloverStatusTv = (TextView) findViewById(R.id.connectivity_status_tv_appSettings);
         if (GlobalUtils.determinePlatform(getApplicationContext()).equalsIgnoreCase("station")) {
             activityHeaderResId = R.style.activity_header_style_station;
             buttonStyleResId = R.style.app_settings_button_style_station;
             TextView cloverStatusMsgTv = (TextView) findViewById(R.id.clover_connectivity_textview_appSettings);
             cloverStatusMsgTv.setTextSize(getResources().getDimension(R.dimen.dimen_24sp));
-            cloverStatusTv = (TextView) findViewById(R.id.connectivity_status_tv_appSettings);
             cloverStatusTv.setTextSize(getResources().getDimension(R.dimen.dimen_24sp));
         } else {
             activityHeaderResId = R.style.activity_header_style_mobile;
