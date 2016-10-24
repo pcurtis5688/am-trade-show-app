@@ -94,7 +94,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ashtonmansion.tsmanagement2.activity.BoothReservationShowSelection" />
+                android:value="com.ashtonmansion.tsmanagement2.activity.HomeActivity" />
         </activity>
         <activity
             android:name="com.ashtonmansion.tsmanagement2.activity.ReserveBoothDetails"
@@ -119,10 +119,9 @@
             android:name="com.ashtonmansion.tsmanagement2.activity.BoothReservationShowSelection"
             android:exported="true"
             android:label="@string/title_activity_select_booth">
-            <intent-filter>
-                <action android:name="clover.intent.action.MERCHANT_TENDER" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ashtonmansion.tsmanagement2.activity.HomeActivity" />
         </activity>
 
         <receiver android:name="com.ashtonmansion.tsmanagement2.util.EventManagerReceiver">
