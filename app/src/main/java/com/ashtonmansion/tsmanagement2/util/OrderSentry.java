@@ -268,14 +268,19 @@ class HandleWatchlistTriggeredTask extends AsyncTask<Void, Void, Boolean> {
         try {
             if (null != lineItemsDeleted && lineItemsDeleted.size() > 0) {
                 for (LineItem lineItem : lineItemsDeleted) {
+                    ////// UPDATE THE ITEM, SET CODE BACK TO AVAILABLE
                     Reference lineItemReference = lineItem.getItem();
-                    Log.d("Sentry", "Cross-referenced Item (set to available) : " + inventoryConnector.getItem(lineItemReference.getId()).getName());
                     Item resetBoothItem = inventoryConnector.getItem(lineItemReference.getId()).setCode("AVAILABLE");
                     inventoryConnector.updateItem(resetBoothItem);
-                    resetToAvailableSuccessful = true;
+
+                    ////// UPDATE THE ORDER NOTE CONTAINING THE BOOTH NO
                     Order orderToCorrect = orderConnector.getOrder(orderID);
                     orderToCorrect.setNote("");
                     orderConnector.updateOrder(orderToCorrect);
+
+                    ////// SET SUCCESS TO TRUE
+                    resetToAvailableSuccessful = true;
+                    Log.d("Sentry", "Cross-referenced Item (set to available) : " + inventoryConnector.getItem(lineItemReference.getId()).getName());
                 }
             }
         } catch (ClientException | ServiceException | BindingException | RemoteException e) {
