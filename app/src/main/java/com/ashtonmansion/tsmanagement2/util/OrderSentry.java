@@ -14,6 +14,7 @@ import com.clover.sdk.v3.base.Reference;
 import com.clover.sdk.v3.inventory.InventoryConnector;
 import com.clover.sdk.v3.inventory.Item;
 import com.clover.sdk.v3.order.LineItem;
+import com.clover.sdk.v3.order.Order;
 import com.clover.sdk.v3.order.OrderConnector;
 
 import java.util.ArrayList;
@@ -230,6 +231,7 @@ class HandleWatchlistTriggeredTask extends AsyncTask<Void, Void, Boolean> {
     ////// CALLER AND CONNECTOR
     private OrderSentry caller;
     private InventoryConnector inventoryConnector;
+    private OrderConnector orderConnector;
     ////// INPUTS FROM CALLER
     private String orderID;
     private Context callingContext;
@@ -257,6 +259,8 @@ class HandleWatchlistTriggeredTask extends AsyncTask<Void, Void, Boolean> {
         super.onPreExecute();
         inventoryConnector = new InventoryConnector(callingContext, CloverAccount.getAccount(callingContext), null);
         inventoryConnector.connect();
+        orderConnector = new OrderConnector(callingContext, CloverAccount.getAccount(callingContext), null);
+        orderConnector.connect();
     }
 
     @Override
@@ -269,6 +273,9 @@ class HandleWatchlistTriggeredTask extends AsyncTask<Void, Void, Boolean> {
                     Item resetBoothItem = inventoryConnector.getItem(lineItemReference.getId()).setCode("AVAILABLE");
                     inventoryConnector.updateItem(resetBoothItem);
                     resetToAvailableSuccessful = true;
+                    Order orderToCorrect = orderConnector.getOrder(orderID);
+                    orderToCorrect.setNote("");
+                    orderConnector.updateOrder(orderToCorrect);
                 }
             }
         } catch (ClientException | ServiceException | BindingException | RemoteException e) {
