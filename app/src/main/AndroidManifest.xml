@@ -128,6 +128,7 @@
             <intent-filter>
                 <action android:name="com.clover.intent.action.LINE_ITEM_ADDED" />
                 <action android:name="clover.intent.V1_ORDER_BUILD_START" />
+                <action android:name="clover.intent.ACTION_START_REGISTER" />
             </intent-filter>
         </receiver>
     </application>
