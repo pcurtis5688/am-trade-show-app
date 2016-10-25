@@ -127,6 +127,7 @@
         <receiver android:name="com.ashtonmansion.tsmanagement2.util.EventManagerReceiver">
             <intent-filter>
                 <action android:name="com.clover.intent.action.LINE_ITEM_ADDED" />
+                <action android:name="clover.intent.V1_ORDER_BUILD_START" />
             </intent-filter>
         </receiver>
     </application>

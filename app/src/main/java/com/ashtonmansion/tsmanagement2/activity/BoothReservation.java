@@ -35,6 +35,7 @@ import java.util.ListIterator;
 public class BoothReservation extends AppCompatActivity {
     ////// CONTEXT AND UI OBJECTS
     private Context boothReservationActivityContext;
+    private boolean startedFromRegister;
     private int pageHeaderFontResId;
     private int tableRowHeaderStyleId;
     private int tableRowStyleId;

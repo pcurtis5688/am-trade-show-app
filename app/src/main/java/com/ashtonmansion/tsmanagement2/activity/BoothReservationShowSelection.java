@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ashtonmansion.tsmanagement2.R;
+import com.ashtonmansion.tsmanagement2.util.GlobalClass;
 import com.ashtonmansion.tsmanagement2.util.GlobalUtils;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.v1.BindingException;
@@ -36,12 +37,13 @@ public class BoothReservationShowSelection extends Activity
         implements NavigationView.OnNavigationItemSelectedListener {
     /////ACTIVITY AND UI VARS
     private Context boothReservationShowSelectionActivityContext;
+    private boolean startedFromRegister;
     private TableLayout showSelectionTable;
     private int pageHeaderFontResId;
     private int showSelectionButtonResId;
     /////DATA VARS
     private List<Tag> showList;
-    ///// ORDER INFO BEING PASSED TO BOOTH RESERVATION, WILL GRAB CUSTOMER
+    ///// ORDER INFO BEING PASSED TO BOOTH RESERVATION
     private String orderID;
 
     @Override
@@ -53,10 +55,12 @@ public class BoothReservationShowSelection extends Activity
         navigationView.setNavigationItemSelectedListener(this);
 
         ////// OTHER INITIALIZATION
+        GlobalClass globalClass = (GlobalClass) this.getApplicationContext();
         Intent intent = getIntent();
         Bundle extrasBundle = intent.getExtras();
         if (null != extrasBundle) {
             orderID = (String) extrasBundle.get("orderid");
+            globalClass.setFromOrderId(orderID);
         }
 
         ////// SET CONTEXT, ATTACH TO SHOW TABLE, AND POPULATE

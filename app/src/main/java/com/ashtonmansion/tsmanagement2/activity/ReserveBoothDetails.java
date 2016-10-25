@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.ashtonmansion.tsmanagement2.R;
 import com.ashtonmansion.tsmanagement2.util.CustomersAdapter;
+import com.ashtonmansion.tsmanagement2.util.GlobalClass;
 import com.ashtonmansion.tsmanagement2.util.GlobalUtils;
 import com.ashtonmansion.tsmanagement2.util.ParcelableListener;
 import com.clover.sdk.util.CloverAccount;
@@ -47,6 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.view.View.GONE;
+
 
 public class ReserveBoothDetails extends AppCompatActivity {
     private Context reserveBoothDetailsActivityContext;
@@ -70,7 +72,6 @@ public class ReserveBoothDetails extends AppCompatActivity {
     private ParcelableListener parcelableListener;
     private String finalBoothID;
 
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reserve_booth_details);
@@ -139,31 +140,19 @@ public class ReserveBoothDetails extends AppCompatActivity {
         } else findViewById(R.id.selected_customer_table).setVisibility(View.GONE);
 
         Button viewBoothOrderBtn = (Button) findViewById(R.id.finalize_or_order_btn);
-        viewBoothOrderBtn.setText(getResources().getString(R.string.view_booth_order));
+        viewBoothOrderBtn.setVisibility(View.INVISIBLE);
 
-        if (booth.getCode().contains("Order #")) {
-            viewBoothOrderBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(Intents.ACTION_START_REGISTER);
-                    intent.putExtra(Intents.EXTRA_ORDER_ID, "" + GlobalUtils.getOrderIDOnlyFromCode(booth.getCode()));
-                    startActivity(intent);
-                }
-            });
-        } else {
-            viewBoothOrderBtn.setEnabled(false);
-            ////// ADD WARNING TO PAGE
-            TableRow reserveThroughRegisterWarningRow = (TableRow) findViewById(R.id.make_reservation_through_register_warning_row);
-            TextView reserveThroughRegisterTv = new TextView(reserveBoothDetailsActivityContext);
-            reserveThroughRegisterTv.setText(getResources().getString(R.string.reserve_through_register_warning_msg));
-            reserveThroughRegisterTv.setTextAppearance(reserveBoothDetailsActivityContext, R.style.reserve_through_register_style);
-            ////// SPAN NONSENSE
-            TableRow.LayoutParams params = new TableRow.LayoutParams();
-            params.span = 2;
-            params.gravity = Gravity.CENTER_HORIZONTAL;
-            reserveThroughRegisterWarningRow.addView(reserveThroughRegisterTv, params);
-            reserveThroughRegisterWarningRow.setVisibility(View.VISIBLE);
-        }
+        ////// ADD WARNING TO PAGE
+        TableRow reserveThroughRegisterWarningRow = (TableRow) findViewById(R.id.make_reservation_through_register_warning_row);
+        TextView reserveThroughRegisterTv = new TextView(reserveBoothDetailsActivityContext);
+        reserveThroughRegisterTv.setText(getResources().getString(R.string.reserve_through_register_warning_msg));
+        reserveThroughRegisterTv.setTextAppearance(reserveBoothDetailsActivityContext, R.style.reserve_through_register_style);
+        ////// SPAN NONSENSE
+        TableRow.LayoutParams params = new TableRow.LayoutParams();
+        params.span = 2;
+        params.gravity = Gravity.CENTER_HORIZONTAL;
+        reserveThroughRegisterWarningRow.addView(reserveThroughRegisterTv, params);
+        reserveThroughRegisterWarningRow.setVisibility(View.VISIBLE);
     }
 
     private void getOrderCustomer() {
@@ -376,174 +365,193 @@ public class ReserveBoothDetails extends AppCompatActivity {
     }
 
     private void finalizeBoothReservation() {
-        injectSelectedBoothAndRemoveGeneric();
+        FinalizeBoothReservationTask finalizeBoothReservationTask = new FinalizeBoothReservationTask();
+        finalizeBoothReservationTask.setCaller(this);
+        finalizeBoothReservationTask.execute();
         Toast.makeText(reserveBoothDetailsActivityContext, getResources().getString(R.string.booth_reservation_booth_reserved_notification), Toast.LENGTH_LONG).show();
     }
 
-    private void injectSelectedBoothAndRemoveGeneric() {
-        new AsyncTask<Void, Void, Void>() {
-            private InventoryConnector inventoryConnector;
-            private OrderConnector orderConnector;
-            private Order boothOrder;
+    private void postReservationFinalization() {
+        GlobalClass globalClass = (GlobalClass) this.getApplicationContext();
+        String fromOrderId = globalClass.getFromOrderId();
+        if (globalClass.isBoothReservationStartedFromRegister()) {
+            finish();
+            globalClass.setBoothReservationStartedFromRegister(false);
+            Intent backToRegisterIntent = new Intent(Intents.ACTION_ITEM_SELECT);
+            backToRegisterIntent.putExtra("EXTRA_ORDER_ID", fromOrderId);
+            startActivity(backToRegisterIntent);
+        }
+    }
 
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                inventoryConnector = new InventoryConnector(reserveBoothDetailsActivityContext, CloverAccount.getAccount(reserveBoothDetailsActivityContext), null);
-                inventoryConnector.connect();
-                orderConnector = new OrderConnector(reserveBoothDetailsActivityContext, CloverAccount.getAccount(reserveBoothDetailsActivityContext), null);
-                orderConnector.connect();
+    private class FinalizeBoothReservationTask extends AsyncTask<Void, Void, Void> {
+        ////// CALLER
+        private ReserveBoothDetails caller;
+        ////// CLOVER CONNECTIONS AND ORDER DATA
+        private InventoryConnector inventoryConnector;
+        private OrderConnector orderConnector;
+        private Order boothOrder;
+
+        public void setCaller(ReserveBoothDetails reserveBoothDetailsCaller) {
+            this.caller = reserveBoothDetailsCaller;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            inventoryConnector = new InventoryConnector(reserveBoothDetailsActivityContext, CloverAccount.getAccount(reserveBoothDetailsActivityContext), null);
+            inventoryConnector.connect();
+            orderConnector = new OrderConnector(reserveBoothDetailsActivityContext, CloverAccount.getAccount(reserveBoothDetailsActivityContext), null);
+            orderConnector.connect();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                boothOrder = orderConnector.getOrder(orderID);
+            } catch (Exception e) {
+                Log.d("ecspp", e.getMessage(), e.getCause());
             }
+            /////// CREATE THE LISTENER FOR BOOTH CHANGES
+            OrderConnector.OnOrderUpdateListener2 secondListener = new OrderConnector.OnOrderUpdateListener2() {
+                private Order fetchedOrder;
+                private List<LineItem> initialLineItems;
+                private String listenerFinalBoothID;
 
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-                    boothOrder = orderConnector.getOrder(orderID);
-                } catch (Exception e) {
-                    Log.d("ecspp", e.getMessage(), e.getCause());
+                @Override
+                public void onOrderCreated(String orderId) {
+                    Log.d("Listener created", " order total : " + fetchedOrder.getTotal() + "and added to the connector");
+
+                    initialLineItems = new ArrayList<>();
+                    listenerFinalBoothID = finalBoothID;
+                    fetchedOrder = boothOrder;
                 }
-                /////// CREATE THE LISTENER FOR BOOTH CHANGES
-                OrderConnector.OnOrderUpdateListener2 secondListener = new OrderConnector.OnOrderUpdateListener2() {
-                    private Order fetchedOrder;
-                    private List<LineItem> initialLineItems;
-                    private String listenerFinalBoothID;
 
-                    @Override
-                    public void onOrderCreated(String orderId) {
-                        Log.d("Listener created", " order total : " + fetchedOrder.getTotal() + "and added to the connector");
+                @Override
+                public void onOrderUpdated(String orderId, boolean selfChange) {
+                    Log.d("Order updated heard", " orderID: " + orderId + ", selfchange: " + selfChange);
 
-                        initialLineItems = new ArrayList<>();
-                        listenerFinalBoothID = finalBoothID;
-                        fetchedOrder = boothOrder;
-                    }
+                }
 
-                    @Override
-                    public void onOrderUpdated(String orderId, boolean selfChange) {
-                        Log.d("Order updated heard", " orderID: " + orderId + ", selfchange: " + selfChange);
+                @Override
+                public void onOrderDeleted(String orderId) {
+                    Log.d("Order deleted heard", " orderID: " + orderId);
+                }
 
-                    }
+                @Override
+                public void onOrderDiscountAdded(String orderId, String discountId) {
+                    Log.d("Order dscnt added", " orderID: " + orderId);
+                }
 
-                    @Override
-                    public void onOrderDeleted(String orderId) {
-                        Log.d("Order deleted heard", " orderID: " + orderId);
-                    }
+                @Override
+                public void onOrderDiscountsDeleted(String orderId, List<String> discountIds) {
 
-                    @Override
-                    public void onOrderDiscountAdded(String orderId, String discountId) {
-                        Log.d("Order dscnt added", " orderID: " + orderId);
-                    }
+                }
 
-                    @Override
-                    public void onOrderDiscountsDeleted(String orderId, List<String> discountIds) {
+                @Override
+                public void onLineItemsAdded(String orderId, List<String> lineItemIds) {
+                    Log.d("LI Added - ", " orderID: " + orderId + " - lineitems: " + lineItemIds.toString());
+                }
 
-                    }
+                @Override
+                public void onLineItemsUpdated(String orderId, List<String> lineItemIds) {
+                    Log.d("LI Updated - ", " orderID: " + orderId + " - lineitems: " + lineItemIds.toString());
+                    Log.d("SWAPPED HERE", " onLineItemsUpdated()");
+                }
 
-                    @Override
-                    public void onLineItemsAdded(String orderId, List<String> lineItemIds) {
-                        Log.d("LI Added - ", " orderID: " + orderId + " - lineitems: " + lineItemIds.toString());
-                    }
+                @Override
+                public void onLineItemsDeleted(String orderId, List<String> lineItemIds) {
+                    Log.d("SWAPPED HERE", " onLineItemsDeleted()");
 
-                    @Override
-                    public void onLineItemsUpdated(String orderId, List<String> lineItemIds) {
-                        Log.d("LI Updated - ", " orderID: " + orderId + " - lineitems: " + lineItemIds.toString());
-                        Log.d("SWAPPED HERE", " onLineItemsUpdated()");
-                    }
+                }
 
-                    @Override
-                    public void onLineItemsDeleted(String orderId, List<String> lineItemIds) {
-                        Log.d("SWAPPED HERE", " onLineItemsDeleted()");
+                private boolean isLineItemSpecificBooth() {
 
-                    }
+                    return false;
+                }
 
-                    private boolean isLineItemSpecificBooth() {
+                @Override
+                public void onLineItemModificationsAdded(String orderId, List<String> lineItemIds, List<String> modificationIds) {
+                    Log.d("LI ModAdded - ", " orderID: " + orderId + " - lineitems: " + lineItemIds.toString() + " mod ids: " + modificationIds.toString());
+                }
 
-                        return false;
-                    }
+                @Override
+                public void onLineItemDiscountsAdded(String orderId, List<String> lineItemIds, List<String> discountIds) {
 
-                    @Override
-                    public void onLineItemModificationsAdded(String orderId, List<String> lineItemIds, List<String> modificationIds) {
-                        Log.d("LI ModAdded - ", " orderID: " + orderId + " - lineitems: " + lineItemIds.toString() + " mod ids: " + modificationIds.toString());
-                    }
+                }
 
-                    @Override
-                    public void onLineItemDiscountsAdded(String orderId, List<String> lineItemIds, List<String> discountIds) {
+                @Override
+                public void onLineItemExchanged(String orderId, String oldLineItemId, String newLineItemId) {
+                }
 
-                    }
+                @Override
+                public void onPaymentProcessed(String orderId, String paymentId) {
+                }
 
-                    @Override
-                    public void onLineItemExchanged(String orderId, String oldLineItemId, String newLineItemId) {
-                    }
+                @Override
+                public void onRefundProcessed(String orderId, String refundId) {
+                }
 
-                    @Override
-                    public void onPaymentProcessed(String orderId, String paymentId) {
-                    }
+                @Override
+                public void onCreditProcessed(String orderId, String creditId) {
 
-                    @Override
-                    public void onRefundProcessed(String orderId, String refundId) {
-                    }
+                }
+            };
 
-                    @Override
-                    public void onCreditProcessed(String orderId, String creditId) {
+            String genericBoothID = null;
+            try {
+                Order utilityOrder = orderConnector.getOrder(orderID);
+                List<LineItem> lineItemList = utilityOrder.getLineItems();
+                List<LineItem> swappedLineItemList = new ArrayList<>();
+                for (LineItem lineItem : lineItemList) {
+                    if (lineItem.getName().equalsIgnoreCase("Select Booth"))
+                        genericBoothID = lineItem.getId();
+                    else swappedLineItemList.add(lineItem);
+                }
+                if (null != genericBoothID) {
+                    List<String> itemsToRemoveIncludingGenericBooth = new ArrayList<>();
+                    itemsToRemoveIncludingGenericBooth.add(genericBoothID);
+                    orderConnector.deleteLineItems(orderID, itemsToRemoveIncludingGenericBooth);
 
-                    }
-                };
-
-                String genericBoothID = null;
-                try {
-                    Order utilityOrder = orderConnector.getOrder(orderID);
-                    List<LineItem> lineItemList = utilityOrder.getLineItems();
-                    List<LineItem> swappedLineItemList = new ArrayList<>();
-                    for (LineItem lineItem : lineItemList) {
-                        if (lineItem.getName().equalsIgnoreCase("Select Booth"))
-                            genericBoothID = lineItem.getId();
-                        else swappedLineItemList.add(lineItem);
-                    }
-                    if (null != genericBoothID) {
-                        List<String> itemsToRemoveIncludingGenericBooth = new ArrayList<>();
-                        itemsToRemoveIncludingGenericBooth.add(genericBoothID);
-                        orderConnector.deleteLineItems(orderID, itemsToRemoveIncludingGenericBooth);
-
-                        for (Item item : inventoryConnector.getItems()) {
-                            if (item.getId().equalsIgnoreCase(booth.getId())) {
-                                orderConnector.addFixedPriceLineItem(orderID, item.getId(), null, null);
-                                inventoryConnector.updateItem(inventoryConnector.getItem(item.getId()).setCode(getResources().getString(R.string.booth_product_code_with_prefix, orderID)));
-                                inventoryConnector.updateItemStock(item.getId(), 0);
-                                Order boothsOrder = orderConnector.getOrder(orderID);
-                                String orderNotes = boothsOrder.getNote();
-                                if (null == orderNotes || orderNotes.trim().equals("")) {
-                                    orderConnector.updateOrder(orderConnector.getOrder(orderID).setNote("Booth No.: " + item.getSku()));
-                                    Log.d("ReserveBoothDetails", "Empty order notes were to set to booth's associate number: " + item.getSku());
-                                } else {
-                                    String orderHeader = orderConnector.getOrder(orderID).getNote() + " Booth No.: " + item.getSku();
-                                    orderConnector.updateOrder(orderConnector.getOrder(orderID).setNote(orderHeader));
-                                    Log.d("ReserveBoothDetails", "Order notes were not empty; booth number appended...");
-                                }
+                    for (Item item : inventoryConnector.getItems()) {
+                        if (item.getId().equalsIgnoreCase(booth.getId())) {
+                            orderConnector.addFixedPriceLineItem(orderID, item.getId(), null, null);
+                            inventoryConnector.updateItem(inventoryConnector.getItem(item.getId()).setCode(getResources().getString(R.string.booth_product_code_with_prefix, orderID)));
+                            inventoryConnector.updateItemStock(item.getId(), 0);
+                            Order boothsOrder = orderConnector.getOrder(orderID);
+                            String orderNotes = boothsOrder.getNote();
+                            if (null == orderNotes || orderNotes.trim().equals("")) {
+                                orderConnector.updateOrder(orderConnector.getOrder(orderID).setNote("Booth No.: " + item.getSku()));
+                                Log.d("ReserveBoothDetails", "Empty order notes were to set to booth's associate number: " + item.getSku());
+                            } else {
+                                String orderHeader = orderConnector.getOrder(orderID).getNote() + " Booth No.: " + item.getSku();
+                                orderConnector.updateOrder(orderConnector.getOrder(orderID).setNote(orderHeader));
+                                Log.d("ReserveBoothDetails", "Order notes were not empty; booth number appended...");
                             }
                         }
-
-                        ////// CHECK IF THIS IS AN EXISTING CUSTOMER SELECTED FROM LIST & HANDLE
-                        if (null != clickedCustomer) {
-                            List<Customer> customerInListForOrder = new ArrayList<>();
-                            customerInListForOrder.add(clickedCustomer);
-                            orderConnector.updateOrder(orderConnector.getOrder(orderID).setCustomers(customerInListForOrder));
-                        }
                     }
-                } catch (Exception e) {
-                    Log.d("Exception: ", e.getMessage(), e.getCause());
-                }
-                return null;
-            }
 
-            @Override
-            protected void onPostExecute(Void result) {
-                findViewById(R.id.finalize_or_order_btn).setEnabled(false);
-                orderConnector.disconnect();
-                inventoryConnector.disconnect();
-                orderConnector = null;
-                inventoryConnector = null;
-                finish();
+                    ////// CHECK IF THIS IS AN EXISTING CUSTOMER SELECTED FROM LIST & HANDLE
+                    if (null != clickedCustomer) {
+                        List<Customer> customerInListForOrder = new ArrayList<>();
+                        customerInListForOrder.add(clickedCustomer);
+                        orderConnector.updateOrder(orderConnector.getOrder(orderID).setCustomers(customerInListForOrder));
+                    }
+                }
+            } catch (Exception e) {
+                Log.d("Exception: ", e.getMessage(), e.getCause());
             }
-        }.execute();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            findViewById(R.id.finalize_or_order_btn).setEnabled(false);
+            orderConnector.disconnect();
+            inventoryConnector.disconnect();
+            orderConnector = null;
+            inventoryConnector = null;
+            caller.postReservationFinalization();
+        }
     }
 
     private void decoupleShowName(Tag show) {

@@ -40,9 +40,8 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
         String itemID = intent.getStringExtra(Intents.EXTRA_CLOVER_ITEM_ID);
         this.orderID = intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID);
 
-        if (intent.getAction().equals(Intents.ACTION_ORDER_CREATED)) {
-            Log.d("Receiver", "ORDER CREATED");
-        }
+        Log.d("EventManagerReceiver", "- Intent Action: " + intent.getAction());
+
         ////// IF SENTRY HAS NOT YET BEEN SPAWNED, CREATE ONE
         if (null == ((GlobalClass) fromContext.getApplicationContext()).getOrderSentry()) {
             SpawnOrderSentryTask spawnOrderSentryTask = new SpawnOrderSentryTask();
@@ -75,6 +74,9 @@ public class EventManagerReceiver extends BroadcastReceiver implements AsyncResp
             if (itemName.trim().equalsIgnoreCase("select booth")) {
                 Intent boothReservationIntent = new Intent(fromContext, BoothReservationShowSelection.class);
                 boothReservationIntent.putExtra("orderid", orderID);
+                GlobalClass globalClass = (GlobalClass) fromContext.getApplicationContext();
+                globalClass.setBoothReservationStartedFromRegister(true);
+                globalClass.setFromRegisterIntent(fromIntent);
                 boothReservationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 fromContext.getApplicationContext().startActivity(boothReservationIntent);
             }
